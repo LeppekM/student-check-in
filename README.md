@@ -24,4 +24,4 @@ and Joe is the Product Owner Proxy. We all contribute equally to both code and t
 ### Who do I talk to? ###
 
 Professor B-Rad
-Product Owner: Jim Frommelll
+Product Owner: Jim Frommell
