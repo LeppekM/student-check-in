@@ -1,0 +1,27 @@
+#Lines (like this one) that begin with # are comments; all other lines are rules
+
+# common build products to be ignored at MSOE
+*.o
+*.obj
+*.class
+*.exe
+
+# common IDE-generated files and folders to ignore
+workspace.xml
+bin/
+out/
+.classpath
+# uncomment following for courses in which Eclipse .project files are not checked in
+# .project
+
+#ignore automatically generated files created by some common applications, operating systems
+*.bak
+*.log
+*.ldb
+~*
+.DS_Store*
+._*
+Thumbs.db
+# Any files you do want not to ignore must be specified starting with !
+# For example, if you didn't want to ignore .classpath, you'd uncomment the following rule:
+# !.classpath
