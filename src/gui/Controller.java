@@ -38,69 +38,29 @@ public class Controller implements Initializable {
     }
 
     public void openCheckInPage(){
-        try {
-            Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource("checkout.fxml"));
-            Scene scene = new Scene(anchorPane);
-            designCar.setScene(scene);
-            designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle("Design a Car");
-            designCar.showAndWait();
-        }
-        catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-
-        }
-
+        newStage("checkout.fxml", "Check-in/out Parts");
     }
-
-
 
     public void openInventory(){
-        try {
-            Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource("openInventory.fxml"));
-            Scene scene = new Scene(anchorPane);
-            designCar.setScene(scene);
-            designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle("Design a Car");
-            designCar.showAndWait();
-        }
-        catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-
-        }
-
-
+        newStage("openInventory.fxml", "Inventory");
     }
+
     public void manageStudents(){
-        try {
-            Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource("manageStudents.fxml"));
-            Scene scene = new Scene(anchorPane);
-            designCar.setScene(scene);
-            designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle("Design a Car");
-            designCar.showAndWait();
-        }
-        catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-
-        }
-
-
+        newStage("manageStudents.fxml", "Manage Students");
     }
+
     public void manageWorkers(){
+        newStage("manageWorkers.fxml", "Manage Workers");
+    }
+
+    private void newStage(String fxml, String title){
         try {
             Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource("manageWorkers.fxml"));
+            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource(fxml));
             Scene scene = new Scene(anchorPane);
             designCar.setScene(scene);
             designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle("Design a Car");
+            designCar.setTitle(title);
             designCar.showAndWait();
         }
         catch(IOException invoke){
@@ -108,9 +68,6 @@ public class Controller implements Initializable {
             alert.showAndWait();
 
         }
-
-
-
     }
 
 
