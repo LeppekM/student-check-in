@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -56,8 +57,8 @@ public class Controller implements Initializable {
     private void newStage(String fxml, String title){
         try {
             Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource(fxml));
-            Scene scene = new Scene(anchorPane);
+            Pane pane = FXMLLoader.load(getClass().getResource(fxml));
+            Scene scene = new Scene(pane);
             designCar.setScene(scene);
             designCar.initModality(Modality.APPLICATION_MODAL);
             designCar.setTitle(title);
