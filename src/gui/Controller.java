@@ -90,8 +90,6 @@ public class Controller implements Initializable {
             alert.showAndWait();
 
         }
-
-
     }
     public void manageWorkers(){
         try {
@@ -108,9 +106,6 @@ public class Controller implements Initializable {
             alert.showAndWait();
 
         }
-
-
-
     }
 
 
