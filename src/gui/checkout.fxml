@@ -2,6 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -11,11 +13,14 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CheckItemsController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CheckItemsController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -94,7 +99,56 @@
                         </TableView>
                      </content>
                   </Tab>
-                  <Tab text="Student Page" />
+                  <Tab text="Student Page">
+                     <content>
+                        <Pane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="-1.0" layoutY="13.0" text="Student Name:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <TextField editable="false" layoutX="131.0" layoutY="14.0" />
+                              <Label layoutX="5.0" layoutY="55.0" text="Student RFID:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <TextField editable="false" layoutX="124.0" layoutY="56.0" />
+                              <Label layoutX="2.0" layoutY="103.0" text="Student Email:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <TextField editable="false" layoutX="124.0" layoutY="103.0" />
+                              <Label layoutX="5.0" layoutY="151.0" text="Date Since Last Rental:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <TextField editable="false" layoutX="198.0" layoutY="152.0" promptText="mm/dd/yyyy" />
+                              <Label layoutX="17.0" layoutY="214.0" text="Items Checked Out:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <ListView layoutX="13.0" layoutY="257.0" prefHeight="226.0" prefWidth="200.0" />
+                              <Label layoutX="253.0" layoutY="214.0" text="Items Overdue:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <ListView layoutX="253.0" layoutY="257.0" prefHeight="226.0" prefWidth="200.0" />
+                              <ListView layoutX="497.0" layoutY="257.0" prefHeight="226.0" prefWidth="200.0" />
+                              <Label layoutX="497.0" layoutY="214.0" text="Items Saved:">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="194.0" fitWidth="210.0" layoutX="674.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                        </Pane>
+                     </content></Tab>
                </tabs>
             </TabPane>
          </items>
