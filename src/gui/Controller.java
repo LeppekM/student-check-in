@@ -54,7 +54,7 @@ public class Controller implements Initializable {
         newStage("manageWorkers.fxml", "Manage Workers");
     }
 
-    private void newStage(String fxml, String title){
+    public void newStage(String fxml, String title){
         try {
             Stage designCar = new Stage();
             Pane pane = FXMLLoader.load(getClass().getResource(fxml));

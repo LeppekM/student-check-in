@@ -132,7 +132,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <ListView layoutX="13.0" layoutY="257.0" prefHeight="226.0" prefWidth="200.0" />
+                              <ListView fx:id="checkedOutTable" layoutX="13.0" layoutY="257.0" onMouseClicked="#popUp" prefHeight="226.0" prefWidth="200.0" />
                               <Label layoutX="253.0" layoutY="214.0" text="Items Overdue:">
                                  <font>
                                     <Font size="18.0" />
