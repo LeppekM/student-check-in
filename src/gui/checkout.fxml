@@ -103,7 +103,7 @@
                      <content>
                         <Pane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <Label layoutX="-1.0" layoutY="13.0" text="Student Name:">
+                              <Label layoutX="5.0" layoutY="13.0" text="Student Name:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -114,8 +114,8 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="124.0" layoutY="56.0" />
-                              <Label layoutX="2.0" layoutY="103.0" text="Student Email:">
+                              <TextField editable="false" layoutX="120.0" layoutY="56.0" />
+                              <Label layoutX="5.0" layoutY="103.0" text="Student Email:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -132,7 +132,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <ListView fx:id="checkedOutTable" layoutX="13.0" layoutY="257.0" onMouseClicked="#popUp" prefHeight="226.0" prefWidth="200.0" />
+                              <ListView fx:id="checkedOutTable" accessibleText="lknf" layoutX="13.0" layoutY="257.0" onMouseClicked="#popUp" prefHeight="226.0" prefWidth="200.0" />
                               <Label layoutX="253.0" layoutY="214.0" text="Items Overdue:">
                                  <font>
                                     <Font size="18.0" />

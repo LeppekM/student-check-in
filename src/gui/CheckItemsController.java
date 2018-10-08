@@ -1,21 +1,12 @@
 package gui;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,6 +18,8 @@ public class CheckItemsController implements Initializable{
     @FXML
     MenuItem quit;
 
+    @FXML
+    ListView checkOutTable;
 
 
     @Override
@@ -48,6 +41,8 @@ public class CheckItemsController implements Initializable{
         if(mouseEvent.getClickCount() == 2){
             Controller c = new Controller();
             c.newStage("infoPopUp.fxml", "Item Info");
+
         }
     }
+
 }
