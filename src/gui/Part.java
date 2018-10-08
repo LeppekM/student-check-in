@@ -12,7 +12,7 @@ public class Part {
     private static boolean fault;
     private static int studentID;
 
-    public void Part(String name, String location, double price, int serialNumber, int barcode, String vendor, String manufacturer,
+    public Part(String name, String location, double price, int serialNumber, int barcode, String vendor, String manufacturer,
                      boolean fault, int studentID){
         setName(name);
         setLocation(location);
