@@ -1,22 +1,39 @@
 package gui;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class CheckItemsController implements Initializable{
 
     @FXML
-    TableColumn studentID;
+    private TableColumn studentID;
 
     @FXML
-    MenuItem quit;
+    private MenuItem quit;
+
+    @FXML
+    private VBox scene;
+
+    @FXML
+    private Button returnHome;
 
     @FXML
     ListView checkOutTable;
@@ -27,14 +44,15 @@ public class CheckItemsController implements Initializable{
         setItems();
     }
 
-    public void setItems() {
+    private void setItems() {
 
-        VBox headerGraphic = new VBox();
-        headerGraphic.setAlignment(Pos.CENTER);
-        studentID.setGraphic(headerGraphic);
     }
     public void close(){
-        System.out.println("HI");
+        scene.getScene().getWindow().hide();
+    }
+
+    public void returnHome(){
+        scene.getScene().getWindow().hide();
     }
 
     public void popUp(MouseEvent mouseEvent) {
