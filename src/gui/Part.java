@@ -2,6 +2,7 @@ package gui;
 
 public class Part {
 
+    private static String name;
     private static String location;
     private static double price;
     private static int serialNumber;
@@ -11,8 +12,9 @@ public class Part {
     private static boolean fault;
     private static int studentID;
 
-    public void Part(String location, double price, int serialNumber, int barcode, String vendor, String manufacturer,
+    public void Part(String name, String location, double price, int serialNumber, int barcode, String vendor, String manufacturer,
                      boolean fault, int studentID){
+        setName(name);
         setLocation(location);
         setPrice(price);
         setSerialNumber(serialNumber);
@@ -23,11 +25,19 @@ public class Part {
         setStudentID(studentID);
     }
 
+    public static String getName() {
+        return name;
+    }
+
+    private static void setName(String name) {
+        Part.name = name;
+    }
+
     public static String getLocation() {
         return location;
     }
 
-    public static void setLocation(String location) {
+    private static void setLocation(String location) {
         Part.location = location;
     }
 
@@ -35,7 +45,7 @@ public class Part {
         return price;
     }
 
-    public static void setPrice(double price) {
+    private static void setPrice(double price) {
         Part.price = price;
     }
 
@@ -43,7 +53,7 @@ public class Part {
         return serialNumber;
     }
 
-    public static void setSerialNumber(int serialNumber) {
+    private static void setSerialNumber(int serialNumber) {
         Part.serialNumber = serialNumber;
     }
 
@@ -51,7 +61,7 @@ public class Part {
         return vendor;
     }
 
-    public static void setVendor(String vendor) {
+    private static void setVendor(String vendor) {
         Part.vendor = vendor;
     }
 
@@ -59,7 +69,7 @@ public class Part {
         return manufacturer;
     }
 
-    public static void setManufacturer(String manufacturer) {
+    private static void setManufacturer(String manufacturer) {
         Part.manufacturer = manufacturer;
     }
 
@@ -67,7 +77,7 @@ public class Part {
         return fault;
     }
 
-    public static void setFault(boolean fault) {
+    private static void setFault(boolean fault) {
         Part.fault = fault;
     }
 
@@ -75,7 +85,7 @@ public class Part {
         return studentID;
     }
 
-    public static void setStudentID(int studentID) {
+    private static void setStudentID(int studentID) {
         Part.studentID = studentID;
     }
 
@@ -83,7 +93,7 @@ public class Part {
         return barcode;
     }
 
-    public static void setBarcode(int barcode) {
+    private static void setBarcode(int barcode) {
         Part.barcode = barcode;
     }
 }
