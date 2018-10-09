@@ -11,7 +11,7 @@
    <children>
       <Pane prefHeight="200.0" prefWidth="500.0">
          <children>
-            <Label layoutX="5.0" text="Item Name:" fx:id="name">
+            <Label layoutX="5.0" text="Item Name:">
                <font>
                   <Font size="18.0" />
                </font>
@@ -26,9 +26,9 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField layoutX="100.0" layoutY="2.0" />
-            <TextField layoutX="166.0" layoutY="42.0" />
-            <CheckBox layoutY="82.0" mnemonicParsing="false" text="Save Item?" contentDisplay="RIGHT" fx:id="save">
+            <TextField fx:id="name" layoutX="100.0" layoutY="2.0" />
+            <TextField fx:id="serialNumber" layoutX="166.0" layoutY="42.0" />
+            <CheckBox fx:id="save" contentDisplay="RIGHT" layoutY="82.0" mnemonicParsing="false" text="Save Item?">
                <font>
                   <Font size="18.0" />
                </font>
