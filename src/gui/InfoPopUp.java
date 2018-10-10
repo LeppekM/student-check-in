@@ -17,7 +17,7 @@ public class InfoPopUp {
 //    public void saveItem(){
 //        if (save.isSelected()){
 //            CheckItemsController cc = new CheckItemsController();
-//            InventoryController ic = new InventoryController();
+//            ControllerInventory ic = new ControllerInventory();
 //            ArrayList<Part> listOfParts = ic.getInventory();
 //            int partName = -1;
 //            if (listOfParts.contains(name.getText())) {
