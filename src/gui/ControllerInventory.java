@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 public class ControllerInventory implements Initializable {
 
     @FXML
-    private Button part;
+    private Button print;
 
     @FXML
     private Button back;
@@ -30,7 +30,13 @@ public class ControllerInventory implements Initializable {
 
     }
 
-
-
+    public void goBack(){
+        Stage stage = (Stage) back.getScene().getWindow();
+        stage.close();
+    }
+    public void printReport(){
+        System.out.println("You're printing something I guess...");
+        return;
+    }
 
 }

@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerInventory">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -64,8 +64,8 @@
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
                            <children>
-                              <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                              <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                              <Button fx:id="print" layoutX="500.0" layoutY="10.0" mnemonicParsing="false" onAction="#printReport" prefHeight="25.0" prefWidth="75.0" text="Print" />
+                              <Button fx:id="back" layoutX="595.0" layoutY="10.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="75.0" text="Back" />
                               <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                               <Label layoutX="20.0" layoutY="20.0" text="Total Inventory">
                                  <font>
@@ -89,7 +89,7 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
                            <children>
                               <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                              <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                              <Button fx:id="back" layoutX="595.0" layoutY="10.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="75.0" text="Back" />
                               <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                               <Label layoutX="20.0" layoutY="20.0" text="Transaction History">
                                  <font>
@@ -115,7 +115,7 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
                            <children>
                               <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                              <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                              <Button fx:id="back" layoutX="595.0" layoutY="10.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="75.0" text="Back" />
                               <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                               <Label layoutX="20.0" layoutY="20.0" text="Currently Checked Out">
                                  <font>
@@ -141,7 +141,7 @@
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
                            <children>
                               <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                              <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                              <Button fx:id="back" layoutX="595.0" layoutY="10.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="75.0" text="Back" />
                               <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                               <Label layoutX="20.0" layoutY="20.0" text="Overdue Items">
                                  <font>
@@ -168,7 +168,7 @@
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="675.0">
                                  <children>
                                     <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                                    <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                                    <Button fx:id="back" layoutX="595.0" layoutY="10.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="75.0" text="Back" />
                                     <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                                     <Label layoutX="20.0" layoutY="20.0" text="Faulty Items">
                                        <font>
