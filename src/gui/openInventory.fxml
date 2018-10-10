@@ -60,20 +60,81 @@
       <children>
             <TabPane prefHeight="500.0" prefWidth="675.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Inventory">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0" />
-                  </content>
-                </Tab>
-                <Tab text="History">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0" />
-                  </content>
-                </Tab>
+                  <Tab text="Total Inventory">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                           <children>
+                              <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
+                              <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                              <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
+                              <Label layoutX="20.0" layoutY="20.0" text="Total Inventory">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                                 <columns>
+                                    <TableColumn prefWidth="169.0" resizable="false" text="Part Name" />
+                                    <TableColumn prefWidth="124.0" resizable="false" text="Serial Number" />
+                                    <TableColumn prefWidth="174.0" resizable="false" text="Manufacturer" />
+                                    <TableColumn prefWidth="73.0" resizable="false" text="Quantity" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab text="History">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                           <children>
+                              <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
+                              <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                              <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
+                              <Label layoutX="20.0" layoutY="20.0" text="Transaction History">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                                 <columns>
+                                    <TableColumn prefWidth="141.0" resizable="false" text="Student" />
+                                    <TableColumn prefWidth="127.0" resizable="false" text="Part Name" />
+                                    <TableColumn prefWidth="113.0" resizable="false" text="Serial Number" />
+                                    <TableColumn prefWidth="73.0" resizable="false" text="Location" />
+                                    <TableColumn prefWidth="78.0" resizable="false" text="Quantity" />
+                                    <TableColumn prefWidth="154.0" resizable="false" text="Date" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
                   <Tab text="Checked Out">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0" />
-                    </content>
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                           <children>
+                              <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
+                              <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                              <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
+                              <Label layoutX="20.0" layoutY="20.0" text="Currently Checked Out">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                                 <columns>
+                                    <TableColumn prefWidth="147.0" resizable="false" text="Student" />
+                                    <TableColumn prefWidth="121.0" resizable="false" text="Part Name" />
+                                    <TableColumn prefWidth="128.0" resizable="false" text="Serial Number" />
+                                    <TableColumn prefWidth="76.0" resizable="false" text="Quantity" />
+                                    <TableColumn prefWidth="104.0" resizable="false" text="Checkout Date" />
+                                    <TableColumn prefWidth="110.0" resizable="false" text="Return Date" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                     </content>
                   </Tab>
                   <Tab text="Overdue">
                     <content>
@@ -132,57 +193,5 @@
             </TabPane>
       </children>
     </AnchorPane>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab text="Total Inventory">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="338.0" prefWidth="640.0">
-                     <children>
-                      <AnchorPane layoutY="29.0" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
-                        <children>
-                              <TextField layoutX="491.0" layoutY="14.0" prefHeight="25.0" prefWidth="135.0" text="Search" />
-                              <TableView layoutY="48.0" prefHeight="268.0" prefWidth="640.0">
-                                <columns>
-                                  <TableColumn prefWidth="128.0" text="Part Name" />
-                                  <TableColumn prefWidth="113.0" text="Serial Number" />
-                                    <TableColumn prefWidth="113.0" text="Manufacturer" />
-                                    <TableColumn prefWidth="86.0" text="Quantity" />
-                                </columns>
-                              </TableView>
-                              <Label layoutX="34.0" layoutY="2.0" prefHeight="25.0" prefWidth="104.0" text="Total Inventory">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
-                        </children>
-                      </AnchorPane>
-                        <Button layoutX="534.0" layoutY="15.0" mnemonicParsing="false" text="Print" />
-                        <Button layoutX="585.0" layoutY="15.0" mnemonicParsing="false" text="Back" />
-                     </children>
-                  </AnchorPane>
-            </content>
-          </Tab>
-          <Tab text="History">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-            <Tab text="Checked Out">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
-            <Tab text="Overdue">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
-            <Tab text="Faults">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
-        </tabs>
-      </TabPane>
   </children>
 </VBox>
