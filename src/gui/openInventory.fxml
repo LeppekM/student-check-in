@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -52,12 +58,78 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-        <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-          <font>
-            <Font size="18.0" />
-          </font>
-        </Label>
-            <Label layoutX="328.0" layoutY="153.0" text="open Inventory" />
+            <TabPane prefHeight="500.0" prefWidth="675.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Inventory">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0" />
+                  </content>
+                </Tab>
+                <Tab text="History">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0" />
+                  </content>
+                </Tab>
+                  <Tab text="Checked Out">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0" />
+                    </content>
+                  </Tab>
+                  <Tab text="Overdue">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                           <children>
+                              <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
+                              <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                              <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
+                              <Label layoutX="20.0" layoutY="20.0" text="Overdue Items">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                                <columns>
+                                  <TableColumn prefWidth="135.0" resizable="false" text="Student" />
+                                  <TableColumn prefWidth="135.0" resizable="false" text="Item" />
+                                    <TableColumn prefWidth="135.0" resizable="false" text="Serial Number" />
+                                    <TableColumn prefWidth="135.0" resizable="false" text="Original Due Date" />
+                                    <TableColumn prefWidth="135.0" resizable="false" text="Fee" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab text="Fault">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                           <children>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="675.0">
+                                 <children>
+                                    <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
+                                    <Button layoutX="595.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Back" />
+                                    <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
+                                    <Label layoutX="20.0" layoutY="20.0" text="Faulty Items">
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                                       <columns>
+                                          <TableColumn prefWidth="135.0" resizable="false" text="Item/Serial Number" />
+                                          <TableColumn prefWidth="135.0" resizable="false" text="Description" />
+                                          <TableColumn prefWidth="135.0" resizable="false" text="Parts Needed" />
+                                          <TableColumn prefWidth="135.0" resizable="false" text="Person Responsible" />
+                                          <TableColumn prefWidth="135.0" resizable="false" text="Date Returned" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </children></AnchorPane>
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
       </children>
     </AnchorPane>
   </children>
