@@ -2,7 +2,6 @@ package gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -11,9 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.lang.reflect.Parameter;
 import java.net.URL;
-import java.util.Observable;
 import java.util.ResourceBundle;
 
 public class CheckItemsController implements Initializable{
@@ -36,56 +33,79 @@ public class CheckItemsController implements Initializable{
     @FXML
     private TableColumn action;
 
+    @FXML
+    private TableColumn studentIDCheckin;
+
+    @FXML
+    private TableColumn barcodeCheckin;
+
+    @FXML
+    private TableColumn partNameCheckin;
+
+    @FXML
+    private TableColumn quantityCheckin;
+
+    @FXML
+    private TableColumn fault;
+
+    @FXML
+    private TableColumn actionCheckin;
 
     @FXML
     TableView checkOutTableView;
 
     @FXML
-    private MenuItem quit;
+    TableView checkInTableView;
 
     @FXML
     private VBox scene;
 
     @FXML
-    private Button returnHome;
-
-    @FXML
     ListView checkOutTable, savedTable;
+
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setItems();
+
+        setCheckoutItems();
+        setCheckinItems();
     }
 
-    private void setItems() {
-        ObservableList<CheckoutTable> data = FXCollections.observableArrayList(
-            new CheckoutTable("", "","","")
-        );
+    private void setCheckinItems() {
+        generateInfo(studentIDCheckin, barcodeCheckin, partNameCheckin, quantityCheckin, fault, actionCheckin, checkInTableView);
+    }
+    private void setCheckoutItems() {
+        generateInfo(studentID, barcode, partName, quantity, overnight, action, checkOutTableView);
+    }
+
+    private void generateInfo(TableColumn studentID, TableColumn barcode, TableColumn partName, TableColumn quantity, TableColumn checkBox, TableColumn action, TableView tableView) {
+        ObservableList<CheckItemsTable> data = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
 
 
         studentID.setCellValueFactory(
-                new PropertyValueFactory<CheckoutTable, String>("studentID")
+                new PropertyValueFactory<CheckItemsTable, String>("studentID")
         );
         barcode.setCellValueFactory(
-                new PropertyValueFactory<CheckoutTable, String>("barcode")
+                new PropertyValueFactory<CheckItemsTable, String>("barcode")
         );
         partName.setCellValueFactory(
-                new PropertyValueFactory<CheckoutTable, String>("partName")
+                new PropertyValueFactory<CheckItemsTable, String>("partName")
         );
         quantity.setCellValueFactory(
-                new PropertyValueFactory<CheckoutTable, String>("quantity")
+                new PropertyValueFactory<CheckItemsTable, String>("quantity")
         );
-        overnight.setCellValueFactory(
-                new PropertyValueFactory<CheckoutTable, String>("overnight")
+        checkBox.setCellValueFactory(
+                new PropertyValueFactory<CheckItemsTable, String>("overnight")
         );
         action.setCellValueFactory(
-                new PropertyValueFactory<CheckoutTable, String>("button")
+                new PropertyValueFactory<CheckItemsTable, String>("button")
         );
 
-        checkOutTableView.setItems(data);
+        tableView.setItems(data);
 
     }
+
     public void close(){
         scene.getScene().getWindow().hide();
     }
@@ -103,5 +123,7 @@ public class CheckItemsController implements Initializable{
             c.newStage("infoPopUp.fxml", "Item Info");
         }
     }
+
+
 
 }

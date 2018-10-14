@@ -4,20 +4,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
-public class CheckoutTable {
+public class CheckItemsTable {
     private TextField studentID;
     private TextField barcode;
     private TextField partName;
     private TextField quantity;
-    private CheckBox overnight;
+    private CheckBox checkBox;
     private Button button;
 
-    CheckoutTable(String studentID, String barcode, String partName, String quantity){
+    CheckItemsTable(String studentID, String barcode, String partName, String quantity){
         this.studentID = new TextField(studentID);
         this.barcode = new TextField(barcode);
         this.partName = new TextField(partName);
         this.quantity = new TextField(quantity);
-        this.overnight = new CheckBox();
+        this.checkBox = new CheckBox();
         this.button = new Button ("Submit");
 
     }
@@ -55,11 +55,11 @@ public class CheckoutTable {
     }
 
     public CheckBox getOvernight() {
-        return overnight;
+        return checkBox;
     }
 
     public void setOvernight(CheckBox overnight) {
-        this.overnight = overnight;
+        this.checkBox = overnight;
     }
 
     public Button getButton() {
