@@ -67,7 +67,7 @@
                <tabs>
                   <Tab text="Checkout">
                      <content>
-                        <TableView fx:id="checkOutTableView" prefHeight="499.0" prefWidth="1027.0" stylesheets="@checkOutTable.css">
+                        <TableView fx:id="checkOutTableView" editable="true" prefHeight="499.0" prefWidth="1027.0" stylesheets="@checkOutTable.css">
                            <columns>
                               <TableColumn fx:id="studentID" prefWidth="75.0" text="Student ID" />
                               <TableColumn fx:id="barcode" prefWidth="75.0" text="Barcode" />
@@ -84,7 +84,7 @@
                   </Tab>
                   <Tab text="Checkin">
                      <content>
-                        <TableView fx:id="checkInTableView" prefHeight="499.0" prefWidth="1027.0" stylesheets="@checkOutTable.css">
+                        <TableView fx:id="checkInTableView" editable="true" prefHeight="499.0" prefWidth="1027.0" stylesheets="@checkOutTable.css">
                            <columns>
                               <TableColumn fx:id="studentIDCheckin" prefWidth="75.0" text="Student ID" />
                               <TableColumn fx:id="barcodeCheckin" prefWidth="75.0" text="Barcode" />
@@ -155,7 +155,7 @@
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
-            <Button mnemonicParsing="false" text="Clear Fields" />
+            <Button mnemonicParsing="false" onAction="#clearFields" text="Clear Fields" />
         <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
             <Button fx:id="returnHome" mnemonicParsing="false" onAction="#returnHome" text="Return to Home" />
       </children>

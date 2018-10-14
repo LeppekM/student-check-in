@@ -1,65 +1,82 @@
 package gui;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 public class CheckItemsTable {
-    private TextField studentID;
-    private TextField barcode;
-    private TextField partName;
-    private TextField quantity;
+    private final SimpleStringProperty studentID;
+    private final SimpleStringProperty barcode;
+    private final SimpleStringProperty partName;
+    private final SimpleStringProperty quantity;
     private CheckBox checkBox;
     private Button button;
 
     CheckItemsTable(String studentID, String barcode, String partName, String quantity){
-        this.studentID = new TextField(studentID);
-        this.barcode = new TextField(barcode);
-        this.partName = new TextField(partName);
-        this.quantity = new TextField(quantity);
+        this.studentID = new SimpleStringProperty(studentID);
+        this.barcode = new SimpleStringProperty(barcode);
+        this.partName = new SimpleStringProperty(partName);
+        this.quantity = new SimpleStringProperty(quantity);
         this.checkBox = new CheckBox();
         this.button = new Button ("Submit");
-
     }
 
-    public TextField getStudentID() {
+
+    public String getStudentID() {
+        return studentID.get();
+    }
+
+    public SimpleStringProperty studentIDProperty() {
         return studentID;
     }
 
-    public void setStudentID(TextField studentID) {
-        this.studentID = studentID;
+    public void setStudentID(String studentID) {
+        this.studentID.set(studentID);
     }
 
-    public TextField getBarcode() {
+    public String getBarcode() {
+        return barcode.get();
+    }
+
+    public SimpleStringProperty barcodeProperty() {
         return barcode;
     }
 
-    public void setBarcode(TextField barcode) {
-        this.barcode = barcode;
+    public void setBarcode(String barcode) {
+        this.barcode.set(barcode);
     }
 
-    public TextField getPartName() {
+    public String getPartName() {
+        return partName.get();
+    }
+
+    public SimpleStringProperty partNameProperty() {
         return partName;
     }
 
-    public void setPartName(TextField partName) {
-        this.partName = partName;
+    public void setPartName(String partName) {
+        this.partName.set(partName);
     }
 
-    public TextField getQuantity() {
+    public String getQuantity() {
+        return quantity.get();
+    }
+
+    public SimpleStringProperty quantityProperty() {
         return quantity;
     }
 
-    public void setQuantity(TextField quantity) {
-        this.quantity = quantity;
+    public void setQuantity(String quantity) {
+        this.quantity.set(quantity);
     }
 
-    public CheckBox getOvernight() {
+    public CheckBox getCheckBox() {
         return checkBox;
     }
 
-    public void setOvernight(CheckBox overnight) {
-        this.checkBox = overnight;
+    public void setCheckBox(CheckBox checkBox) {
+        this.checkBox = checkBox;
     }
 
     public Button getButton() {

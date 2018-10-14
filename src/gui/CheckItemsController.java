@@ -2,10 +2,12 @@ package gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -73,38 +75,25 @@ public class CheckItemsController implements Initializable{
     }
 
     private void setCheckinItems() {
-        generateInfo(studentIDCheckin, barcodeCheckin, partNameCheckin, quantityCheckin, fault, actionCheckin, checkInTableView);
+        generateTables(fault, actionCheckin, checkInTableView);
     }
     private void setCheckoutItems() {
-        generateInfo(studentID, barcode, partName, quantity, overnight, action, checkOutTableView);
+        generateTables(overnight, action, checkOutTableView);
     }
 
-    private void generateInfo(TableColumn studentID, TableColumn barcode, TableColumn partName, TableColumn quantity, TableColumn checkBox, TableColumn action, TableView tableView) {
+    private void generateTables(TableColumn checkBox, TableColumn action, TableView tableView) {
         ObservableList<CheckItemsTable> data = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
+        setCheckoutTableEditableFields();
 
-
-        studentID.setCellValueFactory(
-                new PropertyValueFactory<CheckItemsTable, String>("studentID")
-        );
-        barcode.setCellValueFactory(
-                new PropertyValueFactory<CheckItemsTable, String>("barcode")
-        );
-        partName.setCellValueFactory(
-                new PropertyValueFactory<CheckItemsTable, String>("partName")
-        );
-        quantity.setCellValueFactory(
-                new PropertyValueFactory<CheckItemsTable, String>("quantity")
-        );
         checkBox.setCellValueFactory(
-                new PropertyValueFactory<CheckItemsTable, String>("overnight")
+                new PropertyValueFactory<CheckItemsTable, String>("checkBox")
         );
         action.setCellValueFactory(
                 new PropertyValueFactory<CheckItemsTable, String>("button")
         );
-
         tableView.setItems(data);
-
     }
+
 
     public void close(){
         scene.getScene().getWindow().hide();
@@ -124,6 +113,117 @@ public class CheckItemsController implements Initializable{
         }
     }
 
+    private void makeStudentIDEditable(){
+        studentID.setCellFactory(TextFieldTableCell.forTableColumn());
+        studentID.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                        ((CheckItemsTable) event.getTableView().getItems().get(
+                                event.getTablePosition().getRow())
+                        ).setStudentID(event.getNewValue());
+                    }
+                }
+        );
+        studentIDCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
+        studentIDCheckin.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                        ((CheckItemsTable) event.getTableView().getItems().get(
+                                event.getTablePosition().getRow())
+                        ).setStudentID(event.getNewValue());
+                    }
+                }
+        );
+    }
 
+    private void makeBarcodeEditable(){
+        barcode.setCellFactory(TextFieldTableCell.forTableColumn());
+        barcode.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                        ((CheckItemsTable) event.getTableView().getItems().get(
+                                event.getTablePosition().getRow())
+                        ).setBarcode(event.getNewValue());
+                    }
+                }
+        );
+        barcodeCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
+        barcodeCheckin.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                        ((CheckItemsTable) event.getTableView().getItems().get(
+                                event.getTablePosition().getRow())
+                        ).setBarcode(event.getNewValue());
+                    }
+                }
+        );
+    }
+
+    private void makePartNameEditable(){
+        partName.setCellFactory(TextFieldTableCell.forTableColumn());
+        partName.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                        ((CheckItemsTable) event.getTableView().getItems().get(
+                                event.getTablePosition().getRow())
+                        ).setPartName(event.getNewValue());
+                    }
+                }
+        );
+        partNameCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
+        partNameCheckin.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                        ((CheckItemsTable) event.getTableView().getItems().get(
+                                event.getTablePosition().getRow())
+                        ).setPartName(event.getNewValue());
+                    }
+                }
+        );
+    }
+
+    private void makeQuantityEditable(){
+        quantity.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantity.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                        ((CheckItemsTable) event.getTableView().getItems().get(
+                                event.getTablePosition().getRow())
+                        ).setQuantity(event.getNewValue());
+                    }
+                }
+        );
+        quantityCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantityCheckin.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                        ((CheckItemsTable) event.getTableView().getItems().get(
+                                event.getTablePosition().getRow())
+                        ).setQuantity(event.getNewValue());
+                    }
+                }
+        );
+    }
+
+    private void setCheckoutTableEditableFields(){
+        makeStudentIDEditable();
+        makeBarcodeEditable();
+        makePartNameEditable();
+        makeQuantityEditable();
+    }
+
+
+
+    public void clearFields(){
+        System.out.println(studentID.getColumns().get(0).toString());
+    }
 
 }
