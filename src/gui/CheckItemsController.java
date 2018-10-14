@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.lang.reflect.Parameter;
 import java.net.URL;
@@ -89,8 +90,11 @@ public class CheckItemsController implements Initializable{
         scene.getScene().getWindow().hide();
     }
 
-    public void returnHome(){
+    public void returnHome()throws Exception{
         scene.getScene().getWindow().hide();
+        Stage stage = new Stage();
+        StudentCheckin studentCheckin = new StudentCheckin();
+        studentCheckin.start(stage);
     }
 
     public void popUp(MouseEvent mouseEvent) {
