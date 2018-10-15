@@ -17,16 +17,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ManageStudentsController implements Initializable {
+public class ManageWorkersController implements Initializable {
 
     @FXML
     private VBox scene;
 
     @FXML
-    private Button addStudentButtonManageStudentsPage,
-            viewStudentButtonManageStudentsPage,
-            deleteStudentButtonManageStudentsPage,
-            backToHomeButtonManageStudentsPage;
+    private Button addWorkerButtonManageWorkersPage,
+            viewWorkerButtonManageWrokersPage,
+            deleteWorkerButtonManageWorkersPage,
+            backToHomeButtonManageWorkersPage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -43,25 +43,25 @@ public class ManageStudentsController implements Initializable {
         }
     }
 
-    public void addStudent() {
+    public void addWorker() {
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("AddStudent.fxml"));
+            Pane pane = FXMLLoader.load(getClass().getResource("AddWorker.fxml"));
             Scene scene = new Scene(pane);
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
-            diffStage.setTitle("Add Student");
+            diffStage.setTitle("Add Worker");
             diffStage.showAndWait();
         } catch (IOException e) {
 
         }
     }
 
-    public void viewStudent() {
+    public void viewWorker() {
 
     }
 
-    public void deleteStudent() {
+    public void deleteWorker() {
 
     }
 
