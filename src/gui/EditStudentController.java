@@ -28,7 +28,7 @@ public class EditStudentController {
 
     public void checkEmail(KeyEvent keyEvent) {
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
-            if(!studentEmail.getText().matches("^(.+)@msoe\\.edu$")){
+            if(!studentEmail.getText().matches("^(\\w+)@msoe\\.edu$")){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error, invalid email was entered.\nNeeds to be an MSOE email");
                 alert.showAndWait();
             }
