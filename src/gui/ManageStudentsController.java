@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -53,7 +53,7 @@ public class ManageStudentsController implements Initializable {
             diffStage.setTitle("Add Student");
             diffStage.showAndWait();
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 

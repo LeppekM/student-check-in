@@ -12,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,8 +32,22 @@ public class AddStudentController implements Initializable {
     }
 
     public void addStudent() {
-
+        Student student = new Student("Stu Dent", null, "stud@test.edu");
+        writeStudent(student);
     }
+
+    private void writeStudent(Student student) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/students.txt", true))) {
+            bw.write(student.getName() + "\t" + student.getEmail() + "\r\n");
+            System.out.println("done");
+
+            //writer.write(name + "\t" + email + "\r\n");
+            //writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void cancel() {
         scene.getScene().getWindow().hide();
