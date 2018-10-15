@@ -14,6 +14,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -145,7 +146,10 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <ImageView fitHeight="194.0" fitWidth="210.0" layoutX="674.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="217.0" fitWidth="208.0" layoutX="664.0" layoutY="13.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../msoe.png" />
+                                 </image></ImageView>
                            </children>
                         </Pane>
                      </content></Tab>

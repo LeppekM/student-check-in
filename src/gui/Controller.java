@@ -49,7 +49,7 @@ public class Controller implements Initializable {
         newStage("openInventory.fxml", "Inventory");
     }
 
-    public void manageStudents(){
+    public void manageStudents() {
         newStage("ManageStudents.fxml", "Manage Students");
     }
 

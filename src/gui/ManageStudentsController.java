@@ -58,7 +58,18 @@ public class ManageStudentsController implements Initializable {
     }
 
     public void viewStudent() {
-
+        try {
+            Stage diffStage = new Stage();
+            Pane pane = FXMLLoader.load(getClass().getResource("EditStudent.fxml"));
+            Scene scene = new Scene(pane);
+            diffStage.setScene(scene);
+            diffStage.initModality(Modality.APPLICATION_MODAL);
+            diffStage.setTitle("Edit Student");
+            diffStage.showAndWait();
+        }catch(IOException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+        }
     }
 
     public void deleteStudent() {
