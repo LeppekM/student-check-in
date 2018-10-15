@@ -54,15 +54,15 @@ public class Controller implements Initializable {
         newStage("manageWorkers.fxml", "Manage Workers");
     }
 
-    private void newStage(String fxml, String title){
+    public void newStage(String fxml, String title){
         try {
-            Stage designCar = new Stage();
+            Stage diffStage = new Stage();
             Pane pane = FXMLLoader.load(getClass().getResource(fxml));
             Scene scene = new Scene(pane);
-            designCar.setScene(scene);
-            designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle(title);
-            designCar.showAndWait();
+            diffStage.setScene(scene);
+            diffStage.initModality(Modality.APPLICATION_MODAL);
+            diffStage.setTitle(title);
+            diffStage.showAndWait();
         }
         catch(IOException invoke){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");

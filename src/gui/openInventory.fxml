@@ -72,7 +72,7 @@
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                              <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                              <TableView id="tableInv" fx:id="tableInv" layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
                                  <columns>
                                     <TableColumn prefWidth="169.0" resizable="false" text="Part Name" />
                                     <TableColumn prefWidth="124.0" resizable="false" text="Serial Number" />
