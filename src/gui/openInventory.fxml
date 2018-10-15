@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerInventory">
+<VBox fx:id="sceneInv" prefHeight="500.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerInventory">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -72,12 +72,12 @@
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                              <TableView id="tableInv" fx:id="tableInv" layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                              <TableView id="tableInv" fx:id="tableView" layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
                                  <columns>
-                                    <TableColumn prefWidth="169.0" resizable="false" text="Part Name" />
-                                    <TableColumn prefWidth="124.0" resizable="false" text="Serial Number" />
-                                    <TableColumn prefWidth="174.0" resizable="false" text="Manufacturer" />
-                                    <TableColumn prefWidth="73.0" resizable="false" text="Quantity" />
+                                    <TableColumn fx:id="partName" prefWidth="169.0" resizable="false" text="Part Name" />
+                                    <TableColumn fx:id="serialNumber" prefWidth="124.0" resizable="false" text="Serial Number" />
+                                    <TableColumn fx:id="manufacturer" prefWidth="174.0" resizable="false" text="Manufacturer" />
+                                    <TableColumn fx:id="quantity" prefWidth="73.0" resizable="false" text="Quantity" />
                                  </columns>
                               </TableView>
                            </children>
