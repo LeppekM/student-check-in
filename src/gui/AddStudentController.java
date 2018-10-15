@@ -26,23 +26,33 @@ public class AddStudentController implements Initializable {
     @FXML
     private Button addButtonAddStudentPage, cancelButtonAddStudentPage;
 
+    @FXML
+    private TextField studentNameInputAddStudentPage,
+                    studentRFIDInputAddStudentPage,
+                    studentEmailInputAddStudentPage;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addButtonAddStudentPage.setAlignment(Pos.CENTER);
     }
 
     public void addStudent() {
-        Student student = new Student("Stu Dent", null, "stud@test.edu");
-        writeStudent(student);
+        String name = studentNameInputAddStudentPage.getText();
+        String rfid = studentRFIDInputAddStudentPage.getText();
+        String email = studentEmailInputAddStudentPage.getText();
+        if(!email.matches("^(.+)@msoe\\.edu$")){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, invalid email was entered.\nNeeds to be an MSOE email");
+            alert.showAndWait();
+        } else if (!name.equals("") && !rfid.equals("")) {
+            Student student = new Student(name, rfid, email);
+            writeStudent(student);
+            scene.getScene().getWindow().hide();
+        }
     }
 
     private void writeStudent(Student student) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/students.txt", true))) {
-            bw.write(student.getName() + "\t" + student.getEmail() + "\r\n");
-            System.out.println("done");
-
-            //writer.write(name + "\t" + email + "\r\n");
-            //writer.close();
+            bw.write(student.getName() + "," + student.getRfid() + "," + student.getEmail() + "\r\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

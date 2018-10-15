@@ -20,11 +20,24 @@
                               <Insets right="5.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="nameInputAddStudentPage" />
+                        <TextField fx:id="studentNameInputAddStudentPage" />
                      </children>
                      <opaqueInsets>
                         <Insets bottom="15.0" />
                      </opaqueInsets>
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label text="Student RFID:">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="studentRFIDInputAddStudentPage" />
+                     </children>
                      <VBox.margin>
                         <Insets bottom="15.0" />
                      </VBox.margin>
@@ -36,20 +49,7 @@
                               <Insets right="5.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="emailInputAddStudentPage" />
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="15.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox>
-                     <children>
-                        <Label text="Student ID:">
-                           <HBox.margin>
-                              <Insets right="5.0" />
-                           </HBox.margin>
-                        </Label>
-                        <TextField fx:id="studentIDInputAddStudentPage" />
+                        <TextField fx:id="studentEmailInputAddStudentPage" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="15.0" />
