@@ -20,7 +20,7 @@ public class EditStudentController {
     private void checkDate(KeyEvent keyEvent) {
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
             if(!dateOfRental.getText().matches("[0-1][0-9]\\/[0-3][0-9]\\/[0-9]{4}")){
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, invalid date was entered");
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, invalid date was entered.\nCheck format (mm/dd/yyyy)");
                 alert.showAndWait();
             }
         }
