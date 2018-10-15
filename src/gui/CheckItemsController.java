@@ -73,7 +73,6 @@ public class CheckItemsController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         setCheckoutItems();
         setCheckinItems();
     }
@@ -126,7 +125,9 @@ public class CheckItemsController implements Initializable{
                         ((CheckItemsTable) event.getTableView().getItems().get(
                                 event.getTablePosition().getRow())
                         ).setStudentID(event.getNewValue());
+
                     }
+
                 }
         );
         studentIDCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -251,7 +252,16 @@ public class CheckItemsController implements Initializable{
             data.get(i).setStudentID("");
             data.get(i).setPartName("");
             data.get(i).setBarcode("");
+            data.get(i).getCheckBox().setSelected(false);
         }
     }
+
+    public void newRow(){
+        checkoutData.add(new CheckItemsTable("","","",""));
+        generateTables(fault, action,checkOutTableView, checkoutData );
+    }
+
+
+
 
 }
