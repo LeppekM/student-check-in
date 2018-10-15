@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 public class CheckItemsController implements Initializable{
@@ -65,6 +66,9 @@ public class CheckItemsController implements Initializable{
     @FXML
     ListView checkOutTable, savedTable;
 
+    private ObservableList<CheckItemsTable> checkoutData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
+    private ObservableList<CheckItemsTable> checkinData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
+
 
 
     @Override
@@ -75,14 +79,14 @@ public class CheckItemsController implements Initializable{
     }
 
     private void setCheckinItems() {
-        generateTables(fault, actionCheckin, checkInTableView);
+        generateTables(fault, actionCheckin, checkInTableView, checkinData);
     }
     private void setCheckoutItems() {
-        generateTables(overnight, action, checkOutTableView);
+        generateTables(overnight, action, checkOutTableView, checkoutData);
     }
 
-    private void generateTables(TableColumn checkBox, TableColumn action, TableView tableView) {
-        ObservableList<CheckItemsTable> data = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
+    private void generateTables(TableColumn checkBox, TableColumn action, TableView tableView, ObservableList data) {
+        //ObservableList<CheckItemsTable> data = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
         setCheckoutTableEditableFields();
 
         checkBox.setCellValueFactory(
@@ -223,7 +227,31 @@ public class CheckItemsController implements Initializable{
 
 
     public void clearFields(){
-        System.out.println(studentID.getColumns().get(0).toString());
+        clearCheckinData();
+        clearCheckoutdata();
+        checkInTableView.refresh();
+        checkOutTableView.refresh();
+    }
+
+
+    private void clearCheckinData(){
+        clearData(checkinData);
+    }
+
+    private void clearCheckoutdata(){
+        clearData(checkoutData);
+    }
+
+    /**
+     * Not very elegant solution, but works. Will remake after the spike.
+     */
+    private void clearData(ObservableList<CheckItemsTable> data) {
+        for(int i = 0; i< data.size(); i++){
+            data.get(i).setQuantity("");
+            data.get(i).setStudentID("");
+            data.get(i).setPartName("");
+            data.get(i).setBarcode("");
+        }
     }
 
 }
