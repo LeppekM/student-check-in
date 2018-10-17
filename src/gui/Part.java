@@ -1,5 +1,7 @@
 package gui;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Part {
 
     private static String name;
