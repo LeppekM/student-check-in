@@ -65,6 +65,7 @@ public class Controller implements Initializable {
         catch(IOException invoke){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
+            invoke.printStackTrace();
 
         }
     }

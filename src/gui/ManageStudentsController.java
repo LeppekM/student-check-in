@@ -1,8 +1,10 @@
 package gui;
 
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,9 +25,7 @@ import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,7 +92,40 @@ public class ManageStudentsController implements Initializable {
     }
 
     public void deleteStudent() {
+        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItems() != null) {
+            String col;
+            String pattern = "String Property value: [value: (*)]";
+            for (int i = 0; i < studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().size(); i++) {
+                // get the value of the third column
+                col = studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().get(i).toString().split(", ")[2];
+                col = col.substring(col.indexOf(": ") + 2, col.indexOf("]]"));
+                //col = col.matches("String Property value: (*)");
+                removeFromTextFile(col);
+            }
+            studentsTableManageStudentsPage.getItems().removeAll(studentsTableManageStudentsPage.getSelectionModel().getSelectedItems());
+        }
+    }
 
+    public void removeFromTextFile(String email) {
+        try {
+            File inputFile = new File("src/students.txt");
+            BufferedReader r = new BufferedReader(new FileReader(inputFile));
+            String line;
+            String lines = "";
+            while ((line = r.readLine()) != null) {
+                if (!line.contains(email)) {
+                    lines += line + "\r\n";
+                }
+            }
+            BufferedWriter w = new BufferedWriter(new FileWriter(inputFile, false));
+            w.write(lines);
+            w.close();
+            r.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     public void populateTable() {
@@ -110,7 +143,6 @@ public class ManageStudentsController implements Initializable {
             studentsTableManageStudentsPage.getColumns().add(createColumn(0, "Student Name"));
             studentsTableManageStudentsPage.getColumns().add(createColumn(1, "Student RFID"));
             studentsTableManageStudentsPage.getColumns().add(createColumn(2, "Student Email"));
-
             while ((line = br.readLine()) != null) {
                 final String[] items = line.split(",");
                 for (int columnIndex = studentsTableManageStudentsPage.getColumns().size(); columnIndex < items.length; columnIndex++) {
@@ -121,11 +153,13 @@ public class ManageStudentsController implements Initializable {
                     data.add(new SimpleStringProperty(value));
                 }
                 studentsTableManageStudentsPage.getItems().add(data);
+                studentsTableManageStudentsPage.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+//                    System.out.println(studentsTableManageStudentsPage.getSelectionModel().getSelectedItem().getClass());
+                });
             }
         } catch (IOException e) {
             System.out.println(e);
         }
-
     }
 
     private TableColumn<ObservableList<StringProperty>, String> createColumn(
@@ -139,19 +173,18 @@ public class ManageStudentsController implements Initializable {
             title = columnTitle;
         }
         column.setText(title);
-        column
-                .setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
-                    @Override
-                    public ObservableValue<String> call(
-                            TableColumn.CellDataFeatures<ObservableList<StringProperty>, String> cellDataFeatures) {
-                        ObservableList<StringProperty> values = cellDataFeatures.getValue();
-                        if (columnIndex >= values.size()) {
-                            return new SimpleStringProperty("");
-                        } else {
-                            return cellDataFeatures.getValue().get(columnIndex);
-                        }
-                    }
-                });
+        column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(
+                    TableColumn.CellDataFeatures<ObservableList<StringProperty>, String> cellDataFeatures) {
+                ObservableList<StringProperty> values = cellDataFeatures.getValue();
+                if (columnIndex >= values.size()) {
+                    return new SimpleStringProperty("");
+                } else {
+                    return cellDataFeatures.getValue().get(columnIndex);
+                }
+            }
+        });
         return column;
     }
 
