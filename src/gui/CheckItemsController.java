@@ -1,7 +1,9 @@
 package gui;
 
+import database.Database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,6 +70,8 @@ public class CheckItemsController implements Initializable{
 
     private ObservableList<CheckItemsTable> checkoutData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
     private ObservableList<CheckItemsTable> checkinData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
+    Database database = new Database();
+
 
 
 
@@ -75,6 +79,7 @@ public class CheckItemsController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         setCheckoutItems();
         setCheckinItems();
+
     }
 
     private void setCheckinItems() {
@@ -259,6 +264,14 @@ public class CheckItemsController implements Initializable{
     public void newRow(){
         checkoutData.add(new CheckItemsTable("","","",""));
         generateTables(fault, action,checkOutTableView, checkoutData );
+    }
+
+
+    public void test(){
+
+        database.addStudentID(checkoutData.get(0).getStudentID(), Integer.parseInt(checkoutData.get(0).getBarcode()));
+
+
     }
 
 

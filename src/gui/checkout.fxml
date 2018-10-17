@@ -156,6 +156,7 @@
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
             <Button mnemonicParsing="false" onAction="#clearFields" text="Clear Fields" />
+            <Button mnemonicParsing="false" onAction="#test" text="Submit " />
         <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button fx:id="newRow" layoutX="8.0" mnemonicParsing="false" onAction="#newRow" text="New Row" />
