@@ -72,7 +72,7 @@
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                              <TableView id="tableInv" fx:id="tableView" layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                              <TableView id="tableInv" fx:id="tableView" layoutY="81.0" prefHeight="360.0" prefWidth="675.0">
                                  <columns>
                                     <TableColumn fx:id="partName" prefWidth="169.0" resizable="false" text="Part Name" />
                                     <TableColumn fx:id="serialNumber" prefWidth="124.0" resizable="false" text="Serial Number" />
@@ -80,6 +80,8 @@
                                     <TableColumn fx:id="quantity" prefWidth="73.0" resizable="false" text="Quantity" />
                                  </columns>
                               </TableView>
+                              <Button fx:id="add" layoutX="553.0" layoutY="445.0" mnemonicParsing="false" onAction="#addItem" prefHeight="25.0" prefWidth="53.0" text="Add" />
+                              <Button fx:id="remove" layoutX="609.0" layoutY="445.0" mnemonicParsing="false" onAction="#removeItem" text="Remove" />
                            </children>
                         </AnchorPane>
                      </content>

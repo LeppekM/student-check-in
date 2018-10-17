@@ -65,10 +65,10 @@ public class ControllerInventory implements Initializable {
         }
     }
 
-    private void addItem(){
+    public void addItem(){
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("addPart.fxml"));
+            Pane pane = FXMLLoader.load(getClass().getResource("addItem.fxml"));
             Scene scene = new Scene(pane);
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
@@ -82,7 +82,7 @@ public class ControllerInventory implements Initializable {
         }
     }
 
-    private void removeItem(){
+    public void removeItem(){
         try {
             Stage diffStage = new Stage();
             Pane pane = FXMLLoader.load(getClass().getResource("removeConfirmation.fxml"));
