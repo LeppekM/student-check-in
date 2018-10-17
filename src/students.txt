@@ -1,3 +1,7 @@
-Stu Dent	stud@test.edu
-Stu Dent	stud@test.edu
-Stu Dent	stud@test.edu
+Joe,,gilpinj@msoe.edu
+Joe,qwer,gilpinj@msoe.edu
+adsf,,af@msoe.edu
+,,gilpinj@msoe.edu
+,,d@msoe.edu
+d,,gilpinj@msoe.edu
+a,a,d@msoe.edu

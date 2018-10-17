@@ -1,5 +1,11 @@
 package gui;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -7,15 +13,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ManageStudentsController implements Initializable {
 
@@ -23,14 +35,20 @@ public class ManageStudentsController implements Initializable {
     private VBox scene;
 
     @FXML
+    private TableView studentsTableManageStudentsPage;
+
+    @FXML
     private Button addStudentButtonManageStudentsPage,
             viewStudentButtonManageStudentsPage,
             deleteStudentButtonManageStudentsPage,
             backToHomeButtonManageStudentsPage;
 
+    @FXML
+    private TableColumn studentNameColumn, studentRFIDColumn, studentEmailColumn;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        populateTable();
     }
 
     public void backToHome() {
@@ -52,6 +70,7 @@ public class ManageStudentsController implements Initializable {
             diffStage.initModality(Modality.APPLICATION_MODAL);
             diffStage.setTitle("Add Student");
             diffStage.showAndWait();
+            populateTable();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,6 +93,66 @@ public class ManageStudentsController implements Initializable {
 
     public void deleteStudent() {
 
+    }
+
+    public void populateTable() {
+        List<String> columns = new ArrayList<String>();
+        List<String> rows = new ArrayList<String>();
+        ObservableList<ObservableList> csvData = FXCollections.observableArrayList();
+
+        try {
+            FileReader fr = new FileReader("src/students.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            int i = 0;
+            studentsTableManageStudentsPage.getItems().clear();
+            studentsTableManageStudentsPage.getColumns().clear();
+            studentsTableManageStudentsPage.getColumns().add(createColumn(0, "Student Name"));
+            studentsTableManageStudentsPage.getColumns().add(createColumn(1, "Student RFID"));
+            studentsTableManageStudentsPage.getColumns().add(createColumn(2, "Student Email"));
+
+            while ((line = br.readLine()) != null) {
+                final String[] items = line.split(",");
+                for (int columnIndex = studentsTableManageStudentsPage.getColumns().size(); columnIndex < items.length; columnIndex++) {
+                    studentsTableManageStudentsPage.getColumns().add(createColumn(columnIndex, ""));
+                }
+                ObservableList<StringProperty> data = FXCollections.observableArrayList();
+                for (String value : items) {
+                    data.add(new SimpleStringProperty(value));
+                }
+                studentsTableManageStudentsPage.getItems().add(data);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+    }
+
+    private TableColumn<ObservableList<StringProperty>, String> createColumn(
+            final int columnIndex, String columnTitle) {
+        TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
+        column.setPrefWidth(150);
+        String title;
+        if (columnTitle == null || columnTitle.trim().length() == 0) {
+            title = "Column " + (columnIndex + 1);  // DELETE??
+        } else {
+            title = columnTitle;
+        }
+        column.setText(title);
+        column
+                .setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
+                    @Override
+                    public ObservableValue<String> call(
+                            TableColumn.CellDataFeatures<ObservableList<StringProperty>, String> cellDataFeatures) {
+                        ObservableList<StringProperty> values = cellDataFeatures.getValue();
+                        if (columnIndex >= values.size()) {
+                            return new SimpleStringProperty("");
+                        } else {
+                            return cellDataFeatures.getValue().get(columnIndex);
+                        }
+                    }
+                });
+        return column;
     }
 
 }
