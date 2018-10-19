@@ -18,8 +18,8 @@ public class InfoPopUp {
         if (save.isSelected()){
             CheckItemsController cc = new CheckItemsController();
             Part part; //need inventory/database to have a list of parts so that I can comapre name.getText() to the name of a part and use that info to create a new item in the save items table
-            if(cc.checkOutTable.getItems.contains(name.getText()){
-                cc.savedTable.getItems.add(new Part(name.getText(), Long.parseLong(serialNumber.getText()), "me", 12345, .99, "you", "shelf", "B123", false, 460753));
+            if(cc.checkOutTable.getItems().contains(name.getText())){
+                cc.savedTable.getItems().add(new Part(name.getText(), Long.parseLong(serialNumber.getText()), "me", 12345, .99, "you", "shelf", "B123", false, 460753));
                 cc.savedTable.refresh();
             }
         }
