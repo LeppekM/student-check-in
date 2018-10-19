@@ -15,7 +15,6 @@ public class ExtendedPart extends Part {
  
     public void setName(String prof) {
         this.professor.set(prof);
-    }
     
     public static String getCourseID() {
         return courseID;
