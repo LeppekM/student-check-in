@@ -46,7 +46,7 @@
                         <HBox prefHeight="100.0" prefWidth="200.0">
                             <children>
                                 <Label text="Administrator:" />
-                                <CheckBox mnemonicParsing="false">
+                                <CheckBox fx:id="isAdminCheckBoxAddWorkerPage" mnemonicParsing="false">
                                    <padding>
                                       <Insets left="5.0" />
                                    </padding></CheckBox>
