@@ -29,11 +29,11 @@ public class ExtendedPart extends Part {
         ExtendedPart.courseID = courseID;
     }
 
-    public static String getDueDate() {
+    public static Date getDueDate() {
         return dueDate;
     }
 
     public static void setDueDate(String dueDate) {
-        ExtendedPart.dueDate = dueDate;
+        this.dueDate = dueDate;
     }
 }
