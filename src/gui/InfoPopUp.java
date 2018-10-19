@@ -13,6 +13,13 @@ public class InfoPopUp {
 
     @FXML
     TextField name, serialNumber;
+    
+    public void saveItem(){
+        if (save.isSelected()){
+            CheckItemsController cc = new CheckItemsController();
+        }
+    }
+}
 
 //    public void saveItem(){
 //        if (save.isSelected()){
@@ -35,4 +42,3 @@ public class InfoPopUp {
 //            }
 //        }
 //    }
-}
