@@ -4,15 +4,15 @@ import javafx.beans.property.*;
 
 public class Part {
 
-    private final SimpleStringProperty partName, manufacturer, vendor, location, barcode;
+    private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, barcode;
     private final SimpleDoubleProperty price;
     private final SimpleIntegerProperty quantity;
-    private final SimpleLongProperty serialNumber, studentId;
+    private final SimpleLongProperty studentId;
     private final SimpleBooleanProperty fault;
 
-    public Part(String partName, long serialNumber, String manufacturer, int quantity, double price, String vendor, String location, String barcode, boolean fault, long studentId){
+    public Part(String partName, String serialNumber, String manufacturer, int quantity, double price, String vendor, String location, String barcode, boolean fault, long studentId){
         this.partName = new SimpleStringProperty(partName);
-        this.serialNumber = new SimpleLongProperty(serialNumber);
+        this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
         this.quantity = new SimpleIntegerProperty(quantity);
         this.price = new SimpleDoubleProperty(price);
@@ -31,11 +31,11 @@ public class Part {
         this.partName.set(name);
     }
 
-    public long getSerial() {
+    public String getSerial() {
         return this.serialNumber.get();
     }
 
-    public void setSerial(long serial) {
+    public void setSerial(String serial) {
         this.serialNumber.set(serial);
     }
 
