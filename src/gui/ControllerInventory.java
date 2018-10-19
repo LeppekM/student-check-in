@@ -7,10 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -51,6 +48,16 @@ public class ControllerInventory implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         populateTable();
+        tableView.setRowFactory(tv -> {
+            TableRow<Part> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    Part rowData = row.getItem();
+                    editItem(rowData);
+                }
+            });
+            return row ;
+        });
     }
 
     private void populateTable() {
@@ -151,14 +158,14 @@ public class ControllerInventory implements Initializable {
     }
 
     @FXML
-    public void removeItem(){
+    public void editItem(Part part){
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("removeConfirmation.fxml"));
+            Pane pane = FXMLLoader.load(getClass().getResource("editItem.fxml"));
             Scene scene = new Scene(pane);
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
-            diffStage.setTitle("Are you sure?");
+            diffStage.setTitle("Edit Part");
             diffStage.showAndWait();
         }
         catch(IOException invoke){
@@ -166,5 +173,23 @@ public class ControllerInventory implements Initializable {
             alert.showAndWait();
 
         }
+    }
+
+    @FXML
+    public void removeItem(){
+//        try {
+//            Stage diffStage = new Stage();
+//            Pane pane = FXMLLoader.load(getClass().getResource("removeConfirmation.fxml"));
+//            Scene scene = new Scene(pane);
+//            diffStage.setScene(scene);
+//            diffStage.initModality(Modality.APPLICATION_MODAL);
+//            diffStage.setTitle("Are you sure?");
+//            diffStage.showAndWait();
+//        }
+//        catch(IOException invoke){
+//            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+//            alert.showAndWait();
+//
+//        }
     }
 }
