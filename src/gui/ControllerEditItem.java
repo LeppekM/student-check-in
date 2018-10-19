@@ -26,10 +26,28 @@ public class ControllerEditItem implements Initializable {
     @FXML
     private Hyperlink cancel;
 
+    private Part editedPart;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+    }
+
+    public void initData(Part part){
+        editedPart = part;
+        populateFields(editedPart);
+    }
+
+    @FXML
+    private void populateFields(Part part){
+        nameField.setText(part.getName());
+        serialField.setText(String.valueOf(part.getSerial()));
+        manufacturerField.setText(part.getManufacturer());
+        quantityField.setText(String.valueOf(part.getQuantity()));
+        priceField.setText(String.valueOf(part.getPrice()));
+        vendorField.setText(part.getVendor());
+        barcodeField.setText(part.getBarcode());
     }
 
     @FXML

@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -161,8 +162,10 @@ public class ControllerInventory implements Initializable {
     public void editItem(Part part){
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("editItem.fxml"));
-            Scene scene = new Scene(pane);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("editItem.fxml"));
+            Scene scene = new Scene((Pane) loader.load());
+            ControllerEditItem controller = loader.<ControllerEditItem>getController();
+            controller.initData(part);
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
             diffStage.setTitle("Edit Part");
