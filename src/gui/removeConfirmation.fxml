@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="sceneRemovePart" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerRemoveItem">
-   <children>
-      <AnchorPane prefHeight="200.0" prefWidth="500.0">
-         <children>
-            <Pane prefHeight="200.0" prefWidth="500.0">
-               <children>
-                  <Button fx:id="submit" layoutX="381.0" layoutY="161.0" mnemonicParsing="false" onAction="#removeItem" text="Submit Changes" />
-                  <Hyperlink fx:id="cancel" layoutX="324.0" layoutY="162.0" onAction="#goBack" text="Cancel" />
-                  <Label fx:id="warningText" layoutX="69.0" layoutY="31.0" text="Are you sure you want to remove these items?" />
-               </children>
-            </Pane>
-         </children>
-      </AnchorPane>
-   </children>
+<VBox fx:id="sceneRemovePart" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="gui.ControllerRemoveItem">
+  <children>
+    <AnchorPane prefHeight="200.0" prefWidth="500.0">
+      <children>
+        <Pane prefHeight="200.0" prefWidth="500.0">
+          <children>
+            <Button fx:id="submit" layoutX="381.0" layoutY="161.0" mnemonicParsing="false" onAction="#removeItem" text="Submit Changes" />
+            <Hyperlink fx:id="cancel" layoutX="324.0" layoutY="162.0" onAction="#goBack" text="Cancel" />
+            <Label fx:id="warningText" layoutX="127.0" layoutY="59.0" text="Are you sure you want to remove these items?" />
+          </children>
+        </Pane>
+      </children>
+    </AnchorPane>
+  </children>
 </VBox>

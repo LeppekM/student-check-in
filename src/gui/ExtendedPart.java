@@ -1,29 +1,21 @@
 package gui;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class ExtendedPart extends Part {
 
-    private static String name;
-    private static String location;
-    private static double price;
-    private static int serialNumber;
-    private static int barcode;
-    private static String vendor;
-    private static String manufacturer;
-    private static boolean fault;
-    private static int studentID;
-    private static String prof;
+    private final SimpleStringProperty professor;
 
-    public ExtendedPart(String name, String location, double price, int serialNumber, int barcode, String vendor, String manufacturer,
-                        boolean fault, int studentID, String prof) {
-        super(name, location, price, serialNumber, barcode, vendor, manufacturer, fault, studentID);
-        setProf(prof);
+    public ExtendedPart(String partName, long serialNumber, String manufacturer, int quantity, double price, String vendor, String location, String barcode, boolean fault, long studentId, String prof){
+        super(partName, serialNumber, manufacturer, quantity, price, vendor, location, barcode, fault, studentId);
+        this.professor = new SimpleStringProperty(prof);
     }
 
-    public static String getProf() {
-        return prof;
+    public String getName() {
+        return this.professor.get();
     }
 
-    public static void setProf(String prof) {
-        ExtendedPart.prof = prof;
+    public void setName(String prof) {
+        this.professor.set(prof);
     }
 }

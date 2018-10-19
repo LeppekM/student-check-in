@@ -1,101 +1,105 @@
 package gui;
 
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 
 public class Part {
 
-    private static String name;
-    private static String location;
-    private static double price;
-    private static int serialNumber;
-    private static int barcode;
-    private static String vendor;
-    private static String manufacturer;
-    private static boolean fault;
-    private static int studentID;
+    private final SimpleStringProperty partName, manufacturer, vendor, location, barcode;
+    private final SimpleDoubleProperty price;
+    private final SimpleIntegerProperty quantity;
+    private final SimpleLongProperty serialNumber, studentId;
+    private final SimpleBooleanProperty fault;
 
-    public Part(String name, String location, double price, int serialNumber, int barcode, String vendor, String manufacturer,
-                boolean fault, int studentID){
-        setName(name);
-        setLocation(location);
-        setPrice(price);
-        setSerialNumber(serialNumber);
-        setBarcode(barcode);
-        setVendor(vendor);
-        setManufacturer(manufacturer);
-        setFault(fault);
-        setStudentID(studentID);
+    public Part(String partName, long serialNumber, String manufacturer, int quantity, double price, String vendor, String location, String barcode, boolean fault, long studentId){
+        this.partName = new SimpleStringProperty(partName);
+        this.serialNumber = new SimpleLongProperty(serialNumber);
+        this.manufacturer = new SimpleStringProperty(manufacturer);
+        this.quantity = new SimpleIntegerProperty(quantity);
+        this.price = new SimpleDoubleProperty(price);
+        this.vendor = new SimpleStringProperty(vendor);
+        this.location = new SimpleStringProperty(location);
+        this.barcode = new SimpleStringProperty(barcode);
+        this.fault = new SimpleBooleanProperty(fault);
+        this.studentId = new SimpleLongProperty(studentId);
     }
 
-    public static String getName() {
-        return name;
+    public String getName() {
+        return this.partName.get();
     }
 
-    private static void setName(String name) {
-        Part.name = name;
+    public void setName(String name) {
+        this.partName.set(name);
     }
 
-    public static String getLocation() {
-        return location;
+    public long getSerial() {
+        return this.serialNumber.get();
     }
 
-    private static void setLocation(String location) {
-        Part.location = location;
+    public void setSerial(long serial) {
+        this.serialNumber.set(serial);
     }
 
-    public static double getPrice() {
-        return price;
+    public String getManufacturer() {
+        return manufacturer.get();
     }
 
-    private static void setPrice(double price) {
-        Part.price = price;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer.set(manufacturer);
     }
 
-    public static int getSerialNumber() {
-        return serialNumber;
+    public int getQuantity() {
+        return quantity.get();
     }
 
-    private static void setSerialNumber(int serialNumber) {
-        Part.serialNumber = serialNumber;
+    public void setQuantity(int quant) {
+        quantity.set(quant);
     }
 
-    public static String getVendor() {
-        return vendor;
+    public double getPrice() {
+        return price.get();
     }
 
-    private static void setVendor(String vendor) {
-        Part.vendor = vendor;
+    public void setPrice(double price) {
+        this.price.set(price);
     }
 
-    public static String getManufacturer() {
-        return manufacturer;
+    public String getVendor() {
+        return vendor.get();
     }
 
-    private static void setManufacturer(String manufacturer) {
-        Part.manufacturer = manufacturer;
+    public void setVendor(String vendor) {
+        this.vendor.set(vendor);
     }
 
-    public static boolean isFault() {
-        return fault;
+    public String getLocation() {
+        return location.get();
     }
 
-    private static void setFault(boolean fault) {
-        Part.fault = fault;
+    public void setLocation(String location) {
+        this.location.set(location);
     }
 
-    public static int getStudentID() {
-        return studentID;
+    public String getBarcode() {
+        return barcode.get();
     }
 
-    private static void setStudentID(int studentID) {
-        Part.studentID = studentID;
+    public void setBarcode(String barcode) {
+        this.barcode.set(barcode);
     }
 
-    public static int getBarcode() {
-        return barcode;
+    public boolean getFault() {
+        return fault.get();
     }
 
-    private static void setBarcode(int barcode) {
-        Part.barcode = barcode;
+    public void setFault(boolean fault) {
+        this.fault.set(fault);
+    }
+
+    public long getStudentId() {
+        return studentId.get();
+    }
+
+    public void setVendor(long studentId) {
+        this.studentId.set(studentId);
     }
 }
