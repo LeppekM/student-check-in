@@ -141,10 +141,6 @@ public class ManageStudentsController implements Initializable {
     }
 
     public void populateTable() {
-        List<String> columns = new ArrayList<String>();
-        List<String> rows = new ArrayList<String>();
-        ObservableList<ObservableList> csvData = FXCollections.observableArrayList();
-
         try {
             FileReader fr = new FileReader("src/students.txt");
             BufferedReader br = new BufferedReader(fr);
@@ -165,9 +161,6 @@ public class ManageStudentsController implements Initializable {
                     data.add(new SimpleStringProperty(value));
                 }
                 studentsTableManageStudentsPage.getItems().add(data);
-                studentsTableManageStudentsPage.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-//                    System.out.println(studentsTableManageStudentsPage.getSelectionModel().getSelectedItem().getClass());
-                });
             }
         } catch (IOException e) {
             System.out.println(e);
