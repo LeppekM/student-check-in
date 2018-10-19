@@ -14,7 +14,7 @@ public class Database {
     final String username = "langdk";
     final String password = "3cisweve";
     private Statement statement;
-    private PreparedStatement preparedStatement;    
+    private PreparedStatement preparedStatement;
 
     public void addStudentID(String studentID, int barcode){
 
