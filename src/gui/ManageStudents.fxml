@@ -23,15 +23,15 @@
                 </VBox>
                 <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
                    <children>
-                      <Button fx:id="addStudentButtonManageStudentsPage" onAction="#addStudent" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Add Student">
+                      <Button fx:id="addStudentButtonManageStudentsPage" mnemonicParsing="false" onAction="#addStudent" prefHeight="50.0" prefWidth="100.0" text="Add Student">
                         <VBox.margin>
                            <Insets bottom="30.0" />
                         </VBox.margin></Button>
-                      <Button fx:id="viewStudentButtonManageStudentsPage" onAction="#viewStudent" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="View Student">
+                      <Button fx:id="viewStudentButtonManageStudentsPage" disable="true" mnemonicParsing="false" onAction="#viewStudent" prefHeight="50.0" prefWidth="100.0" text="View Student">
                         <VBox.margin>
                            <Insets bottom="15.0" top="30.0" />
                         </VBox.margin></Button>
-                      <Button fx:id="deleteStudentButtonManageStudentsPage" onAction="#deleteStudent" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Delete Student" />
+                      <Button fx:id="deleteStudentButtonManageStudentsPage" mnemonicParsing="false" onAction="#deleteStudent" prefHeight="50.0" prefWidth="100.0" text="Delete Student" />
                    </children>
                    <HBox.margin>
                       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
@@ -42,7 +42,7 @@
                <Insets bottom="15.0" />
             </VBox.margin>
           </HBox>
-           <Button fx:id="backToHomeButtonManageStudentsPage" onAction="#backToHome" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Back to Home" />
+           <Button fx:id="backToHomeButtonManageStudentsPage" mnemonicParsing="false" onAction="#backToHome" prefHeight="50.0" prefWidth="100.0" text="Back to Home" />
          <VBox.margin>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </VBox.margin>

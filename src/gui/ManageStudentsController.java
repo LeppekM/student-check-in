@@ -77,29 +77,31 @@ public class ManageStudentsController implements Initializable {
     }
 
     public void viewStudent() {
-        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItems() != null) {
-            EditStudentController esc = new EditStudentController();
-            try {
-                Stage diffStage = new Stage();
-                Pane pane = FXMLLoader.load(getClass().getResource("EditStudent.fxml"));
-                Scene scene = new Scene(pane);
-                diffStage.setScene(scene);
-                diffStage.initModality(Modality.APPLICATION_MODAL);
-                diffStage.setTitle("Edit Student");
-                String cols = "";
-                for (int i = 0; i < studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().size(); i++) {
-                    cols = studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().get(i).toString().split(",")[2];
-                    cols = cols.substring(cols.indexOf(": ") + 2, cols.indexOf("]]"));
-                }
-//            esc.studentName.setText(studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().get(0).toString().split(", ")[0]);
-//            esc.studentID.setText(studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().get(1).toString().split(", ")[1]);
-//            esc.studentEmail.setText(studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().get(2).toString().split(", ")[2]);
-//                esc.studentName.setText(cols[0]);
-                diffStage.showAndWait();
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-                alert.showAndWait();
+        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItem() != null){
+            viewStudentButtonManageStudentsPage.setDisable(false);
+        }
+        EditStudentController esc = new EditStudentController();
+        Student student = (Student) studentsTableManageStudentsPage.getSelectionModel().getSelectedItem();
+        try {
+            Stage diffStage = new Stage();
+            Pane pane = FXMLLoader.load(getClass().getResource("EditStudent.fxml"));
+            Scene scene = new Scene(pane);
+            diffStage.setScene(scene);
+            diffStage.initModality(Modality.APPLICATION_MODAL);
+            diffStage.setTitle("Edit Student");
+            if (student != null) {
+                esc.studentName.setText(student.getName());
+                esc.studentID.setText(student.getRfid());
+                esc.studentEmail.setText(student.getEmail());
+                esc.dateOfRental.setText(student.getDateOfLastCheckout().toString());
+                esc.checkedOut.setItems((ObservableList) student.getCheckedOut());
+                esc.overdueItems.setItems((ObservableList) student.getOverdue());
+                esc.savedItems.setItems((ObservableList) student.getSaved());
             }
+            diffStage.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
         }
     }
 
