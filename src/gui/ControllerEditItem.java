@@ -66,7 +66,7 @@ public class ControllerEditItem implements Initializable {
                 throw new NullPointerException("One or more fields are empty.");
             }
             String name = nameField.getText();
-            long serial = Long.parseLong(serialField.getText());
+            String serial = serialField.getText();
             String manufacturer = manufacturerField.getText();
             int quantity = Integer.parseInt(quantityField.getText());
             double price = Double.parseDouble(priceField.getText());

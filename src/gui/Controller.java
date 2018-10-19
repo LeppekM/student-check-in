@@ -19,6 +19,9 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML
+    private VBox mainMenuScene;
+
+    @FXML
     private Button manageWorkers;
 
     @FXML
@@ -46,8 +49,8 @@ public class Controller implements Initializable {
         newStage("openInventory.fxml", "Inventory");
     }
 
-    public void manageStudents(){
-        newStage("manageStudents.fxml", "Manage Students");
+    public void manageStudents() {
+        newStage("ManageStudents.fxml", "Manage Students");
     }
 
     public void manageWorkers(){
@@ -56,17 +59,13 @@ public class Controller implements Initializable {
 
     public void newStage(String fxml, String title){
         try {
-            Stage diffStage = new Stage();
             Pane pane = FXMLLoader.load(getClass().getResource(fxml));
-            Scene scene = new Scene(pane);
-            diffStage.setScene(scene);
-            diffStage.initModality(Modality.APPLICATION_MODAL);
-            diffStage.setTitle(title);
-            diffStage.showAndWait();
+            mainMenuScene.getScene().setRoot(pane);
         }
         catch(IOException invoke){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
+            invoke.printStackTrace();
 
         }
     }

@@ -41,8 +41,8 @@ public class ControllerInventory implements Initializable {
 
     private final ObservableList<Part> data
             = FXCollections.observableArrayList(
-            new Part("HDMI Cable", 234567, "Sony", 2, 5.99, "MSOE", "OUT", "H233J788", false, 533277),
-            new Part("Raspberry Pi", 567890, "Pi Foundation", 3, 29.99, "MSOE", "IN", "P845J788", true, 000000)
+            new Part("HDMI Cable", "234567", "Sony", 2, 5.99, "MSOE", "OUT", "H233J788", false, 533277),
+            new Part("Raspberry Pi", "567890", "Pi Foundation", 3, 29.99, "MSOE", "IN", "P845J788", true, 000000)
     );
 
 
