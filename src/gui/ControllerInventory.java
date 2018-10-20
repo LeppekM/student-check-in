@@ -1,6 +1,5 @@
 package gui;
 
-import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,8 +20,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -75,45 +72,23 @@ public class ControllerInventory implements Initializable {
         tableView.getItems().setAll(this.data);
     }
 
-    public void executeSqlScript(Connection conn, File inputFile) {
-
-        // Delimiter
-        String delimiter = ";";
-
-        // Create scanner
-        Scanner scanner;
-        try {
-            scanner = new Scanner(inputFile).useDelimiter(delimiter);
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-            return;
-        }
-
-        // Loop through the SQL file statements
+    private void grabSQLData(Connection conn, String rawStatement) {
         Statement currentStatement = null;
-        while(scanner.hasNext()) {
-
-            // Get statement
-            String rawStatement = scanner.next() + delimiter;
-            try {
-                // Execute statement
-                currentStatement = conn.createStatement();
-                currentStatement.execute(rawStatement);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                // Release resources
-                if (currentStatement != null) {
-                    try {
-                        currentStatement.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                currentStatement = null;
-            }
-        }
-        scanner.close();
+         try {
+             currentStatement = conn.createStatement();
+             currentStatement.execute(rawStatement);
+         } catch (SQLException e) {
+             e.printStackTrace();
+         } finally {
+             if (currentStatement != null) {
+                 try {
+                     currentStatement.close();
+                 } catch (SQLException e) {
+                     e.printStackTrace();
+                 }
+             }
+             currentStatement = null;
+         }
     }
 
     @FXML
@@ -144,7 +119,7 @@ public class ControllerInventory implements Initializable {
     public void addItem(){
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("addItem.fxml"));
+            Pane pane = FXMLLoader.load(getClass().getResource("AddItem.fxml"));
             Scene scene = new Scene(pane);
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
@@ -162,7 +137,7 @@ public class ControllerInventory implements Initializable {
     public void editItem(Part part){
         try {
             Stage diffStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("editItem.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditItem.fxml"));
             Scene scene = new Scene((Pane) loader.load());
             ControllerEditItem controller = loader.<ControllerEditItem>getController();
             controller.initData(part);
@@ -180,19 +155,14 @@ public class ControllerInventory implements Initializable {
 
     @FXML
     public void removeItem(){
-//        try {
-//            Stage diffStage = new Stage();
-//            Pane pane = FXMLLoader.load(getClass().getResource("removeConfirmation.fxml"));
-//            Scene scene = new Scene(pane);
-//            diffStage.setScene(scene);
-//            diffStage.initModality(Modality.APPLICATION_MODAL);
-//            diffStage.setTitle("Are you sure?");
-//            diffStage.showAndWait();
-//        }
-//        catch(IOException invoke){
-//            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-//            alert.showAndWait();
-//
-//        }
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        dialog.setHeaderText("Please Confirm");
+        dialog.setContentText("Are you sure you want to delete these items?");
+        dialog.setResizable(true);
+        dialog.getDialogPane().setPrefSize(350, 200);
+        final Optional<ButtonType> result = dialog.showAndWait();
+        if(result.get() == ButtonType.OK){
+            System.out.println("Part removed!");
+        }
     }
 }
