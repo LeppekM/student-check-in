@@ -24,7 +24,7 @@ public class Part {
     }
 
     public String getName() {
-        return this.partName.get();
+        return partName.get();
     }
 
     public void setName(String name) {
@@ -32,7 +32,7 @@ public class Part {
     }
 
     public String getSerial() {
-        return this.serialNumber.get();
+        return serialNumber.get();
     }
 
     public void setSerial(String serial) {

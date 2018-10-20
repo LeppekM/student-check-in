@@ -12,6 +12,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -26,7 +30,7 @@ public class ControllerEditItem implements Initializable {
     @FXML
     private Hyperlink cancel;
 
-    private Part editedPart;
+    private Part selectedPart;
 
 
     @Override
@@ -35,8 +39,8 @@ public class ControllerEditItem implements Initializable {
     }
 
     public void initData(Part part){
-        editedPart = part;
-        populateFields(editedPart);
+        selectedPart = part;
+        populateFields(selectedPart);
     }
 
     @FXML
@@ -83,8 +87,34 @@ public class ControllerEditItem implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "One or more fields are not correctly entered.");
             alert.showAndWait();
         }
-        if(editedPart != null){
-            System.out.println("Part edited!");
+        try {
+            if (editedPart != null) {
+                Connection con = DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/parts", "root", "xam54678");
+                editSQLData(con, "");
+                System.out.println("Part edited!");
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void editSQLData(Connection conn, String rawStatement) {
+        Statement currentStatement = null;
+        try {
+            currentStatement = conn.createStatement();
+            currentStatement.execute(rawStatement);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (currentStatement != null) {
+                try {
+                    currentStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            currentStatement = null;
         }
     }
 }

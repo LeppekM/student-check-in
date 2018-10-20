@@ -46,7 +46,7 @@ public class Controller implements Initializable {
     }
 
     public void openInventory(){
-        newStage("openInventory.fxml", "Inventory");
+        newStage("InventoryTabs.fxml", "Inventory");
     }
 
     public void manageStudents() {
