@@ -13,7 +13,7 @@
           <HBox>
              <children>
                 <VBox>
-                  <TableView fx:id="studentsTableManageStudentsPage" layoutX="26.0" layoutY="29.0" prefHeight="300.0" prefWidth="450.0">
+                  <TableView fx:id="studentsTableManageStudentsPage" layoutX="26.0" layoutY="29.0" onMouseClicked="#openStudent" prefHeight="300.0" prefWidth="450.0">
                     <columns>
                       <TableColumn fx:id="studentNameColumn" prefWidth="150.0" text="Student Name" />
                         <TableColumn fx:id="studentRFIDColumn" prefWidth="150.0" text="Student RFID" />

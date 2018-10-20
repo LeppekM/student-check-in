@@ -12,8 +12,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.URL;
+import java.util.*;
+import javafx.fxml.Initializable;
 
-public class EditStudentController {
+public class EditStudentController implements Initializable{
 
     @FXML
     TextField studentName, studentID, studentEmail, dateOfRental;
@@ -23,6 +26,11 @@ public class EditStudentController {
 
     @FXML
     Button save, cancel;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setDataValues();
+    }
 
     @FXML
     private void checkDate(KeyEvent keyEvent) {
@@ -44,7 +52,6 @@ public class EditStudentController {
     }
 
     public void saveData(MouseEvent mouseEvent) {
-        ManageStudentsController msc = new ManageStudentsController();
         Stage stage = (Stage) save.getScene().getWindow();
         if (mouseEvent.getClickCount() == 1){
             try {
@@ -75,5 +82,13 @@ public class EditStudentController {
             Stage stage = (Stage) cancel.getScene().getWindow();
             stage.close();
         }
+    }
+
+    public void setDataValues(){
+        ManageStudentsController msc = new ManageStudentsController();
+        String[] student = msc.getStudentValues(msc.getTable());
+        studentName.setText(student[0]);
+        studentID.setText(student[1]);
+        studentEmail.setText(student[2]);
     }
 }
