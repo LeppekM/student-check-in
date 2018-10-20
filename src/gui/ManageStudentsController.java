@@ -186,7 +186,8 @@ public class ManageStudentsController implements Initializable {
     }
 
     public void openStudent(MouseEvent mouseEvent) {
-        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().size() >= 1){
+        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().size() >= 1 &&
+                studentsTableManageStudentsPage.getItems().size() > 0){
             viewStudentButtonManageStudentsPage.setDisable(false);
         }else{
             viewStudentButtonManageStudentsPage.setDisable(true);
