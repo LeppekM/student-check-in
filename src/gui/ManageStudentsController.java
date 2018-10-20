@@ -23,6 +23,7 @@ import java.util.*;
 
 public class ManageStudentsController implements Initializable {
 
+
     @FXML
     private VBox scene;
 
@@ -75,8 +76,7 @@ public class ManageStudentsController implements Initializable {
             diffStage.setTitle("Edit Student");
             diffStage.showAndWait();
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
+            e.printStackTrace();
         }
     }
 
@@ -97,7 +97,7 @@ public class ManageStudentsController implements Initializable {
 
     public void removeFromTextFile(String email) {
         try {
-            File inputFile = new File("src/students.txt");
+            File inputFile = new File("students.txt");
             BufferedReader r = new BufferedReader(new FileReader(inputFile));
             String line;
             String lines = "";
@@ -119,7 +119,7 @@ public class ManageStudentsController implements Initializable {
 
     public void populateTable() {
         try {
-            FileReader fr = new FileReader("src/students.txt");
+            FileReader fr = new FileReader("students.txt");
             BufferedReader br = new BufferedReader(fr);
             String line;
             int i = 0;
