@@ -11,11 +11,13 @@ public abstract class Worker {
 
     private String name;
     private String email;
+    private String password;
     private boolean isAdmin;
 
-    public Worker(String name, String email, boolean isAdmin) {
+    public Worker(String name, String email, String password, boolean isAdmin) {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.isAdmin = isAdmin;
     }
 

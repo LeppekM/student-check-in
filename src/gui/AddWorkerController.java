@@ -26,6 +26,7 @@ public class AddWorkerController implements Initializable {
     @FXML
     private TextField nameInputAddWorkerPage,
             emailInputAddWorkerPage,
+            passwordInputAddWorkerPage,
             adminPinInputAddWorkerPage;
 
     @FXML
@@ -39,6 +40,7 @@ public class AddWorkerController implements Initializable {
     public void addWorker() {
         String name = nameInputAddWorkerPage.getText();
         String email = emailInputAddWorkerPage.getText();
+        String password = passwordInputAddWorkerPage.getText();
         boolean isAdmin = isAdminCheckBoxAddWorkerPage.isSelected();
         String adminPin = adminPinInputAddWorkerPage.getText();
         if (!email.matches("^(.+)@msoe\\.edu$")) {
@@ -48,10 +50,10 @@ public class AddWorkerController implements Initializable {
             Worker worker = null;
             if (isAdmin) {
                 if (!adminPin.equals("")) {
-                    worker = new Administrator(name, email, isAdmin, adminPin);
+                    worker = new Administrator(name, email, password, isAdmin, adminPin);
                 }
             } else {
-                worker = new StudentWorker(name, email);
+                worker = new StudentWorker(name, email, password);
             }
             if (worker != null) {
                 writeWorker(worker);

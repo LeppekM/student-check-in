@@ -108,12 +108,10 @@ public class ManageStudentsController implements Initializable {
     public void deleteStudent() {
         if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItems() != null) {
             String col;
-            String pattern = "String Property value: [value: (*)]";
             for (int i = 0; i < studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().size(); i++) {
                 // get the value of the third column
                 col = studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().get(i).toString().split(", ")[2];
                 col = col.substring(col.indexOf(": ") + 2, col.indexOf("]]"));
-                //col = col.matches("String Property value: (*)");
                 removeFromTextFile(col);
             }
             studentsTableManageStudentsPage.getItems().removeAll(studentsTableManageStudentsPage.getSelectionModel().getSelectedItems());

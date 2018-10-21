@@ -4,8 +4,8 @@ public class Administrator extends Worker {
 
     String adminPin;
 
-    public Administrator(String name, String email, boolean isAdmin, String adminPin) {
-        super(name, email, isAdmin);
+    public Administrator(String name, String email,String password, boolean isAdmin, String adminPin) {
+        super(name, email, password, isAdmin);
         this.adminPin = adminPin;
     }
 
