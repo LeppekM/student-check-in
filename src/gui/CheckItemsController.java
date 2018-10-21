@@ -107,14 +107,10 @@ public class CheckItemsController implements Initializable{
     }
 
     private void generateTables(TableColumn checkBox, TableColumn action, TableView tableView, ObservableList data) {
-        //ObservableList<CheckItemsTable> data = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
         setCheckoutTableEditableFields();
 
         checkBox.setCellValueFactory(
                 new PropertyValueFactory<CheckItemsTable, String>("checkBox")
-        );
-        action.setCellValueFactory(
-                new PropertyValueFactory<CheckItemsTable, String>("button")
         );
         tableView.setItems(data);
     }
