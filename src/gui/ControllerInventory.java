@@ -32,7 +32,7 @@ public class ControllerInventory implements Initializable {
     @FXML
     private Button print, back, add, remove;
 
-    @FXML private TableView<Part> tableView;
+    @FXML public TableView<Part> tableView;
 
     @FXML private TableColumn<Part,String> partName, serialNumber, manufacturer, quantity, price, vendor, location, barcode, fault, studentId;
 

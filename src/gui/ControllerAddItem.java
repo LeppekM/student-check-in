@@ -74,8 +74,9 @@ public class ControllerAddItem implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "One or more fields are not correctly entered.");
             alert.showAndWait();
         }
+        ControllerInventory ci = new ControllerInventory();
+        ci.tableView.getItems().add(addedPart);
         updateDataBase(addedPart);
-
         if(addedPart != null){
             System.out.println("Part submitted!");
         }
