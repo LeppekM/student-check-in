@@ -1,13 +1,18 @@
 package gui;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.CheckBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -47,6 +52,7 @@ public class AddWorkerController implements Initializable {
         } else if (!name.equals("")) {
             Worker worker = null;
             if (isAdmin) {
+                adminPopup();
                 if (!adminPin.equals("")) {
                     worker = new Administrator(name, email, isAdmin, adminPin);
                 }
@@ -71,6 +77,23 @@ public class AddWorkerController implements Initializable {
 
     public void cancel() {
         scene.getScene().getWindow().hide();
+    }
+
+
+    public void adminPopup(){
+        if(isAdminCheckBoxAddWorkerPage.isSelected()){
+            try {
+                Stage diffStage = new Stage();
+                Pane pane = FXMLLoader.load(getClass().getResource("AdminPopup.fxml"));
+                Scene scene = new Scene(pane, 250, 200);
+                diffStage.setScene(scene);
+                diffStage.initModality(Modality.APPLICATION_MODAL);
+                diffStage.setTitle("Admin Credentials Needed");
+                diffStage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

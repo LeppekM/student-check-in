@@ -29,6 +29,9 @@ public class ManageWorkersController implements Initializable {
     private TableView workersTableManageWorkersPage;
 
     @FXML
+    CheckBox isAdminCheckBoxAddWorkerPage;
+
+    @FXML
     private Button addWorkerButtonManageWorkersPage,
             viewWorkerButtonManageWrokersPage,
             deleteWorkerButtonManageWorkersPage,
@@ -161,5 +164,7 @@ public class ManageWorkersController implements Initializable {
         });
         return column;
     }
+
+
 
 }
