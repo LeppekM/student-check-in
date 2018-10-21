@@ -64,9 +64,9 @@
     </MenuBar>
     <SplitPane focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <items>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
-                  <Tab text="Checkout">
+                  <Tab fx:id="checkOutTab" text="Checkout">
                      <content>
                         <TableView fx:id="checkOutTableView" editable="true" prefHeight="499.0" prefWidth="1027.0" stylesheets="@checkOutTable.css">
                            <columns>
@@ -83,7 +83,7 @@
                         </TableView>
                      </content>
                   </Tab>
-                  <Tab text="Checkin">
+                  <Tab fx:id="checkInTab" text="Checkin">
                      <content>
                         <TableView fx:id="checkInTableView" editable="true" prefHeight="499.0" prefWidth="1027.0" stylesheets="@checkOutTable.css">
                            <columns>
@@ -148,7 +148,7 @@
                               </Label>
                               <ImageView fitHeight="217.0" fitWidth="208.0" layoutX="664.0" layoutY="13.0" pickOnBounds="true">
                                  <image>
-                                    <Image url="@../../msoe.png" />
+                                    <Image url="@../../../../sdl/student-check-in/msoe.png" />
                                  </image></ImageView>
                            </children>
                         </Pane>
@@ -160,7 +160,7 @@
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
             <Button mnemonicParsing="false" onAction="#clearFields" text="Clear Fields" />
-            <Button mnemonicParsing="false" onAction="#test" text="Submit " />
+            <Button fx:id="submit" mnemonicParsing="false" onAction="#submit" text="Submit " />
         <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button fx:id="newRow" layoutX="8.0" mnemonicParsing="false" onAction="#newRow" text="New Row" />

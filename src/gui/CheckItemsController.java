@@ -4,6 +4,7 @@ import database.Database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -67,6 +68,18 @@ public class CheckItemsController implements Initializable{
 
     @FXML
     ListView checkOutTable, savedTable;
+
+    @FXML
+    TabPane tabPane;
+
+    @FXML
+    Tab checkOutTab;
+
+    @FXML
+    Button submit;
+
+    @FXML
+    Tab checkInTab;
 
     private ObservableList<CheckItemsTable> checkoutData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
     private ObservableList<CheckItemsTable> checkinData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
@@ -267,14 +280,13 @@ public class CheckItemsController implements Initializable{
     }
 
 
-    public void test(){
-
-        database.addStudentID(checkoutData.get(0).getStudentID(), Integer.parseInt(checkoutData.get(0).getBarcode()));
-
-
+    public void submit(){
+        if(checkOutTab.isSelected()){
+            database.addStudentID(checkoutData.get(0).getStudentID(), Integer.parseInt(checkoutData.get(0).getBarcode()));
+        }
+        if(checkInTab.isSelected()){
+            database.removeStudentID(checkinData.get(0).getStudentID());
+        }
     }
-
-
-
 
 }
