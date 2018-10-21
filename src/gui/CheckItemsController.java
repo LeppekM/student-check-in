@@ -7,14 +7,19 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
 import java.util.ResourceBundle;
@@ -92,7 +97,6 @@ public class CheckItemsController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         setCheckoutItems();
         setCheckinItems();
-
     }
 
     private void setCheckinItems() {
@@ -282,10 +286,38 @@ public class CheckItemsController implements Initializable{
 
     public void submit(){
         if(checkOutTab.isSelected()){
+            overnightPopup();
             database.addStudentID(checkoutData.get(0).getStudentID(), Integer.parseInt(checkoutData.get(0).getBarcode()));
         }
         if(checkInTab.isSelected()){
+            faultPopup();
             database.removeStudentID(checkinData.get(0).getStudentID());
+        }
+    }
+
+    public void overnightPopup(){
+        if(checkoutData.get(0).getCheckBox().isSelected()){
+            showNewStage("overnightPopup.fxml", "Overnight Checkout");
+        }
+    }
+
+    public void faultPopup(){
+        if(checkinData.get(0).getCheckBox().isSelected()){
+            showNewStage("faultPopup.fxml", "Fault Information");
+        }
+    }
+
+    public void showNewStage(String fxml, String title){
+        try {
+            Stage diffStage = new Stage();
+            Pane pane = FXMLLoader.load(getClass().getResource(fxml));
+            Scene scene = new Scene(pane);
+            diffStage.setScene(scene);
+            diffStage.initModality(Modality.APPLICATION_MODAL);
+            diffStage.setTitle(title);
+            diffStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
