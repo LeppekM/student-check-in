@@ -52,7 +52,7 @@
             </Label>
             <TextField fx:id="studentName" layoutX="135.0" layoutY="10.0" />
             <TextField fx:id="studentID" layoutX="125.0" layoutY="50.0" />
-            <TextField fx:id="studentEmail" layoutX="130.0" layoutY="90.0" />
+            <TextField fx:id="studentEmail" editable="false" layoutX="130.0" layoutY="90.0" />
             <TextField fx:id="dateOfRental" layoutX="195.0" layoutY="130.0" promptText="mm/dd/yyyy" />
             <ImageView fitHeight="150.0" fitWidth="179.0" layoutX="391.0" layoutY="15.0" pickOnBounds="true">
                <image>

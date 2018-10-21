@@ -44,24 +44,48 @@ public class EditStudentController implements Initializable {
                 alert.showAndWait();
             }
             try {
-                FileReader fr = new FileReader("src/students.txt");
-                BufferedReader br = new BufferedReader(fr);
+                File file = new File("src/students.txt");
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+                Scanner scanner = new Scanner(file);
                 String line;
-                BufferedWriter w = new BufferedWriter(new FileWriter(new File("src/students.txt")));
-                while ((line = br.readLine()) != null) {
-                    if (line.contains(studentEmail.getCharacters())) {
+                while(scanner.hasNextLine()){
+                    line = scanner.nextLine();
+                    if (line.contains(studentEmail.getCharacters())){
                         line = studentName.getText() + "," + studentID.getText() + "," + studentEmail.getText();
                     }
-                    w.write(line);
+                    bufferedWriter.write(line);
                 }
-                w.close();
-                br.close();
-                fr.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                bufferedWriter.close();
+                scanner.close();
+            }catch (FileNotFoundException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "File not Found");
+                alert.showAndWait();
+            }catch (IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error writing to file");
+                alert.showAndWait();
             }
+//            try {
+//                FileReader fr = new FileReader("src/students.txt");
+//                BufferedReader br = new BufferedReader(fr);
+//                String line;
+//                BufferedWriter w = new BufferedWriter(new FileWriter(new File("src/students.txt")));
+//                line = br.readLine();
+//                System.out.println(line);
+//                while (br.readLine() != null) {
+//                    line = br.readLine();
+//                    if (line.contains(studentEmail.getCharacters())) {
+//                        line = studentName.getText() + "," + studentID.getText() + "," + studentEmail.getText();
+//                    }
+//                    w.write(line);
+//                }
+//                w.close();
+//                br.close();
+//                fr.close();
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Student List Updated");
             alert.showAndWait();
             save.getScene().getWindow().hide();
