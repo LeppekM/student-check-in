@@ -1,21 +1,15 @@
 package gui;
 
-import com.sun.javafx.collections.ObservableListWrapper;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -26,10 +20,9 @@ import javafx.util.Callback;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ManageStudentsController implements Initializable {
+
 
     @FXML
     private VBox scene;
@@ -38,10 +31,7 @@ public class ManageStudentsController implements Initializable {
     private TableView studentsTableManageStudentsPage;
 
     @FXML
-    private Button addStudentButtonManageStudentsPage,
-            viewStudentButtonManageStudentsPage,
-            deleteStudentButtonManageStudentsPage,
-            backToHomeButtonManageStudentsPage;
+    private Button viewStudentButtonManageStudentsPage;
 
     @FXML
     private TableColumn studentNameColumn, studentRFIDColumn, studentEmailColumn;
@@ -77,32 +67,7 @@ public class ManageStudentsController implements Initializable {
     }
 
     public void viewStudent() {
-        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItem() != null){
-            viewStudentButtonManageStudentsPage.setDisable(false);
-        }
-        EditStudentController esc = new EditStudentController();
-        Student student = (Student) studentsTableManageStudentsPage.getSelectionModel().getSelectedItem();
-        try {
-            Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("EditStudent.fxml"));
-            Scene scene = new Scene(pane);
-            diffStage.setScene(scene);
-            diffStage.initModality(Modality.APPLICATION_MODAL);
-            diffStage.setTitle("Edit Student");
-            if (student != null) {
-                esc.studentName.setText(student.getName());
-                esc.studentID.setText(student.getRfid());
-                esc.studentEmail.setText(student.getEmail());
-                esc.dateOfRental.setText(student.getDateOfLastCheckout().toString());
-                esc.checkedOut.setItems((ObservableList) student.getCheckedOut());
-                esc.overdueItems.setItems((ObservableList) student.getOverdue());
-                esc.savedItems.setItems((ObservableList) student.getSaved());
-            }
-            diffStage.showAndWait();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-        }
+        EditStudentController esc = new EditStudentController(getStudentValues(studentsTableManageStudentsPage));
     }
 
     public void deleteStudent() {
@@ -193,4 +158,23 @@ public class ManageStudentsController implements Initializable {
         return column;
     }
 
+    private String[] getStudentValues(TableView l) {
+        String[] student = new String[3];
+        String name = l.getSelectionModel().getSelectedItem().toString().split(", ")[0];
+        String ID = l.getSelectionModel().getSelectedItem().toString().split(", ")[1];
+        String email = l.getSelectionModel().getSelectedItem().toString().split(", ")[2];
+        student[0] = name.substring(name.indexOf(": ") + 2, name.indexOf("]"));
+        student[1] = ID.substring(ID.indexOf(": ") + 2, ID.indexOf("]"));
+        student[2] = email.substring(email.indexOf(": ") + 2, email.indexOf("]]"));
+        return student;
+    }
+
+    public void openStudent(MouseEvent mouseEvent) {
+        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().size() == 1 &&
+                studentsTableManageStudentsPage.getItems().size() > 0){
+            viewStudentButtonManageStudentsPage.setDisable(false);
+        }else{
+            viewStudentButtonManageStudentsPage.setDisable(true);
+        }
+    }
 }
