@@ -67,20 +67,20 @@ public class ManageStudentsController implements Initializable {
     }
 
     public void viewStudent() {
-        try {
-            Stage diffStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditStudent.fxml"));
-            Pane pane = loader.load();
+//        try {
+//            Stage diffStage = new Stage();
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditStudent.fxml"));
+//            Pane pane = loader.load();
             EditStudentController esc = new EditStudentController(getStudentValues(studentsTableManageStudentsPage));
-            loader.setController(esc);
-            Scene scene = new Scene(pane);
-            diffStage.setScene(scene);
-            diffStage.initModality(Modality.APPLICATION_MODAL);
-            diffStage.setTitle("Edit Student");
-            diffStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//            loader.setController(esc);
+//            Scene scene = new Scene(pane);
+//            diffStage.setScene(scene);
+//            diffStage.initModality(Modality.APPLICATION_MODAL);
+//            diffStage.setTitle("Edit Student");
+//            diffStage.showAndWait();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void deleteStudent() {

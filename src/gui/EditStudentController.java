@@ -3,6 +3,7 @@ package gui;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -11,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -72,9 +74,21 @@ public class EditStudentController  implements  Initializable{
     }
 
     EditStudentController(String[] student){
-        studentName.setText(student[0]);
-        studentID.setText(student[1]);
-        studentEmail.setText(student[2]);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditStudent.fxml"));
+            loader.setController(this);
+            Pane pane = loader.load();
+            Scene scene = new Scene(pane);
+            initialize(loader.getLocation(), loader.getResources());
+            studentName.setText(student[0]);
+            studentID.setText(student[1]);
+            studentEmail.setText(student[2]);
+            Stage diff = new Stage();
+            diff.setScene(scene);
+            diff.showAndWait();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 //    @FXML
