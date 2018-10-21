@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EditStudentController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane prefHeight="400.0" prefWidth="600.0">
          <children>
@@ -52,15 +52,15 @@
             </Label>
             <TextField fx:id="studentName" layoutX="135.0" layoutY="10.0" />
             <TextField fx:id="studentID" layoutX="125.0" layoutY="50.0" />
-            <TextField fx:id="studentEmail" layoutX="130.0" layoutY="90.0" onKeyPressed="#checkEmail" />
-            <TextField fx:id="dateOfRental" layoutX="195.0" layoutY="130.0" onKeyPressed="#checkDate" promptText="mm/dd/yyyy" />
+            <TextField fx:id="studentEmail" layoutX="130.0" layoutY="90.0" />
+            <TextField fx:id="dateOfRental" layoutX="195.0" layoutY="130.0" promptText="mm/dd/yyyy" />
             <ImageView fitHeight="150.0" fitWidth="179.0" layoutX="391.0" layoutY="15.0" pickOnBounds="true">
                <image>
                   <Image url="@../../msoe.png" />
                </image>
             </ImageView>
-            <Button fx:id="save" layoutX="455.0" layoutY="370.0" mnemonicParsing="false" onMouseClicked="#saveData" text="Save" />
-            <Button fx:id="cancel" layoutX="526.0" layoutY="370.0" mnemonicParsing="false" onMouseClicked="#closePage" text="Cancel" />
+            <Button fx:id="save" layoutX="455.0" layoutY="370.0" mnemonicParsing="false" text="Save" />
+            <Button fx:id="cancel" layoutX="526.0" layoutY="370.0" mnemonicParsing="false" text="Cancel" />
          </children>
       </Pane>
    </children>

@@ -69,7 +69,10 @@ public class ManageStudentsController implements Initializable {
     public void viewStudent() {
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("EditStudent.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditStudent.fxml"));
+            Pane pane = loader.load();
+            EditStudentController esc = new EditStudentController(getStudentValues(studentsTableManageStudentsPage));
+            loader.setController(esc);
             Scene scene = new Scene(pane);
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
@@ -97,7 +100,7 @@ public class ManageStudentsController implements Initializable {
 
     public void removeFromTextFile(String email) {
         try {
-            File inputFile = new File("students.txt");
+            File inputFile = new File("src/students.txt");
             BufferedReader r = new BufferedReader(new FileReader(inputFile));
             String line;
             String lines = "";
@@ -119,7 +122,7 @@ public class ManageStudentsController implements Initializable {
 
     public void populateTable() {
         try {
-            FileReader fr = new FileReader("students.txt");
+            FileReader fr = new FileReader("src/students.txt");
             BufferedReader br = new BufferedReader(fr);
             String line;
             int i = 0;
@@ -170,7 +173,7 @@ public class ManageStudentsController implements Initializable {
         return column;
     }
 
-    public String[] getStudentValues(TableView l) {
+    private String[] getStudentValues(TableView l) {
         String[] student = new String[3];
         String name = l.getSelectionModel().getSelectedItem().toString().split(", ")[0];
         String ID = l.getSelectionModel().getSelectedItem().toString().split(", ")[1];
@@ -181,12 +184,8 @@ public class ManageStudentsController implements Initializable {
         return student;
     }
 
-    public TableView getTable() {
-        return studentsTableManageStudentsPage;
-    }
-
     public void openStudent(MouseEvent mouseEvent) {
-        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().size() >= 1 &&
+        if (studentsTableManageStudentsPage.getSelectionModel().getSelectedItems().size() == 1 &&
                 studentsTableManageStudentsPage.getItems().size() > 0){
             viewStudentButtonManageStudentsPage.setDisable(false);
         }else{
