@@ -10,8 +10,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -25,6 +30,10 @@ public class ControllerAddItem implements Initializable {
 
     @FXML
     private Hyperlink cancel;
+
+    static String dbdriver = "com.mysql.jdbc.Driver";
+    static String dburl = "jdbc:mysql://localhost";
+    static String dbname = "parts";
 
 
     @Override
@@ -65,9 +74,57 @@ public class ControllerAddItem implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "One or more fields are not correctly entered.");
             alert.showAndWait();
         }
+        updateDataBase(addedPart);
+
         if(addedPart != null){
             System.out.println("Part submitted!");
         }
     }
 
+    private void updateDataBase(Part part){
+        String user = JOptionPane.showInputDialog("Enter username to update Parts database");
+        String userPass = JOptionPane.showInputDialog("Enter password");
+        try{
+            Class.forName(dbdriver);
+        }catch (ClassNotFoundException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Class not found");
+            alert.showAndWait();
+        }
+        Connection connection = null;
+        try{
+            connection = DriverManager.getConnection((dburl + "/" + dbname), user, userPass);
+            connection.setClientInfo("autoReconnect", "true");
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Connection failure");
+            alert.showAndWait();
+        }
+        byte fault = 0;
+        if (part.getFault()){
+            fault = 1;
+        }
+        String addToDB = "Insert into parts_list (serialNumber, partName, price, vendor, manufacturer, location, barcode," +
+                "fault, studentID) VALUES ('" + part.getSerial() + "', '" + part.getName() + "', " + part.getPrice() + ", '" +
+                part.getVendor() + "', '" + part.getManufacturer() + "', '" + part.getLocation() + "', " + part.getBarcode() +
+                ", " + fault + ", " + part.getStudentId() + ");";
+        grabSQLData(connection, addToDB);
+    }
+
+    private void grabSQLData(Connection conn, String rawStatement) {
+        Statement currentStatement = null;
+        try {
+            currentStatement = conn.createStatement();
+            currentStatement.execute(rawStatement);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (currentStatement != null) {
+                try {
+                    currentStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            currentStatement = null;
+        }
+    }
 }

@@ -72,24 +72,24 @@ public class ControllerInventory implements Initializable {
         tableView.getItems().setAll(this.data);
     }
 
-    private void grabSQLData(Connection conn, String rawStatement) {
-        Statement currentStatement = null;
-         try {
-             currentStatement = conn.createStatement();
-             currentStatement.execute(rawStatement);
-         } catch (SQLException e) {
-             e.printStackTrace();
-         } finally {
-             if (currentStatement != null) {
-                 try {
-                     currentStatement.close();
-                 } catch (SQLException e) {
-                     e.printStackTrace();
-                 }
-             }
-             currentStatement = null;
-         }
-    }
+//    private void grabSQLData(Connection conn, String rawStatement) {
+//        Statement currentStatement = null;
+//         try {
+//             currentStatement = conn.createStatement();
+//             currentStatement.execute(rawStatement);
+//         } catch (SQLException e) {
+//             e.printStackTrace();
+//         } finally {
+//             if (currentStatement != null) {
+//                 try {
+//                     currentStatement.close();
+//                 } catch (SQLException e) {
+//                     e.printStackTrace();
+//                 }
+//             }
+//             currentStatement = null;
+//         }
+//    }
 
     @FXML
     public void goBack(){
