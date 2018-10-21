@@ -18,9 +18,10 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+
 import javafx.fxml.Initializable;
 
-public class EditStudentController  implements  Initializable{
+public class EditStudentController implements Initializable {
 
     @FXML
     TextField studentName, studentID, studentEmail, dateOfRental;
@@ -33,47 +34,44 @@ public class EditStudentController  implements  Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Stage stage = (Stage) save.getScene().getWindow();
         save.setOnMouseClicked(event -> {
-            if(!dateOfRental.getText().matches("[0-1][0-9]\\/[0-3][0-9]\\/[0-9]{4}")){
+            if (!dateOfRental.getText().matches("[0-1][0-9]\\/[0-3][0-9]\\/[0-9]{4}")) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error, invalid date was entered.\nCheck format (mm/dd/yyyy)");
                 alert.showAndWait();
             }
-            if(!studentEmail.getText().matches("^(\\w+)@msoe\\.edu$")){
+            if (!studentEmail.getText().matches("^(\\w+)@msoe\\.edu$")) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error, invalid email was entered.\nNeeds to be an MSOE email");
                 alert.showAndWait();
             }
-//            Stage stage = (Stage) save.getScene().getWindow();
-//            if (event.getClickCount() == 1){
-                try {
-                    FileReader fr = new FileReader("src/students.txt");
-                    BufferedReader br = new BufferedReader(fr);
-                    String line;
-                    BufferedWriter w = new BufferedWriter(new FileWriter(new File("src/students.txt")));
-                    while((line = br.readLine()) != null){
-                        if(line.contains(studentEmail.getCharacters())){
-                            line = studentName.getText() + "," + studentID.getText() + "," + studentEmail.getText();
-                        }
-                        w.write(line);
+            try {
+                FileReader fr = new FileReader("src/students.txt");
+                BufferedReader br = new BufferedReader(fr);
+                String line;
+                BufferedWriter w = new BufferedWriter(new FileWriter(new File("src/students.txt")));
+                while ((line = br.readLine()) != null) {
+                    if (line.contains(studentEmail.getCharacters())) {
+                        line = studentName.getText() + "," + studentID.getText() + "," + studentEmail.getText();
                     }
-                    w.close();
-                    br.close();
-                    fr.close();
-                }catch (FileNotFoundException e){
-                    e.printStackTrace();
-                }catch (IOException e){
-                    e.printStackTrace();
+                    w.write(line);
                 }
-                stage.close();
-//            }
-            cancel.setOnMouseClicked(event1 -> {
-//                stage = (Stage) cancel.getScene().getWindow();
-                stage.close();
-            });
+                w.close();
+                br.close();
+                fr.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Student List Updated");
+            alert.showAndWait();
+            save.getScene().getWindow().hide();
+        });
+        cancel.setOnMouseClicked(event -> {
+            cancel.getScene().getWindow().hide();
         });
     }
 
-    EditStudentController(String[] student){
+    EditStudentController(String[] student) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EditStudent.fxml"));
             loader.setController(this);
@@ -86,7 +84,7 @@ public class EditStudentController  implements  Initializable{
             Stage diff = new Stage();
             diff.setScene(scene);
             diff.showAndWait();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
