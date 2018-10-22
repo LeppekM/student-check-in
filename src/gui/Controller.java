@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,92 +20,74 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML
-    private Button manageWorkers;
+    private VBox mainMenuScene;
 
     @FXML
-    private Button manageStudents;
+    private Button manageWorker, manageStudent, checkInOutButtonMenuPage, inventory;
 
-    @FXML
-    private Button checkin;
+    private static Worker currentWorker;
 
-    @FXML
-    private Button inventory;
+//    public Controller(Worker worker, StackPane stackPane) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+//            loader.setController(this);
+//            Pane mainMenuPane = loader.load();
+//            stackPane.getScene().setRoot(mainMenuPane);
+//            initialize(loader.getLocation(), loader.getResources());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        this.currentWorker = worker;
+//    }
 
-
-
+    public void initData(Worker worker) {
+        if (currentWorker == null) {
+            this.currentWorker = worker;
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        manageWorker.setOnAction(event -> manageWorkers());
+        manageStudent.setOnAction(event -> manageStudents());
+        inventory.setOnAction(event -> openInventory());
+        checkInOutButtonMenuPage.setOnAction(event -> openCheckInPage());
 
     }
 
-    public void openCheckInPage(){
-        try {
-            Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource("checkout.fxml"));
-            Scene scene = new Scene(anchorPane);
-            designCar.setScene(scene);
-            designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle("Design a Car");
-            designCar.showAndWait();
-        }
-        catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-
-        }
-
+    public void openCheckInPage() {
+        newStage("checkout.fxml", "Check-in/out Parts");
     }
-
-
 
     public void openInventory(){
-        try {
-            Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource("openInventory.fxml"));
-            Scene scene = new Scene(anchorPane);
-            designCar.setScene(scene);
-            designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle("Design a Car");
-            designCar.showAndWait();
-        }
-        catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-
-        }
-
-
+        newStage("InventoryTabs.fxml", "Inventory");
     }
-    public void manageStudents(){
-        try {
-            Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource("manageStudents.fxml"));
-            Scene scene = new Scene(anchorPane);
-            designCar.setScene(scene);
-            designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle("Design a Car");
-            designCar.showAndWait();
-        }
-        catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
 
+    public void manageStudents() {
+        if (currentWorker instanceof Administrator) {
+            newStage("ManageStudents.fxml", "Manage Students");
+        } else if (currentWorker instanceof StudentWorker) {
+            if (((StudentWorker) currentWorker).canManageStudents()) {
+                newStage("ManageStudents.fxml", "Manage Students");
+            }
         }
     }
+
     public void manageWorkers(){
+        if (currentWorker instanceof Administrator) {
+            newStage("manageWorkers.fxml", "Manage Workers");
+        }
+    }
+
+    public void newStage(String fxml, String title){
         try {
-            Stage designCar = new Stage();
-            VBox anchorPane = (VBox) FXMLLoader.load(getClass().getResource("manageWorkers.fxml"));
-            Scene scene = new Scene(anchorPane);
-            designCar.setScene(scene);
-            designCar.initModality(Modality.APPLICATION_MODAL);
-            designCar.setTitle("Design a Car");
-            designCar.showAndWait();
+            Pane pane = FXMLLoader.load(getClass().getResource(fxml));
+            mainMenuScene.getScene().setRoot(pane);
         }
         catch(IOException invoke){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
+            invoke.printStackTrace();
 
         }
     }

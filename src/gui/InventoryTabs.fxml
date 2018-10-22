@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="sceneInv" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="gui.ControllerInventory">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Undo" />
+            <MenuItem mnemonicParsing="false" text="Redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" />
+            <MenuItem mnemonicParsing="false" text="Copy" />
+            <MenuItem mnemonicParsing="false" text="Paste" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Select All" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="604.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+        <TabPane layoutX="0.0" layoutY="0.0" prefHeight="576.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+          <tabs>
+            <Tab text="Total Inventory">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="555.0" prefWidth="800.0">
+                  <children>
+                    <Label layoutX="20.0" layoutY="20.0" text="Total Inventory">
+                      <font>
+                        <Font size="24.0" fx:id="x1" />
+                      </font>
+                    </Label>
+                    <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
+                      <columns>
+                        <TableColumn prefWidth="169.0" resizable="false" text="Part Name" fx:id="partName" />
+                        <TableColumn prefWidth="124.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
+                        <TableColumn prefWidth="174.0" resizable="false" text="Manufacturer" fx:id="manufacturer" />
+                        <TableColumn prefWidth="73.0" resizable="false" text="Quantity" fx:id="quantity" />
+                        <TableColumn prefWidth="73.0" resizable="false" text="Price" fx:id="price" />
+                        <TableColumn prefWidth="73.0" resizable="false" text="Vendor" fx:id="vendor" />
+                        <TableColumn prefWidth="73.0" resizable="false" text="Location" fx:id="location" />
+                        <TableColumn prefWidth="73.0" resizable="false" text="Barcode" fx:id="barcode" />
+                        <TableColumn prefWidth="73.0" resizable="false" text="Fault" fx:id="fault" />
+                        <TableColumn prefWidth="73.0" resizable="false" text="Student ID" fx:id="studentId" />
+                      </columns>
+                    </TableView>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="History">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
+                  <children>
+                    <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Transaction History" />
+                    <TableView layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
+                      <columns>
+                        <TableColumn prefWidth="141.0" resizable="false" text="Student" />
+                        <TableColumn prefWidth="127.0" resizable="false" text="Part Name" />
+                        <TableColumn prefWidth="113.0" resizable="false" text="Serial Number" />
+                        <TableColumn prefWidth="73.0" resizable="false" text="Location" />
+                        <TableColumn prefWidth="78.0" resizable="false" text="Quantity" />
+                        <TableColumn prefWidth="154.0" resizable="false" text="Date" />
+                      </columns>
+                    </TableView>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Checked Out">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
+                  <children>
+                    <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Currently Checked Out" />
+                    <TableView layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
+                      <columns>
+                        <TableColumn prefWidth="147.0" resizable="false" text="Student" />
+                        <TableColumn prefWidth="121.0" resizable="false" text="Part Name" />
+                        <TableColumn prefWidth="128.0" resizable="false" text="Serial Number" />
+                        <TableColumn prefWidth="76.0" resizable="false" text="Quantity" />
+                        <TableColumn prefWidth="104.0" resizable="false" text="Checkout Date" />
+                        <TableColumn prefWidth="110.0" resizable="false" text="Return Date" />
+                      </columns>
+                    </TableView>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Overdue">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
+                  <children>
+                    <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Overdue Items" />
+                    <TableView layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
+                      <columns>
+                        <TableColumn prefWidth="135.0" resizable="false" text="Student" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Item" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Serial Number" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Original Due Date" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Fee" />
+                      </columns>
+                    </TableView>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Fault">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
+                  <children>
+                    <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Faulty Items" />
+                    <TableView layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
+                      <columns>
+                        <TableColumn prefWidth="135.0" resizable="false" text="Item/Serial Number" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Description" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Parts Needed" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Person Responsible" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Date Returned" />
+                      </columns>
+                    </TableView>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+          </tabs>
+        </TabPane>
+        <Button fx:id="print" layoutX="700.0" layoutY="40.0" mnemonicParsing="false" onAction="#printReport" prefHeight="25.0" prefWidth="75.0" text="Print" />
+        <Button fx:id="back" layoutX="15.0" layoutY="540.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="100.0" text="Back to Home" />
+        <Button fx:id="add" layoutX="650.0" layoutY="541.0" mnemonicParsing="false" onAction="#addItem" prefHeight="21.0" prefWidth="56.0" text="Add" />
+        <Button fx:id="remove" layoutX="725.0" layoutY="541.0" mnemonicParsing="false" onAction="#removeItem" text="Remove" />
+        <TextField fx:id="searchField" layoutX="605.0" layoutY="75.0" onAction="#search" prefHeight="25.0" prefWidth="169.0" promptText="Search..." text="" />
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>

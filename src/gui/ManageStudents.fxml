@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="scene" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ManageStudentsController">
+   <children>
+       <VBox prefHeight="400.0" prefWidth="640.">
+          <HBox>
+             <children>
+                <VBox>
+                  <TableView fx:id="studentsTableManageStudentsPage" layoutX="26.0" layoutY="29.0" onMouseClicked="#openStudent" prefHeight="300.0" prefWidth="450.0">
+                    <columns>
+                      <TableColumn fx:id="studentNameColumn" prefWidth="150.0" text="Student Name" />
+                        <TableColumn fx:id="studentRFIDColumn" prefWidth="150.0" text="Student RFID" />
+                        <TableColumn fx:id="studentEmailColumn" prefWidth="150.0" text="Student Email" />
+                    </columns>
+                  </TableView>
+                </VBox>
+                <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                   <children>
+                      <Button fx:id="addStudentButtonManageStudentsPage" mnemonicParsing="false" onAction="#addStudent" prefHeight="50.0" prefWidth="100.0" text="Add Student">
+                        <VBox.margin>
+                           <Insets bottom="30.0" />
+                        </VBox.margin></Button>
+                      <Button fx:id="viewStudentButtonManageStudentsPage" disable="true" mnemonicParsing="false" onAction="#viewStudent" prefHeight="50.0" prefWidth="100.0" text="View Student">
+                        <VBox.margin>
+                           <Insets bottom="15.0" top="30.0" />
+                        </VBox.margin></Button>
+                      <Button fx:id="deleteStudentButtonManageStudentsPage" mnemonicParsing="false" onAction="#deleteStudent" prefHeight="50.0" prefWidth="100.0" text="Delete Student" />
+                   </children>
+                   <HBox.margin>
+                      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                   </HBox.margin>
+                </VBox>
+             </children>
+            <VBox.margin>
+               <Insets bottom="15.0" />
+            </VBox.margin>
+          </HBox>
+           <Button fx:id="backToHomeButtonManageStudentsPage" mnemonicParsing="false" onAction="#backToHome" prefHeight="50.0" prefWidth="100.0" text="Back to Home" />
+         <VBox.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </VBox.margin>
+       </VBox>
+   </children>
+</VBox>

@@ -1,0 +1,2 @@
+Jim Frommell,frommell@msoe.edu,password!,true,123456
+Joe Gilpin,gilpinj@msoe.edu,goBrewers,false
