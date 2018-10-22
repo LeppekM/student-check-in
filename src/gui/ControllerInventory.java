@@ -40,16 +40,18 @@ public class ControllerInventory implements Initializable {
     @FXML private TableColumn<Part,String> partName, serialNumber, manufacturer, quantity, price, vendor, location,
             barcode, fault, studentId;
 
-    private final ObservableList<Part> data
+    private static final ObservableList<Part> data
             = FXCollections.observableArrayList();
 
     static final String dbdriver = "com.mysql.jdbc.Driver";
     static final String dburl = "jdbc:mysql://localhost";
     static final String dbname = "parts";
+    static Connection connection;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        connection = makeDBConnection();
         populateTable();
         tableView.setRowFactory(tv -> {
             TableRow<Part> row = new TableRow<>();
@@ -78,34 +80,11 @@ public class ControllerInventory implements Initializable {
     }
 
     public void updateTable(){
-        grabTable();
+        String statement = "SELECT * FROM parts;";
+        this.data.clear();
+        tableView.getItems().clear();
+        executeSQLCommand(statement);
         tableView.getItems().setAll(this.data);
-    }
-
-    private void grabTable(){
-        ResultSet rs = null;
-        String statement = "SELECT * FROM parts";
-        rs = executeSQLCommand(statement);
-
-        try {
-            while (rs.next()) {
-                String serialNumber = rs.getString("serialNumber");
-                String partName = rs.getString("partName");
-                double price = rs.getDouble("price");
-                String vendor = rs.getString("vendor");
-                String manufacturer = rs.getString("manufacturer");
-                String location = rs.getString("location");
-                String barcode = rs.getString("barcode");
-                boolean fault = rs.getBoolean("fault");
-                long studentID = rs.getLong("studentID");
-                Part part = new Part(partName, serialNumber, manufacturer, 1, price, vendor, location, barcode, fault, studentID);
-                data.add(part);
-            }
-        }catch(SQLException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't grab part list");
-            alert.showAndWait();
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -126,7 +105,12 @@ public class ControllerInventory implements Initializable {
 
     @FXML
     public void printReport(){
-        String report = "Test";
+        Object[] parts = data.toArray();
+        String report = "";
+        for(int x = 0; x<parts.length; x++){
+            report=report+parts[x].toString();
+        }
+
         try {
             OutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(System.getProperty("user.dir") + "/test.txt"));
             byte[] bytes = report.getBytes();
@@ -143,14 +127,21 @@ public class ControllerInventory implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, problems loading part list.");
             alert.showAndWait();
         }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Print complete");
+        alert.setHeaderText(null);
+        alert.setContentText("Successfully printed report!");
+
+        alert.showAndWait();
     }
 
     @FXML
     public void addItem(){
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("AddItem.fxml"));
-            Scene scene = new Scene(pane);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddItem.fxml"));
+            Scene scene = new Scene((Pane) loader.load());
+            ControllerAddItem controller = loader.<ControllerAddItem>getController();
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
             diffStage.setTitle("Add Part");
@@ -200,24 +191,35 @@ public class ControllerInventory implements Initializable {
 
     private void deleteFromTable(Part part){
         if (part != null) {
-            String deleteFromDB = "DELETE FROM parts WHERE serialNumber='"+part.getSerial()+"' AND barcode='"
+            String deleteFromDB = "DELETE FROM parts WHERE serialNumber='"+part.getSerialNumber()+"' AND barcode='"
                     + part.getBarcode() + "';";
             executeSQLCommand(deleteFromDB);
         }
     }
 
-    public static ResultSet executeSQLCommand(String rawStatement){
-        Connection conn = makeDBConnection();
-        if(conn==null) {
+    public static void executeSQLCommand(String rawStatement){
+        if(connection==null) {
             System.out.println("Connection was null, SQL command not executed.");
-            return null;
+            return;
         }
         Statement currentStatement = null;
         try {
-            currentStatement = conn.createStatement();
-            if(rawStatement.toLowerCase().contains("select")) {
+            currentStatement = connection.createStatement();
+            if(rawStatement.contains("SELECT")) {
                 ResultSet rs = currentStatement.executeQuery(rawStatement);
-                return rs;
+                while (rs.next()) {
+                    String serialNumber = rs.getString("serialNumber");
+                    String partName = rs.getString("partName");
+                    double price = rs.getDouble("price");
+                    String vendor = rs.getString("vendor");
+                    String manufacturer = rs.getString("manufacturer");
+                    String location = rs.getString("location");
+                    String barcode = rs.getString("barcode");
+                    boolean fault = rs.getBoolean("fault");
+                    long studentID = rs.getLong("studentID");
+                    Part part = new Part(partName, serialNumber, manufacturer, 1, price, vendor, location, barcode, fault, studentID);
+                    data.add(part);
+                }
             }
             else
                 currentStatement.execute(rawStatement);
@@ -227,14 +229,12 @@ public class ControllerInventory implements Initializable {
             if (currentStatement != null) {
                 try {
                     currentStatement.close();
-                    System.out.println("Connection closed!");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
             currentStatement = null;
         }
-        return null;
     }
 
     public static Connection makeDBConnection(){
