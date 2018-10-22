@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="scene" prefHeight="300.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddWorkerController">
+<VBox fx:id="scene" prefHeight="300.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddWorkerController">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0">
             <children>
