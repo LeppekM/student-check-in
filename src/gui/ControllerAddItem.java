@@ -20,6 +20,10 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static gui.ControllerInventory.dbdriver;
+import static gui.ControllerInventory.dbname;
+import static gui.ControllerInventory.dburl;
+
 public class ControllerAddItem implements Initializable {
 
     @FXML
@@ -30,10 +34,6 @@ public class ControllerAddItem implements Initializable {
 
     @FXML
     private Hyperlink cancel;
-
-    static String dbdriver = "com.mysql.jdbc.Driver";
-    static String dburl = "jdbc:mysql://localhost";
-    static String dbname = "parts";
 
 
     @Override
@@ -58,9 +58,9 @@ public class ControllerAddItem implements Initializable {
             }
             String name = nameField.getText();
             String serial = serialField.getText();
-            String manufacturer = manufacturerField.getText();
             int quantity = Integer.parseInt(quantityField.getText());
             double price = Double.parseDouble(priceField.getText());
+            String manufacturer = manufacturerField.getText();
             String vendor = vendorField.getText();
             String barcode = barcodeField.getText();
 
@@ -75,57 +75,16 @@ public class ControllerAddItem implements Initializable {
             alert.showAndWait();
         }
         if(addedPart != null){
-            //ControllerInventory ci = new ControllerInventory();
-            //ci.tableView.getItems().add(addedPart);
-            updateDataBase(addedPart);
-            System.out.println("Part submitted!");
-        }
-    }
-
-    private void updateDataBase(Part part){
-        String user = JOptionPane.showInputDialog("Enter username to update Parts database");
-        String userPass = JOptionPane.showInputDialog("Enter password");
-        try{
-            Class.forName(dbdriver);
-        }catch (ClassNotFoundException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Class not found");
-            alert.showAndWait();
-        }
-        Connection connection = null;
-        try{
-            connection = DriverManager.getConnection((dburl + "/" + dbname), user, userPass);
-            connection.setClientInfo("autoReconnect", "true");
-        }catch (SQLException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Connection failure");
-            alert.showAndWait();
-        }
-        byte fault = 0;
-        if (part.getFault()){
-            fault = 1;
-        }
-        String addToDB = "Insert into parts_list (serialNumber, partName, price, vendor, manufacturer, location, barcode," +
-                "fault, studentID) VALUES ('" + part.getSerial() + "', '" + part.getName() + "', " + part.getPrice() + ", '" +
-                part.getVendor() + "', '" + part.getManufacturer() + "', '" + part.getLocation() + "', " + part.getBarcode() +
-                ", " + fault + ", " + part.getStudentId() + ");";
-        grabSQLData(connection, addToDB);
-    }
-
-    private void grabSQLData(Connection conn, String rawStatement) {
-        Statement currentStatement = null;
-        try {
-            currentStatement = conn.createStatement();
-            currentStatement.execute(rawStatement);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (currentStatement != null) {
-                try {
-                    currentStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            byte fault = 0;
+            if (addedPart.getFault()){
+                fault = 1;
             }
-            currentStatement = null;
+            String addToDB = "Insert into parts (serialNumber,partName,price,vendor,manufacturer,location,barcode," +
+                    "fault,studentID) VALUES ('" + addedPart.getSerial() + "', '" + addedPart.getName() + "', " + addedPart.getPrice() + ", '" +
+                    addedPart.getVendor() + "', '" + addedPart.getManufacturer() + "', '" + addedPart.getLocation() + "', '" + addedPart.getBarcode() +
+                    "', " + fault + ", " + addedPart.getStudentId() + ");";
+            ControllerInventory.executeSQLCommand(addToDB);
+            goBack();
         }
     }
 }

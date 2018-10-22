@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -18,6 +19,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static gui.ControllerInventory.dbdriver;
+import static gui.ControllerInventory.dbname;
+import static gui.ControllerInventory.dburl;
 
 public class ControllerEditItem implements Initializable {
 
@@ -71,9 +76,9 @@ public class ControllerEditItem implements Initializable {
             }
             String name = nameField.getText();
             String serial = serialField.getText();
-            String manufacturer = manufacturerField.getText();
             int quantity = Integer.parseInt(quantityField.getText());
             double price = Double.parseDouble(priceField.getText());
+            String manufacturer = manufacturerField.getText();
             String vendor = vendorField.getText();
             String barcode = barcodeField.getText();
 
@@ -87,42 +92,13 @@ public class ControllerEditItem implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "One or more fields are not correctly entered.");
             alert.showAndWait();
         }
-        try {
-            if (editedPart != null) {
-                Connection con = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/parts", "root", "xam54678");
-                byte fault = 0;
-                if (editedPart.getFault()){
-                    fault = 1;
-                }
-                String addToDB = "Insert into parts (serialNumber, partName, price, vendor, manufacturer, location, barcode," +
-                        "fault, studentID) VALUES ('" + editedPart.getSerial() + "', '" + editedPart.getName() + "', " + editedPart.getPrice() + ", '" +
-                        editedPart.getVendor() + "', '" + editedPart.getManufacturer() + "', '" + editedPart.getLocation() + "', " + editedPart.getBarcode() +
-                        ", " + fault + ", " + editedPart.getStudentId() + ");";
-                editSQLData(con, addToDB);
-                System.out.println("Part edited!");
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void editSQLData(Connection conn, String rawStatement) {
-        Statement currentStatement = null;
-        try {
-            currentStatement = conn.createStatement();
-            currentStatement.execute(rawStatement);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (currentStatement != null) {
-                try {
-                    currentStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            currentStatement = null;
+        if (editedPart != null) {
+            String addToDB = "Insert into parts (serialNumber, partName, price, vendor, manufacturer, location, barcode," +
+                    "fault, studentID) VALUES ('" + editedPart.getSerial() + "', '" + editedPart.getName() + "', " + editedPart.getPrice() + ", '" +
+                    editedPart.getVendor() + "', '" + editedPart.getManufacturer() + "', '" + editedPart.getLocation() + "', '" + editedPart.getBarcode() +
+                    "', " + editedPart.getFault() + ", " + editedPart.getStudentId() + ");";
+            ControllerInventory.executeSQLCommand(addToDB);
+            goBack();
         }
     }
 }

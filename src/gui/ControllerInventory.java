@@ -14,13 +14,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.security.Security;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -43,10 +41,11 @@ public class ControllerInventory implements Initializable {
             barcode, fault, studentId;
 
     private final ObservableList<Part> data
-            = FXCollections.observableArrayList(
-            new Part("HDMI Cable", "234567", "Sony", 2, 5.99, "MSOE", "OUT", "H233J788", false, 533277),
-            new Part("Raspberry Pi", "567890", "Pi Foundation", 3, 29.99, "MSOE", "IN", "P845J788", true, 000000)
-    );
+            = FXCollections.observableArrayList();
+
+    static final String dbdriver = "com.mysql.jdbc.Driver";
+    static final String dburl = "jdbc:mysql://localhost";
+    static final String dbname = "parts";
 
 
     @Override
@@ -75,18 +74,38 @@ public class ControllerInventory implements Initializable {
         barcode.setCellValueFactory(new PropertyValueFactory("barcode"));
         fault.setCellValueFactory(new PropertyValueFactory("fault"));
         studentId.setCellValueFactory(new PropertyValueFactory("studentId"));
+        updateTable();
+    }
+
+    public void updateTable(){
         grabTable();
         tableView.getItems().setAll(this.data);
     }
 
     private void grabTable(){
-        int listLength = 2;
-        Part part;
-        for(int x=0; x<listLength; x++){
-            part = new Part("", "", "", 3, 3, "", "", "", false, 12345);
-            data.add(part);
-        }
+        ResultSet rs = null;
+        String statement = "SELECT * FROM parts";
+        rs = executeSQLCommand(statement);
 
+        try {
+            while (rs.next()) {
+                String serialNumber = rs.getString("serialNumber");
+                String partName = rs.getString("partName");
+                double price = rs.getDouble("price");
+                String vendor = rs.getString("vendor");
+                String manufacturer = rs.getString("manufacturer");
+                String location = rs.getString("location");
+                String barcode = rs.getString("barcode");
+                boolean fault = rs.getBoolean("fault");
+                long studentID = rs.getLong("studentID");
+                Part part = new Part(partName, serialNumber, manufacturer, 1, price, vendor, location, barcode, fault, studentID);
+                data.add(part);
+            }
+        }catch(SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't grab part list");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -109,7 +128,7 @@ public class ControllerInventory implements Initializable {
     public void printReport(){
         String report = "Test";
         try {
-            OutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("C:"));
+            OutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(System.getProperty("user.dir") + "/test.txt"));
             byte[] bytes = report.getBytes();
             InputStream inputStream = new ByteArrayInputStream(bytes);
             int token = -1;
@@ -140,8 +159,8 @@ public class ControllerInventory implements Initializable {
         catch(IOException invoke){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
-
         }
+        updateTable();
     }
 
     @FXML
@@ -160,8 +179,8 @@ public class ControllerInventory implements Initializable {
         catch(IOException invoke){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
-
         }
+        updateTable();
     }
 
     @FXML
@@ -175,39 +194,69 @@ public class ControllerInventory implements Initializable {
         if(result.get() == ButtonType.OK){
             Part part = tableView.getSelectionModel().getSelectedItem();
             deleteFromTable(part);
-            System.out.println("Part removed!");
         }
+        updateTable();
     }
 
     private void deleteFromTable(Part part){
-        try {
-            if (part != null) {
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/parts", "root", "xam54678");
-                String deleteFromDB = "DELETE FROM parts WHERE serialNumber="+part.getSerial()+" AND barcode="
-                        + part.getBarcode() + ";";
-                executeSQLCommand(con, deleteFromDB);
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
+        if (part != null) {
+            String deleteFromDB = "DELETE FROM parts WHERE serialNumber='"+part.getSerial()+"' AND barcode='"
+                    + part.getBarcode() + "';";
+            executeSQLCommand(deleteFromDB);
         }
     }
 
-    private void executeSQLCommand(Connection conn, String rawStatement) {
+    public static ResultSet executeSQLCommand(String rawStatement){
+        Connection conn = makeDBConnection();
+        if(conn==null) {
+            System.out.println("Connection was null, SQL command not executed.");
+            return null;
+        }
         Statement currentStatement = null;
         try {
             currentStatement = conn.createStatement();
-            currentStatement.execute(rawStatement);
+            if(rawStatement.toLowerCase().contains("select")) {
+                ResultSet rs = currentStatement.executeQuery(rawStatement);
+                return rs;
+            }
+            else
+                currentStatement.execute(rawStatement);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             if (currentStatement != null) {
                 try {
                     currentStatement.close();
+                    System.out.println("Connection closed!");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
             currentStatement = null;
         }
+        return null;
+    }
+
+    public static Connection makeDBConnection(){
+        String user = JOptionPane.showInputDialog("Enter username to update Parts database");
+        String userPass = JOptionPane.showInputDialog("Enter password");
+        try {
+            Class.forName(dbdriver);
+        } catch (ClassNotFoundException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Class not found");
+            alert.showAndWait();
+        }
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection((dburl + "/" + dbname), user, userPass);
+            connection.setClientInfo("autoReconnect", "true");
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Connection failure");
+            alert.showAndWait();
+        }catch(NullPointerException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Connection failure");
+            alert.showAndWait();
+        }
+        return connection;
     }
 }
