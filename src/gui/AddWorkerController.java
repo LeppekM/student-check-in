@@ -36,6 +36,8 @@ public class AddWorkerController implements Initializable {
     @FXML
     private CheckBox isAdminCheckBoxAddWorkerPage;
 
+    AdminPopupController adminPopupController = new AdminPopupController();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addButtonAddWorkerPage.setAlignment(Pos.CENTER);
@@ -80,19 +82,9 @@ public class AddWorkerController implements Initializable {
     }
 
 
-    public void adminPopup(){
-        if(isAdminCheckBoxAddWorkerPage.isSelected()){
-            try {
-                Stage diffStage = new Stage();
-                Pane pane = FXMLLoader.load(getClass().getResource("AdminPopup.fxml"));
-                Scene scene = new Scene(pane, 250, 200);
-                diffStage.setScene(scene);
-                diffStage.initModality(Modality.APPLICATION_MODAL);
-                diffStage.setTitle("Admin Credentials Needed");
-                diffStage.showAndWait();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void adminPopup() {
+        if (isAdminCheckBoxAddWorkerPage.isSelected()) {
+            adminPopupController.launchAdminPin();
         }
     }
 
