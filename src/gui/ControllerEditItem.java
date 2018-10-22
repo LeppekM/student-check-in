@@ -91,7 +91,15 @@ public class ControllerEditItem implements Initializable {
             if (editedPart != null) {
                 Connection con = DriverManager.getConnection(
                         "jdbc:mysql://localhost:3306/parts", "root", "xam54678");
-                editSQLData(con, "");
+                byte fault = 0;
+                if (editedPart.getFault()){
+                    fault = 1;
+                }
+                String addToDB = "Insert into parts (serialNumber, partName, price, vendor, manufacturer, location, barcode," +
+                        "fault, studentID) VALUES ('" + editedPart.getSerial() + "', '" + editedPart.getName() + "', " + editedPart.getPrice() + ", '" +
+                        editedPart.getVendor() + "', '" + editedPart.getManufacturer() + "', '" + editedPart.getLocation() + "', " + editedPart.getBarcode() +
+                        ", " + fault + ", " + editedPart.getStudentId() + ");";
+                editSQLData(con, addToDB);
                 System.out.println("Part edited!");
             }
         }catch(SQLException e){

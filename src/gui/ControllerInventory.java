@@ -1,5 +1,6 @@
 package gui;
 
+import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,14 +14,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.security.Security;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -32,9 +34,13 @@ public class ControllerInventory implements Initializable {
     @FXML
     private Button print, back, add, remove;
 
+    @FXML
+    private TextField searchField;
+
     @FXML public TableView<Part> tableView;
 
-    @FXML private TableColumn<Part,String> partName, serialNumber, manufacturer, quantity, price, vendor, location, barcode, fault, studentId;
+    @FXML private TableColumn<Part,String> partName, serialNumber, manufacturer, quantity, price, vendor, location,
+            barcode, fault, studentId;
 
     private final ObservableList<Part> data
             = FXCollections.observableArrayList(
@@ -69,27 +75,24 @@ public class ControllerInventory implements Initializable {
         barcode.setCellValueFactory(new PropertyValueFactory("barcode"));
         fault.setCellValueFactory(new PropertyValueFactory("fault"));
         studentId.setCellValueFactory(new PropertyValueFactory("studentId"));
+        grabTable();
         tableView.getItems().setAll(this.data);
     }
 
-//    private void grabSQLData(Connection conn, String rawStatement) {
-//        Statement currentStatement = null;
-//         try {
-//             currentStatement = conn.createStatement();
-//             currentStatement.execute(rawStatement);
-//         } catch (SQLException e) {
-//             e.printStackTrace();
-//         } finally {
-//             if (currentStatement != null) {
-//                 try {
-//                     currentStatement.close();
-//                 } catch (SQLException e) {
-//                     e.printStackTrace();
-//                 }
-//             }
-//             currentStatement = null;
-//         }
-//    }
+    private void grabTable(){
+        int listLength = 2;
+        Part part;
+        for(int x=0; x<listLength; x++){
+            part = new Part("", "", "", 3, 3, "", "", "", false, 12345);
+            data.add(part);
+        }
+
+    }
+
+    @FXML
+    public void search(){
+
+    }
 
     @FXML
     public void goBack(){
@@ -104,14 +107,22 @@ public class ControllerInventory implements Initializable {
 
     @FXML
     public void printReport(){
+        String report = "Test";
         try {
-            Pane pane = FXMLLoader.load(getClass().getResource("manageWorkers.fxml"));
-            sceneInv.getScene().setRoot(pane);
-        }
-        catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
+            OutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("C:"));
+            byte[] bytes = report.getBytes();
+            InputStream inputStream = new ByteArrayInputStream(bytes);
+            int token = -1;
 
+            while ((token = inputStream.read()) != -1) {
+                bufferedOutputStream.write(token);
+            }
+            bufferedOutputStream.flush();
+            bufferedOutputStream.close();
+            inputStream.close();
+        }catch(IOException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, problems loading part list.");
+            alert.showAndWait();
         }
     }
 
@@ -157,12 +168,46 @@ public class ControllerInventory implements Initializable {
     public void removeItem(){
         Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
         dialog.setHeaderText("Please Confirm");
-        dialog.setContentText("Are you sure you want to delete these items?");
+        dialog.setContentText("Are you sure you want to delete this item?");
         dialog.setResizable(true);
         dialog.getDialogPane().setPrefSize(350, 200);
         final Optional<ButtonType> result = dialog.showAndWait();
         if(result.get() == ButtonType.OK){
+            Part part = tableView.getSelectionModel().getSelectedItem();
+            deleteFromTable(part);
             System.out.println("Part removed!");
+        }
+    }
+
+    private void deleteFromTable(Part part){
+        try {
+            if (part != null) {
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/parts", "root", "xam54678");
+                String deleteFromDB = "DELETE FROM parts WHERE serialNumber="+part.getSerial()+" AND barcode="
+                        + part.getBarcode() + ";";
+                executeSQLCommand(con, deleteFromDB);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void executeSQLCommand(Connection conn, String rawStatement) {
+        Statement currentStatement = null;
+        try {
+            currentStatement = conn.createStatement();
+            currentStatement.execute(rawStatement);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (currentStatement != null) {
+                try {
+                    currentStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            currentStatement = null;
         }
     }
 }
