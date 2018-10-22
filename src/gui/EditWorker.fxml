@@ -4,13 +4,11 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EditWorkerController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Pane prefHeight="400.0" prefWidth="600.0">
             <children>
@@ -29,14 +27,9 @@
                     </font></Label>
                 <TextField fx:id="workerName" layoutX="135.0" layoutY="10.0" />
                 <TextField fx:id="workerEmail" layoutX="125.0" layoutY="50.0" />
-                <ImageView fitHeight="150.0" fitWidth="179.0" layoutX="391.0" layoutY="15.0" pickOnBounds="true">
-                    <image>
-                        <Image url="@../../msoe.png" />
-                    </image>
-                </ImageView>
                 <Button fx:id="save" layoutX="455.0" layoutY="370.0" mnemonicParsing="false" onAction="#save" text="Save" />
                 <Button fx:id="cancel" layoutX="526.0" layoutY="370.0" mnemonicParsing="false" text="Cancel" />
-            <CheckBox layoutX="104.0" layoutY="95.0" mnemonicParsing="false" onAction="#isAdmin" />
+            <CheckBox fx:id="adminCheckBox" layoutX="104.0" layoutY="95.0" mnemonicParsing="false" onAction="#isAdmin" />
             <Label layoutX="10.0" layoutY="129.0" text="Admin Pin:">
                <font>
                   <Font size="18.0" />

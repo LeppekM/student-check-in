@@ -60,8 +60,7 @@ public class ManageWorkersController implements Initializable {
     }
 
     public void viewWorker() {
-        newStage("EditWorker.fxml", "Edit Worker");
-
+        EditWorkerController editWorkerController = new EditWorkerController(getWorkerValues(workersTableManageWorkersPage));
     }
 
     private void newStage(String fxml, String title) {
@@ -170,6 +169,17 @@ public class ManageWorkersController implements Initializable {
         return column;
     }
 
-
-
+    private String[] getWorkerValues(TableView tableView) {
+        String[] worker = new String[4];
+        String name = tableView.getSelectionModel().getSelectedItem().toString().split(", ")[0];
+        String email = tableView.getSelectionModel().getSelectedItem().toString().split(", ")[1];
+        String value = tableView.getSelectionModel().getSelectedItem().toString().split(", ")[2];
+        worker[0] = name.substring(name.indexOf(": ") + 2, name.indexOf("]"));
+        worker[1] = email.substring(email.indexOf(": ") + 2, email.indexOf("]"));
+        worker[2] = value.substring(value.indexOf(": ") + 2, value.indexOf("]]"));
+        return worker;
+    }
 }
+
+
+
