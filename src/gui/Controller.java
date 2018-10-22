@@ -66,6 +66,10 @@ public class Controller implements Initializable {
     public void manageStudents() {
         if (currentWorker instanceof Administrator) {
             newStage("ManageStudents.fxml", "Manage Students");
+        } else if (currentWorker instanceof StudentWorker) {
+            if (((StudentWorker) currentWorker).canManageStudents()) {
+                newStage("ManageStudents.fxml", "Manage Students");
+            }
         }
     }
 
