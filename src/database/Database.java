@@ -5,39 +5,39 @@ import java.util.ArrayList;
 
 public class Database {
 
-    private ArrayList<Double> partInfo = new ArrayList<>();
-    final String SELECT_QUERY = "SELECT barcode FROM part";
-
-
 
     final String url = "jdbc:mysql://localhost:3306/sdl";
     final String username = "langdk";
-    final String password = "3cisweve";
+    final String password = "password";
     private Statement statement;
-    private PreparedStatement preparedStatement;
 
     public void addStudentID(String studentID, int barcode){
-
-        System.out.println("Connecting database...");
-
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             statement = connection.createStatement();
-            preparedStatement = connection.prepareStatement(selectQuery(barcode));
-            ResultSet resultSet;
-            resultSet = preparedStatement.executeQuery();
-            statement.executeUpdate(updateHelper(studentID, barcode));
-            System.out.println(updateHelper(studentID, barcode));
+            statement.executeUpdate(addStudentIDHelper(studentID, barcode));
+            System.out.println(addStudentIDHelper(studentID, barcode));
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public String updateHelper(String studentID, int barcode){
+    public void removeStudentID(String studentID){
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            statement = connection.createStatement();
+            statement.executeUpdate(removeStudentIDHelper(studentID));
+            System.out.println(removeStudentIDHelper(studentID));
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+
+    }
+
+    public String addStudentIDHelper(String studentID, int barcode){
         return "UPDATE part set studentID = "+studentID+" WHERE barcode = " + barcode;
     }
 
-    public String selectQuery(int barcode){
-        return "SELECT barcode from part where barcode = " + barcode;
+    public String removeStudentIDHelper(String studentID){
+        return "UPDATE part set studentID = null WHERE studentID = " + studentID;
     }
 
 }

@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="scene" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CheckItemsController">
+<VBox fx:id="scene" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CheckItemsController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -64,9 +64,9 @@
     </MenuBar>
     <SplitPane focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <items>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
-                  <Tab text="Checkout">
+                  <Tab fx:id="checkOutTab" text="Checkout">
                      <content>
                         <TableView fx:id="checkOutTableView" editable="true" prefHeight="499.0" prefWidth="1027.0" stylesheets="@checkOutTable.css">
                            <columns>
@@ -83,7 +83,7 @@
                         </TableView>
                      </content>
                   </Tab>
-                  <Tab text="Checkin">
+                  <Tab fx:id="checkInTab" text="Checkin">
                      <content>
                         <TableView fx:id="checkInTableView" editable="true" prefHeight="499.0" prefWidth="1027.0" stylesheets="@checkOutTable.css">
                            <columns>
@@ -109,25 +109,25 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="131.0" layoutY="14.0" />
+                              <TextField fx:id="name" editable="false" layoutX="131.0" layoutY="14.0" />
                               <Label layoutX="5.0" layoutY="55.0" text="Student RFID:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="120.0" layoutY="56.0" />
+                              <TextField fx:id="ID" editable="false" layoutX="120.0" layoutY="56.0" />
                               <Label layoutX="5.0" layoutY="103.0" text="Student Email:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="124.0" layoutY="103.0" />
+                              <TextField fx:id="email" editable="false" layoutX="124.0" layoutY="103.0" />
                               <Label layoutX="5.0" layoutY="151.0" text="Date Since Last Rental:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="198.0" layoutY="152.0" promptText="mm/dd/yyyy" />
+                              <TextField fx:id="date" editable="false" layoutX="198.0" layoutY="152.0" promptText="mm/dd/yyyy" />
                               <Label layoutX="17.0" layoutY="214.0" text="Items Checked Out:">
                                  <font>
                                     <Font size="18.0" />
@@ -160,7 +160,7 @@
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
             <Button mnemonicParsing="false" onAction="#clearFields" text="Clear Fields" />
-            <Button mnemonicParsing="false" onAction="#test" text="Submit " />
+            <Button fx:id="submit" mnemonicParsing="false" onAction="#submit" text="Submit " />
         <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button fx:id="newRow" layoutX="8.0" mnemonicParsing="false" onAction="#newRow" text="New Row" />

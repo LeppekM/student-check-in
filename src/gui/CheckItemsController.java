@@ -4,66 +4,37 @@ import database.Database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
 public class CheckItemsController implements Initializable{
 
     @FXML
-    private TableColumn studentID;
+    private TableColumn studentID, barcode, partName, quantity, overnight, action, studentIDCheckin, barcodeCheckin, partNameCheckin, quantityCheckin, fault, actionCheckin;
 
     @FXML
-    private TableColumn barcode;
-
-    @FXML
-    private TableColumn partName;
-
-    @FXML
-    private TableColumn quantity;
-
-    @FXML
-    private TableColumn overnight;
-
-    @FXML
-    private TableColumn action;
-
-    @FXML
-    private TableColumn studentIDCheckin;
-
-    @FXML
-    private TableColumn barcodeCheckin;
-
-    @FXML
-    private TableColumn partNameCheckin;
-
-    @FXML
-    private TableColumn quantityCheckin;
-
-    @FXML
-    private TableColumn fault;
-
-    @FXML
-    private TableColumn actionCheckin;
-
-    @FXML
-    TableView checkOutTableView;
-
-    @FXML
-    TableView checkInTableView;
+    TableView checkOutTableView, checkInTableView;
 
     @FXML
     private VBox scene;
@@ -71,18 +42,63 @@ public class CheckItemsController implements Initializable{
     @FXML
     ListView checkOutTable, savedTable;
 
+    @FXML
+    TabPane tabPane;
+
+    @FXML
+    Tab checkOutTab, checkInTab;
+
+    @FXML
+    Button submit;
+
+    @FXML
+    TextField name, ID, email, date;
+
     private ObservableList<CheckItemsTable> checkoutData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
     private ObservableList<CheckItemsTable> checkinData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
     Database database = new Database();
-
-
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setCheckoutItems();
         setCheckinItems();
-
+        checkOutTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2){
+                String item = checkOutTable.getSelectionModel().getSelectedItem().toString();
+                try {
+                    Stage diffStage = new Stage();
+                    Pane pane = FXMLLoader.load(getClass().getResource("infoPopUp.fxml"));
+                    Scene scene = new Scene(pane);
+                    diffStage.setScene(scene);
+                    diffStage.initModality(Modality.APPLICATION_MODAL);
+                    diffStage.setTitle("Item Info");
+                    diffStage.showAndWait();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        checkOutTableView.setOnMouseClicked(event -> {
+            if (checkOutTableView.getSelectionModel().getSelectedItems().size() == 1 &&
+                    checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getStudentID() != null){
+                try {
+                    FileReader fr = new FileReader("src/students.txt");
+                    BufferedReader br = new BufferedReader(fr);
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        if (line.contains(checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getStudentID())) {
+                            name.setText(line.substring(0, line.indexOf(',')));
+                            ID.setText(line.substring(line.indexOf(',') + 1, line.lastIndexOf(',')));
+                            email.setText(line.substring(line.lastIndexOf(',') + 1));
+                        }
+                    }
+                    Student student = new Student(name.getText(), ID.getText(), email.getText());
+                    br.close();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void setCheckinItems() {
@@ -93,14 +109,10 @@ public class CheckItemsController implements Initializable{
     }
 
     private void generateTables(TableColumn checkBox, TableColumn action, TableView tableView, ObservableList data) {
-        //ObservableList<CheckItemsTable> data = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
         setCheckoutTableEditableFields();
 
         checkBox.setCellValueFactory(
                 new PropertyValueFactory<CheckItemsTable, String>("checkBox")
-        );
-        action.setCellValueFactory(
-                new PropertyValueFactory<CheckItemsTable, String>("button")
         );
         tableView.setItems(data);
     }
@@ -256,8 +268,6 @@ public class CheckItemsController implements Initializable{
         makeQuantityEditable();
     }
 
-
-
     public void clearFields(){
         clearCheckinData();
         clearCheckoutdata();
@@ -293,14 +303,46 @@ public class CheckItemsController implements Initializable{
     }
 
 
-    public void test(){
-
-        database.addStudentID(checkoutData.get(0).getStudentID(), Integer.parseInt(checkoutData.get(0).getBarcode()));
-
-
+    public void submit(){
+        if(checkOutTab.isSelected()){
+            overnightPopup();
+            database.addStudentID(checkoutData.get(0).getStudentID(), Integer.parseInt(checkoutData.get(0).getBarcode()));
+        }
+        if(checkInTab.isSelected()){
+            faultPopup();
+            database.removeStudentID(checkinData.get(0).getStudentID());
+        }
+        String finalDate = LocalDate.now().toString();
+        System.out.println(finalDate);
+        finalDate = finalDate.substring(5,7) + "/" + finalDate.substring(8) + "/" + finalDate.substring(0,4);
+        date.setText(finalDate);
+        checkOutTable.getItems().add(checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getPartName());
     }
 
+    public void overnightPopup(){
+        if(checkoutData.get(0).getCheckBox().isSelected()){
+            showNewStage("overnightPopup.fxml", "Overnight Checkout");
+        }
+    }
 
+    public void faultPopup(){
+        if(checkinData.get(0).getCheckBox().isSelected()){
+            showNewStage("faultPopup.fxml", "Fault Information");
+        }
+    }
 
+    public void showNewStage(String fxml, String title){
+        try {
+            Stage diffStage = new Stage();
+            Pane pane = FXMLLoader.load(getClass().getResource(fxml));
+            Scene scene = new Scene(pane);
+            diffStage.setScene(scene);
+            diffStage.initModality(Modality.APPLICATION_MODAL);
+            diffStage.setTitle(title);
+            diffStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
