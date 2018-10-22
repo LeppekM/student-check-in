@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,26 +23,39 @@ public class Controller implements Initializable {
     private VBox mainMenuScene;
 
     @FXML
-    private Button manageWorkers;
+    private Button manageWorker, manageStudent, checkInOutButtonMenuPage, inventory;
 
-    @FXML
-    private Button manageStudents;
+    private static Worker currentWorker;
 
-    @FXML
-    private Button checkin;
+//    public Controller(Worker worker, StackPane stackPane) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+//            loader.setController(this);
+//            Pane mainMenuPane = loader.load();
+//            stackPane.getScene().setRoot(mainMenuPane);
+//            initialize(loader.getLocation(), loader.getResources());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        this.currentWorker = worker;
+//    }
 
-    @FXML
-    private Button inventory;
-
-
-
+    public void initData(Worker worker) {
+        if (currentWorker == null) {
+            this.currentWorker = worker;
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        manageWorker.setOnAction(event -> manageWorkers());
+        manageStudent.setOnAction(event -> manageStudents());
+        inventory.setOnAction(event -> openInventory());
+        checkInOutButtonMenuPage.setOnAction(event -> openCheckInPage());
 
     }
 
-    public void openCheckInPage(){
+    public void openCheckInPage() {
         newStage("checkout.fxml", "Check-in/out Parts");
     }
 
@@ -50,11 +64,19 @@ public class Controller implements Initializable {
     }
 
     public void manageStudents() {
-        newStage("ManageStudents.fxml", "Manage Students");
+        if (currentWorker instanceof Administrator) {
+            newStage("ManageStudents.fxml", "Manage Students");
+        } else if (currentWorker instanceof StudentWorker) {
+            if (((StudentWorker) currentWorker).canManageStudents()) {
+                newStage("ManageStudents.fxml", "Manage Students");
+            }
+        }
     }
 
     public void manageWorkers(){
-        newStage("manageWorkers.fxml", "Manage Workers");
+        if (currentWorker instanceof Administrator) {
+            newStage("manageWorkers.fxml", "Manage Workers");
+        }
     }
 
     public void newStage(String fxml, String title){

@@ -43,6 +43,19 @@
                                 <Insets bottom="15.0" />
                             </VBox.margin>
                         </HBox>
+                        <HBox>
+                            <children>
+                                <Label text="Password:">
+                                    <HBox.margin>
+                                        <Insets right="5.0" />
+                                    </HBox.margin>
+                                </Label>
+                                <TextField fx:id="passwordInputAddWorkerPage" />
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="15.0" />
+                            </VBox.margin>
+                        </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                             <children>
                                 <Label text="Administrator:" />

@@ -6,14 +6,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
 import java.util.ResourceBundle;
@@ -108,16 +111,39 @@ public class CheckItemsController implements Initializable{
     }
 
     public void returnHome()throws Exception{
-        scene.getScene().getWindow().hide();
-        Stage stage = new Stage();
-        StudentCheckin studentCheckin = new StudentCheckin();
-        studentCheckin.start(stage);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+            //loader.setController(new Controller());
+            Pane pane = loader.load();
+            scene.getScene().setRoot(pane);
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+        }
+//        scene.getScene().getWindow().hide();
+//        Stage stage = new Stage();
+//        StudentCheckin studentCheckin = new StudentCheckin();
+//        studentCheckin.start(stage);
     }
 
     public void popUp(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount() == 2){
-            Controller c = new Controller();
-            c.newStage("infoPopUp.fxml", "Item Info");
+            newStage("infoPopUp.fxml", "Item Info");
+            //Controller c = new Controller();
+            //c.newStage("infoPopUp.fxml", "Item Info");
+        }
+    }
+
+    public void newStage(String fxml, String title){
+        try {
+            Pane pane = FXMLLoader.load(getClass().getResource(fxml));
+            scene.getScene().setRoot(pane);
+        }
+        catch(IOException invoke){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+            invoke.printStackTrace();
+
         }
     }
 

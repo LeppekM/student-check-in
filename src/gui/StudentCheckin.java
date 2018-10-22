@@ -14,13 +14,19 @@ public class StudentCheckin extends Application  {
     }
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
-
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         Scene scene = new Scene(root, 800, 600);
-
         primaryStage.setTitle("Barcode Scanner");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+//        Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
+//
+//        Scene scene = new Scene(root, 800, 600);
+//
+//        primaryStage.setTitle("Barcode Scanner");
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
 
     }
 

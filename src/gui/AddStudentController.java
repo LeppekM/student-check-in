@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for AddStudent.fxml
+ */
 public class AddStudentController implements Initializable {
 
     @FXML
@@ -36,6 +39,9 @@ public class AddStudentController implements Initializable {
         addButtonAddStudentPage.setAlignment(Pos.CENTER);
     }
 
+    /**
+     * Functionality for the Add Student button that adds a student if the name and email are not null.
+     */
     public void addStudent() {
         String name = studentNameInputAddStudentPage.getText();
         String rfid = studentRFIDInputAddStudentPage.getText();
