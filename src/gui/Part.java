@@ -23,19 +23,19 @@ public class Part {
         this.studentId = new SimpleLongProperty(studentId);
     }
 
-    public String getName() {
-        return this.partName.get();
+    public String getPartName() {
+        return partName.get();
     }
 
-    public void setName(String name) {
+    public void setPartName(String name) {
         this.partName.set(name);
     }
 
-    public String getSerial() {
-        return this.serialNumber.get();
+    public String getSerialNumber() {
+        return serialNumber.get();
     }
 
-    public void setSerial(String serial) {
+    public void setSerialNumber(String serial) {
         this.serialNumber.set(serial);
     }
 
@@ -101,5 +101,13 @@ public class Part {
 
     public void setVendor(long studentId) {
         this.studentId.set(studentId);
+    }
+
+    @Override
+    public String toString(){
+        return "Part Name: "+getPartName()+"\tSerial Number: "+getSerialNumber()+"\tManufacturer: " + getManufacturer() +
+                "\tQuantity: " + getQuantity() + "\tPrice: " + getPrice() + "\tVendor: " + getVendor() +
+                "\tLocation: " + getLocation() + "\tBarcode: " + getBarcode() + "\tFault: " + getFault() +
+                "\tStudent ID: " + getStudentId() + "\n";
     }
 }

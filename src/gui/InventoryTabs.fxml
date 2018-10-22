@@ -19,7 +19,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sceneInv" prefHeight="528.0" prefWidth="675.0000999999975" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="gui.ControllerInventory">
+<VBox fx:id="sceneInv" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="gui.ControllerInventory">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -60,24 +60,20 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="604.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-        <TabPane prefHeight="500.0" prefWidth="675.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane layoutX="0.0" layoutY="0.0" prefHeight="576.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
           <tabs>
             <Tab text="Total Inventory">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="555.0" prefWidth="800.0">
                   <children>
-                    <Button fx:id="print" layoutX="500.0" layoutY="10.0" mnemonicParsing="false" onAction="#printReport" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                    <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                     <Label layoutX="20.0" layoutY="20.0" text="Total Inventory">
                       <font>
                         <Font size="24.0" fx:id="x1" />
                       </font>
                     </Label>
-                    <Button fx:id="add" layoutX="549.0" layoutY="445.0" mnemonicParsing="false" onAction="#addItem" prefHeight="21.0" prefWidth="56.0" text="Add" />
-                    <Button fx:id="remove" layoutX="609.0" layoutY="445.0" mnemonicParsing="false" onAction="#removeItem" text="Remove" />
-                    <TableView id="tableInv" fx:id="tableView" layoutY="77.0" prefHeight="360.0" prefWidth="675.0">
+                    <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
                       <columns>
                         <TableColumn prefWidth="169.0" resizable="false" text="Part Name" fx:id="partName" />
                         <TableColumn prefWidth="124.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
@@ -97,12 +93,10 @@
             </Tab>
             <Tab text="History">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                    <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                     <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Transaction History" />
-                    <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                    <TableView layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
                       <columns>
                         <TableColumn prefWidth="141.0" resizable="false" text="Student" />
                         <TableColumn prefWidth="127.0" resizable="false" text="Part Name" />
@@ -118,12 +112,10 @@
             </Tab>
             <Tab text="Checked Out">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                    <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                     <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Currently Checked Out" />
-                    <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                    <TableView layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
                       <columns>
                         <TableColumn prefWidth="147.0" resizable="false" text="Student" />
                         <TableColumn prefWidth="121.0" resizable="false" text="Part Name" />
@@ -139,12 +131,10 @@
             </Tab>
             <Tab text="Overdue">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
                   <children>
-                    <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                    <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
                     <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Overdue Items" />
-                    <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
+                    <TableView layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
                       <columns>
                         <TableColumn prefWidth="135.0" resizable="false" text="Student" />
                         <TableColumn prefWidth="135.0" resizable="false" text="Item" />
@@ -159,31 +149,29 @@
             </Tab>
             <Tab text="Fault">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="675.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0">
                   <children>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="675.0">
-                      <children>
-                        <Button layoutX="500.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Print" />
-                        <TextField layoutX="501.0" layoutY="43.0" prefHeight="25.0" prefWidth="169.0" />
-                        <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Faulty Items" />
-                        <TableView layoutY="81.0" prefHeight="390.0" prefWidth="675.0">
-                          <columns>
-                            <TableColumn prefWidth="135.0" resizable="false" text="Item/Serial Number" />
-                            <TableColumn prefWidth="135.0" resizable="false" text="Description" />
-                            <TableColumn prefWidth="135.0" resizable="false" text="Parts Needed" />
-                            <TableColumn prefWidth="135.0" resizable="false" text="Person Responsible" />
-                            <TableColumn prefWidth="135.0" resizable="false" text="Date Returned" />
-                          </columns>
-                        </TableView>
-                      </children>
-                    </AnchorPane>
+                    <Label font="$x1" layoutX="20.0" layoutY="20.0" text="Faulty Items" />
+                    <TableView layoutX="0.0" layoutY="81.0" prefHeight="420.0" prefWidth="800.0">
+                      <columns>
+                        <TableColumn prefWidth="135.0" resizable="false" text="Item/Serial Number" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Description" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Parts Needed" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Person Responsible" />
+                        <TableColumn prefWidth="135.0" resizable="false" text="Date Returned" />
+                      </columns>
+                    </TableView>
                   </children>
                 </AnchorPane>
               </content>
             </Tab>
           </tabs>
         </TabPane>
-        <Button fx:id="back" layoutX="590.0" layoutY="41.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="75.0" text="Back" />
+        <Button fx:id="print" layoutX="700.0" layoutY="40.0" mnemonicParsing="false" onAction="#printReport" prefHeight="25.0" prefWidth="75.0" text="Print" />
+        <Button fx:id="back" layoutX="15.0" layoutY="540.0" mnemonicParsing="false" onAction="#goBack" prefHeight="25.0" prefWidth="100.0" text="Back to Home" />
+        <Button fx:id="add" layoutX="650.0" layoutY="541.0" mnemonicParsing="false" onAction="#addItem" prefHeight="21.0" prefWidth="56.0" text="Add" />
+        <Button fx:id="remove" layoutX="725.0" layoutY="541.0" mnemonicParsing="false" onAction="#removeItem" text="Remove" />
+        <TextField fx:id="searchField" layoutX="605.0" layoutY="75.0" onAction="#search" prefHeight="25.0" prefWidth="169.0" promptText="Search..." text="" />
       </children>
     </AnchorPane>
   </children>
