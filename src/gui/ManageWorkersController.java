@@ -56,22 +56,27 @@ public class ManageWorkersController implements Initializable {
     }
 
     public void addWorker() {
+        newStage("AddWorker.fxml", "Add Worker");
+    }
+
+    public void viewWorker() {
+        newStage("EditWorker.fxml", "Edit Worker");
+
+    }
+
+    private void newStage(String fxml, String title) {
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("AddWorker.fxml"));
+            Pane pane = FXMLLoader.load(getClass().getResource(fxml));
             Scene scene = new Scene(pane);
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
-            diffStage.setTitle("Add Worker");
+            diffStage.setTitle(title);
             diffStage.showAndWait();
             populateTable();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void viewWorker() {
-
     }
 
     public void deleteWorker() {
