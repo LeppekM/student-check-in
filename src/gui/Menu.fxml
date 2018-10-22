@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainMenuScene" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Controller">
+<VBox fx:id="mainMenuScene" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -53,10 +53,10 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-            <Button fx:id="checkInOutButtonMenuPage" layoutX="103.0" layoutY="66.0" mnemonicParsing="false" onAction="#openCheckInPage" prefHeight="75.0" prefWidth="150.0" text="Check In/Out" />
-            <Button fx:id="manageWorker" layoutX="382.0" layoutY="66.0" mnemonicParsing="false" onAction="#manageWorkers" prefHeight="75.0" prefWidth="150.0" text="Manage Workers" />
-            <Button fx:id="inventory" layoutX="111.0" layoutY="220.0" mnemonicParsing="false" onAction="#openInventory" prefHeight="75.0" prefWidth="150.0" text="Inventory" />
-            <Button fx:id="manageStudent" layoutX="382.0" layoutY="220.0" mnemonicParsing="false" onAction="#manageStudents" prefHeight="75.0" prefWidth="150.0" text="Manage Students" />
+            <Button fx:id="checkInOutButtonMenuPage" layoutX="103.0" layoutY="66.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="150.0" text="Check In/Out" />
+            <Button fx:id="manageWorker" layoutX="382.0" layoutY="66.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="150.0" text="Manage Workers" />
+            <Button fx:id="inventory" layoutX="111.0" layoutY="220.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="150.0" text="Inventory" />
+            <Button fx:id="manageStudent" layoutX="382.0" layoutY="220.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="150.0" text="Manage Students" />
       </children>
     </AnchorPane>
   </children>

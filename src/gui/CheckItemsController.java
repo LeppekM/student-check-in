@@ -116,8 +116,8 @@ public class CheckItemsController implements Initializable{
 
     public void popUp(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount() == 2){
-            Controller c = new Controller();
-            c.newStage("infoPopUp.fxml", "Item Info");
+            //Controller c = new Controller();
+            //c.newStage("infoPopUp.fxml", "Item Info");
         }
     }
 

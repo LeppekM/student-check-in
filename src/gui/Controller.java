@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,22 +23,29 @@ public class Controller implements Initializable {
     private VBox mainMenuScene;
 
     @FXML
-    private Button manageWorkers;
+    private Button manageWorker, manageStudent, checkInOutButtonMenuPage, inventory;
 
-    @FXML
-    private Button manageStudents;
+    Worker currentWorker;
 
-    @FXML
-    private Button checkin;
-
-    @FXML
-    private Button inventory;
-
-
-
+    public Controller(Worker worker, StackPane stackPane) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+            loader.setController(this);
+            Pane mainMenuPane = loader.load();
+            stackPane.getScene().setRoot(mainMenuPane);
+            initialize(loader.getLocation(), loader.getResources());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.currentWorker = worker;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        manageWorker.setOnAction(event -> manageWorkers());
+        manageStudent.setOnAction(event -> manageStudents());
+        inventory.setOnAction(event -> openInventory());
+        checkInOutButtonMenuPage.setOnAction(event -> openCheckInPage());
 
     }
 
