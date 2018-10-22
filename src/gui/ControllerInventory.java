@@ -192,7 +192,7 @@ public class ControllerInventory implements Initializable {
     private void deleteFromTable(Part part){
         if (part != null) {
             String deleteFromDB = "DELETE FROM parts WHERE serialNumber='"+part.getSerialNumber()+"' AND barcode='"
-                    + part.getBarcode() + "';";
+                    + part.getBarcode() + "' limit 1;";
             executeSQLCommand(deleteFromDB);
         }
     }
