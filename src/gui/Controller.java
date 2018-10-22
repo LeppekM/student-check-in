@@ -25,19 +25,25 @@ public class Controller implements Initializable {
     @FXML
     private Button manageWorker, manageStudent, checkInOutButtonMenuPage, inventory;
 
-    Worker currentWorker;
+    private static Worker currentWorker;
 
-    public Controller(Worker worker, StackPane stackPane) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
-            loader.setController(this);
-            Pane mainMenuPane = loader.load();
-            stackPane.getScene().setRoot(mainMenuPane);
-            initialize(loader.getLocation(), loader.getResources());
-        } catch (IOException e) {
-            e.printStackTrace();
+//    public Controller(Worker worker, StackPane stackPane) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+//            loader.setController(this);
+//            Pane mainMenuPane = loader.load();
+//            stackPane.getScene().setRoot(mainMenuPane);
+//            initialize(loader.getLocation(), loader.getResources());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        this.currentWorker = worker;
+//    }
+
+    public void initData(Worker worker) {
+        if (currentWorker == null) {
+            this.currentWorker = worker;
         }
-        this.currentWorker = worker;
     }
 
     @Override

@@ -43,7 +43,9 @@ public class ManageStudentsController implements Initializable {
 
     public void backToHome() {
         try {
-            Pane pane = FXMLLoader.load(getClass().getResource("Menu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+            //loader.setController(new Controller());
+            Pane pane = loader.load();
             scene.getScene().setRoot(pane);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");

@@ -111,10 +111,19 @@ public class CheckItemsController implements Initializable{
     }
 
     public void returnHome()throws Exception{
-        scene.getScene().getWindow().hide();
-        Stage stage = new Stage();
-        StudentCheckin studentCheckin = new StudentCheckin();
-        studentCheckin.start(stage);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+            //loader.setController(new Controller());
+            Pane pane = loader.load();
+            scene.getScene().setRoot(pane);
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+        }
+//        scene.getScene().getWindow().hide();
+//        Stage stage = new Stage();
+//        StudentCheckin studentCheckin = new StudentCheckin();
+//        studentCheckin.start(stage);
     }
 
     public void popUp(MouseEvent mouseEvent) {

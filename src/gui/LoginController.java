@@ -40,20 +40,24 @@ public class LoginController implements Initializable {
     }
 
     public void login() {
-        //try {
+        try {
             Worker worker = loginWorker(usernameInputLoginPage.getText(), passwordInputLoginPage.getText());
             if (worker != null) {
-                Controller controller = new Controller(worker, loginScene);
-//                Pane mainMenuPane = FXMLLoader.load(getClass().getResource("Menu.fxml"));
-//                loginScene.getScene().setRoot(mainMenuPane);
+                //Controller controller = new Controller(worker, loginScene);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+                Pane mainMenuPane = loader.load();
+                Controller controller = loader.getController();
+                controller.initData(worker);
+
+                loginScene.getScene().setRoot(mainMenuPane);
             }
-        //}
-//        catch(IOException invoke){
-//            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-//            alert.showAndWait();
-//            invoke.printStackTrace();
-//
-//        }
+        }
+        catch(IOException invoke){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+            invoke.printStackTrace();
+
+        }
     }
 
     private Worker loginWorker(String email, String password) {
