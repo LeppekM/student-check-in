@@ -6,14 +6,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
 import java.util.ResourceBundle;
@@ -116,8 +119,22 @@ public class CheckItemsController implements Initializable{
 
     public void popUp(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount() == 2){
+            newStage("infoPopUp.fxml", "Item Info");
             //Controller c = new Controller();
             //c.newStage("infoPopUp.fxml", "Item Info");
+        }
+    }
+
+    public void newStage(String fxml, String title){
+        try {
+            Pane pane = FXMLLoader.load(getClass().getResource(fxml));
+            scene.getScene().setRoot(pane);
+        }
+        catch(IOException invoke){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+            invoke.printStackTrace();
+
         }
     }
 

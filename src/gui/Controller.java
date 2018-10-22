@@ -49,7 +49,7 @@ public class Controller implements Initializable {
 
     }
 
-    public void openCheckInPage(){
+    public void openCheckInPage() {
         newStage("checkout.fxml", "Check-in/out Parts");
     }
 
@@ -58,11 +58,15 @@ public class Controller implements Initializable {
     }
 
     public void manageStudents() {
-        newStage("ManageStudents.fxml", "Manage Students");
+        if (currentWorker instanceof Administrator) {
+            newStage("ManageStudents.fxml", "Manage Students");
+        }
     }
 
     public void manageWorkers(){
-        newStage("manageWorkers.fxml", "Manage Workers");
+        if (currentWorker instanceof Administrator) {
+            newStage("manageWorkers.fxml", "Manage Workers");
+        }
     }
 
     public void newStage(String fxml, String title){

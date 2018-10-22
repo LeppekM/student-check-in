@@ -67,7 +67,7 @@ public class LoginController implements Initializable {
             while (!isFound && (line = r.readLine()) != null) {
                 workerLine = line.split(",");
                 if (email.equals(workerLine[1]) && password.equals(workerLine[2])) {
-                    if (workerLine[2].equals("true")) {
+                    if (workerLine[3].equals("true")) {
                         worker = new Administrator(workerLine[0], workerLine[1], workerLine[2], true, workerLine[4]);
                     } else {
                         worker = new StudentWorker(workerLine[0], workerLine[1], workerLine[2]);
