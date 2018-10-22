@@ -1,13 +1,18 @@
 package gui;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.CheckBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -31,6 +36,8 @@ public class AddWorkerController implements Initializable {
     @FXML
     private CheckBox isAdminCheckBoxAddWorkerPage;
 
+    AdminPopupController adminPopupController = new AdminPopupController();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addButtonAddWorkerPage.setAlignment(Pos.CENTER);
@@ -47,6 +54,7 @@ public class AddWorkerController implements Initializable {
         } else if (!name.equals("")) {
             Worker worker = null;
             if (isAdmin) {
+                adminPopup();
                 if (!adminPin.equals("")) {
                     worker = new Administrator(name, email, isAdmin, adminPin);
                 }
@@ -71,6 +79,13 @@ public class AddWorkerController implements Initializable {
 
     public void cancel() {
         scene.getScene().getWindow().hide();
+    }
+
+
+    public void adminPopup() {
+        if (isAdminCheckBoxAddWorkerPage.isSelected()) {
+            adminPopupController.launchAdminPin();
+        }
     }
 
 }

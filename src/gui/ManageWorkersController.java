@@ -29,6 +29,9 @@ public class ManageWorkersController implements Initializable {
     private TableView workersTableManageWorkersPage;
 
     @FXML
+    CheckBox isAdminCheckBoxAddWorkerPage;
+
+    @FXML
     private Button addWorkerButtonManageWorkersPage,
             viewWorkerButtonManageWrokersPage,
             deleteWorkerButtonManageWorkersPage,
@@ -53,22 +56,26 @@ public class ManageWorkersController implements Initializable {
     }
 
     public void addWorker() {
+        newStage("AddWorker.fxml", "Add Worker");
+    }
+
+    public void viewWorker() {
+        EditWorkerController editWorkerController = new EditWorkerController(getWorkerValues(workersTableManageWorkersPage));
+    }
+
+    private void newStage(String fxml, String title) {
         try {
             Stage diffStage = new Stage();
-            Pane pane = FXMLLoader.load(getClass().getResource("AddWorker.fxml"));
+            Pane pane = FXMLLoader.load(getClass().getResource(fxml));
             Scene scene = new Scene(pane);
             diffStage.setScene(scene);
             diffStage.initModality(Modality.APPLICATION_MODAL);
-            diffStage.setTitle("Add Worker");
+            diffStage.setTitle(title);
             diffStage.showAndWait();
             populateTable();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void viewWorker() {
-
     }
 
     public void deleteWorker() {
@@ -162,4 +169,17 @@ public class ManageWorkersController implements Initializable {
         return column;
     }
 
+    private String[] getWorkerValues(TableView tableView) {
+        String[] worker = new String[4];
+        String name = tableView.getSelectionModel().getSelectedItem().toString().split(", ")[0];
+        String email = tableView.getSelectionModel().getSelectedItem().toString().split(", ")[1];
+        String value = tableView.getSelectionModel().getSelectedItem().toString().split(", ")[2];
+        worker[0] = name.substring(name.indexOf(": ") + 2, name.indexOf("]"));
+        worker[1] = email.substring(email.indexOf(": ") + 2, email.indexOf("]"));
+        worker[2] = value.substring(value.indexOf(": ") + 2, value.indexOf("]]"));
+        return worker;
+    }
 }
+
+
+
