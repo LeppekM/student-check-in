@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="scene" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CheckItemsController">
+<VBox fx:id="scene" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CheckItemsController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -109,25 +109,25 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="131.0" layoutY="14.0" />
+                              <TextField fx:id="studentName" editable="false" layoutX="131.0" layoutY="14.0" />
                               <Label layoutX="5.0" layoutY="55.0" text="Student RFID:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="120.0" layoutY="56.0" />
+                              <TextField fx:id="studentRFID" editable="false" layoutX="120.0" layoutY="56.0" />
                               <Label layoutX="5.0" layoutY="103.0" text="Student Email:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="124.0" layoutY="103.0" />
+                              <TextField fx:id="studentEmail" editable="false" layoutX="124.0" layoutY="103.0" />
                               <Label layoutX="5.0" layoutY="151.0" text="Date Since Last Rental:">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <TextField editable="false" layoutX="198.0" layoutY="152.0" promptText="mm/dd/yyyy" />
+                              <TextField fx:id="dateOfLastRental" editable="false" layoutX="198.0" layoutY="152.0" promptText="mm/dd/yyyy" />
                               <Label layoutX="17.0" layoutY="214.0" text="Items Checked Out:">
                                  <font>
                                     <Font size="18.0" />

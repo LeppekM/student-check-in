@@ -14,6 +14,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
 import java.util.ResourceBundle;
@@ -21,52 +25,19 @@ import java.util.ResourceBundle;
 public class CheckItemsController implements Initializable{
 
     @FXML
-    private TableColumn studentID;
+    private TableColumn studentID, barcode, partName, quantity, overnight, action, studentIDCheckin, barcodeCheckin, partNameCheckin, quantityCheckin, fault, actionCheckin;
 
     @FXML
-    private TableColumn barcode;
-
-    @FXML
-    private TableColumn partName;
-
-    @FXML
-    private TableColumn quantity;
-
-    @FXML
-    private TableColumn overnight;
-
-    @FXML
-    private TableColumn action;
-
-    @FXML
-    private TableColumn studentIDCheckin;
-
-    @FXML
-    private TableColumn barcodeCheckin;
-
-    @FXML
-    private TableColumn partNameCheckin;
-
-    @FXML
-    private TableColumn quantityCheckin;
-
-    @FXML
-    private TableColumn fault;
-
-    @FXML
-    private TableColumn actionCheckin;
-
-    @FXML
-    TableView checkOutTableView;
-
-    @FXML
-    TableView checkInTableView;
+    TableView checkOutTableView, checkInTableView;
 
     @FXML
     private VBox scene;
 
     @FXML
     ListView checkOutTable, savedTable;
+
+    @FXML
+    TextField studentName, studentRFID, studentEmail, dateOfLastRental;
 
     private ObservableList<CheckItemsTable> checkoutData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
     private ObservableList<CheckItemsTable> checkinData = FXCollections.observableArrayList(new CheckItemsTable("", "","",""));
@@ -268,10 +239,28 @@ public class CheckItemsController implements Initializable{
 
 
     public void test(){
-
-        database.addStudentID(checkoutData.get(0).getStudentID(), Integer.parseInt(checkoutData.get(0).getBarcode()));
-
-
+//        database.addStudentID(checkoutData.get(0).getStudentID(), Integer.parseInt(checkoutData.get(0).getBarcode())); had to comment out so it could run, DB class only works with Dan
+        if (checkOutTableView.getSelectionModel().getSelectedItems().size() == 1){
+            String sid = checkOutTableView.getSelectionModel().getSelectedItem().toString().split(", ")[0];
+            System.out.println(sid);
+            String id = sid.substring(sid.indexOf(": ") + 2, sid.indexOf("]"));
+            System.out.println(id);
+            try {
+                FileReader fr = new FileReader("src/students.txt");
+                BufferedReader br = new BufferedReader(fr);
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.contains(id)) {
+                        studentName.setText(line.substring(0, line.indexOf(',')));
+                        studentRFID.setText(line.substring(line.indexOf(','), line.lastIndexOf(',')));
+                        studentEmail.setText(line.substring(line.lastIndexOf(',')));
+                    }
+                }
+                br.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
     }
 
 
