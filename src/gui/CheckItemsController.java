@@ -94,11 +94,6 @@ public class CheckItemsController implements Initializable{
                             email.setText(line.substring(line.lastIndexOf(',') + 1));
                         }
                     }
-//                    String finalDate = LocalDate.now().toString();
-//                    System.out.println(finalDate);
-//                    finalDate = finalDate.substring(5,7) + "/" + finalDate.substring(8) + "/" + finalDate.substring(0,4);
-//                    date.setText(finalDate);
-//                    checkOutTable.getItems().add(checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getPartName());
                     Student student = new Student(name.getText(), ID.getText(), email.getText());
                     br.close();
                 } catch (IOException e){
@@ -301,29 +296,6 @@ public class CheckItemsController implements Initializable{
         finalDate = finalDate.substring(5,7) + "/" + finalDate.substring(8) + "/" + finalDate.substring(0,4);
         date.setText(finalDate);
         checkOutTable.getItems().add(checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getPartName());
-//        if (checkOutTableView.getSelectionModel().getSelectedItems().size() == 1){
-//            try {
-//                FileReader fr = new FileReader("src/students.txt");
-//                BufferedReader br = new BufferedReader(fr);
-//                String line;
-//                while ((line = br.readLine()) != null) {
-//                    if (line.contains(checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getStudentID())) {
-//                        name.setText(line.substring(0, line.indexOf(',')));
-//                        ID.setText(line.substring(line.indexOf(',') + 1, line.lastIndexOf(',')));
-//                        email.setText(line.substring(line.lastIndexOf(',') + 1));
-//                    }
-//                }
-//                String finalDate = LocalDate.now().toString();
-//                System.out.println(finalDate);
-//                finalDate = finalDate.substring(5,7) + "/" + finalDate.substring(8) + "/" + finalDate.substring(0,4);
-//                date.setText(finalDate);
-//                checkOutTable.getItems().add(checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getPartName());
-//                Student student = new Student(name.getText(), ID.getText(), email.getText());
-//                br.close();
-//            } catch (IOException e){
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     public void overnightPopup(){
