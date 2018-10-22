@@ -28,7 +28,7 @@
             </Label>
             <TextField fx:id="name" editable="false" layoutX="100.0" layoutY="2.0" />
             <TextField fx:id="serialNumber" editable="false" layoutX="166.0" layoutY="42.0" />
-            <CheckBox fx:id="save" contentDisplay="RIGHT" layoutY="82.0" mnemonicParsing="false" text="Save Item?">
+            <CheckBox fx:id="save" contentDisplay="RIGHT" layoutY="82.0" mnemonicParsing="false" onAction="#saveItem" text="Save Item?">
                <font>
                   <Font size="18.0" />
                </font>
