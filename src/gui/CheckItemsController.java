@@ -80,7 +80,7 @@ public class CheckItemsController implements Initializable{
         });
         checkOutTableView.setOnMouseClicked(event -> {
             if (checkOutTableView.getSelectionModel().getSelectedItems().size() == 1 &&
-                checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getStudentID() != null){
+                    checkoutData.get(checkOutTableView.getSelectionModel().getSelectedIndex()).getStudentID() != null){
                 try {
                     FileReader fr = new FileReader("src/students.txt");
                     BufferedReader br = new BufferedReader(fr);
@@ -112,7 +112,7 @@ public class CheckItemsController implements Initializable{
         setCheckoutTableEditableFields();
 
         checkBox.setCellValueFactory(
-            new PropertyValueFactory<CheckItemsTable, String>("checkBox")
+                new PropertyValueFactory<CheckItemsTable, String>("checkBox")
         );
         tableView.setItems(data);
     }
@@ -132,10 +132,10 @@ public class CheckItemsController implements Initializable{
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
         }
-        //        scene.getScene().getWindow().hide();
-        //        Stage stage = new Stage();
-        //        StudentCheckin studentCheckin = new StudentCheckin();
-        //        studentCheckin.start(stage);
+            //        scene.getScene().getWindow().hide();
+            //        Stage stage = new Stage();
+            //        StudentCheckin studentCheckin = new StudentCheckin();
+            //        studentCheckin.start(stage);
     }
 
     public void popUp(MouseEvent mouseEvent) {
