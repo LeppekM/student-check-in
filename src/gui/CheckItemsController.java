@@ -162,102 +162,102 @@ public class CheckItemsController implements Initializable{
     private void makeStudentIDEditable(){
         studentID.setCellFactory(TextFieldTableCell.forTableColumn());
         studentID.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
-                        ((CheckItemsTable) event.getTableView().getItems().get(
-                                event.getTablePosition().getRow())
-                        ).setStudentID(event.getNewValue());
-
-                    }
+            new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                    ((CheckItemsTable) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                    ).setStudentID(event.getNewValue());
 
                 }
+
+            }
         );
         studentIDCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
         studentIDCheckin.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
-                        ((CheckItemsTable) event.getTableView().getItems().get(
-                                event.getTablePosition().getRow())
-                        ).setStudentID(event.getNewValue());
-                    }
+            new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                    ((CheckItemsTable) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                    ).setStudentID(event.getNewValue());
                 }
+            }
         );
     }
 
     private void makeBarcodeEditable(){
         barcode.setCellFactory(TextFieldTableCell.forTableColumn());
         barcode.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
-                        ((CheckItemsTable) event.getTableView().getItems().get(
-                                event.getTablePosition().getRow())
-                        ).setBarcode(event.getNewValue());
-                    }
+            new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                    ((CheckItemsTable) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                    ).setBarcode(event.getNewValue());
                 }
+            }
         );
         barcodeCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
         barcodeCheckin.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
-                        ((CheckItemsTable) event.getTableView().getItems().get(
-                                event.getTablePosition().getRow())
-                        ).setBarcode(event.getNewValue());
-                    }
+            new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                    ((CheckItemsTable) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                    ).setBarcode(event.getNewValue());
                 }
+            }
         );
     }
 
     private void makePartNameEditable(){
         partName.setCellFactory(TextFieldTableCell.forTableColumn());
         partName.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
-                        ((CheckItemsTable) event.getTableView().getItems().get(
-                                event.getTablePosition().getRow())
-                        ).setPartName(event.getNewValue());
-                    }
+            new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                    ((CheckItemsTable) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                    ).setPartName(event.getNewValue());
                 }
+            }
         );
         partNameCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
         partNameCheckin.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
-                        ((CheckItemsTable) event.getTableView().getItems().get(
-                                event.getTablePosition().getRow())
-                        ).setPartName(event.getNewValue());
-                    }
+            new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                    ((CheckItemsTable) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                    ).setPartName(event.getNewValue());
                 }
+            }
         );
     }
 
     private void makeQuantityEditable(){
         quantity.setCellFactory(TextFieldTableCell.forTableColumn());
         quantity.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
-                        ((CheckItemsTable) event.getTableView().getItems().get(
-                                event.getTablePosition().getRow())
-                        ).setQuantity(event.getNewValue());
-                    }
+            new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                    ((CheckItemsTable) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                    ).setQuantity(event.getNewValue());
                 }
+            }
         );
         quantityCheckin.setCellFactory(TextFieldTableCell.forTableColumn());
         quantityCheckin.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
-                        ((CheckItemsTable) event.getTableView().getItems().get(
-                                event.getTablePosition().getRow())
-                        ).setQuantity(event.getNewValue());
-                    }
+            new EventHandler<TableColumn.CellEditEvent<CheckItemsTable, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<CheckItemsTable, String> event) {
+                    ((CheckItemsTable) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())
+                    ).setQuantity(event.getNewValue());
                 }
+            }
         );
     }
 
@@ -285,8 +285,8 @@ public class CheckItemsController implements Initializable{
     }
 
     /**
-     * Not very elegant solution, but works. Will remake after the spike.
-     */
+      * Not very elegant solution, but works. Will remake after the spike.
+      */
     private void clearData(ObservableList<CheckItemsTable> data) {
         for(int i = 0; i< data.size(); i++){
             data.get(i).setQuantity("");

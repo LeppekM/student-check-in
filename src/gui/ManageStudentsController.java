@@ -70,6 +70,8 @@ public class ManageStudentsController implements Initializable {
 
     public void viewStudent() {
         EditStudentController esc = new EditStudentController(getStudentValues(studentsTableManageStudentsPage));
+        populateTable();
+        viewStudentButtonManageStudentsPage.setDisable(true);
     }
 
     public void deleteStudent() {
