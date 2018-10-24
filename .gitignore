@@ -6,6 +6,14 @@
 *.class
 *.exe
 
+### Gradle ###
+.gradle
+/build/
+
+# Package Files #
+*.war
+*.ear
+
 # common IDE-generated files and folders to ignore
 workspace.xml
 bin/
