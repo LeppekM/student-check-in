@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/student-check-in-gradle.iml" filepath="$PROJECT_DIR$/.idea/modules/student-check-in-gradle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/student-check-in-gradle_main.iml" filepath="$PROJECT_DIR$/.idea/modules/student-check-in-gradle_main.iml" group="student-check-in-gradle" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/student-check-in-gradle_test.iml" filepath="$PROJECT_DIR$/.idea/modules/student-check-in-gradle_test.iml" group="student-check-in-gradle" />
+    </modules>
+  </component>
+</project>
