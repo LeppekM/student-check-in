@@ -22,6 +22,8 @@ workspace.xml
 bin/
 out/
 .classpath
+.idea/
+.idea/**
 # uncomment following for courses in which Eclipse .project files are not checked in
 # .project
 
