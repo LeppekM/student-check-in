@@ -37,7 +37,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Part rowData = row.getItem();
-                    editItem(rowData);
+                    editPart(rowData);
                 }
             });
             return row;
@@ -66,10 +66,5 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     @FXML
     public void search(){
         System.out.println(searchTotal.getText());
-    }
-
-    @FXML
-    public void editItem(Part part){
-        System.out.println(part);
     }
 }
