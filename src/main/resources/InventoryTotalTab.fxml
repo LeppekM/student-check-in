@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="totalTabPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerTotalTab">
   <children>
-    <TableView layoutX="0.0" layoutY="0.0" prefHeight="548.0" prefWidth="800.0">
+    <Label layoutX="20.0" layoutY="14.0" text="Total Inventory">
+      <font>
+        <Font size="24.0" fx:id="x1" />
+      </font>
+    </Label>
+    <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
       <columns>
-        <TableColumn prefWidth="75.0" text="Column X" />
-        <TableColumn prefWidth="75.0" text="Column X" />
+        <TableColumn prefWidth="169.0" resizable="false" text="Part Name" fx:id="partName" />
+        <TableColumn prefWidth="124.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
+        <TableColumn prefWidth="174.0" resizable="false" text="Manufacturer" fx:id="manufacturer" />
+        <TableColumn prefWidth="73.0" resizable="false" text="Price" fx:id="price" />
+        <TableColumn prefWidth="73.0" resizable="false" text="Vendor" fx:id="vendor" />
+        <TableColumn prefWidth="73.0" resizable="false" text="Location" fx:id="location" />
+        <TableColumn prefWidth="73.0" resizable="false" text="Barcode" fx:id="barcode" />
+        <TableColumn prefWidth="73.0" resizable="false" text="Fault" fx:id="fault" />
+        <TableColumn prefWidth="73.0" resizable="false" text="Part ID" fx:id="partID" />
       </columns>
     </TableView>
-    <Button layoutX="419.0" layoutY="508.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="367.0" text="Button" />
+    <TextField fx:id="searchTotal" layoutX="622.0" layoutY="21.0" onAction="#search" prefHeight="25.0" prefWidth="150.99990000000253" promptText="Search..." />
   </children>
 </AnchorPane>
