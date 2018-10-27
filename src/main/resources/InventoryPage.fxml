@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -35,5 +36,7 @@
       </tabs>
     </TabPane>
     <Button fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack" prefHeight="33.0" prefWidth="106.0" text="Back to Home" />
+    <Button id="back" fx:id="add" layoutX="575.0" layoutY="580.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" text="Add" />
+    <Button id="back" fx:id="remove" layoutX="685.0" layoutY="580.0" mnemonicParsing="false" onAction="#removePart" prefHeight="33.0" prefWidth="106.0" text="Remove" />
   </children>
 </AnchorPane>

@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Part;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,11 +18,27 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private AnchorPane inventoryScene;
 
     @FXML
-    private Button back;
+    private Button back, add, remove;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+    }
+
+    @FXML
+    public void addPart(){
+        //Called when the "Add" button is clicked
+    }
+
+    @FXML
+    public void editPart(Part part){
+        //Called when a part is double clicked in a table.
+        //@param part the part that was double clicked
+    }
+
+    @FXML
+    public void removePart(){
+        //Called when the "Remove" button is clicked
     }
 
     @FXML
