@@ -20,7 +20,7 @@ public class StudentCheckIn extends Application  {
         URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 800, 620);
         primaryStage.setTitle("Barcode Scanner");
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="totalTabPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerTotalTab">
+  <children>
+    <TableView layoutX="0.0" layoutY="0.0" prefHeight="548.0" prefWidth="800.0">
+      <columns>
+        <TableColumn prefWidth="75.0" text="Column X" />
+        <TableColumn prefWidth="75.0" text="Column X" />
+      </columns>
+    </TableView>
+    <Button layoutX="419.0" layoutY="508.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="367.0" text="Button" />
+  </children>
+</AnchorPane>

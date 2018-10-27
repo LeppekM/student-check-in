@@ -5,42 +5,34 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerMenu implements Initializable {
+public class ControllerInventoryPage extends ControllerMenu implements Initializable {
 
     @FXML
-    private VBox mainMenuScene;
+    private AnchorPane inventoryScene;
 
     @FXML
-    private Button inventory;
+    private Button back;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        inventory.setOnAction(event -> openInventory());
     }
 
-    public void openInventory(){
-        newStage("InventoryPage.fxml");
-    }
-
-    public void newStage(String fxml){
+    @FXML
+    public void goBack(){
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource(fxml);
+            URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            mainMenuScene.getScene().setRoot(loader.load(myFxmlURL));
-        }
-        catch(IOException invoke){
+            inventoryScene.getScene().setRoot(loader.load(myFxmlURL));
+        } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
-            invoke.printStackTrace();
-
         }
     }
-
-
 }
