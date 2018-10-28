@@ -6,9 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="InventoryController.ControllerCheckedOutTab"
-            prefHeight="600.0" prefWidth="800.0">
-
+<AnchorPane fx:id="totalTabPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerTotalTab">
+    <children>
+        <TableView layoutX="0.0" layoutY="0.0" prefHeight="548.0" prefWidth="800.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="Column X" />
+                <TableColumn prefWidth="75.0" text="Column X" />
+            </columns>
+        </TableView>
+    </children>
 </AnchorPane>
