@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
-   <children>
-      <TableView prefHeight="400.0" prefWidth="750.0">
-        <columns>
-            <TableColumn fx:id="studentColumnInventoryHistoryTab" prefWidth="125.0" text="Student" />
-            <TableColumn fx:id="partNameColumnInventoryHistoryTab" prefWidth="125.0" text="Part Name" />
-            <TableColumn fx:id="serialNumberColumnInventoryHistoryTab" prefWidth="125.0" text="Serial #" />
-            <TableColumn fx:id="locationColumnInventoryHistoryTab" prefWidth="125.0" text="Location" />
-            <TableColumn fx:id="quantityColumnInventoryHistoryTab" prefWidth="125.0" text="Quantity" />
-            <TableColumn fx:id="dateColumnInventoryHistoryTab" prefWidth="125.0" text="Date" />
-        </columns>
-      </TableView>
-   </children>
+<AnchorPane fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerHistoryTab">
+    <children>
+        <Label layoutX="20.0" layoutY="14.0" text="History">
+            <font>
+                <Font size="24.0" fx:id="x1" />
+            </font>
+        </Label>
+        <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
+            <columns>
+                <TableColumn prefWidth="150.0" resizable="false" text="Student" fx:id="student" />
+                <TableColumn prefWidth="130.0" resizable="false" text="Part Name" fx:id="partName" />
+                <TableColumn prefWidth="130.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
+                <TableColumn prefWidth="130.0" resizable="false" text="Location" fx:id="location" />
+                <TableColumn prefWidth="130.0" resizable="false" text="Quantity" fx:id="quantity" />
+                <TableColumn prefWidth="130.0" resizable="false" text="Date" fx:id="date" />
+            </columns>
+        </TableView>
+        <TextField fx:id="searchHistory" layoutX="622.0" layoutY="21.0" onAction="#search" prefHeight="25.0" prefWidth="150.99990000000253" promptText="Search..." />
+    </children>
 </AnchorPane>
