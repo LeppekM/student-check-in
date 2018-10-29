@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="InventoryController.ControllerHistoryTab"
-            prefHeight="600.0" prefWidth="800.0">
 
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
+   <children>
+      <TableView prefHeight="400.0" prefWidth="750.0">
+        <columns>
+            <TableColumn fx:id="studentColumnInventoryHistoryTab" prefWidth="125.0" text="Student" />
+            <TableColumn fx:id="partNameColumnInventoryHistoryTab" prefWidth="125.0" text="Part Name" />
+            <TableColumn fx:id="serialNumberColumnInventoryHistoryTab" prefWidth="125.0" text="Serial #" />
+            <TableColumn fx:id="locationColumnInventoryHistoryTab" prefWidth="125.0" text="Location" />
+            <TableColumn fx:id="quantityColumnInventoryHistoryTab" prefWidth="125.0" text="Quantity" />
+            <TableColumn fx:id="dateColumnInventoryHistoryTab" prefWidth="125.0" text="Date" />
+        </columns>
+      </TableView>
+   </children>
 </AnchorPane>
