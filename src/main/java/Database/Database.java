@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Database {
 
-    static String host = "jdbc:mysql://127.0.0.1:3306/?user=root";
+    static String host = "jdbc:mysql://127.0.0.1:3306";
     static final String dbdriver = "com.mysql.jdbc.Driver";
     static final String dbname = "local_student_check_in";
     static Connection connection;
@@ -18,7 +18,17 @@ public class Database {
         String login = JOptionPane.showInputDialog("Enter login name: ");
 
         // Note: password will be echoed to console;
-        String password = JOptionPane.showInputDialog("Enter password: ");
+//        String password = JOptionPane.showInputDialog("Enter password: ");
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Enter a password: ");
+        JPasswordField pass = new JPasswordField(20);
+        panel.add(label);
+        panel.add(pass);
+        String[] options = new String[]{"OK", "Cancel"};
+        int option = JOptionPane.showOptionDialog(null, panel, "Input",
+                                                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                                            null, options, options[1]);
+        String password = new String(pass.getPassword());
 
         // String password = PasswordField.readPassword("Enter password: ");
 
@@ -43,22 +53,13 @@ public class Database {
             System.exit(0);
         }
 
-        try {
-            //String test = "update vendor v set v.vendorID = 1, v.vendor = 'bob'";
-            Statement preparedStatement = connection.createStatement();
-            //preparedStatement.executeUpdate(test.toString());
+        //String test = "update vendor v set v.vendorID = 1, v.vendor = 'bob'";
 
-            preparedStatement.execute("use local_student_check_in;");
-
-            String testQuery = "desc parts;";
-            ArrayList<String> result = new ArrayList<>();
-            result = executeQuery(connection, testQuery);
-            for (String s : result) {
-                System.out.println(s);
-            }
-            preparedStatement.close();
-        }catch (SQLException e){
-            e.printStackTrace();
+        String testQuery = "desc parts;";
+        ArrayList<String> result = new ArrayList<>();
+        result = executeQuery(connection, testQuery);
+        for (String s : result) {
+            System.out.print(s + " ");
         }
     }
 
