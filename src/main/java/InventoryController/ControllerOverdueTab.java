@@ -21,7 +21,7 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
 //        d.test();
 //        JOptionPane.showMessageDialog(null, "Done");
         try {
-            File file = new File("/src/testOverdue.txt");
+            File file = new File("java/testOverdue.txt");
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = "";
