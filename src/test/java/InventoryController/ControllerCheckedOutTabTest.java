@@ -1,6 +1,5 @@
 package InventoryController;
 
-import Database.CheckedOutParts;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.Test;
@@ -8,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ControllerCheckedOutTabTest {
-    final ObservableList<CheckedOutList> data = FXCollections.observableArrayList(new CheckedOutList("Daniel", "test", 1, "2018-10-10","2018-10-11"));
+    final ObservableList<CheckedOutItems> data = FXCollections.observableArrayList(new CheckedOutItems("Daniel", "test", 1, "2018-10-10","2018-10-11"));
 
     /**
      * Not a good test, but will remake later
