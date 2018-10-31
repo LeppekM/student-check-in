@@ -8,10 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ControllerCheckedOutTab  extends ControllerInventoryPage implements Initializable {
@@ -20,36 +17,27 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
     private TableView<CheckedOutList> checkedOutItems;
 
     @FXML
-    private TableColumn<CheckedOutList, Integer> partIDCol, quantityCol;
+    private TableColumn<CheckedOutList, Integer> quantityCol;
 
     @FXML
-    private TableColumn<CheckedOutList, String> partNameCol;
-
-    @FXML
-    private TableColumn<CheckedOutList, String> dueDateCol;
+    private TableColumn<CheckedOutList, String> partNameCol, dueDateCol, sNameCol, checkOutAtCol;
 
     private CheckedOutParts checkedOutParts = new CheckedOutParts();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        populateTable();
-
+        checkedOutParts.getCheckedOutItems();
+        populateTable(checkedOutParts.data);
     }
 
 
-    public void populateTable(){
-
-        checkedOutParts.getCheckedOutItems();
-        //System.out.println(checkedOutParts.data.get(0).getPartID());
-
-        partIDCol.setCellValueFactory(new PropertyValueFactory<>("partID"));
+    public void populateTable(ObservableList<CheckedOutList> data){
+        sNameCol.setCellValueFactory(new PropertyValueFactory<>("studentName"));
         partNameCol.setCellValueFactory(new PropertyValueFactory<>("partName"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        checkOutAtCol.setCellValueFactory(new PropertyValueFactory<>("checkedOutAt"));
         dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-        checkedOutItems.setItems(checkedOutParts.data);
-
+        checkedOutItems.setItems(data);
     }
-
-
 
 }

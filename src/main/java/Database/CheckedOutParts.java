@@ -14,16 +14,22 @@ public class CheckedOutParts {
     private final String url = "jdbc:mysql://localhost:3306/sdl";
     private final String username = "langdk";
     private final String password = "password";
-    private final String SELECTQUERY = "SELECT checkout_parts.partID, checkout_parts.checkoutQuantity, checkout_parts.dueAt, parts.partName\n" +
+    private final String SELECTQUERY = "SELECT students.studentName, parts.partName, checkout_parts.checkoutQuantity, checkouts.checkoutAt, checkout_parts.dueAt\n" +
             "FROM checkout_parts\n" +
-            "INNER JOIN parts ON checkout_parts.partID = parts.partID";
+            "INNER JOIN parts \n" +
+            "ON checkout_parts.partID = parts.partID\n" +
+            "INNER JOIN checkouts\n" +
+            "ON checkout_parts.checkoutID = checkouts.checkoutID\n" +
+            "INNER JOIN students\n" +
+            "ON checkouts.studentID = students.studentID";
     private Statement statement;
-    private int checkoutID;
-    private int partID;
+
     private int checkoutQuantity;
+    private String checkedOutAt;
     private String dueDate;
     private String partName;
-    //ArrayList<CheckedOutList> checkedOutLists = new ArrayList<>();
+    private String studentName;
+
     public ObservableList<CheckedOutList> data = FXCollections.observableArrayList();
 
 
@@ -34,7 +40,7 @@ public class CheckedOutParts {
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                CheckedOutList checkedOutList = new CheckedOutList(partID, partName, checkoutQuantity, dueDate);
+                CheckedOutList checkedOutList = new CheckedOutList(studentName, partName, checkoutQuantity, checkedOutAt, dueDate);
                 data.add(checkedOutList);
             }
 
@@ -45,10 +51,12 @@ public class CheckedOutParts {
 
     private void setVariables(ResultSet resultSet){
         try {
-            partID = resultSet.getInt("partId");
-            checkoutQuantity = resultSet.getInt("checkoutQuantity");
-            dueDate = resultSet.getString("dueAt");
+            studentName = resultSet.getString("studentName");
             partName = resultSet.getString("partName");
+            checkoutQuantity = resultSet.getInt("checkoutQuantity");
+            checkedOutAt = resultSet.getString("checkoutAt");
+            dueDate = resultSet.getString("dueAt");
+
         } catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database");
         }
