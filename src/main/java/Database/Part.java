@@ -8,7 +8,6 @@ public class Part {
     private final SimpleDoubleProperty price;
     private final SimpleIntegerProperty partID;
     private final SimpleBooleanProperty fault;
-    private SimpleBooleanProperty checkedOut, overDue;
 
 
     public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID){
@@ -21,8 +20,6 @@ public class Part {
         this.barcode = new SimpleStringProperty(barcode);
         this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
-        getCheckedOutStatus();
-        getOverdueStatus();
     }
 
     public String getPartName() {
@@ -80,21 +77,7 @@ public class Part {
     public void setBarcode(String barcode) {
         this.barcode.set(barcode);
     }
-
-    public boolean getCheckedOutStatus() {
-        return this.getPartID()==1;
-    }
-
-    public void setCheckedOutStatus(boolean isCheckedOut) { this.checkedOut.set(isCheckedOut);
-    }
-    public boolean getOverdueStatus() {
-        return this.getPartID()==1;
-    }
-
-    public void setOverDueStatus(boolean overDueStatus) {
-        this.overDue.set(overDueStatus);
-    }
-
+    
     public boolean getFault() {
         return fault.get();
     }
