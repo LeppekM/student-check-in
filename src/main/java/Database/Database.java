@@ -46,7 +46,7 @@ public class Database {
         }
 
         try {
-            String test = "update vendor v set v.vendorID = 1, v.vendor = 'bob'";
+            String test = "insert into vendors (vendorID, vendor) values (1, 'bob')";
             Statement preparedStatement = connection.createStatement();
             preparedStatement.executeUpdate(test.toString());
             preparedStatement.close();
