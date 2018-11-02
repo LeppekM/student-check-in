@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import Database.Part;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,9 +21,13 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     @FXML
     private Button back, add, remove;
 
+    private Database database;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        database = new Database();
+        database.connect();
     }
 
     @FXML
@@ -39,6 +44,10 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     @FXML
     public void removePart(){
         //Called when the "Remove" button is clicked
+        ControllerTotalTab totalTab = new ControllerTotalTab();
+        if(totalTab.tableView.getSelectionModel().getSelectedItems().size() == 1){
+            database.deleteItem(totalTab.tableView.getSelectionModel().getSelectedItem().getPartID());
+        }
     }
 
     @FXML
