@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.Part;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -50,11 +51,20 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         }
     }
 
+    public ObservableList<Part> populateList(ObservableList<Part> data){
+        Part part1 = new Part("Raspberry Pi", "3453I214", "Pi Inc.", 35.99, "MSOE", "OUT", "J26734", false, 0);
+        Part part2 = new Part("HDMI Cable", "H2J4364", "Sony", 4.99, "MSOE", "IN", "A43453", false, 1);
+        data.add(part1);
+        data.add(part2);
+        return data;
+    }
+
     @FXML
     public void goBack(){
         try {
             URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            inventoryScene.getChildren().clear();
             inventoryScene.getScene().setRoot(loader.load(myFxmlURL));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");

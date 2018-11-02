@@ -26,7 +26,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     private TableColumn<Part,String> partName, serialNumber, manufacturer, price, vendor, location,
             barcode, fault, partID;
 
-    private static final ObservableList<Part> data
+    private static ObservableList<Part> data
             = FXCollections.observableArrayList();
 
     @Override
@@ -55,10 +55,9 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         fault.setCellValueFactory(new PropertyValueFactory("fault"));
         partID.setCellValueFactory(new PropertyValueFactory("partID"));
 
-        Part part1 = new Part("Raspberry Pi", "3453I214", "Pi Inc.", 35.99, "MSOE", "OUT", "J26734", false, 0);
-        Part part2 = new Part("HDMI Cable", "H2J4364", "Sony", 4.99, "MSOE", "IN", "A43453", false, 1);
-        data.add(part1);
-        data.add(part2);
+        data = populateList(data);
+
+
 
         tableView.getItems().setAll(this.data);
     }
