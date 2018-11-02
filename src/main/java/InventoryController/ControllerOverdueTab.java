@@ -29,6 +29,11 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
     public void initialize(URL location, ResourceBundle resources) {
         data.add(new OverdueItems(560785,"hdmi cord","67v3","2018/3/15",40));
         data.add(new OverdueItems(560785,"aux cord","68v3","2018/3/15",20));
+//        overdueItems.getColumns().add(studentID);
+//        overdueItems.getColumns().add(partID);
+//        overdueItems.getColumns().add(serial);
+//        overdueItems.getColumns().add(date);
+//        overdueItems.getColumns().add(price);
         populteTable(data);
     }
 
@@ -38,6 +43,8 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
         partID.setCellValueFactory(new PropertyValueFactory<>("part"));
         serial.setCellValueFactory(new PropertyValueFactory<>("serial"));
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
-        overdueItems.setItems(d);
+        for (OverdueItems i: d) {
+            overdueItems.getItems().add(i);
+        }
     }
 }
