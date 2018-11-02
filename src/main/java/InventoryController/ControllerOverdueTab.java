@@ -9,25 +9,19 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import javax.swing.*;
-import java.io.*;
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ControllerOverdueTab  extends ControllerInventoryPage implements Initializable {
 
     @FXML
-    TableView<OverdueItems> overdueItems;
+    private TableView<OverdueItems> overdueItems;
 
     @FXML
-    TableColumn<OverdueItems, String> partID, serial;
+    TableColumn<OverdueItems, String> partID, serial, date;
 
     @FXML
-    TableColumn<OverdueItems, Integer> studentID, fee;
-
-    @FXML
-    TableColumn<OverdueItems, Date> date;
+    TableColumn<OverdueItems, Integer> studentID, price;
 
     final ObservableList<OverdueItems> data = FXCollections.observableArrayList();
 
@@ -39,11 +33,11 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
     }
 
     private void populteTable(ObservableList<OverdueItems> d){
-        studentID.setCellValueFactory(new PropertyValueFactory<>("student id"));
-        partID.setCellValueFactory(new PropertyValueFactory<>("part id"));
-        serial.setCellValueFactory(new PropertyValueFactory<>("serial number"));
-        date.setCellValueFactory(new PropertyValueFactory<>("original due date"));
-        fee.setCellValueFactory(new PropertyValueFactory<>("fee"));
+        studentID.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        partID.setCellValueFactory(new PropertyValueFactory<>("part"));
+        serial.setCellValueFactory(new PropertyValueFactory<>("serial"));
+        date.setCellValueFactory(new PropertyValueFactory<>("date"));
         overdueItems.setItems(d);
     }
 }

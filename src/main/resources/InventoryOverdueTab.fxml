@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -14,14 +13,13 @@
    <children>
       <Pane prefHeight="600.0" prefWidth="800.0">
          <children>
-            <TextField layoutX="637.0" layoutY="14.0" promptText="Search..." />
             <TableView layoutY="52.0" prefHeight="548.0" prefWidth="800.0">
               <columns>
                 <TableColumn fx:id="studentID" editable="false" minWidth="160.0" prefWidth="75.0" text="Student ID" />
                 <TableColumn fx:id="partID" editable="false" minWidth="160.0" prefWidth="75.0" text="Part " />
                   <TableColumn fx:id="serial" editable="false" minWidth="160.0" prefWidth="75.0" text="Serial Number" />
                   <TableColumn fx:id="date" editable="false" minWidth="160.0" prefWidth="75.0" text="Original Due Date" />
-                  <TableColumn fx:id="fee" editable="false" minWidth="160.0" prefWidth="75.0" text="Fee" />
+                  <TableColumn fx:id="price" editable="false" minWidth="160.0" prefWidth="75.0" text="Fee" />
               </columns>
                 <stylesheets>
                     <URL value="@tableRow.css" />
@@ -32,7 +30,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Button layoutX="349.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Print Report" />
+            <Button layoutX="670.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Print Report" />
          </children>
       </Pane>
    </children>

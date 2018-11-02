@@ -3,9 +3,6 @@ package Database;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class OverdueItems {
     private SimpleIntegerProperty ID, price;
     private SimpleStringProperty part, serial, date;
