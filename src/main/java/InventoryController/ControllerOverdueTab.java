@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import Database.OverdueItems;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,7 +24,7 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
     @FXML
     TableColumn<OverdueItems, Integer> studentID, price;
 
-    private ObservableList<OverdueItems> data = FXCollections.observableArrayList();
+    private ObservableList<OverdueItems> data = Database.getOverdue();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

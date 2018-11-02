@@ -1,10 +1,13 @@
 package Database;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Database {
@@ -44,14 +47,34 @@ public class Database {
             e.printStackTrace();
             System.exit(0);
         }
+    }
 
+    public static ObservableList getOverdue(){
+        ObservableList<OverdueItems> data = FXCollections.observableArrayList();
         try {
-            String test = "insert into vendors (vendorID, vendor) values (1, 'bob')";
-            Statement preparedStatement = connection.createStatement();
-            preparedStatement.executeUpdate(test.toString());
-            preparedStatement.close();
+            Date date = gettoday();
+            String overdue = "select cp.partID, p.partName, p.serialNumber, cp.dueAt, p.price" +
+                    "from checkout_parts cp left join parts p on cp.partID = p.partID" +
+                    "where cp.dueAt < " + date.toString() + ";";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(overdue);
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            while (resultSet.next()){
+                data.add(new OverdueItems(resultSet.getInt("cp.partID"), resultSet.getString("p.partName"),
+                        resultSet.getString("p.serialNumber"), resultSet.getDate("cp.dueAt").toString(),
+                        resultSet.getInt("p.price")));
+            }
+            resultSet.close();
+            statement.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
+        return data;
+    }
+
+    private static Date gettoday(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
+        long date = System.currentTimeMillis();
+        return new Date(date);
     }
 }
