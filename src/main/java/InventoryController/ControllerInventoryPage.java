@@ -8,10 +8,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 
 public class ControllerInventoryPage extends ControllerMenu implements Initializable {
@@ -22,13 +27,15 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     @FXML
     private Button back, add, remove;
 
-    private Database database;
+    protected static Database database;
+//    public static Connection connection;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         database = new Database();
-        database.connect();
+//        this.connection = database.getConnection();
+//        database.connect();
     }
 
     @FXML
@@ -51,11 +58,40 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         }
     }
 
-    public ObservableList<Part> populateList(ObservableList<Part> data){
-        Part part1 = new Part("Raspberry Pi", "3453I214", "Pi Inc.", 35.99, "MSOE", "OUT", "J26734", false, 0);
-        Part part2 = new Part("HDMI Cable", "H2J4364", "Sony", 4.99, "MSOE", "IN", "A43453", false, 1);
-        data.add(part1);
-        data.add(part2);
+    public ObservableList<Part> selectParts(String tab, ObservableList<Part> data){
+        Statement currentStatement = null;
+        try {
+            String rawStatement = "SELECT * from parts";
+            Database database2 = new Database();
+            Connection connection2 = database2.getConnection();
+            currentStatement = connection2.createStatement();
+            ResultSet rs = currentStatement.executeQuery(rawStatement);
+            while (rs.next()) {
+                String serialNumber = rs.getString("serialNumber");
+                String partName = rs.getString("partName");
+                double price = rs.getDouble("price");
+                String vendor = rs.getString("vendor");
+                String manufacturer = rs.getString("manufacturer");
+                String location = rs.getString("location");
+                String barcode = rs.getString("barcode");
+                boolean fault = (rs.getInt("fault") == 1) ? true : false;
+                int partID = rs.getInt("partID");
+                boolean isDeleted = rs.getBoolean("isDeleted");
+                Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID, isDeleted);
+                data.add(part);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (currentStatement != null) {
+                try {
+                    currentStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            currentStatement = null;
+        }
         return data;
     }
 

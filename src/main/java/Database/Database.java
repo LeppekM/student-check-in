@@ -1,20 +1,20 @@
 package Database;
 
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+
 import javax.swing.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Database {
 
-    static String host = "jdbc:mysql://localhost:3306";
-    static final String dbdriver = "com.mysql.jdbc.Driver";
-    static final String dbname = "parts";
-    static Connection connection;
+    private static String host = "jdbc:mysql://localhost:3306";
+    private static final String dbdriver = "com.mysql.jdbc.Driver";
+    private static final String dbname = "parts";
+    private static Connection connection;
 
-    public void connect() {
+    public Database() {
         // scanner.useDelimiter("\n");
 
         String login = JOptionPane.showInputDialog("Enter login name: ");
@@ -55,5 +55,9 @@ public class Database {
             e.printStackTrace();
         }
         JOptionPane.showMessageDialog(null, "Part with ID = " + partID + " has been successfully deleted");
+    }
+
+    public Connection getConnection(){
+        return connection;
     }
 }

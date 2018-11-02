@@ -26,6 +26,5 @@
         <TableColumn prefWidth="73.0" resizable="false" text="Part ID" fx:id="partID" />
       </columns>
     </TableView>
-    <TextField fx:id="searchTotal" layoutX="622.0" layoutY="21.0" onAction="#search" prefHeight="25.0" prefWidth="150.99990000000253" promptText="Search..." />
   </children>
 </AnchorPane>

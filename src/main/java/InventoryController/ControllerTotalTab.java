@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import Database.Part;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,8 +17,8 @@ import java.util.ResourceBundle;
 
 public class ControllerTotalTab  extends ControllerInventoryPage implements Initializable {
 
-    @FXML
-    private TextField searchTotal;
+//    @FXML
+//    private TextField searchTotal;
 
     @FXML
     public TableView<Part> tableView;
@@ -25,6 +26,8 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     @FXML
     private TableColumn<Part,String> partName, serialNumber, manufacturer, price, vendor, location,
             barcode, fault, partID;
+
+    protected static Database database;
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
@@ -55,15 +58,16 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         fault.setCellValueFactory(new PropertyValueFactory("fault"));
         partID.setCellValueFactory(new PropertyValueFactory("partID"));
 
-        data = populateList(data);
+        this.data.clear();
+        tableView.getItems().clear();
 
-
+        this.data = selectParts("total", this.data);
 
         tableView.getItems().setAll(this.data);
     }
 
-    @FXML
-    public void search(){
-        System.out.println(searchTotal.getText());
-    }
+//    @FXML
+//    public void search(){
+//        System.out.println(searchTotal.getText());
+//    }
 }
