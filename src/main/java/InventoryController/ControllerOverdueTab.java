@@ -23,28 +23,21 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
     @FXML
     TableColumn<OverdueItems, Integer> studentID, price;
 
-    final ObservableList<OverdueItems> data = FXCollections.observableArrayList();
+    private ObservableList<OverdueItems> data = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         data.add(new OverdueItems(560785,"hdmi cord","67v3","2018/3/15",40));
         data.add(new OverdueItems(560785,"aux cord","68v3","2018/3/15",20));
-//        overdueItems.getColumns().add(studentID);
-//        overdueItems.getColumns().add(partID);
-//        overdueItems.getColumns().add(serial);
-//        overdueItems.getColumns().add(date);
-//        overdueItems.getColumns().add(price);
-        populteTable(data);
+       populteTable();
     }
 
-    private void populteTable(ObservableList<OverdueItems> d){
+    private void populteTable(){
         studentID.setCellValueFactory(new PropertyValueFactory<>("ID"));
-        price.setCellValueFactory(new PropertyValueFactory<>("price"));
         partID.setCellValueFactory(new PropertyValueFactory<>("part"));
         serial.setCellValueFactory(new PropertyValueFactory<>("serial"));
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
-        for (OverdueItems i: d) {
-            overdueItems.getItems().add(i);
-        }
+        price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        overdueItems.setItems(data);
     }
 }

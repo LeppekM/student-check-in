@@ -7,12 +7,12 @@ public class OverdueItems {
     private SimpleIntegerProperty ID, price;
     private SimpleStringProperty part, serial, date;
 
-    public OverdueItems(int ID, String part, String serial, String date, int price){
-        this.ID = new SimpleIntegerProperty(ID);
-        this.part = new SimpleStringProperty(part);
-        this.serial = new SimpleStringProperty(serial);
-        this.date = new SimpleStringProperty(date);
-        this.price = new SimpleIntegerProperty(price);
+    public OverdueItems(int partID, String partCon, String serialCon, String dateCon, int priceCon){
+        this.ID = new SimpleIntegerProperty(partID);
+        this.part = new SimpleStringProperty(partCon);
+        this.serial = new SimpleStringProperty(serialCon);
+        this.date = new SimpleStringProperty(dateCon);
+        this.price = new SimpleIntegerProperty(priceCon);
     }
 
     public int getID() {
@@ -74,5 +74,4 @@ public class OverdueItems {
     public void setDate(String date) {
         this.date.set(date);
     }
-
 }

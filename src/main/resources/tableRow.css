@@ -1,5 +1,5 @@
 .table-row-cell:odd {
-    -fx-background-color: firebrick;
+    -fx-background-color: red;
     -fx-text-fill: white;
 }
 
