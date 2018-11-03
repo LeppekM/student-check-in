@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import Database.Part;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,8 +17,8 @@ import java.util.ResourceBundle;
 
 public class ControllerTotalTab  extends ControllerInventoryPage implements Initializable {
 
-    @FXML
-    private TextField searchTotal;
+//    @FXML
+//    private TextField searchTotal;
 
     @FXML
     public TableView<Part> tableView;
@@ -26,7 +27,9 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     private TableColumn<Part,String> partName, serialNumber, manufacturer, price, vendor, location,
             barcode, fault, partID;
 
-    private static final ObservableList<Part> data
+    protected static Database database;
+
+    private static ObservableList<Part> data
             = FXCollections.observableArrayList();
 
     @Override
@@ -55,16 +58,16 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         fault.setCellValueFactory(new PropertyValueFactory("fault"));
         partID.setCellValueFactory(new PropertyValueFactory("partID"));
 
-        Part part1 = new Part("Raspberry Pi", "3453I214", "Pi Inc.", 35.99, "MSOE", "OUT", "J26734", false, 0);
-        Part part2 = new Part("HDMI Cable", "H2J4364", "Sony", 4.99, "MSOE", "IN", "A43453", false, 1);
-        data.add(part1);
-        data.add(part2);
+        this.data.clear();
+        tableView.getItems().clear();
+
+        //this.data = selectParts("total", this.data);
 
         tableView.getItems().setAll(this.data);
     }
 
-    @FXML
-    public void search(){
-        System.out.println(searchTotal.getText());
-    }
+//    @FXML
+//    public void search(){
+//        System.out.println(searchTotal.getText());
+//    }
 }

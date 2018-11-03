@@ -7,9 +7,9 @@ public class Part {
     private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, barcode;
     private final SimpleDoubleProperty price;
     private final SimpleIntegerProperty partID;
-    private final SimpleBooleanProperty fault;
+    private final SimpleBooleanProperty fault, isDeleted;
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID){
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID, boolean isDeleted){
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
@@ -19,6 +19,7 @@ public class Part {
         this.barcode = new SimpleStringProperty(barcode);
         this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
+        this.isDeleted = new SimpleBooleanProperty(isDeleted);
     }
 
     public String getPartName() {
@@ -89,8 +90,16 @@ public class Part {
         return partID.get();
     }
 
-    public void setPartID(int studentId) {
-        this.partID.set(studentId);
+    public void setPartID(int partId) {
+        this.partID.set(partId);
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted.get();
+    }
+
+    public void setIsDeleted(boolean deleted) {
+        this.isDeleted.set(deleted);
     }
 
     @Override
@@ -98,6 +107,6 @@ public class Part {
         return "Part Name: "+getPartName()+"\tSerial Number: "+getSerialNumber()+"\tManufacturer: " + getManufacturer() +
                 "\tPrice: " + getPrice() + "\tVendor: " + getVendor() +
                 "\tLocation: " + getLocation() + "\tBarcode: " + getBarcode() + "\tFault: " + getFault() +
-                "\tPart ID: " + getPartID() + "\n";
+                "\tPart ID: " + getPartID() + "\tIs Deleted: " + getIsDeleted() + "\n";
     }
 }

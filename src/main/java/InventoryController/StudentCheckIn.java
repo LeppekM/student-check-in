@@ -1,6 +1,5 @@
 package InventoryController;
 
-import Database.Database;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,8 +17,6 @@ public class StudentCheckIn extends Application  {
     }
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Database database = new Database();
-        database.test();
         URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);

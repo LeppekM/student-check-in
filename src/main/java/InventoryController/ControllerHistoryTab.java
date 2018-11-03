@@ -21,12 +21,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
     private void populateTable() {
 
-//        student.setCellValueFactory(new PropertyValueFactory("student"));
-//        partName.setCellValueFactory(new PropertyValueFactory("partName"));
-//        serialNumber.setCellValueFactory(new PropertyValueFactory("serialNumber"));
-//        location.setCellValueFactory(new PropertyValueFactory("location"));
-//        quantity.setCellValueFactory(new PropertyValueFactory("quantity"));
-//        date.setCellValueFactory(new PropertyValueFactory("date"));
+        student.setCellValueFactory(new PropertyValueFactory("student"));
+        partName.setCellValueFactory(new PropertyValueFactory("partName"));
+        serialNumber.setCellValueFactory(new PropertyValueFactory("serialNumber"));
+        location.setCellValueFactory(new PropertyValueFactory("location"));
+        quantity.setCellValueFactory(new PropertyValueFactory("quantity"));
+        date.setCellValueFactory(new PropertyValueFactory("date"));
     }
 
     public void search() {
