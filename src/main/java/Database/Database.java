@@ -17,7 +17,7 @@ public class Database {
     static final String dbname = "parts";
     static Connection connection;
 
-    public void test() {
+    public Database() {
         // scanner.useDelimiter("\n");
 
         String login = JOptionPane.showInputDialog("Enter login name: ");
@@ -49,20 +49,20 @@ public class Database {
         }
     }
 
-    public static ObservableList getOverdue(){
+    public ObservableList getOverdue(){
         ObservableList<OverdueItems> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
-            String overdue = "select cp.partID, p.partName, p.serialNumber, cp.dueAt, p.price" +
-                    "from checkout_parts cp left join parts p on cp.partID = p.partID" +
-                    "where cp.dueAt < " + date.toString() + ";";
+            String overdue = "select checkout_parts.partID, parts.partName, parts.serialNumber, checkout_parts.dueAt, parts.price" +
+                    " from checkout_parts left join parts on checkout_parts.partID = parts.partID" +
+                    " where checkout_parts.dueAt < date('" + date.toString() + "');";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(overdue);
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
-                data.add(new OverdueItems(resultSet.getInt("cp.partID"), resultSet.getString("p.partName"),
-                        resultSet.getString("p.serialNumber"), resultSet.getDate("cp.dueAt").toString(),
-                        resultSet.getInt("p.price")));
+                data.add(new OverdueItems(resultSet.getInt("checkout_parts.partID"), resultSet.getString("parts.partName"),
+                        resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
+                        resultSet.getInt("parts.price")));
             }
             resultSet.close();
             statement.close();

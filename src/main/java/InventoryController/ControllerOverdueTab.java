@@ -24,12 +24,13 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
     @FXML
     TableColumn<OverdueItems, Integer> studentID, price;
 
-    private ObservableList<OverdueItems> data = Database.getOverdue();
+    private ObservableList<OverdueItems> data;
+    private Database database;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        data.add(new OverdueItems(560785,"hdmi cord","67v3","2018/3/15",40));
-        data.add(new OverdueItems(560785,"aux cord","68v3","2018/3/15",20));
+        database = new Database();
+        data = database.getOverdue();
        populteTable();
     }
 
