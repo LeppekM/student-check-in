@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import Database.Part;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +23,6 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
 
     @FXML
     private Button back, add, remove;
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
