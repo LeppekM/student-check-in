@@ -49,6 +49,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public void submitItem(){
         addPart.addItem(setPartFields());
         partAddedSuccess();
+        close();
     }
 
     /**
