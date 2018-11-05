@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.HistoryItems;
 import Database.HistoryParts;
+import Database.Part;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -10,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
@@ -35,6 +37,16 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     public void initialize(URL location, ResourceBundle resources) {
         ObservableList<HistoryItems> list = historyParts.getHistoryItems();
         populateTable(list);
+//        historyTable.setRowFactory(tv -> {
+//            TableRow<Part> row = new TableRow<>();
+//            row.setOnMouseClicked(event -> {
+//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+//                    Part rowData = row.getItem();
+//                    editPart(rowData);
+//                }
+//            });
+//            return row;
+//        });
         //database.getHistory();
     }
 
@@ -57,7 +69,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         historyTable.getColumns().add(createColumn(5, "Date"));
 
         for (int i = 0; i < list.size(); i++) {
-            for (int columnIndex = historyTable.getColumns().size(); i < list.size(); columnIndex++) {
+            for (int columnIndex = historyTable.getColumns().size(); columnIndex < list.size(); columnIndex++) {
                 historyTable.getColumns().add(createColumn(columnIndex, ""));
             }
             ObservableList<StringProperty> data = FXCollections.observableArrayList();

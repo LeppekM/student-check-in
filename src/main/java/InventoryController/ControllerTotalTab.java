@@ -61,7 +61,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
 
         //this.data = selectParts("total", this.data);
 
-        tableView.getItems().setAll(this.data);
+        //tableView.getItems().setAll(this.data);
     }
 
 //    @FXML
