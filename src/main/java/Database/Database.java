@@ -17,7 +17,7 @@ public class Database {
 
     static String host = "jdbc:mysql://localhost:3306";
     static final String dbdriver = "com.mysql.jdbc.Driver";
-    static final String dbname = "parts";
+    static final String dbname = "student_check_in";
     static Connection connection;
 
     public Database() {

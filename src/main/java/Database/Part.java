@@ -8,6 +8,7 @@ public class Part {
     private final SimpleDoubleProperty price;
     private final SimpleIntegerProperty partID, quantity;
     private final SimpleBooleanProperty fault, isDeleted;
+    AddPart addPart = new AddPart();
 
     public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID, boolean isDeleted){
         this.partName = new SimpleStringProperty(partName);
@@ -32,7 +33,8 @@ public class Part {
         this.location = new SimpleStringProperty(location);
         this.barcode = new SimpleStringProperty(barcode);
         this.quantity = new SimpleIntegerProperty(quantity);
-        this.partID = null;
+        //Returns the next part id
+        this.partID = new SimpleIntegerProperty(addPart.getPartID());
         this.fault = new SimpleBooleanProperty(false);
         this.isDeleted =new SimpleBooleanProperty(false);
     }

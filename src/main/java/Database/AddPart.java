@@ -4,7 +4,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 
 public class AddPart {
-    private final String url = "jdbc:mysql://localhost:3306/sdl";
+    private final String url = "jdbc:mysql://localhost:3306/student_check_in";
     private final String username = "langdk";
     private final String password = "password";
     private String addQuery = "INSERT INTO parts(partID, partName, serialnumber, manufacturer, price, vendorID," +
@@ -36,7 +36,7 @@ public class AddPart {
      */
     private PreparedStatement insertQuery(Part part, PreparedStatement preparedStatement){
         try {
-            preparedStatement.setInt(1, getPartID());
+            preparedStatement.setInt(1, part.getPartID());
             preparedStatement.setString(2, part.getPartName());
             preparedStatement.setString(3, part.getSerialNumber());
             preparedStatement.setString(4, part.getManufacturer());
@@ -69,7 +69,7 @@ public class AddPart {
      * the next partID when adding a part
      * @return The new part ID to be added to the database for the corresponding part
      */
-    private int getPartID(){
+    public int getPartID(){
         int partID = 0;
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             Statement statement = connection.createStatement();

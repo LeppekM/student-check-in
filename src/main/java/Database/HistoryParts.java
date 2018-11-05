@@ -8,9 +8,9 @@ import java.sql.*;
 
 public class HistoryParts {
 
-    private static String host = "jdbc:mysql://127.0.0.1:3306";
+    private static String host = "jdbc:mysql://localhost:3306";
     private static final String dbdriver = "com.mysql.jdbc.Driver";
-    private static final String dbname = "local_student_check_in";
+    private static final String dbname = "student_check_in";
     private static Connection connection;
 
     private static final String HISTORY_QUERY = "SELECT studentName, partName, serialNumber, location, " +

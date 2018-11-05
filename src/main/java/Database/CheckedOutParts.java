@@ -10,7 +10,7 @@ import java.sql.*;
  * This class queries the database for checked out items, and returns a student name, part name, quantity checked out, date checked out, and due date
  */
 public class CheckedOutParts {
-    private final String url = "jdbc:mysql://localhost:3306/sdl";
+    private final String url = "jdbc:mysql://localhost:3306/student_check_in";
     private final String username = "langdk";
     private final String password = "password";
     private final String SELECTQUERY = "SELECT students.studentName, parts.partName, checkout_parts.checkoutQuantity, checkouts.checkoutAt, checkout_parts.dueAt\n" +
