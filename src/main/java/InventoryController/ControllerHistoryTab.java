@@ -3,6 +3,7 @@ package InventoryController;
 import Database.HistoryItems;
 import Database.HistoryParts;
 import Database.Part;
+import Database.DatabaseLogin;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -35,7 +36,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<HistoryItems> list = historyParts.getHistoryItems();
+        ObservableList<HistoryItems> list = historyParts.getHistoryItems(DatabaseLogin.username, DatabaseLogin.password);
         populateTable(list);
 //        historyTable.setRowFactory(tv -> {
 //            TableRow<Part> row = new TableRow<>();

@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.AddPart;
+import Database.DatabaseLogin;
 import Database.Part;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,7 +48,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * Adds the part to database
      */
     public void submitItem(){
-        addPart.addItem(setPartFields());
+        addPart.addItem(setPartFields(), DatabaseLogin.username, DatabaseLogin.password);
         partAddedSuccess();
         close();
     }

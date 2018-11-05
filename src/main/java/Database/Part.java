@@ -34,7 +34,7 @@ public class Part {
         this.barcode = new SimpleStringProperty(barcode);
         this.quantity = new SimpleIntegerProperty(quantity);
         //Returns the next part id
-        this.partID = new SimpleIntegerProperty(addPart.getPartID());
+        this.partID = new SimpleIntegerProperty(addPart.getPartID(DatabaseLogin.username, DatabaseLogin.password));
         this.fault = new SimpleBooleanProperty(false);
         this.isDeleted =new SimpleBooleanProperty(false);
     }

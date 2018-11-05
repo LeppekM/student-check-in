@@ -34,23 +34,23 @@ public class HistoryParts {
     /**
      * Queries the database for items that are checked out.
      */
-    public ObservableList<HistoryItems> getHistoryItems(){
-        String login = JOptionPane.showInputDialog("Enter login name: ");
-
-// Note: password will be echoed to console;
-//        String password = JOptionPane.showInputDialog("Enter password: ");
-        JPanel panel = new JPanel();
-        JLabel label = new JLabel("Enter a password: ");
-        JPasswordField pass = new JPasswordField(20);
-        panel.add(label);
-        panel.add(pass);
-        String[] options = new String[]{"OK", "Cancel"};
-        int option = JOptionPane.showOptionDialog(null, panel, "Input",
-                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-                null, options, options[1]);
-        String password = new String(pass.getPassword());
-
-        JOptionPane.showMessageDialog(null, "Connecting as user '" + login + "' . . .");
+    public ObservableList<HistoryItems> getHistoryItems(String username, String password){
+//        String login = JOptionPane.showInputDialog("Enter login name: ");
+//
+//// Note: password will be echoed to console;
+////        String password = JOptionPane.showInputDialog("Enter password: ");
+//        JPanel panel = new JPanel();
+//        JLabel label = new JLabel("Enter a password: ");
+//        JPasswordField pass = new JPasswordField(20);
+//        panel.add(label);
+//        panel.add(pass);
+//        String[] options = new String[]{"OK", "Cancel"};
+//        int option = JOptionPane.showOptionDialog(null, panel, "Input",
+//                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+//                null, options, options[1]);
+//        String password = new String(pass.getPassword());
+//
+//        JOptionPane.showMessageDialog(null, "Connecting as user '" + login + "' . . .");
 
         // Load the JDBC driver.
         // Library (.jar file) must be added to project build path.
@@ -61,7 +61,7 @@ public class HistoryParts {
             System.exit(0);
         }
 
-        try (Connection connection = DriverManager.getConnection((host + "/" + dbname), login, password)) {
+        try (Connection connection = DriverManager.getConnection((host + "/" + dbname), username, password)) {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){

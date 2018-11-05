@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.Part;
+import Database.DatabaseLogin;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,11 +37,14 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private Button back, add, remove;
 
     protected static Database database;
+
 //    public static Connection connection;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+
         //database = new Database();
 //        this.connection = database.getConnection();
 //        database.connect();

@@ -11,8 +11,8 @@ import java.sql.*;
  */
 public class CheckedOutParts {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-    private final String username = "langdk";
-    private final String password = "password";
+//    private final String username = "langdk";
+//    private final String password = "password";
     private final String SELECTQUERY = "SELECT students.studentName, parts.partName, checkout_parts.checkoutQuantity, checkouts.checkoutAt, checkout_parts.dueAt\n" +
             "FROM checkout_parts\n" +
             "INNER JOIN parts \n" +
@@ -33,7 +33,7 @@ public class CheckedOutParts {
     /**
      * Queries the database for items that are checked out.
      */
-    public void getCheckedOutItems(){
+    public void getCheckedOutItems(String username, String password){
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             statement = connection.createStatement();

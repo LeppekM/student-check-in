@@ -20,24 +20,24 @@ public class Database {
     static final String dbname = "student_check_in";
     static Connection connection;
 
-    public Database() {
+    public Database(String username, String password) {
         // scanner.useDelimiter("\n");
 
-        String login = JOptionPane.showInputDialog("Enter login name: ");
-
-        // Note: password will be echoed to console;
-        JPanel panel = new JPanel();
-        JLabel label = new JLabel("Enter a password: ");
-        JPasswordField pass = new JPasswordField(20);
-        panel.add(label);
-        panel.add(pass);
-        String[] options = new String[]{"OK", "Cancel"};
-        int option = JOptionPane.showOptionDialog(null, panel, "Input",
-                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-                null, options, options[1]);
-        String password = new String(pass.getPassword());
-
-        JOptionPane.showMessageDialog(null,"Connecting as user '" + login + "' . . .");
+//        String login = JOptionPane.showInputDialog("Enter login name: ");
+//
+//        // Note: password will be echoed to console;
+//        JPanel panel = new JPanel();
+//        JLabel label = new JLabel("Enter a password: ");
+//        JPasswordField pass = new JPasswordField(20);
+//        panel.add(label);
+//        panel.add(pass);
+//        String[] options = new String[]{"OK", "Cancel"};
+//        int option = JOptionPane.showOptionDialog(null, panel, "Input",
+//                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+//                null, options, options[1]);
+//        String password = new String(pass.getPassword());
+//
+//        JOptionPane.showMessageDialog(null,"Connecting as user '" + login + "' . . .");
 
         // Load the JDBC driver.
         // Library (.jar file) must be added to project build path.
@@ -51,7 +51,7 @@ public class Database {
         connection = null;
         try {
             connection = DriverManager.getConnection((host + "/" + dbname),
-                    login, password);
+                    username, password);
             connection.setClientInfo("autoReconnect", "true");
         } catch (SQLException e) {
             e.printStackTrace();

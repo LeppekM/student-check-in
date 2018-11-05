@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 
 public class AddPart {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-    private final String username = "langdk";
-    private final String password = "password";
+//    private final String username = "langdk";
+//    private final String password = "password";
     private String addQuery = "INSERT INTO parts(partID, partName, serialnumber, manufacturer, price, vendorID," +
             " location, barcode, totalQuantity,  availableQuantity, createdAt, createdBy)"+
             "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -19,7 +19,7 @@ public class AddPart {
      * This method adds an item to the database
      * @param part The part to be added
      */
-    public void addItem(Part part){
+    public void addItem(Part part, String username, String password){
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
             insertQuery(part, preparedStatement).execute();
@@ -69,7 +69,7 @@ public class AddPart {
      * the next partID when adding a part
      * @return The new part ID to be added to the database for the corresponding part
      */
-    public int getPartID(){
+    public int getPartID(String username, String password){
         int partID = 0;
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             Statement statement = connection.createStatement();

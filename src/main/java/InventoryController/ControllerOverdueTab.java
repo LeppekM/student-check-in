@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.OverdueItems;
+import Database.DatabaseLogin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -29,7 +30,7 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        database = new Database();
+        database = new Database(DatabaseLogin.username, DatabaseLogin.password);
         data = database.getOverdue();
        populteTable();
     }
