@@ -10,12 +10,18 @@
       <tabs>
         <Tab fx:id="totalTab" text="Total Inventory">
           <content>
-            <fx:include fx:id="totalTabPage" source="InventoryTotalTab.fxml" />
+            <fx:include fx:id="totalTabPage" source="InventoryTotalTab.fxml">
+              <children>
+                <Button fx:id="add" layoutX="570.0" layoutY="550.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" text="Add" />
+                <Button fx:id="remove" layoutX="685.0" layoutY="550.0" mnemonicParsing="false" onAction="#removePart" prefHeight="33.0" prefWidth="106.0" text="Remove" />
+              </children>
+            </fx:include>
           </content>
         </Tab>
         <Tab fx:id="historyTab" text="History">
           <content>
             <fx:include fx:id="historyTabPage" source="InventoryHistoryTab.fxml" />
+
           </content>
         </Tab>
         <Tab fx:id="checkedOutTab" text="Checked Out">

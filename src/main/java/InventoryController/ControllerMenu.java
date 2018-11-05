@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -33,6 +34,7 @@ public class ControllerMenu implements Initializable {
             URL myFxmlURL = ClassLoader.getSystemResource(fxml);
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             mainMenuScene.getScene().setRoot(loader.load(myFxmlURL));
+
         }
         catch(IOException invoke){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");

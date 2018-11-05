@@ -7,10 +7,9 @@ public class Part {
     private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, barcode;
     private final SimpleDoubleProperty price;
     private final SimpleIntegerProperty partID, quantity;
-    private final SimpleBooleanProperty fault;
+    private final SimpleBooleanProperty fault, isDeleted;
 
-
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID, int quantity){
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID, boolean isDeleted){
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
@@ -20,7 +19,8 @@ public class Part {
         this.barcode = new SimpleStringProperty(barcode);
         this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
-        this.quantity = new SimpleIntegerProperty(quantity);
+        this.quantity = new SimpleIntegerProperty(0);
+        this.isDeleted = new SimpleBooleanProperty(isDeleted);
     }
 
     public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, int quantity){
@@ -34,6 +34,7 @@ public class Part {
         this.quantity = new SimpleIntegerProperty(quantity);
         this.partID = null;
         this.fault = new SimpleBooleanProperty(false);
+        this.isDeleted =new SimpleBooleanProperty(false);
     }
 
     public String getPartName() {
@@ -91,7 +92,7 @@ public class Part {
     public void setBarcode(String barcode) {
         this.barcode.set(barcode);
     }
-    
+
     public boolean getFault() {
         return fault.get();
     }
@@ -104,8 +105,16 @@ public class Part {
         return partID.get();
     }
 
-    public void setPartID(int studentId) {
-        this.partID.set(studentId);
+    public void setPartID(int partId) {
+        this.partID.set(partId);
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted.get();
+    }
+
+    public void setIsDeleted(boolean deleted) {
+        this.isDeleted.set(deleted);
     }
 
     public int getQuantity() {
@@ -126,8 +135,6 @@ public class Part {
         return "Part Name: "+getPartName()+"\tSerial Number: "+getSerialNumber()+"\tManufacturer: " + getManufacturer() +
                 "\tPrice: " + getPrice() + "\tVendor: " + getVendor() +
                 "\tLocation: " + getLocation() + "\tBarcode: " + getBarcode() + "\tFault: " + getFault() +
-                "\tPart ID: " + getPartID() + "\n";
+                "\tPart ID: " + getPartID() + "\tIs Deleted: " + getIsDeleted() + "\n";
     }
-
-
 }
