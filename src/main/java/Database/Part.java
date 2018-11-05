@@ -6,10 +6,11 @@ public class Part {
 
     private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, barcode;
     private final SimpleDoubleProperty price;
-    private final SimpleIntegerProperty partID;
+    private final SimpleIntegerProperty partID, quantity;
     private final SimpleBooleanProperty fault;
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID){
+
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID, int quantity){
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
@@ -19,6 +20,20 @@ public class Part {
         this.barcode = new SimpleStringProperty(barcode);
         this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
+        this.quantity = new SimpleIntegerProperty(quantity);
+    }
+
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, int quantity){
+        this.partName = new SimpleStringProperty(partName);
+        this.serialNumber = new SimpleStringProperty(serialNumber);
+        this.manufacturer = new SimpleStringProperty(manufacturer);
+        this.price = new SimpleDoubleProperty(price);
+        this.vendor = new SimpleStringProperty(vendor);
+        this.location = new SimpleStringProperty(location);
+        this.barcode = new SimpleStringProperty(barcode);
+        this.quantity = new SimpleIntegerProperty(quantity);
+        this.partID = null;
+        this.fault = new SimpleBooleanProperty(false);
     }
 
     public String getPartName() {
@@ -76,7 +91,7 @@ public class Part {
     public void setBarcode(String barcode) {
         this.barcode.set(barcode);
     }
-
+    
     public boolean getFault() {
         return fault.get();
     }
@@ -93,6 +108,19 @@ public class Part {
         this.partID.set(studentId);
     }
 
+    public int getQuantity() {
+        return quantity.get();
+    }
+
+    public SimpleIntegerProperty quantityProperty() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity.set(quantity);
+    }
+
+
     @Override
     public String toString(){
         return "Part Name: "+getPartName()+"\tSerial Number: "+getSerialNumber()+"\tManufacturer: " + getManufacturer() +
@@ -100,4 +128,6 @@ public class Part {
                 "\tLocation: " + getLocation() + "\tBarcode: " + getBarcode() + "\tFault: " + getFault() +
                 "\tPart ID: " + getPartID() + "\n";
     }
+
+
 }
