@@ -4,8 +4,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class HistoryItems {
-    private SimpleIntegerProperty quantity;
-    private SimpleStringProperty student, partName, serialNumber, location, date;
+    private final SimpleIntegerProperty quantity;
+    private final SimpleStringProperty student, partName, serialNumber, location, date;
 
     public HistoryItems(String student, String partName, String serialNumber, String location, int quantity, String date) {
         this.student = new SimpleStringProperty(student);

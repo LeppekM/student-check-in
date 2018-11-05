@@ -13,9 +13,9 @@
                 <Font size="24.0" fx:id="x1" />
             </font>
         </Label>
-        <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
+        <TableView id="historyTable" fx:id="tableView" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
             <columns>
-                <TableColumn prefWidth="150.0" resizable="false" text="Student" fx:id="student" />
+                <TableColumn prefWidth="150.0" resizable="false" text="Student" fx:id="studentName" />
                 <TableColumn prefWidth="130.0" resizable="false" text="Part Name" fx:id="partName" />
                 <TableColumn prefWidth="130.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
                 <TableColumn prefWidth="130.0" resizable="false" text="Location" fx:id="location" />

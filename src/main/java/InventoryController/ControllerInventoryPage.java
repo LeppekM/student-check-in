@@ -6,9 +6,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -25,6 +27,9 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private AnchorPane inventoryScene;
 
     @FXML
+    private TabPane tabPane;
+
+    @FXML
     private Button back, add, remove;
 
     protected static Database database;
@@ -33,7 +38,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        database = new Database();
+        //database = new Database();
 //        this.connection = database.getConnection();
 //        database.connect();
     }
@@ -62,9 +67,9 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         Statement currentStatement = null;
         try {
             String rawStatement = "SELECT * from parts";
-            Database database2 = new Database();
-            Connection connection2 = database2.getConnection();
-            currentStatement = connection2.createStatement();
+            //Database database2 = new Database();
+            //Connection connection2 = database2.getConnection();
+            //currentStatement = connection2.createStatement();
             ResultSet rs = currentStatement.executeQuery(rawStatement);
             while (rs.next()) {
                 String serialNumber = rs.getString("serialNumber");
@@ -80,6 +85,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID, isDeleted);
                 data.add(part);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

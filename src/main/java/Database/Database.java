@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Database {
 
-    private static String host = "jdbc:mysql://127.0.0.1:3306/?user=root";
+    private static String host = "jdbc:mysql://127.0.0.1:3306";
     private static final String dbdriver = "com.mysql.jdbc.Driver";
     private static final String dbname = "local_student_check_in";
     private static Connection connection;
@@ -61,6 +61,7 @@ public class Database {
             String delete = "update parts p set p.isDeleted = 1 where p.partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
+            statement.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -102,27 +103,27 @@ public class Database {
         return data;
     }
 
-    private static ArrayList<String> executeQuery(Connection connection, String query) {
-        ResultSet results = null;
-        ArrayList<String> resultList = new ArrayList<>();
-        Statement statement = null;
-        try {
-            statement = connection.createStatement();
-            results = statement.executeQuery(query);
-            while (results.next()) {
-                resultList.add(results.getString(1));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.exit(0);
-        } finally {
-            try {
-                results.close();
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return resultList;
-    }
+//    private static ObservableList<HistoryItems> executeQuery(Connection connection, String query) {
+//        ResultSet results = null;
+//        ArrayList<String> resultList = new ArrayList<>();
+//        Statement statement = null;
+//        try {
+//            statement = connection.createStatement();
+//            results = statement.executeQuery(query);
+//            while (results.next()) {
+//                resultList.add(results.getString(1));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.exit(0);
+//        } finally {
+//            try {
+//                results.close();
+//                statement.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return resultList;
+//    }
 }

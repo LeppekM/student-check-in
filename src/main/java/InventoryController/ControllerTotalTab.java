@@ -27,8 +27,6 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     private TableColumn<Part,String> partName, serialNumber, manufacturer, price, vendor, location,
             barcode, fault, partID;
 
-    protected static Database database;
-
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
 
