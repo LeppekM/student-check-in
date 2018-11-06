@@ -2,16 +2,9 @@ package Database;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 public class Database {
 
@@ -132,6 +125,27 @@ public class Database {
             e.printStackTrace();
         }
         return data;
+    }
+
+    public Part selectPart(int partID){
+        String query = "select * from parts where partID = " + partID;
+        Part part = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            while (resultSet.next()) {
+                part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
+                        resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
+                        resultSet.getString("location"), resultSet.getString("barcode"), false,
+                        resultSet.getInt("partID"), false);
+            }
+            resultSet.close();
+            statement.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return part;
     }
 
     //    private static ObservableList<HistoryItems> executeQuery(Connection connection, String query) {
