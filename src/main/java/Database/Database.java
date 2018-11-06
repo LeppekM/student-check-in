@@ -83,7 +83,6 @@ public class Database {
     }
 
     private static Date gettoday(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
         long date = System.currentTimeMillis();
         return new Date(date);
     }
