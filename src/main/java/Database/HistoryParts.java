@@ -21,7 +21,7 @@ public class HistoryParts {
             "INNER JOIN checkout_parts ON parts.partID = checkout_parts.partID " +
             "INNER JOIN checkouts ON checkout_parts.checkoutID = checkouts.checkoutID " +
             "INNER JOIN students ON checkouts.studentID = students.studentID " +
-            "WHERE parts.deleted = 0 " +
+            "WHERE parts.isDeleted = 0 " +
             "ORDER BY CASE " +
             "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
             "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END DESC;";
@@ -86,7 +86,7 @@ public class HistoryParts {
             serialNumber = resultSet.getString("serialNumber");
             location = resultSet.getString("location");
             quantity = resultSet.getInt("quantity");
-            date = resultSet.getDate("date").toString();
+            date = resultSet.getString("date");
 
         } catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database");
