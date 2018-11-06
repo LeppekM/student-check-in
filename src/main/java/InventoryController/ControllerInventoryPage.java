@@ -34,78 +34,39 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private TabPane tabPane;
 
     @FXML
-    private Button back, add, remove;
+    private Button back;
 
     protected static Database database;
-
-//    public static Connection connection;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-
-        //database = new Database();
-//        this.connection = database.getConnection();
-//        database.connect();
     }
 
-    @FXML
-    public void addPart(){
-        Stage stage = new Stage();
-        try{
-            URL myFxmlURL = ClassLoader.getSystemResource("AddPart.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load(myFxmlURL);
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Add a Part");
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        //Called when the "Add" button is clicked
-    }
-
-    @FXML
-    public void editPart(Part part){
-        //Called when a part is double clicked in a table.
-        //@param part the part that was double clicked
-    }
-
-    @FXML
-    public void removePart(){
-        //Called when the "Remove" button is clicked
-        ControllerTotalTab totalTab = new ControllerTotalTab();
-        if(totalTab.tableView.getSelectionModel().getSelectedItems().size() == 1){
-            database.deleteItem(totalTab.tableView.getSelectionModel().getSelectedItem().getPartID());
-        }
-    }
-
-    public ObservableList<Part> selectParts(String tab, ObservableList<Part> data){
+    //Takes a tab name and a data list as parameters, then returns the data list populated with the appropriate
+    //parts based on which tab was stated;
+    //param tab = Name of the tab using the method.
+    //param data = List of part objects meant to be populated and used to fill a TableView
+    public ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data){
         Statement currentStatement = null;
         try {
-            String rawStatement = "SELECT * from parts";
-            //Database database2 = new Database();
-            //Connection connection2 = database2.getConnection();
-            //currentStatement = connection2.createStatement();
+            Connection connection = database.getConnection();
+            currentStatement = connection.createStatement();
             ResultSet rs = currentStatement.executeQuery(rawStatement);
             while (rs.next()) {
                 String serialNumber = rs.getString("serialNumber");
                 String partName = rs.getString("partName");
                 double price = rs.getDouble("price");
-                String vendor = rs.getString("vendor");
+                String vendor = rs.getString("vendorID");
                 String manufacturer = rs.getString("manufacturer");
                 String location = rs.getString("location");
                 String barcode = rs.getString("barcode");
-                boolean fault = (rs.getInt("fault") == 1) ? true : false;
+                boolean fault = (rs.getInt("faultQuantity") == 1) ? true : false;
                 int partID = rs.getInt("partID");
-                boolean isDeleted = rs.getBoolean("isDeleted");
+                boolean isDeleted = (rs.getString("deletedBy") == null) ? false : true;
                 Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID, isDeleted);
                 data.add(part);
             }
-            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

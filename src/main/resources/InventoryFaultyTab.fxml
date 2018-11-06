@@ -6,9 +6,26 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="InventoryController.ControllerFaultyTab"
-            prefHeight="600.0" prefWidth="800.0">
-
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="InventoryController.ControllerFaultyTab" prefHeight="600.0" prefWidth="800.0">
+    <children>
+        <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
+            <font>
+                <Font size="24.0" fx:id="x1" />
+            </font>
+        </Label>
+        <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
+            <columns>
+                <TableColumn prefWidth="169.0" resizable="false" text="Part Name" fx:id="partName" />
+                <TableColumn prefWidth="124.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
+                <TableColumn prefWidth="174.0" resizable="false" text="Manufacturer" fx:id="manufacturer" />
+                <TableColumn prefWidth="73.0" resizable="false" text="Price" fx:id="price" />
+                <TableColumn prefWidth="73.0" resizable="false" text="Vendor" fx:id="vendor" />
+                <TableColumn prefWidth="73.0" resizable="false" text="Location" fx:id="location" />
+                <TableColumn prefWidth="73.0" resizable="false" text="Barcode" fx:id="barcode" />
+                <TableColumn prefWidth="73.0" resizable="false" text="Fault" fx:id="fault" />
+                <TableColumn prefWidth="73.0" resizable="false" text="Part ID" fx:id="partID" />
+            </columns>
+        </TableView>
+    </children>
 </AnchorPane>

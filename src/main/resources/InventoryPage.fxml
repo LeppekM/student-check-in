@@ -10,18 +10,12 @@
       <tabs>
         <Tab fx:id="totalTab" text="Total Inventory">
           <content>
-            <fx:include fx:id="totalTabPage" source="InventoryTotalTab.fxml">
-              <children>
-                <Button fx:id="add" layoutX="570.0" layoutY="550.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" text="Add" />
-                <Button fx:id="remove" layoutX="685.0" layoutY="550.0" mnemonicParsing="false" onAction="#removePart" prefHeight="33.0" prefWidth="106.0" text="Remove" />
-              </children>
-            </fx:include>
+            <fx:include fx:id="totalTabPage" source="InventoryTotalTab.fxml" />
           </content>
         </Tab>
         <Tab fx:id="historyTab" text="History">
           <content>
             <fx:include fx:id="historyTabPage" source="InventoryHistoryTab.fxml" />
-
           </content>
         </Tab>
         <Tab fx:id="checkedOutTab" text="Checked Out">
@@ -42,7 +36,5 @@
       </tabs>
     </TabPane>
     <Button fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack" prefHeight="33.0" prefWidth="106.0" text="Back to Home" />
-    <Button id="back" fx:id="add" layoutX="575.0" layoutY="580.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" text="Add" />
-    <Button id="back" fx:id="remove" layoutX="685.0" layoutY="580.0" mnemonicParsing="false" onAction="#removePart" prefHeight="33.0" prefWidth="106.0" text="Remove" />
   </children>
 </AnchorPane>

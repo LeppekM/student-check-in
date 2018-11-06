@@ -21,7 +21,7 @@ public class HistoryParts {
             "INNER JOIN checkout_parts ON parts.partID = checkout_parts.partID " +
             "INNER JOIN checkouts ON checkout_parts.checkoutID = checkouts.checkoutID " +
             "INNER JOIN students ON checkouts.studentID = students.studentID " +
-            "WHERE parts.isDeleted = 0 " +
+            "WHERE parts.deletedBy IS NULL " +
             "ORDER BY CASE " +
             "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
             "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END DESC;";
