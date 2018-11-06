@@ -82,7 +82,7 @@ public class Database {
 
     public void deleteItem(int partID){
         try{
-            String delete = "update parts p set p.deletedBy = 'root' where p.partID = " + partID + ";";
+            String delete = "update parts p set p.deletedBy = 'root', p.isDeleted = 1 where p.partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
             statement.close();
@@ -138,7 +138,7 @@ public class Database {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getString("barcode"), false,
-                        resultSet.getInt("partID"), false);
+                        resultSet.getInt("partID"), resultSet.getBoolean("isDeleted"));
             }
             resultSet.close();
             statement.close();
