@@ -82,7 +82,7 @@ public class Database {
 
     public void deleteItem(int partID){
         try{
-            String delete = "update parts p set p.deletedBy = 'root', p.isDeleted = 1 where p.partID = " + partID + ";";
+            String delete = "update parts p set p.deletedBy = 'root', p.isDeleted = 1, p.deletedAt = date('" + gettoday() +"') where p.partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
             statement.close();
