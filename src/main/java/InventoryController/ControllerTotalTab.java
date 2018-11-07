@@ -56,7 +56,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         this.data.clear();
         tableView.getItems().clear();
 
-        this.data = selectParts("SELECT * from parts WHERE deletedBy IS NULL ORDER BY partID", this.data);
+        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
 
         tableView.getItems().setAll(this.data);
 
