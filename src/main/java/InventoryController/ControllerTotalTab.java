@@ -40,16 +40,6 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     public void initialize(URL location, ResourceBundle resources) {
         database = new Database(DatabaseLogin.username, DatabaseLogin.password);
         populateTable();
-        tableView.setRowFactory(tv -> {
-            TableRow<Part> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    Part rowData = row.getItem();
-                    editPart(rowData);
-                }
-            });
-            return row;
-        });
     }
 
     private void populateTable() {
@@ -69,6 +59,17 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         this.data = selectParts("SELECT * from parts WHERE deletedBy IS NULL ORDER BY partID", this.data);
 
         tableView.getItems().setAll(this.data);
+
+        tableView.setRowFactory(tv -> {
+            TableRow<Part> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    Part rowData = row.getItem();
+                    editPart(rowData);
+                }
+            });
+            return row;
+        });
     }
 
     @FXML
@@ -98,6 +99,23 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     public void editPart(Part part){
         //Called when a part is double clicked in a table.
         //@param part the part that was double clicked
+        Stage stage = new Stage();
+        try {
+            //URL myFxmlURL = ClassLoader.getSystemResource("EditPart.fxml");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditPart.fxml"));
+            Parent root = loader.load();
+
+            ((ControllerEditPart) loader.getController()).initPart(part);
+            Scene scene = new Scene(root, 400, 400);
+            stage.setTitle("Edit a Part");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            populateTable();
+        }
+
     }
 
     @FXML

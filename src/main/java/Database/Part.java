@@ -131,6 +131,16 @@ public class Part {
         this.quantity.set(quantity);
     }
 
+    public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, int quantity) {
+        this.partName.set(partName);
+        this.serialNumber.set(serialNumber);
+        this.manufacturer.set(manufacturer);
+        this.price.set(price);
+        this.vendor.set(vendor);
+        this.location.set(location);
+        this.barcode.set(barcode);
+        this.quantity.set(quantity);
+    }
 
     @Override
     public String toString(){
