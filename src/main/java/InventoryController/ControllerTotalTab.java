@@ -42,6 +42,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         populateTable();
     }
 
+    @FXML
     private void populateTable() {
         partName.setCellValueFactory(new PropertyValueFactory("partName"));
         serialNumber.setCellValueFactory(new PropertyValueFactory("serialNumber"));
@@ -56,7 +57,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         this.data.clear();
         tableView.getItems().clear();
 
-        this.data = selectParts("SELECT * from parts WHERE deletedBy IS NULL ORDER BY partID", this.data);
+        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
 
         tableView.getItems().setAll(this.data);
 
@@ -70,11 +71,6 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
             });
             return row;
         });
-    }
-
-    @FXML
-    private void refresh(){
-        populateTable();
     }
 
     @FXML

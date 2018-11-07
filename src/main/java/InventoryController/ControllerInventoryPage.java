@@ -43,9 +43,9 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     public void initialize(URL location, ResourceBundle resources) {
     }
 
-    //Takes a tab name and a data list as parameters, then returns the data list populated with the appropriate
-    //parts based on which tab was stated;
-    //param tab = Name of the tab using the method.
+    //Takes a raw statement and a data list as parameters, then returns the data list populated with the appropriate
+    //parts based on the statement where clause;
+    //param rawStatement = The statement to select parts.
     //param data = List of part objects meant to be populated and used to fill a TableView
     public ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data){
         Statement currentStatement = null;
@@ -63,7 +63,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 String barcode = rs.getString("barcode");
                 boolean fault = (rs.getInt("faultQuantity") == 1) ? true : false;
                 int partID = rs.getInt("partID");
-                boolean isDeleted = (rs.getString("deletedBy") == null) ? false : true;
+                boolean isDeleted = (rs.getInt("isDeleted") == 0) ? false : true;
                 Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID, isDeleted);
                 data.add(part);
             }

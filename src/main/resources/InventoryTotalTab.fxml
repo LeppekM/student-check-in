@@ -28,6 +28,6 @@
     </TableView>
     <Button fx:id="add" layoutX="560.0" layoutY="554.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" text="Add" />
     <Button fx:id="remove" layoutX="680.0" layoutY="554.0" mnemonicParsing="false" onAction="#removePart" prefHeight="33.0" prefWidth="106.0" text="Remove" />
-    <Button fx:id="refresh" layoutX="713.0" layoutY="20.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+    <Button fx:id="refresh" layoutX="713.0" layoutY="20.0" mnemonicParsing="false" onAction="#populateTable" text="Refresh" />
   </children>
 </AnchorPane>

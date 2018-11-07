@@ -48,7 +48,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         this.data.clear();
         this.tableView.getItems().clear();
 
-        this.data = selectParts("SELECT * from parts WHERE deletedBy IS NULL AND faultQuantity = 1 ORDER BY partID", this.data);
+        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 AND faultQuantity = 1 ORDER BY partID", this.data);
 
         this.tableView.getItems().setAll(this.data);
     }
