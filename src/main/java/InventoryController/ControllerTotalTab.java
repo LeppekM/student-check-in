@@ -42,6 +42,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         populateTable();
     }
 
+    @FXML
     private void populateTable() {
         partName.setCellValueFactory(new PropertyValueFactory("partName"));
         serialNumber.setCellValueFactory(new PropertyValueFactory("serialNumber"));
@@ -70,11 +71,6 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
             });
             return row;
         });
-    }
-
-    @FXML
-    private void refresh(){
-        populateTable();
     }
 
     @FXML
