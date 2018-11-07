@@ -36,9 +36,6 @@ public class AddAndDeleteTest {
 
     @Test
     public void deleteTest(){
-//        AddPart addPart = new AddPart();
-//        Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 100, false);
-//        addPart.addItem(part,"terrybc", "Sharks$199714");
         database.deleteItem(100);
         Part test = database.selectPart(100);
         assertTrue(test.getIsDeleted());
