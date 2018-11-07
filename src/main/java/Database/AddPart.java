@@ -49,7 +49,7 @@ public class AddPart {
             preparedStatement.setInt(10, part.getQuantity());
             preparedStatement.setString(11, getCurrentDate());
             //Hardcoded created by because we don't have workers setup yet
-            preparedStatement.setString(12, "John");
+            preparedStatement.setString(12, "Jim");
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
