@@ -3,6 +3,9 @@ package Database;
 import java.sql.*;
 import java.time.LocalDateTime;
 
+/**
+ * This class uses a query to edit a part in the database
+ */
 public class EditPart {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
     //    private final String username = "langdk";
@@ -12,7 +15,7 @@ public class EditPart {
             "WHERE partID = ?;";
 
     /**
-     * This method edits an item to the database
+     * This method edits an item in the database
      * @param part The part to be edited
      */
     public void editItem(Part part, String username, String password){
@@ -30,7 +33,7 @@ public class EditPart {
      * This method sets the information from a part to the item being edited in the database
      * @param part The part being edited in the database
      * @param preparedStatement The statement that has items being set to it
-     * @return
+     * @return the statement that has items being set to it
      */
     private PreparedStatement editQuery(Part part, PreparedStatement preparedStatement){
         try {

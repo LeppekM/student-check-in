@@ -6,6 +6,9 @@ import javafx.collections.ObservableList;
 import javax.swing.*;
 import java.sql.*;
 
+/**
+ * This class queries the database for the transaction history, and returns a student name, part name, serial number, location, quantity, date
+ */
 public class HistoryParts {
 
     private static String host = "jdbc:mysql://localhost:3306";
@@ -25,6 +28,7 @@ public class HistoryParts {
             "ORDER BY CASE " +
             "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
             "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END DESC;";
+
     private Statement statement;
     private int quantity;
     private String studentName, partName, serialNumber, location, date;
@@ -32,7 +36,7 @@ public class HistoryParts {
     public ObservableList<HistoryItems> data = FXCollections.observableArrayList();
 
     /**
-     * Queries the database for items that are checked out.
+     * Queries the database for the transaction history.
      */
     public ObservableList<HistoryItems> getHistoryItems(String username, String password){
 //        String login = JOptionPane.showInputDialog("Enter login name: ");

@@ -15,14 +15,14 @@
         </Label>
         <TableView id="historyTable" fx:id="historyTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
             <columns>
-                <TableColumn prefWidth="150.0" resizable="false" text="Student" fx:id="studentName" />
-                <TableColumn prefWidth="130.0" resizable="false" text="Part Name" fx:id="partName" />
-                <TableColumn prefWidth="130.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
-                <TableColumn prefWidth="130.0" resizable="false" text="Location" fx:id="location" />
-                <TableColumn prefWidth="130.0" resizable="false" text="Quantity" fx:id="quantity" />
-                <TableColumn prefWidth="130.0" resizable="false" text="Date" fx:id="date" />
+                <TableColumn prefWidth="125.0" resizable="false" text="Student" fx:id="studentName" />
+                <TableColumn prefWidth="125.0" resizable="false" text="Part Name" fx:id="partName" />
+                <TableColumn prefWidth="110.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
+                <TableColumn prefWidth="110.0" resizable="false" text="Location" fx:id="location" />
+                <TableColumn prefWidth="50.0" resizable="false" text="Quantity" fx:id="quantity" />
+                <TableColumn prefWidth="80.0" resizable="false" text="Date" fx:id="date" />
             </columns>
         </TableView>
-        <TextField fx:id="searchHistory" layoutX="622.0" layoutY="21.0" onAction="#search" prefHeight="25.0" prefWidth="150.99990000000253" promptText="Search..." />
+        <TextField fx:id="searchHistory" layoutX="622.0" layoutY="21.0" prefHeight="25.0" prefWidth="150.99990000000253" promptText="Search..." />
     </children>
 </AnchorPane>
