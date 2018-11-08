@@ -20,9 +20,9 @@ public class AddAndDeleteTest {
     @Test
     public void addParts(){
         AddPart addPart = new AddPart();
-        Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 100, false);
+        Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 1000, false);
         addPart.addItem(part,"root", "Rootpass123");
-        Part test = database.selectPart(100);
+        Part test = database.selectPart(1000);
         assertEquals(part.getPartName(), test.getPartName());
         assertEquals(part.getSerialNumber(), test.getSerialNumber());
         assertEquals(part.getManufacturer(), test.getManufacturer());
