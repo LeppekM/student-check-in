@@ -13,6 +13,9 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
+/**
+ * This class acts as the controller for the history tab of the inventory page
+ */
 public class ControllerEditPart extends ControllerInventoryPage implements Initializable {
     @FXML
     private VBox sceneEditPart;
@@ -42,11 +45,20 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
 
     private EditPart editPart = new EditPart();    // change this to get part
 
+    /**
+     * This method sets the data in the history page.
+     * @param location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         part = null;
     }
 
+    /**
+     * This method is used to pass data into the tab to initialize the text representing the edited part
+     * @param part
+     */
     public void initPart(Part part) {
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         if (this.part == null && part != null) {

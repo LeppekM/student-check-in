@@ -20,6 +20,9 @@ import javafx.util.Callback;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * This class acts as the controller for the history tab of the inventory page
+ */
 public class ControllerHistoryTab  extends ControllerInventoryPage implements Initializable {
 
     @FXML
@@ -34,6 +37,11 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     //private HistoryItems historyItems = new HistoryItems();
     private HistoryParts historyParts = new HistoryParts();
 
+    /**
+     * This method sets the data in the history page.
+     * @param location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ObservableList<HistoryItems> list = historyParts.getHistoryItems(DatabaseLogin.username, DatabaseLogin.password);
@@ -51,6 +59,10 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         //database.getHistory();
     }
 
+    /**
+     * This method adds content to the table.
+     * @param list A list of data added to the table
+     */
     private void populateTable(ObservableList<HistoryItems> list) {
 
 //        studentName.setCellValueFactory(new PropertyValueFactory("studentName"));
@@ -62,6 +74,8 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         historyTable.getItems().clear();
         historyTable.getColumns().clear();
+
+        // SET COLUMN WIDTH HERE (TOTAL = 800)
         historyTable.getColumns().add(createColumn(0, "Student"));
         historyTable.getColumns().add(createColumn(1, "Part Name"));
         historyTable.getColumns().add(createColumn(2, "Serial Number"));
@@ -85,6 +99,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
     }
 
+    /**
+     * This method creates a column with the correct format for the table
+     * @param columnIndex
+     * @param columnTitle
+     * @return
+     */
     private TableColumn<ObservableList<StringProperty>, String> createColumn(
             final int columnIndex, String columnTitle) {
         TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
@@ -108,10 +128,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                 }
             }
         });
+        // width of column set to width of table / number of columns
+        column.setPrefWidth(800 / 6);
         return column;
     }
 
-    public void search() {
-
-    }
+//    public void search() {
+//
+//    }
 }
