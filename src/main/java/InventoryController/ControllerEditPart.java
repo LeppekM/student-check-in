@@ -1,8 +1,6 @@
 package InventoryController;
 
-import Database.DatabaseLogin;
-import Database.EditPart;
-import Database.Part;
+import Database.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -77,7 +75,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      * Edits the part in database
      */
     public void updateItem(){
-        editPart.editItem(getPartFromInput(), DatabaseLogin.username, DatabaseLogin.password);
+        editPart.editItem(getPartFromInput());
         partEditedSuccess();
         close();
     }

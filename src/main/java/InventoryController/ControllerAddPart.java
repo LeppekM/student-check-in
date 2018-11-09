@@ -1,8 +1,6 @@
 package InventoryController;
 
-import Database.AddPart;
-import Database.DatabaseLogin;
-import Database.Part;
+import Database.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -52,7 +50,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
 
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
         setPartFields();
-        addPart.addItem(setPartFields(), DatabaseLogin.username, DatabaseLogin.password);
+        addPart.addItem(setPartFields());
         partAddedSuccess();
         close();
         }

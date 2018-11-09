@@ -1,8 +1,6 @@
 package InventoryController;
 
-import Database.Database;
-import Database.Part;
-import Database.DatabaseLogin;
+import Database.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

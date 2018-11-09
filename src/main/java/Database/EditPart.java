@@ -19,8 +19,8 @@ public class EditPart {
      * This method edits an item in the database
      * @param part The part to be edited
      */
-    public void editItem(Part part, String username, String password){
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+    public void editItem(Part part){
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement preparedStatement = connection.prepareStatement(editQuery);
             preparedStatement = editQuery(part, preparedStatement);
             preparedStatement.execute();

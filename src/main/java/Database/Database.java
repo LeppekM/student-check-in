@@ -8,6 +8,8 @@ import java.sql.*;
 
 public class Database {
 
+    public static final String username = "root";
+    public static final String password = "Rootpass123";
     static String host = "jdbc:mysql://localhost:3306";
     static final String dbdriver = "com.mysql.jdbc.Driver";
     static final String dbname = "student_check_in";
@@ -66,7 +68,7 @@ public class Database {
             " values (?, 'Milwaukee Tool DMM', ?, 'Milwaukee Tool', 15900, 0, 'S350 M1', NULL, 1, 0, 1, date('" + gettoday() + "')," +
             "NULL);";//632-682, 1-50
 
-    public Database(String username, String password) {
+    public Database() {
         // Load the JDBC driver.
         // Library (.jar file) must be added to project build path.
         try {

@@ -33,9 +33,9 @@ public class CheckedOutParts {
     /**
      * Queries the database for items that are checked out.
      */
-    public void getCheckedOutItems(String username, String password){
+    public void getCheckedOutItems(){
 
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
             while(resultSet.next()){
