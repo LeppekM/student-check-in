@@ -15,14 +15,14 @@ public class Database {
     static final String dbname = "student_check_in";
     static Connection connection;
 
-    private String circuitDesigners = "insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID," +
-            " location, barcode, totalQuantity, faultQuantity, availableQuantity, createdAt, createdBy)" +
-            " values (?, 'Circuit Designers', ?, 'MSOE', 9800, 1, 'S350 A1', NULL, 1, 0, 1, date('" + gettoday() + "')," +
-            "NULL);";//1-103, 1-103
-    private String analog = "insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID," +
-            " location, barcode, totalQuantity, faultQuantity, availableQuantity, createdAt, createdBy)" +
-            " values (?, 'Analog Discovery 2', ?, 'Digilent', 27900, 2, 'S350 B1', NULL, 1, 0, 1, date('" + gettoday() + "')," +
-            "NULL);";//494-579, 1-85
+//    private String circuitDesigners = "insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID," +
+//            " location, barcode, totalQuantity, faultQuantity, availableQuantity, createdAt, createdBy, isDeleted)" +
+//            " values (?, 'Circuit Designers', ?, 'MSOE', 9800, 1, 'S350 A1', NULL, 1, 0, 1, date('" + gettoday() + "')," +
+//            "NULL, 0);";//1-103, 1-103
+//    private String analog = "insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID," +
+//            " location, barcode, totalQuantity, faultQuantity, availableQuantity, createdAt, createdBy, isDeleted)" +
+//            " values (?, 'Analog Discovery 2', ?, 'Digilent', 27900, 2, 'S350 B1', NULL, 1, 0, 1, date('" + gettoday() + "')," +
+//            "NULL, 0);";//494-579, 1-85
 
     public Database() {
         // Load the JDBC driver.
@@ -44,21 +44,21 @@ public class Database {
             System.exit(0);
         }
 
-        LoadRealDatabase loadRealDatabase = new LoadRealDatabase(connection);
-        String[] tables = {"parts", "fault", "checkout_parts", "checkouts", "students", "vendors"};
-        for (String s: tables){
-            loadRealDatabase.clearDatabase(s);
-        }
-        int j = 0;
-        for (int i = 1; i < 188; i++) {
-            if (i < 104) {
-                j = i;
-                loadRealDatabase.loadDatabase(circuitDesigners, i, j);
-            }else {
-                j = i - 104;
-                loadRealDatabase.loadDatabase(analog, i, j);
-            }
-        }
+//        LoadRealDatabase loadRealDatabase = new LoadRealDatabase(connection);
+//        String[] tables = {"parts", "fault", "checkout_parts", "checkouts", "students", "vendors"};
+//        for (String s: tables){
+//            loadRealDatabase.clearDatabase(s);
+//        }
+//        int j = 0;
+//        for (int i = 1; i < 188; i++) {
+//            if (i < 104) {
+//                j = i;
+//                loadRealDatabase.loadDatabase(circuitDesigners, i, j);
+//            }else {
+//                j = i - 103;
+//                loadRealDatabase.loadDatabase(analog, i, j);
+//            }
+//        }
     }
 
     public ObservableList getOverdue(){
