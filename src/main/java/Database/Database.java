@@ -15,15 +15,6 @@ public class Database {
     static final String dbname = "student_check_in";
     static Connection connection;
 
-//    private String circuitDesigners = "insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID," +
-//            " location, barcode, totalQuantity, faultQuantity, availableQuantity, createdAt, createdBy, isDeleted)" +
-//            " values (?, 'Circuit Designers', ?, 'MSOE', 9800, 1, 'S350 A1', NULL, 1, 0, 1, date('" + gettoday() + "')," +
-//            "NULL, 0);";//1-103, 1-103
-//    private String analog = "insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID," +
-//            " location, barcode, totalQuantity, faultQuantity, availableQuantity, createdAt, createdBy, isDeleted)" +
-//            " values (?, 'Analog Discovery 2', ?, 'Digilent', 27900, 2, 'S350 B1', NULL, 1, 0, 1, date('" + gettoday() + "')," +
-//            "NULL, 0);";//494-579, 1-85
-
     public Database() {
         // Load the JDBC driver.
         // Library (.jar file) must be added to project build path.
@@ -43,29 +34,13 @@ public class Database {
             e.printStackTrace();
             System.exit(0);
         }
-
-//        LoadRealDatabase loadRealDatabase = new LoadRealDatabase(connection);
-//        String[] tables = {"parts", "fault", "checkout_parts", "checkouts", "students", "vendors"};
-//        for (String s: tables){
-//            loadRealDatabase.clearDatabase(s);
-//        }
-//        int j = 0;
-//        for (int i = 1; i < 188; i++) {
-//            if (i < 104) {
-//                j = i;
-//                loadRealDatabase.loadDatabase(circuitDesigners, i, j);
-//            }else {
-//                j = i - 103;
-//                loadRealDatabase.loadDatabase(analog, i, j);
-//            }
-//        }
     }
 
     public ObservableList getOverdue(){
         ObservableList<OverdueItems> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
-            String overdue = "select checkout_parts.partID, checkouts.studentID, parts.partName, parts.serialNumber, checkout_parts.dueAt, parts.price" +
+            String overdue = "select checkout_parts.partID, checkouts.studentID, parts.partName, parts.serialNumber, checkout_parts.dueAt, parts.price/100" +
                     " from checkout_parts left join parts on checkout_parts.partID = parts.partID left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID" +
                     " where checkout_parts.dueAt < date('" + date.toString() + "');";
             Statement statement = connection.createStatement();
@@ -74,7 +49,7 @@ public class Database {
             while (resultSet.next()){
                 data.add(new OverdueItems(resultSet.getInt("checkouts.studentID"), resultSet.getString("parts.partName"),
                         resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
-                        resultSet.getInt("parts.price")));
+                        resultSet.getInt("parts.price/100")));
             }
             resultSet.close();
             statement.close();
