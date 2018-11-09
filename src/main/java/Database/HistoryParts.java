@@ -38,7 +38,7 @@ public class HistoryParts {
     /**
      * Queries the database for the transaction history.
      */
-    public ObservableList<HistoryItems> getHistoryItems(String username, String password){
+    public ObservableList<HistoryItems> getHistoryItems(){
 //        String login = JOptionPane.showInputDialog("Enter login name: ");
 //
 //// Note: password will be echoed to console;
@@ -65,7 +65,7 @@ public class HistoryParts {
             System.exit(0);
         }
 
-        try (Connection connection = DriverManager.getConnection((host + "/" + dbname), username, password)) {
+        try (Connection connection = DriverManager.getConnection((host + "/" + dbname), Database.username, Database.password)) {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){

@@ -1,7 +1,6 @@
 package InventoryController;
 
 import Database.Database;
-import Database.DatabaseLogin;
 import Database.Part;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +37,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        database = new Database(DatabaseLogin.username, DatabaseLogin.password);
+        database = new Database();
         populateTable();
     }
 

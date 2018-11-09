@@ -1,7 +1,6 @@
 package InventoryController;
 
 import Database.CheckedOutParts;
-import Database.DatabaseLogin;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +28,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        checkedOutParts.getCheckedOutItems(DatabaseLogin.username, DatabaseLogin.password); //Queries database, populating the Observable Arraylist in that class
+        checkedOutParts.getCheckedOutItems(); //Queries database, populating the Observable Arraylist in that class
         populateTable(checkedOutParts.data);
     }
 
