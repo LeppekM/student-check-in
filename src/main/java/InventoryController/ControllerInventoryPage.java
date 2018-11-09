@@ -41,10 +41,12 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     public void initialize(URL location, ResourceBundle resources) {
     }
 
-    //Takes a raw statement and a data list as parameters, then returns the data list populated with the appropriate
-    //parts based on the statement where clause;
-    //param rawStatement = The statement to select parts.
-    //param data = List of part objects meant to be populated and used to fill a TableView
+    /* Takes a raw statement and a data list as parameters, then returns the data list populated with the appropriate
+     * parts based on the statement where clause;
+     * @param rawStatement = The statement to select parts.
+     * @param data = List of part objects meant to be populated and used to fill a TableView
+     * @returns The list of parts filled with the parts based on what was requested in the raw statement.
+     */
     public ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data){
         Statement currentStatement = null;
         try {
@@ -80,6 +82,9 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         return data;
     }
 
+    /*
+     *Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
+     */
     @FXML
     public void goBack(){
         try {
