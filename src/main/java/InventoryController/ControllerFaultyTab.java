@@ -18,7 +18,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 //    private TextField searchTotal;
 
     @FXML
-    public TableView<Part> tableView;
+    private TableView<Part> tableView;
 
     @FXML
     private TableColumn<Part,String> partName, serialNumber, manufacturer, price, vendor, location,
@@ -33,6 +33,10 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         populateTable();
     }
 
+    /*
+     * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
+     */
+    @FXML
     private void populateTable() {
         partName.setCellValueFactory(new PropertyValueFactory("partName"));
         serialNumber.setCellValueFactory(new PropertyValueFactory("serialNumber"));

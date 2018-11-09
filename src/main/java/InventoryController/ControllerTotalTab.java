@@ -26,7 +26,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     private Button add, remove, refresh;
 
     @FXML
-    public TableView<Part> tableView;
+    private TableView<Part> tableView;
 
     @FXML
     private TableColumn<Part,String> partName, serialNumber, manufacturer, price, vendor, location,
@@ -41,6 +41,9 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         populateTable();
     }
 
+    /*
+     * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
+     */
     @FXML
     private void populateTable() {
         partName.setCellValueFactory(new PropertyValueFactory("partName"));
@@ -72,6 +75,9 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         });
     }
 
+    /*
+     * Called to bring up the "AddPart" FXML scene.
+     */
     @FXML
     public void addPart(){
         Stage stage = new Stage();
@@ -90,6 +96,10 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
         //Called when the "Add" button is clicked
     }
 
+    /*
+     * Called when a part is double-clicked in the table. Brings up the EditPart FXML scene
+     * @param part the part that was double clicked
+     */
     @FXML
     public void editPart(Part part){
         //Called when a part is double clicked in a table.
@@ -113,6 +123,9 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
 
     }
 
+    /*
+     * Called to delete the currently selected part in the table if one is selected.
+     */
     @FXML
     public void removePart(){
         if(tableView.getSelectionModel().getSelectedItems().size() == 1){
