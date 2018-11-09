@@ -50,7 +50,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
         setPartFields();
         addPart.addItem(setPartFields());
-        partAddedSuccess();
+        //partAddedSuccess();
         close();
         return true;
         }
