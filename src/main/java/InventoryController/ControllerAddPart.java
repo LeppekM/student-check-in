@@ -40,22 +40,23 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+
     }
 
     /**
      * Adds the part to database
      */
-    public void submitItem(){
-
-
+    public boolean submitItem(){
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
         setPartFields();
         addPart.addItem(setPartFields());
         partAddedSuccess();
         close();
+        return true;
         }
         else {
             errorHandler();
+            return false;
         }
     }
 
@@ -93,7 +94,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * @param price The double to be returned. Returns -1 if not a double, and the value otherwise
      * @return
      */
-    private double priceCheck(String price){
+    public double priceCheck(String price){
         double positivePriceCheck;
         double failedvalue = -1;
         try {
@@ -113,7 +114,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * @param quantity The integer to be returned. Returns -1 if not an int, and the value otherwise
      * @return
      */
-    private int quantityCheck(String quantity){
+    public int quantityCheck(String quantity){
         int positiveCheck;
         int failedValue = -1;
         if(quantity.chars().allMatch(Character::isDigit)){ //If quantity is a valid int
@@ -221,6 +222,9 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private void close(){
         sceneAddPart.getScene().getWindow().hide();
     }
+
+
+
 
 
 }
