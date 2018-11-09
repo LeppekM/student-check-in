@@ -14,14 +14,14 @@ public class AddAndDeleteTest {
 
     @Before
     public void before(){
-        database = new Database("root", "Rootpass123");
+        database = new Database();
     }
 
     @Test
     public void addParts(){
         AddPart addPart = new AddPart();
         Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 1000, false);
-        addPart.addItem(part,"root", "Rootpass123");
+        addPart.addItem(part);
         Part test = database.selectPart(1000);
         assertEquals(part.getPartName(), test.getPartName());
         assertEquals(part.getSerialNumber(), test.getSerialNumber());
