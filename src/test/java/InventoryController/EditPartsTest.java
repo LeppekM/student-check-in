@@ -17,7 +17,7 @@ public class EditPartsTest {
 
     @Before
     public void before(){
-        database = new Database("root", "Rootpass123");
+        database = new Database();
     }
 
     @Test
@@ -25,10 +25,10 @@ public class EditPartsTest {
         EditPart editPart = new EditPart();
         AddPart addPart = new AddPart();
         Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 1000, false);
-        addPart.addItem(part,"root", "Rootpass123");
+        addPart.addItem(part);
 
         Part editedPart = new Part("testPart", "xyz", "MSOE", 17.20, "3", "there", "scan me", false, 1000, false);
-        editPart.editItem(editedPart,"root", "Rootpass123");
+        editPart.editItem(editedPart);
         Part test = database.selectPart(1000);
         assertEquals(editedPart.getPartName(), test.getPartName());
         assertEquals(editedPart.getSerialNumber(), test.getSerialNumber());
