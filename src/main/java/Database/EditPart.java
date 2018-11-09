@@ -14,6 +14,7 @@ public class EditPart {
             "price = ?, vendorID = ?, location = ?, barcode = ?, totalQuantity = ? " +
             "WHERE partID = ?;";
 
+    private String getVendorIDQuery = "SELECT vendorID FROM vendors WHERE vendor = ?;";
     /**
      * This method edits an item in the database
      * @param part The part to be edited
@@ -29,6 +30,23 @@ public class EditPart {
         }
     }
 
+    public int getVendorID(Part part, String username, String password){
+        int result = -1;
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(getVendorIDQuery);
+            preparedStatement.setString(1, part.getVendor());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+
+            String s = rsmd.getColumnLabel(1);
+            System.out.println(s + " HERE");
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return result;
+    }
+
     /**
      * This method sets the information from a part to the item being edited in the database
      * @param part The part being edited in the database
@@ -41,7 +59,7 @@ public class EditPart {
             preparedStatement.setString(2, part.getManufacturer());
             preparedStatement.setDouble(3, part.getPrice());
             //Hardcoded vendorID for now.
-            preparedStatement.setInt(4, 2);
+            preparedStatement.setInt(4, 0);
             preparedStatement.setString(5, part.getLocation());
             preparedStatement.setString(6, part.getBarcode());
             preparedStatement.setInt(7, part.getQuantity());
