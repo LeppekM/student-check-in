@@ -39,6 +39,9 @@ public class EditPartsTest {
         assertEquals(editedPart.getFault(), test.getFault());
         assertEquals(editedPart.getPartID(), part.getPartID());
         assertEquals(editedPart.getIsDeleted(), test.getIsDeleted());
+
+        // Undoes change to part
+        editPart.editItem(part);
     }
 
 }
