@@ -81,13 +81,13 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     }
 
     /**
-     * Helper method that sets creates a part from the user input
+     * Helper method that sets the part info from the user input
      */
     private Part getPartFromInput() {
         String partName = nameField.getText();
         String serialNumber = serialField.getText();
         String manufacturer = manufacturerField.getText();
-        double price = Double.parseDouble(priceField.getText().substring(1));
+        double price = Double.parseDouble(priceField.getText().substring(1).replace(",", ""));
         String vendor = vendorField.getText();
         String location = locationField.getText();
         String barcode = serialField.getText();

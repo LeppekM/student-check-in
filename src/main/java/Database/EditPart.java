@@ -11,8 +11,8 @@ public class EditPart {
     //    private final String username = "langdk";
 //    private final String password = "password";
     private String editQuery = "UPDATE parts SET serialNumber = ?, manufacturer = ?, " +
-            "price = ?, vendorID = ?, location = ?, barcode = ?, totalQuantity = ? " +
-            "WHERE partID = ?;";
+            "price = ?, vendorID = ?, location = ?, barcode = ?, totalQuantity = ?," +
+            "updatedAt = ? WHERE partID = ?;";
 
     private String getVendorIDQuery = "SELECT vendorID FROM vendors WHERE vendor = ?;";
     /**
@@ -39,12 +39,19 @@ public class EditPart {
             ResultSetMetaData rsmd = resultSet.getMetaData();
 
             String s = rsmd.getColumnLabel(1);
-            System.out.println(s + " HERE");
             preparedStatement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return result;
+    }
+
+    /**
+     * This method gets the current date
+     * @return Current date
+     */
+    private String getCurrentDate(){
+        return LocalDateTime.now().toString();
     }
 
     /**
@@ -65,7 +72,8 @@ public class EditPart {
             preparedStatement.setInt(7, part.getQuantity());
 
             //Hardcoded created by because we don't have workers setup yet
-            preparedStatement.setString(8, "" + part.getPartID());
+            preparedStatement.setString(8, getCurrentDate());
+            preparedStatement.setString(9, "" + part.getPartID());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
