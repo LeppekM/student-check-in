@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,6 +23,9 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
 
 //    @FXML
 //    private TextField searchTotal;
+
+    @FXML
+    public AnchorPane totalTabPage;
 
     @FXML
     private Button add, remove, refresh;
@@ -87,6 +92,8 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
             Parent root = loader.load(myFxmlURL);
             Scene scene = new Scene(root, 400, 400);
             stage.setTitle("Add a Part");
+            stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             stage.show();
 
@@ -113,6 +120,8 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
             ((ControllerEditPart) loader.getController()).initPart(part);
             Scene scene = new Scene(root, 400, 400);
             stage.setTitle("Edit a Part");
+            stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e){

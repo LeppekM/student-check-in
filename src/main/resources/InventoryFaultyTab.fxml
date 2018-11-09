@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="InventoryController.ControllerFaultyTab" prefHeight="600.0" prefWidth="800.0">
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerFaultyTab">
     <children>
         <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
             <font>
                 <Font size="24.0" fx:id="x1" />
             </font>
         </Label>
-        <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
+        <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0">
             <columns>
-                <TableColumn prefWidth="169.0" resizable="false" text="Part Name" fx:id="partName" />
-                <TableColumn prefWidth="124.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
-                <TableColumn prefWidth="174.0" resizable="false" text="Manufacturer" fx:id="manufacturer" />
-                <TableColumn prefWidth="73.0" resizable="false" text="Price" fx:id="price" />
-                <TableColumn prefWidth="73.0" resizable="false" text="Vendor" fx:id="vendor" />
-                <TableColumn prefWidth="73.0" resizable="false" text="Location" fx:id="location" />
-                <TableColumn prefWidth="73.0" resizable="false" text="Barcode" fx:id="barcode" />
-                <TableColumn prefWidth="73.0" resizable="false" text="Fault" fx:id="fault" />
-                <TableColumn prefWidth="73.0" resizable="false" text="Part ID" fx:id="partID" />
+                <TableColumn fx:id="partName" prefWidth="169.0" resizable="false" text="Part Name" />
+                <TableColumn fx:id="serialNumber" prefWidth="124.0" resizable="false" text="Serial Number" />
+                <TableColumn fx:id="manufacturer" prefWidth="174.0" resizable="false" text="Manufacturer" />
+                <TableColumn fx:id="price" prefWidth="73.0" resizable="false" text="Price" />
+                <TableColumn fx:id="vendor" prefWidth="73.0" resizable="false" text="Vendor" />
+                <TableColumn fx:id="location" prefWidth="73.0" resizable="false" text="Location" />
+                <TableColumn fx:id="barcode" prefWidth="73.0" resizable="false" text="Barcode" />
+                <TableColumn fx:id="fault" prefWidth="73.0" resizable="false" text="Fault" />
+                <TableColumn fx:id="partID" prefWidth="73.0" resizable="false" text="Part ID" />
             </columns>
         </TableView>
     </children>
