@@ -61,6 +61,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         fault.setCellValueFactory(new PropertyValueFactory("fault"));
         partID.setCellValueFactory(new PropertyValueFactory("partID"));
 
+        //Remove vendor/manufacturer/price
+        //Add student ID to faults
+
         this.data.clear();
         tableView.getItems().clear();
 

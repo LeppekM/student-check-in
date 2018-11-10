@@ -22,7 +22,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
     @FXML
     private TableColumn<Part,String> partName, serialNumber, manufacturer, price, vendor, location,
-            barcode, fault, partID;
+            barcode, fault, faultDesc, partID;
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
@@ -47,6 +47,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         barcode.setCellValueFactory(new PropertyValueFactory("barcode"));
         fault.setCellValueFactory(new PropertyValueFactory("fault"));
         partID.setCellValueFactory(new PropertyValueFactory("partID"));
+//        faultDesc.setCellFactory(new PropertyValueFactory("faultDesc"));
 
         this.data.clear();
         this.tableView.getItems().clear();

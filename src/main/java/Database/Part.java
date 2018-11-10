@@ -4,7 +4,7 @@ import javafx.beans.property.*;
 
 public class Part {
 
-    private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, barcode;
+    private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, barcode, faultDesc;
     private final SimpleDoubleProperty price;
     private final SimpleIntegerProperty partID, quantity;
     private final SimpleBooleanProperty fault, isDeleted;
@@ -22,6 +22,7 @@ public class Part {
         this.partID = new SimpleIntegerProperty(partID);
         this.quantity = new SimpleIntegerProperty(0);
         this.isDeleted = new SimpleBooleanProperty(isDeleted);
+        this.faultDesc = new SimpleStringProperty("");
     }
 
     public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, int quantity){
@@ -37,6 +38,7 @@ public class Part {
         this.partID = new SimpleIntegerProperty(addPart.getPartID());
         this.fault = new SimpleBooleanProperty(false);
         this.isDeleted =new SimpleBooleanProperty(false);
+        this.faultDesc = new SimpleStringProperty("");
     }
 
     public String getPartName() {
@@ -129,6 +131,14 @@ public class Part {
 
     public void setQuantity(int quantity) {
         this.quantity.set(quantity);
+    }
+
+    public String getFaultDesc() {
+        return faultDesc.get();
+    }
+
+    public void setFaultDesc(String faultDesc) {
+        this.faultDesc.set(faultDesc);
     }
 
     public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, int quantity) {
