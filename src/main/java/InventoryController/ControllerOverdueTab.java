@@ -12,7 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerOverdueTab  extends ControllerInventoryPage implements Initializable {
+public class ControllerOverdueTab extends ControllerInventoryPage implements Initializable {
 
     @FXML
     private TableView<OverdueItems> overdueItems;
@@ -26,14 +26,26 @@ public class ControllerOverdueTab  extends ControllerInventoryPage implements In
     private ObservableList<OverdueItems> data;
     private Database database;
 
+    /**
+     * This method puts all overdue items into the list for populating the gui table
+     *
+     * @param location
+     * @param resources
+     * @author Bailey Terry
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         database = new Database();
         data = database.getOverdue();
-       populteTable();
+        populteTable();
     }
 
-    private void populteTable(){
+    /**
+     * This method populates the gui based off of the data in the Observable list
+     *
+     * @author Bailey Terry
+     */
+    private void populteTable() {
         studentID.setCellValueFactory(new PropertyValueFactory<>("ID"));
         partID.setCellValueFactory(new PropertyValueFactory<>("part"));
         serial.setCellValueFactory(new PropertyValueFactory<>("serial"));

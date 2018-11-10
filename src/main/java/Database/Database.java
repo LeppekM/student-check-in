@@ -15,6 +15,11 @@ public class Database {
     static final String dbname = "student_check_in";
     static Connection connection;
 
+    /**
+     * This creates a connection to the database
+     *
+     * @author Bailey Terry
+     */
     public Database() {
         // Load the JDBC driver.
         // Library (.jar file) must be added to project build path.
@@ -36,7 +41,13 @@ public class Database {
         }
     }
 
-    public ObservableList getOverdue(){
+    /**
+     * This method uses an SQL query to get all items in the databse with a due date less than todays date
+     *
+     * @return a list of overdue items
+     * @author Bailey Terry
+     */
+    public ObservableList getOverdue() {
         ObservableList<OverdueItems> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
@@ -46,37 +57,49 @@ public class Database {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(overdue);
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 data.add(new OverdueItems(resultSet.getInt("checkouts.studentID"), resultSet.getString("parts.partName"),
                         resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
                         resultSet.getInt("parts.price/100")));
             }
             resultSet.close();
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return data;
     }
 
-    private static Date gettoday(){
+    /**
+     * Helper method to get the current date
+     *
+     * @return todays date
+     * @author Bailey Terry
+     */
+    private static Date gettoday() {
         long date = System.currentTimeMillis();
         return new Date(date);
     }
 
-    public void deleteItem(int partID){
-        try{
-            String delete = "update parts p set p.deletedBy = 'root', p.isDeleted = 1, p.deletedAt = date('" + gettoday() +"') where p.partID = " + partID + ";";
+    /**
+     * This uses an SQL query to soft delete an item from the database
+     *
+     * @param partID a unique part id
+     * @author Bailey Terry
+     */
+    public void deleteItem(int partID) {
+        try {
+            String delete = "update parts p set p.deletedBy = 'root', p.isDeleted = 1, p.deletedAt = date('" + gettoday() + "') where p.partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         JOptionPane.showMessageDialog(null, "Part with ID = " + partID + " has been successfully deleted");
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return connection;
     }
 
@@ -111,7 +134,14 @@ public class Database {
         return data;
     }
 
-    public Part selectPart(int partID){
+    /**
+     * Helper method to get a specific part from the database
+     *
+     * @param partID unique id of the part
+     * @return a Part
+     * @author Bailey Terry
+     */
+    public Part selectPart(int partID) {
         String query = "select * from parts where partID = " + partID;
         Part part = null;
         try {
@@ -126,7 +156,7 @@ public class Database {
             }
             resultSet.close();
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return part;

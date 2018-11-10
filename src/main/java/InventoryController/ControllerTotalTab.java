@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerTotalTab  extends ControllerInventoryPage implements Initializable {
+public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
 
 //    @FXML
 //    private TextField searchTotal;
@@ -34,7 +34,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
     private TableView<Part> tableView;
 
     @FXML
-    private TableColumn<Part,String> partName, serialNumber, manufacturer, price, vendor, location,
+    private TableColumn<Part, String> partName, serialNumber, manufacturer, price, vendor, location,
             barcode, fault, partID;
 
     private static ObservableList<Part> data
@@ -84,9 +84,9 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
      * Called to bring up the "AddPart" FXML scene.
      */
     @FXML
-    public void addPart(){
+    public void addPart() {
         Stage stage = new Stage();
-        try{
+        try {
             URL myFxmlURL = ClassLoader.getSystemResource("AddPart.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load(myFxmlURL);
@@ -97,7 +97,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
             stage.setScene(scene);
             stage.show();
 
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         //Called when the "Add" button is clicked
@@ -108,7 +108,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
      * @param part the part that was double clicked
      */
     @FXML
-    public void editPart(Part part){
+    public void editPart(Part part) {
         //Called when a part is double clicked in a table.
         //@param part the part that was double clicked
         Stage stage = new Stage();
@@ -124,7 +124,7 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             stage.show();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             populateTable();
@@ -132,12 +132,15 @@ public class ControllerTotalTab  extends ControllerInventoryPage implements Init
 
     }
 
-    /*
-     * Called to delete the currently selected part in the table if one is selected.
+    /**
+     * This method calls the database method to soft delete an item from the inventory list
+     * this then updates the gui table
+     *
+     * @author Bailey Terry
      */
     @FXML
-    public void removePart(){
-        if(tableView.getSelectionModel().getSelectedItems().size() == 1){
+    public void removePart() {
+        if (tableView.getSelectionModel().getSelectedItems().size() == 1) {
             database.deleteItem(tableView.getSelectionModel().getSelectedItem().getPartID());
         }
         tableView.getItems().remove(tableView.getSelectionModel().getSelectedItem());

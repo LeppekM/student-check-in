@@ -60,13 +60,24 @@ public class LoadRealDatabase {
             " values (?, 'Milwaukee Tool DMM', ?, 'Milwaukee Tool', 15900, 8, 'S350 M1', NULL, 1, 0, 1, date('" + new Date(System.currentTimeMillis()) + "')," +
             "NULL, 0);";//632-682, 1-50
 
+    /**
+     * This is a seperate program to load the database with all parts
+     *
+     * @param args
+     * @author Bailey Terry
+     */
     public static void main(String[] args) {
         database = new Database();
         connection = database.getConnection();
         load();
     }
 
-    public static void load() {
+    /**
+     * This method does the loading into the database after it clears all tables
+     *
+     * @author Bailey Terry
+     */
+    private static void load() {
         String[] tables = {"parts", "fault", "checkout_parts", "checkouts", "students", "vendors"};
         for (String s : tables) {
             clearDatabase(s);
@@ -116,7 +127,15 @@ public class LoadRealDatabase {
         }
     }
 
-    public static void loadDatabase(String partQuery, int partIDValue, int serialValue){
+    /**
+     * This prepares the querys with their appropriate IDs and executes it
+     *
+     * @param partQuery   the query itself
+     * @param partIDValue the unique partID
+     * @param serialValue the serial number
+     * @author Bailey Terry
+     */
+    private static void loadDatabase(String partQuery, int partIDValue, int serialValue) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(partQuery);
             preparedStatement.setInt(1, partIDValue);
@@ -129,12 +148,18 @@ public class LoadRealDatabase {
         }
     }
 
-    public static void clearDatabase(String table){
-        String clearTable =  "delete from " + table + ";";
-        try{
+    /**
+     * This clears the tables information from the databse
+     *
+     * @param table the table to clear
+     * @author Bailey Terry
+     */
+    private static void clearDatabase(String table) {
+        String clearTable = "delete from " + table + ";";
+        try {
             Statement statement = connection.createStatement();
             statement.execute(clearTable);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
