@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerFaultyTab">
-    <children>
-        <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
-            <font>
-                <Font size="24.0" fx:id="x1" />
-            </font>
-        </Label>
-        <TableView id="tableInv" fx:id="tableView" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0">
-            <columns>
-                <TableColumn fx:id="partName" prefWidth="169.0" text="Part Name" />
-                <TableColumn fx:id="serialNumber" prefWidth="124.0" text="Serial Number" />
-                <TableColumn fx:id="manufacturer" prefWidth="174.0" text="Manufacturer" />
-                <TableColumn fx:id="price" prefWidth="73.0" text="Price" />
-                <TableColumn fx:id="vendor" prefWidth="73.0" text="Vendor" />
-                <TableColumn fx:id="location" prefWidth="73.0" text="Location" />
-                <TableColumn fx:id="barcode" prefWidth="73.0" text="Barcode" />
-                <TableColumn fx:id="fault" prefWidth="73.0" text="Fault" />
-                <TableColumn fx:id="partID" prefWidth="73.0" text="Part ID" />
-            </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-        </TableView>
-    </children>
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerFaultyTab">
+  <children>
+    <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
+      <font>
+        <Font size="24.0" fx:id="x1" />
+      </font>
+    </Label>
+    <TableView id="tableInv" fx:id="tableView" layoutX="0.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0">
+      <columnResizePolicy>
+        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+      </columnResizePolicy>
+      <columns>
+        <TableColumn prefWidth="169.0" text="Part Name" fx:id="partName" />
+        <TableColumn prefWidth="124.0" text="Serial Number" fx:id="serialNumber" />
+        <TableColumn prefWidth="174.0" text="Manufacturer" fx:id="manufacturer" />
+        <TableColumn prefWidth="73.0" text="Price" fx:id="price" />
+        <TableColumn prefWidth="73.0" text="Vendor" fx:id="vendor" />
+        <TableColumn prefWidth="73.0" text="Location" fx:id="location" />
+        <TableColumn prefWidth="73.0" text="Barcode" fx:id="barcode" />
+        <TableColumn prefWidth="73.0" text="Fault" fx:id="fault" />
+        <TableColumn prefWidth="73.0" text="Fault Description" fx:id="faultDesc" />
+        <TableColumn prefWidth="73.0" text="Part ID" fx:id="partID" />
+      </columns>
+    </TableView>
+  </children>
 </AnchorPane>

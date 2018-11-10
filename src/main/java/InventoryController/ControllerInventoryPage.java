@@ -64,7 +64,9 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 boolean fault = (rs.getInt("faultQuantity") == 1) ? true : false;
                 int partID = rs.getInt("partID");
                 boolean isDeleted = (rs.getInt("isDeleted") == 0) ? false : true;
+//                String faultDesc = rs.getString("");
                 Part part = new Part(partName, serialNumber, manufacturer, price/100, vendor, location, barcode, fault, partID, isDeleted);
+//                part.setFaultDesc("");
                 data.add(part);
             }
         } catch (SQLException e) {
