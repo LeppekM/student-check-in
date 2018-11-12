@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="inventoryScene" prefHeight="620.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerInventoryPage">
+  <children>
+    <TabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab fx:id="totalTab" text="Total Inventory">
+          <content>
+            <fx:include fx:id="totalTabPage" source="InventoryTotalTab.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="historyTab" text="Transaction History">
+          <content>
+            <fx:include fx:id="historyTabPage" source="InventoryHistoryTab.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="checkedOutTab" text="Checked Out">
+          <content>
+            <fx:include fx:id="checkedOutTabPage" source="InventoryCheckedOutTab.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="overdueTab" text="Overdue">
+          <content>
+            <fx:include fx:id="overdueTabPage" source="InventoryOverdueTab.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="faultsTab" text="Faulty">
+          <content>
+            <fx:include fx:id="faultyTabPage" source="InventoryFaultyTab.fxml" />
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
+    <Button fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack" prefHeight="33.0" prefWidth="106.0" text="Back to Home" />
+  </children>
+</AnchorPane>

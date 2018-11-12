@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerHistoryTab">
+    <children>
+        <Label layoutX="20.0" layoutY="14.0" text="Transaction History">
+            <font>
+                <Font size="24.0" fx:id="x1" />
+            </font>
+        </Label>
+        <TableView id="historyTable" fx:id="historyTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
+            <columns>
+                <TableColumn prefWidth="125.0" resizable="false" text="Student" fx:id="studentName" />
+                <TableColumn prefWidth="125.0" resizable="false" text="Part Name" fx:id="partName" />
+                <TableColumn prefWidth="110.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
+                <TableColumn prefWidth="110.0" resizable="false" text="Location" fx:id="location" />
+                <TableColumn prefWidth="50.0" resizable="false" text="Quantity" fx:id="quantity" />
+                <TableColumn prefWidth="80.0" resizable="false" text="Date" fx:id="date" />
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>

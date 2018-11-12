@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="mainMenuScene" prefHeight="620.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerMenu">
+  <children>
+    <StackPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+        <VBox alignment="CENTER">
+          <children>
+            <HBox alignment="CENTER">
+              <children>
+                <VBox>
+                  <children>
+                    <Button fx:id="inventory" mnemonicParsing="false" prefHeight="75.0" prefWidth="150.0" text="Inventory" />
+                  </children>
+                  <padding>
+                    <Insets right="50.0" />
+                  </padding>
+                </VBox>
+              </children>
+            </HBox>
+          </children>
+        </VBox>
+      </children>
+    </StackPane>
+  </children>
+</VBox>

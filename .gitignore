@@ -6,11 +6,24 @@
 *.class
 *.exe
 
+### Gradle ###
+.gradle
+/build/
+.idea/**/gradle.xml
+.idea/**/libraries
+
+# Cache of project
+.gradletasknamecache
+
+
+
 # common IDE-generated files and folders to ignore
 workspace.xml
 bin/
 out/
 .classpath
+.idea/
+.idea/**
 # uncomment following for courses in which Eclipse .project files are not checked in
 # .project
 
