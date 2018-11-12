@@ -22,16 +22,13 @@
         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
       <columns>
-        <TableColumn prefWidth="169.0" text="Part Name" fx:id="partName" />
-        <TableColumn prefWidth="124.0" text="Serial Number" fx:id="serialNumber" />
-        <TableColumn prefWidth="174.0" text="Manufacturer" fx:id="manufacturer" />
-        <TableColumn prefWidth="73.0" text="Price" fx:id="price" />
-        <TableColumn prefWidth="73.0" text="Vendor" fx:id="vendor" />
-        <TableColumn prefWidth="73.0" text="Location" fx:id="location" />
-        <TableColumn prefWidth="73.0" text="Barcode" fx:id="barcode" />
-        <TableColumn prefWidth="73.0" text="Fault" fx:id="fault" />
-        <TableColumn prefWidth="73.0" text="Fault Description" fx:id="faultDesc" />
-        <TableColumn prefWidth="73.0" text="Part ID" fx:id="partID" />
+        <TableColumn editable="false" prefWidth="169.0" text="Part Name" fx:id="partName" />
+        <TableColumn editable="false" prefWidth="124.0" text="Serial Number" fx:id="serialNumber" />
+        <TableColumn editable="false" prefWidth="73.0" text="Location" fx:id="location" />
+        <TableColumn editable="false" prefWidth="73.0" text="Barcode" fx:id="barcode" />
+        <TableColumn editable="false" prefWidth="73.0" text="Fault" fx:id="fault" />
+        <TableColumn editable="false" prefWidth="73.0" text="Fault Description" fx:id="faultDesc" />
+        <TableColumn editable="false" prefWidth="73.0" text="Part ID" fx:id="partID" />
       </columns>
     </TableView>
   </children>

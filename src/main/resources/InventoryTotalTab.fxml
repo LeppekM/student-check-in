@@ -25,15 +25,12 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
           </columnResizePolicy>
           <columns>
-            <TableColumn prefWidth="155.0" text="Part Name" fx:id="partName" />
-            <TableColumn prefWidth="52.0" text="Serial No." fx:id="serialNumber" />
-            <TableColumn prefWidth="131.0" text="Manufacturer" fx:id="manufacturer" />
-            <TableColumn text="Price" fx:id="price" />
-            <TableColumn prefWidth="92.0" text="Vendor" fx:id="vendor" />
-            <TableColumn prefWidth="78.0" text="Location" fx:id="location" />
-            <TableColumn prefWidth="68.0" text="Barcode" fx:id="barcode" />
-            <TableColumn prefWidth="129.0" text="Fault" fx:id="fault" />
-            <TableColumn prefWidth="89.0" text="Part ID" fx:id="partID" />
+            <TableColumn editable="false" prefWidth="155.0" text="Part Name" fx:id="partName" />
+            <TableColumn editable="false" prefWidth="52.0" text="Serial No." fx:id="serialNumber" />
+            <TableColumn editable="false" prefWidth="78.0" text="Location" fx:id="location" />
+            <TableColumn editable="false" prefWidth="68.0" text="Barcode" fx:id="barcode" />
+            <TableColumn editable="false" prefWidth="129.0" text="Fault" fx:id="fault" />
+            <TableColumn editable="false" prefWidth="89.0" text="Part ID" fx:id="partID" />
           </columns>
         </TableView>
       </children>
