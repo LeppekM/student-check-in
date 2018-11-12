@@ -101,6 +101,10 @@ public class Part {
         return fault.get();
     }
 
+    public SimpleBooleanProperty faultProperty(){
+        return fault;
+    }
+
     public void setFault(boolean fault) {
         this.fault.set(fault);
     }
@@ -157,6 +161,7 @@ public class Part {
         return "Part Name: "+getPartName()+"\tSerial Number: "+getSerialNumber()+"\tManufacturer: " + getManufacturer() +
                 "\tPrice: " + getPrice() + "\tVendor: " + getVendor() +
                 "\tLocation: " + getLocation() + "\tBarcode: " + getBarcode() + "\tFault: " + getFault() +
-                "\tPart ID: " + getPartID() + "\tIs Deleted: " + getIsDeleted() + "\n";
+                "\tFault Description: " + getFaultDesc() + "\tPart ID: " + getPartID() + "\tIs Deleted: "
+                + getIsDeleted() + "\n";
     }
 }

@@ -2,18 +2,23 @@ package InventoryController;
 
 import Database.Database;
 import Database.Part;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,8 +39,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private TableView<Part> tableView;
 
     @FXML
-    private TableColumn<Part, String> partName, serialNumber, manufacturer, price, vendor, location,
-            barcode, fault, partID;
+    private TableColumn<Part, String> partName, serialNumber, location,
+            barcode, partID;
+    @FXML
+    private TableColumn<Part, Boolean> fault;
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
@@ -46,29 +53,23 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         populateTable();
     }
 
-    /*
+    /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
+     * @author Matthew Karcz
      */
     @FXML
     private void populateTable() {
-        partName.setCellValueFactory(new PropertyValueFactory("partName"));
-        serialNumber.setCellValueFactory(new PropertyValueFactory("serialNumber"));
-        manufacturer.setCellValueFactory(new PropertyValueFactory("manufacturer"));
-        price.setCellValueFactory(new PropertyValueFactory("price"));
-        vendor.setCellValueFactory(new PropertyValueFactory("vendor"));
-        location.setCellValueFactory(new PropertyValueFactory("location"));
-        barcode.setCellValueFactory(new PropertyValueFactory("barcode"));
-        fault.setCellValueFactory(new PropertyValueFactory("fault"));
-        partID.setCellValueFactory(new PropertyValueFactory("partID"));
-
-        //Remove vendor/manufacturer/price
-        //Add student ID to faults
-
         this.data.clear();
-        tableView.getItems().clear();
-
         this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
 
+        partName.setCellValueFactory(new PropertyValueFactory("partName"));
+        serialNumber.setCellValueFactory(new PropertyValueFactory("serialNumber"));
+        location.setCellValueFactory(new PropertyValueFactory("location"));
+        barcode.setCellValueFactory(new PropertyValueFactory("barcode"));
+        partID.setCellValueFactory(new PropertyValueFactory("partID"));
+        fault.setCellFactory(CheckBoxTableCell.forTableColumn(fault));
+        fault.setCellValueFactory(new PropertyValueFactory("fault"));
+        tableView.getItems().clear();
         tableView.getItems().setAll(this.data);
 
         tableView.setRowFactory(tv -> {
@@ -83,7 +84,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         });
     }
 
-    /*
+    /**
      * Called to bring up the "AddPart" FXML scene.
      */
     @FXML
@@ -103,10 +104,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //Called when the "Add" button is clicked
     }
 
-    /*
+    /**
      * Called when a part is double-clicked in the table. Brings up the EditPart FXML scene
      * @param part the part that was double clicked
      */
