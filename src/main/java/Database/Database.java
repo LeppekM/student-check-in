@@ -7,9 +7,9 @@ import javax.swing.*;
 import java.sql.*;
 
 public class Database {
-
+    //DB root pass: Userpassword123
     public static final String username = "root";
-    public static final String password = "xam54678";
+    public static final String password = "Userpassword123";
     static String host = "jdbc:mysql://localhost:3306";
     static final String dbdriver = "com.mysql.jdbc.Driver";
     static final String dbname = "student_check_in";
