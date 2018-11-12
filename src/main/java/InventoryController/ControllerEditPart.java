@@ -43,6 +43,8 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
 
     private EditPart editPart = new EditPart();    // change this to get part
 
+    private int originalQuantity;
+
     /**
      * This method sets the data in the history page.
      * @param location used to resolve relative paths for the root object, or null if the location is not known.
@@ -65,9 +67,11 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
             serialField.setText(part.getSerialNumber());
             manufacturerField.setText(part.getManufacturer());
             quantityField.setText("" + part.getQuantity());
-            priceField.setText("$" + df.format(part.getPrice()));
+            priceField.setText("" + df.format(part.getPrice()));
             vendorField.setText(part.getVendor());
             locationField.setText(part.getLocation());
+
+            originalQuantity = part.getQuantity();
         }
     }
 
@@ -75,25 +79,153 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      * Edits the part in database
      */
     public void updateItem(){
-        editPart.editItem(getPartFromInput());
-        partEditedSuccess();
-        close();
+        if (validateInput()) {
+            editPart.editItem(getPartFromInput());
+            //partEditedSuccess();
+            close();
+        }
     }
 
     /**
      * Helper method that sets the part info from the user input
      */
     private Part getPartFromInput() {
-        String partName = nameField.getText();
-        String serialNumber = serialField.getText();
-        String manufacturer = manufacturerField.getText();
-        double price = Double.parseDouble(priceField.getText().substring(1).replace(",", ""));
-        String vendor = vendorField.getText();
-        String location = locationField.getText();
-        String barcode = serialField.getText();
-        int quantity = Integer.parseInt(quantityField.getText());
+        String partName = nameField.getText().trim();
+        String serialNumber = serialField.getText().trim();
+        String manufacturer = manufacturerField.getText().trim();
+        double price = Double.parseDouble(priceField.getText().replaceAll(",", "").trim());
+        String vendor = vendorField.getText().trim();
+        String location = locationField.getText().trim();
+        String barcode = serialField.getText().trim();
+        int quantity = Integer.parseInt(quantityField.getText().trim());
         part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode, quantity);
         return part;
+    }
+
+    /**
+     * This method uses helper methods to ensure that he inputs for the part are valid.
+     * @return true if the inputs are valid, false otherwise
+     */
+    private boolean validateInput() {
+        boolean isValid = true;
+        if (!validateAllFieldsFilledIn(nameField.getText().trim(), serialField.getText().trim(),
+                manufacturerField.getText().trim(),
+                priceField.getText().replaceAll(",", "").trim(),
+                vendorField.getText().trim(), locationField.getText().trim(),
+                serialField.getText().trim(), quantityField.getText().trim())) {
+            isValid = false;
+            fieldErrorAlert();
+        } else if (!validateNumberInputsContainNumber(priceField.getText()) ||
+                !validateNumberInputsContainNumber(quantityField.getText())) {
+            isValid = false;
+            invalidNumberAlert();
+        } else if (!validateNumberInputsWithinRange(priceField.getText(), quantityField.getText())) {
+            isValid = false;
+            numberOutOfRangeAlert();
+        } else if (!validateQuantityIsGreaterThanPreviousValue(quantityField.getText())) {
+            isValid = false;
+            quantityTooSmallAlert();
+        }
+        return isValid;
+    }
+
+    /**
+     * This method ensures that the inputted fields are not empty.
+     * @return true if the fields are not empty, false otherwise
+     */
+    protected boolean validateAllFieldsFilledIn(String partName, String serialNumber,
+                                                String manufacturer, String price, String vendor,
+                                                String location, String barcode, String quantity) {
+        return partName != ""
+                && serialNumber != ""
+                && manufacturer != ""
+                && price != ""
+                && vendor != ""
+                && location != ""
+                && barcode != ""
+                && quantity != "";
+    }
+
+    /**
+     * This method ensures that the inputs supposed to contain numbers do
+     * @return true if the input fields supposed to contain numbers do, false otherwise
+     */
+    protected boolean validateNumberInputsContainNumber(String number) {
+        boolean containsNumber = true;
+        try {
+            Double.parseDouble(number.replace(",", ""));
+        } catch (Exception e) {
+            containsNumber = false;
+        }
+        return containsNumber;
+    }
+
+    /**
+     * This method ensures that the inputs with numbers are non-negative and
+     * less than the max value for Doubles.
+     * @return true if the number inputs are within this range, false otherwise
+     */
+    protected boolean validateNumberInputsWithinRange(String price, String quantity) {
+        // quantity is not checked to be greater than 0, because another test ensures
+        // that quantity is greater than the unedited quantity
+        return Double.parseDouble(price.replace(",", "")) >= 0
+                && Double.parseDouble(price.replace(",", "")) < Double.MAX_VALUE
+                && Double.parseDouble(quantity.replace(",", "")) < Double.MAX_VALUE;
+    }
+
+    /**
+     * This method ensures that the quantity entered is greater than
+     * the previous quantity
+     * @return true if the quantiy entered is greater than the previous
+     * quantity, false otherwise
+     */
+    protected boolean validateQuantityIsGreaterThanPreviousValue(String quantity) {
+        return Double.parseDouble(quantity.replace(",", "")) >= originalQuantity;
+    }
+
+    /**
+     * Creates an alert informing user to fill out all fields
+     */
+    private void fieldErrorAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("Please fill out all fields before submitting info");
+
+        alert.showAndWait();
+    }
+
+    /**
+     * Creates an alert informing user to enter digits
+     */
+    private void invalidNumberAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("Please make sure you are entering numbers into price and quantity fields");
+
+        alert.showAndWait();
+    }
+
+    /**
+     * Creates an alert informing user to enter numbers that are non-negative
+     */
+    private void numberOutOfRangeAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("Please make sure you are entering numbers into price and quantity fields that are non-negative.");
+
+        alert.showAndWait();
+    }
+
+    /**
+     * Creates an alert informing user to enter a quantity greater than
+     * or equal to the previous quantity
+     */
+    private void quantityTooSmallAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("Please make sure you are entering a quantity that is greater than the previous quantity.");
+
+        alert.showAndWait();
     }
 
     /**
