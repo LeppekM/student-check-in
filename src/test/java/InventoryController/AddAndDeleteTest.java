@@ -36,8 +36,8 @@ public class AddAndDeleteTest {
 
     @Test
     public void deleteTest(){
-        database.deleteItem(100);
-        Part test = database.selectPart(100);
+        database.deleteItem(1000);
+        Part test = database.selectPart(1000);
         assertTrue(test.getIsDeleted());
     }
 }
