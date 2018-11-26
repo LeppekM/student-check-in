@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sceneAddPart" prefHeight="373.0000999999975" prefWidth="410.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerAddPart">
+<VBox id="root" fx:id="sceneAddPart" prefHeight="373.0000999999975" prefWidth="410.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerAddPart">
   <children>
     <AnchorPane prefHeight="468.0" prefWidth="410.0">
       <children>
