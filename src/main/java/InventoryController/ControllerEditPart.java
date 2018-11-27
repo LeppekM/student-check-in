@@ -4,11 +4,13 @@ import Database.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -34,7 +36,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     private TextField priceField;
 
     @FXML
-    private TextField vendorField;
+    private ComboBox vendorList;
 
     @FXML
     private TextField locationField;
@@ -68,7 +70,10 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
             manufacturerField.setText(part.getManufacturer());
             quantityField.setText("" + part.getQuantity());
             priceField.setText("" + df.format(part.getPrice()));
-            vendorField.setText(part.getVendor());
+            ArrayList<String> vendors = editPart.getVendorList();
+            if (vendors != null) {
+                vendorList.getItems().addAll(vendors);
+            }
             locationField.setText(part.getLocation());
 
             originalQuantity = part.getQuantity();
@@ -94,7 +99,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
         String serialNumber = serialField.getText().trim();
         String manufacturer = manufacturerField.getText().trim();
         double price = Double.parseDouble(priceField.getText().replaceAll(",", "").trim());
-        String vendor = vendorField.getText().trim();
+        String vendor = vendorList.getValue().toString();
         String location = locationField.getText().trim();
         String barcode = serialField.getText().trim();
         int quantity = Integer.parseInt(quantityField.getText().trim());
@@ -111,7 +116,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
         if (!validateAllFieldsFilledIn(nameField.getText().trim(), serialField.getText().trim(),
                 manufacturerField.getText().trim(),
                 priceField.getText().replaceAll(",", "").trim(),
-                vendorField.getText().trim(), locationField.getText().trim(),
+                locationField.getText().trim(),
                 serialField.getText().trim(), quantityField.getText().trim())) {
             isValid = false;
             fieldErrorAlert();
@@ -134,13 +139,12 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      * @return true if the fields are not empty, false otherwise
      */
     protected boolean validateAllFieldsFilledIn(String partName, String serialNumber,
-                                                String manufacturer, String price, String vendor,
+                                                String manufacturer, String price,
                                                 String location, String barcode, String quantity) {
         return partName != ""
                 && serialNumber != ""
                 && manufacturer != ""
                 && price != ""
-                && vendor != ""
                 && location != ""
                 && barcode != ""
                 && quantity != "";

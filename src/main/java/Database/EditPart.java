@@ -2,6 +2,7 @@ package Database;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * This class uses a query to edit a part in the database
@@ -15,6 +16,9 @@ public class EditPart {
             "updatedAt = ? WHERE partID = ?;";
 
     private String getVendorIDQuery = "SELECT vendorID FROM vendors WHERE vendor = ?;";
+
+    private String getVendorListQuery = "SELECT vendor FROM vendors;";
+
     /**
      * This method edits an item in the database
      * @param part The part to be edited
@@ -25,14 +29,15 @@ public class EditPart {
             preparedStatement = editQuery(part, preparedStatement);
             preparedStatement.execute();
             preparedStatement.close();
+            getVendorList();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
     }
 
-    public int getVendorID(Part part, String username, String password){
+    public int getVendorID(Part part){
         int result = -1;
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement preparedStatement = connection.prepareStatement(getVendorIDQuery);
             preparedStatement.setString(1, part.getVendor());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -44,6 +49,29 @@ public class EditPart {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return result;
+    }
+
+    /**
+     * This method queries the database to get a list of all vendors
+     * @return the list of vendors
+     */
+    public ArrayList<String> getVendorList() {
+        ArrayList<String> vendors = null;
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(getVendorListQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            vendors = new ArrayList<>();
+            while (resultSet.next()) {
+                for (int i = 1; i < rsmd.getColumnCount() + 1; i++) {
+                    vendors.add(resultSet.getString(i));
+                }
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return vendors;
     }
 
     /**
