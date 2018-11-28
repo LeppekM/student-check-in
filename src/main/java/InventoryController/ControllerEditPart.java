@@ -30,9 +30,6 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     private TextField manufacturerField;
 
     @FXML
-    private TextField quantityField;
-
-    @FXML
     private TextField priceField;
 
     @FXML
@@ -41,9 +38,15 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     @FXML
     private TextField locationField;
 
+    @FXML
+    private TextField barcodeField;
+
+    @FXML
+    private TextField quantityField;
+
     private Part part;
 
-    private EditPart editPart = new EditPart();    // change this to get part
+    private EditPart editPart = new EditPart();
 
     private int originalQuantity;
 
@@ -78,7 +81,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
                 vendorList.getItems().addAll(vendors);
             }
             locationField.setText(part.getLocation());
-
+            barcodeField.setText(part.getBarcode());
             originalQuantity = part.getQuantity();
         }
     }
@@ -107,7 +110,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
         double price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").trim());
         String vendor = vendorList.getValue().toString();
         String location = locationField.getText().trim();
-        String barcode = serialField.getText().trim();
+        String barcode = barcodeField.getText().trim();
         int quantity = Integer.parseInt(quantityField.getText().trim());
         part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode, quantity);
         return part;
@@ -119,11 +122,12 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      */
     private boolean validateInput() {
         boolean isValid = true;
-        if (!validateAllFieldsFilledIn(nameField.getText().trim(), serialField.getText().trim(),
-                manufacturerField.getText().trim(),
-                priceField.getText().replaceAll(",", "").trim(),
-                locationField.getText().trim(),
-                serialField.getText().trim(), quantityField.getText().trim())) {
+        System.out.println(barcodeField.getText());
+        if (!validateAllFieldsFilledIn(nameField.getText(), serialField.getText(),
+                manufacturerField.getText(),
+                priceField.getText().replaceAll(",", ""),
+                locationField.getText(),
+                barcodeField.getText(), quantityField.getText())) {
             isValid = false;
             fieldErrorAlert();
         } else if (vendorList.getValue() == null) {
@@ -150,13 +154,13 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     protected boolean validateAllFieldsFilledIn(String partName, String serialNumber,
                                                 String manufacturer, String price,
                                                 String location, String barcode, String quantity) {
-        return partName != ""
-                && serialNumber != ""
-                && manufacturer != ""
-                && price != ""
-                && location != ""
-                && barcode != ""
-                && quantity != "";
+        return partName != null && partName.trim() != ""
+                && serialNumber != null && serialNumber.trim() != ""
+                && manufacturer != null && manufacturer.trim() != ""
+                && price != null && price.trim() != ""
+                && location != null && location.trim() != ""
+                && barcode != null && barcode.trim() != ""
+                && quantity != null && quantity.trim() != "";
     }
 
     /**
