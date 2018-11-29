@@ -64,7 +64,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 String barcode = rs.getString("barcode");
                 boolean fault = (rs.getInt("faultQuantity") == 1) ? true : false;
                 int partID = rs.getInt("partID");
-                boolean isDeleted = (rs.getInt("isDeleted") == 0) ? false : true;
+                int isDeleted = rs.getInt("isDeleted");
 //                String faultDesc = rs.getString("faultDesc");
                 Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID, isDeleted);
                 data.add(part);
