@@ -153,7 +153,7 @@ public class Database {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getString("barcode"), false,
-                        resultSet.getInt("partID"), resultSet.getBoolean("isDeleted"));
+                        resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
             }
             resultSet.close();
             statement.close();
