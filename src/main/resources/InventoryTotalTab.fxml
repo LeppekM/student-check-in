@@ -34,7 +34,8 @@
         </TableView>
       </children>
     </AnchorPane>
-    <Button fx:id="add" layoutX="560.0" layoutY="554.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Add" />
+    <Button fx:id="add" layoutX="440.0" layoutY="554.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Add" />
+    <Button fx:id="edit" layoutX="560.0" layoutY="554.0" mnemonicParsing="false" onAction="#editPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="edit" />
     <Button fx:id="remove" layoutX="680.0" layoutY="554.0" mnemonicParsing="false" onAction="#removePart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Remove" />
     <Button fx:id="refresh" layoutX="713.0" layoutY="20.0" mnemonicParsing="false" onAction="#populateTable" stylesheets="@ButtonStyle.css" text="Refresh" />
   </children>
