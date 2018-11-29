@@ -81,7 +81,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     public void updateItem(){
         if (validateInput()) {
             editPart.editItem(getPartFromInput());
-            //partEditedSuccess();
+            partEditedSuccess();
             close();
         }
     }
@@ -232,6 +232,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      * Creates an alert informing user that part was edited successfully
      */
     private void partEditedSuccess(){
+//        Notifications.create().title("Successful!").text("Part edited successfully.").showWarning();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Confirmation");
         alert.setContentText("Part Edited successfully");

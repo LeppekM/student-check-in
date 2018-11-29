@@ -203,6 +203,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * Creates an alert informing user that part was added successfully
      */
     private void partAddedSuccess(){
+//        Notifications.create().title("Successful!").text("Part added successfully.").showWarning();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Confirmation");
         alert.setContentText("Part added successfully");
