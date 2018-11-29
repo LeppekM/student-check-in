@@ -6,6 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -50,7 +52,8 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
         setPartFields();
         addPart.addItem(setPartFields());
-        //partAddedSuccess();
+        Notifications.create().title("Successful!").text("Part added successfully.").hideAfter(new Duration(5000)).show();//.showWarning();
+//        partAddedSuccess();
         close();
         return true;
         }
@@ -203,11 +206,10 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * Creates an alert informing user that part was added successfully
      */
     private void partAddedSuccess(){
-//        Notifications.create().title("Successful!").text("Part added successfully.").showWarning();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Confirmation");
-        alert.setContentText("Part added successfully");
-        alert.showAndWait();
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setTitle("Confirmation");
+//        alert.setContentText("Part added successfully");
+//        alert.showAndWait();
     }
 
     /**

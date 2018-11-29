@@ -2,6 +2,8 @@ package Database;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import javax.swing.*;
 import java.sql.*;
@@ -9,7 +11,7 @@ import java.sql.*;
 public class Database {
     //DB root pass: Userpassword123
     public static final String username = "root";
-    public static final String password = "Userpassword123";
+    public static final String password = "xam54678";
     static String host = "jdbc:mysql://localhost:3306";
     static final String dbdriver = "com.mysql.jdbc.Driver";
     static final String dbname = "student_check_in";
@@ -96,8 +98,7 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").showWarning();
-        JOptionPane.showMessageDialog(null, "Part with ID = " + partID + " has been successfully deleted");
+        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").hideAfter(new Duration(5000)).show();//.showWarning();
     }
 
     public Connection getConnection() {
@@ -153,7 +154,7 @@ public class Database {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getString("barcode"), false,
-                        resultSet.getInt("partID"), resultSet.getBoolean("isDeleted"));
+                        resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
             }
             resultSet.close();
             statement.close();

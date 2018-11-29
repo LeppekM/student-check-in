@@ -6,11 +6,11 @@ public class Part {
 
     private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, barcode, faultDesc;
     private final SimpleDoubleProperty price;
-    private final SimpleIntegerProperty partID, quantity;
-    private final SimpleBooleanProperty fault, isDeleted;
+    private final SimpleIntegerProperty partID, quantity, isDeleted;
+    private final SimpleBooleanProperty fault;
     AddPart addPart = new AddPart();
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID, boolean isDeleted){
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID, int isDeleted){
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
@@ -21,7 +21,7 @@ public class Part {
         this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
         this.quantity = new SimpleIntegerProperty(0);
-        this.isDeleted = new SimpleBooleanProperty(isDeleted);
+        this.isDeleted = new SimpleIntegerProperty(isDeleted);
         this.faultDesc = new SimpleStringProperty("");
     }
 
@@ -37,7 +37,7 @@ public class Part {
         //Returns the next part id
         this.partID = new SimpleIntegerProperty(addPart.getPartID());
         this.fault = new SimpleBooleanProperty(false);
-        this.isDeleted =new SimpleBooleanProperty(false);
+        this.isDeleted = new SimpleIntegerProperty(0);
         this.faultDesc = new SimpleStringProperty("");
     }
 
@@ -117,11 +117,11 @@ public class Part {
         this.partID.set(partId);
     }
 
-    public boolean getIsDeleted() {
+    public int getIsDeleted() {
         return isDeleted.get();
     }
 
-    public void setIsDeleted(boolean deleted) {
+    public void setIsDeleted(int deleted) {
         this.isDeleted.set(deleted);
     }
 

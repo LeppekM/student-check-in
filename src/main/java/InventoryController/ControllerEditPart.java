@@ -6,6 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -81,8 +83,9 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     public void updateItem(){
         if (validateInput()) {
             editPart.editItem(getPartFromInput());
-            partEditedSuccess();
+//            partEditedSuccess();
             close();
+            Notifications.create().title("Successful!").text("Part edited successfully.").hideAfter(new Duration(5000)).show();
         }
     }
 
@@ -232,11 +235,10 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      * Creates an alert informing user that part was edited successfully
      */
     private void partEditedSuccess(){
-//        Notifications.create().title("Successful!").text("Part edited successfully.").showWarning();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Confirmation");
-        alert.setContentText("Part Edited successfully");
-        alert.showAndWait();
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setTitle("Confirmation");
+//        alert.setContentText("Part Edited successfully");
+//        alert.showAndWait();
     }
 
     /**
