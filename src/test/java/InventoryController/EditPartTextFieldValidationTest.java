@@ -47,38 +47,38 @@ public class EditPartTextFieldValidationTest {
 
         //Act
         boolean testPartNameEmpty = controllerEditPart.validateAllFieldsFilledIn("", "test", "test",
-                "test", "test", "test", "test", "test");
+                "test", "test", "test", "test");
 
         boolean testSerialNumberEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "", "test",
-                "test", "test", "test", "test", "test");
+                "test", "test", "test", "test");
 
-        boolean testManufacturerEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "", "  ",
-                "test", "test", "test", "test", "test");
+        boolean testManufacturerEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "", "",
+                "test", "test", "test", "test");
 
         boolean testPriceEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
-                "", "test", "test", "test", "test");
-
-        boolean testVendorEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
-                "test", "", "test", "test", "test");
+                "", "test", "test", "test");
 
         boolean testLocationEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
-                "test", "test", "", "test", "test");
+                "test", "", "test", "test");
 
         boolean testBarcodeEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
-                "test", "test", "test", "", "test");
+                "test", "test", "", "test");
 
         boolean testQuantityEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
-                "test", "test", "test", "", "");
+                "test", "test", "test", "");
+
+        boolean testAllEmpty = controllerEditPart.validateAllFieldsFilledIn("", "", "", "", "", "",
+                "");
 
         //Assert
         assertEquals(correctValue, testPartNameEmpty);
         assertEquals(correctValue, testSerialNumberEmpty);
         assertEquals(correctValue, testManufacturerEmpty);
         assertEquals(correctValue, testPriceEmpty);
-        assertEquals(correctValue, testVendorEmpty);
         assertEquals(correctValue, testLocationEmpty);
         assertEquals(correctValue, testBarcodeEmpty);
         assertEquals(correctValue, testQuantityEmpty);
+        assertEquals(correctValue, testAllEmpty);
     }
 
     /**

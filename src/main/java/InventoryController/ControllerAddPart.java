@@ -80,6 +80,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         String location = locationField.getText();
         String barcode = serialField.getText();
         String quantity = quantityField.getText();
+        int isDeleted = 0; //Part won't ever be deleted when adding
         //If the price or quantity isn't filled out, the invalid value -1 is passed instead.
         if(price.isEmpty()){
             price = failedCheck;
@@ -88,7 +89,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
             quantity = failedCheck;
         }
 
-        return new Part(partname, serialNumber, manufacturer, priceCheck(price), vendor, location, barcode, quantityCheck(quantity));
+        return new Part(partname, serialNumber, manufacturer, priceCheck(price), vendor, location, barcode, quantityCheck(quantity), isDeleted);
     }
 
 
