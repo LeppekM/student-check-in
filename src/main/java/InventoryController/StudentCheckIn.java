@@ -25,6 +25,7 @@ public class StudentCheckIn extends Application  {
         primaryStage.setResizable(false);
         primaryStage.setTitle("Barcode Scanner");
         primaryStage.setScene(scene);
+//        scene.getStylesheets().add(ControllerMenu.class.getResource("MenuStyle.css").toExternalForm());
         primaryStage.show();
     }
 

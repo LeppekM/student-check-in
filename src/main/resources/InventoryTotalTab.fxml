@@ -11,6 +11,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 
+<?import java.net.URL?>
 <AnchorPane fx:id="totalTabPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerTotalTab">
   <children>
     <Label layoutX="20.0" layoutY="14.0" text="Total Inventory">
@@ -32,6 +33,9 @@
             <TableColumn editable="false" prefWidth="129.0" text="Fault" fx:id="fault" />
             <TableColumn editable="false" prefWidth="89.0" text="Part ID" fx:id="partID" />
           </columns>
+          <stylesheets>
+            <URL value="@TableStyle.css" />
+          </stylesheets>
         </TableView>
       </children>
     </AnchorPane>

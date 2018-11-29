@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import java.net.URL?>
 <AnchorPane fx:id="totalTabPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerCheckedOutTab">
     <children>
         <TableView fx:id="checkedOutItems" layoutX="6.0" layoutY="63.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
@@ -16,6 +17,9 @@
             <TableColumn fx:id="checkOutAtCol" prefWidth="75.0" text="Checked Out Date" />
             <TableColumn fx:id="dueDateCol" prefWidth="75.0" text="Due At" />
             </columns>
+            <stylesheets>
+                <URL value="@TableStyle.css" />
+            </stylesheets>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>

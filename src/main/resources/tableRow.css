@@ -1,9 +1,0 @@
-.table-row-cell:odd {
-    -fx-background-color: red;
-    -fx-text-fill: white;
-}
-
-.table-row-cell:even {
-    -fx-background-color: dimgray;
-    -fx-text-fill: white;
-}
