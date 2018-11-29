@@ -10,6 +10,11 @@
 <?import java.net.URL?>
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerOverdueTab">
    <children>
+       <Label layoutX="15.0" layoutY="11.0" text="Overdue Items">
+           <stylesheets>
+               <URL value="@LabelStyle.css" />
+           </stylesheets>
+       </Label>
       <Pane prefHeight="600.0" prefWidth="800.0">
          <children>
             <TableView fx:id="overdueItems" layoutY="65.0" prefHeight="476.0" prefWidth="800.0">
@@ -24,11 +29,6 @@
                     <URL value="@TableStyle.css" />
                 </stylesheets>
             </TableView>
-            <Label layoutX="15.0" layoutY="11.0" text="Overdue Items">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
          </children>
       </Pane>
    </children>

@@ -14,9 +14,9 @@
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerFaultyTab">
   <children>
     <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
-      <font>
-        <Font size="24.0" fx:id="x1" />
-      </font>
+      <stylesheets>
+        <URL value="@LabelStyle.css" />
+      </stylesheets>
     </Label>
     <TableView id="tableInv" fx:id="tableView" layoutX="0.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0">
       <columnResizePolicy>
