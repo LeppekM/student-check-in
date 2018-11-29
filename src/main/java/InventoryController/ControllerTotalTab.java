@@ -16,6 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -49,6 +51,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Label emptytableLabel = new Label("No parts found.");
+        emptytableLabel.setFont(new Font(18));
+        tableView.setPlaceholder(emptytableLabel);
         database = new Database();
         populateTable();
     }

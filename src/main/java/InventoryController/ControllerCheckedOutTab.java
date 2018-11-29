@@ -4,9 +4,12 @@ import Database.CheckedOutParts;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Font;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -28,6 +31,9 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Label emptytableLabel = new Label("No parts found.");
+        emptytableLabel.setFont(new Font(18));
+        checkedOutItems.setPlaceholder(emptytableLabel);
         checkedOutParts.getCheckedOutItems(); //Queries database, populating the Observable Arraylist in that class
         populateTable(checkedOutParts.data);
     }
