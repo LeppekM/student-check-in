@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import org.junit.Test;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.matcher.control.TableViewMatchers;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,7 +25,6 @@ public class CheckedOutTabTest extends ApplicationTest {
 
     @Override
     public void start (Stage stage)throws IOException {
-        final ObservableList<CheckedOutItems> data = FXCollections.observableArrayList(new CheckedOutItems("Daniel", "test", 1, "2018-10-10","2018-10-11"));
 
         URL myFxmlURL = ClassLoader.getSystemResource("InventoryCheckedOutTab.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
@@ -37,13 +37,11 @@ public class CheckedOutTabTest extends ApplicationTest {
     }
 
 
-
+    /**
+     * Not a complete test, only figuring out how to access tableview data.
+     */
     @Test
     public void verifyTableData(){
-        clickOn("#sNameCol");
-        clickOn("#partNameCol");
-        clickOn("#quantityCol");
-        clickOn("#checkOutAtCol");
-        clickOn("#dueDateCol");
+        verifyThat("#checkedOutItems", TableViewMatchers.containsRow("Daniel Lang","Circuit Designers", 1, "2018-10-31", "2018-11-01"));
     }
 }
