@@ -6,6 +6,5 @@ pipelines:
     - step:
         caches:
           - gradle
-        script:          
-          - chmod +x gradlew
-          - ./gradlew clean assemble
+        script:                
+           - ./gradlew clean build
