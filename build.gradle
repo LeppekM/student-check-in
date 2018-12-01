@@ -17,4 +17,6 @@ dependencies {
     testCompile "org.testfx:testfx-junit:4.0.15-alpha"
     testCompile "org.testfx:openjfx-monocle:8u76-b04"
 }
-
+test {
+    exclude 'InventoryController/**'
+}
