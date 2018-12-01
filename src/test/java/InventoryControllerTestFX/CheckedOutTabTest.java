@@ -26,14 +26,18 @@ public class CheckedOutTabTest extends ApplicationTest {
 
     @BeforeClass
     public static void setupHeadlessMode()throws Exception{
-        if(Boolean.getBoolean("headless")){
-            System.setProperty("testfx.robot", "glass");
-            System.setProperty("testfx.headless", "true");
-            System.setProperty("prism.order", "sw");
-            System.setProperty("prism.txt", "t2k");
-            System.setProperty("java.awt.headless", "true");
-        }
-        registerPrimaryStage();
+        System.setProperty("testfx.robot", "glass");
+        System.setProperty("testfx.headless", "true");
+        System.setProperty("prism.order", "sw");
+        System.setProperty("prism.text", "t2k");
+//        if(Boolean.getBoolean("headless")){
+//            System.setProperty("testfx.robot", "glass");
+//            System.setProperty("testfx.headless", "true");
+//            System.setProperty("prism.order", "sw");
+//            System.setProperty("prism.txt", "t2k");
+//            System.setProperty("java.awt.headless", "true");
+//        }
+//        registerPrimaryStage();
     }
 
     @Override
