@@ -1,0 +1,35 @@
+.root {
+    -fx-background-image: url("abstract.jpg");
+    -fx-background-size: 400px 400px;
+    /*-fx-background-repeat: repeat;*/
+}
+
+.label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial Narrow";
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+.hyperlink{
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.combo-box .list-view{
+    -fx-background-color: #424242;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+}
+
+.combo-box{
+    -fx-background-color: #424242;
+    -fx-text-fill: white;
+}
+
+.text-field{
+    -fx-background-color: #424242;
+    -fx-text-fill: white;
+}

@@ -11,7 +11,7 @@
     <children>
         <Label layoutX="20.0" layoutY="14.0" text="Transaction History">
             <stylesheets>
-                <URL value="@LabelStyle.css" />
+                <URL value="@HeaderStyle.css" />
             </stylesheets>
         </Label>
         <TableView id="historyTable" fx:id="historyTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">

@@ -11,7 +11,7 @@
   <children>
     <Label layoutX="20.0" layoutY="14.0" text="Total Inventory">
       <stylesheets>
-        <URL value="@LabelStyle.css" />
+        <URL value="@HeaderStyle.css" />
       </stylesheets>
     </Label>
     <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -35,7 +35,7 @@
       </children>
     </AnchorPane>
     <Button fx:id="add" layoutX="440.0" layoutY="554.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Add" />
-    <Button fx:id="edit" layoutX="560.0" layoutY="554.0" mnemonicParsing="false" onAction="#editPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="edit" />
+    <Button fx:id="edit" layoutX="560.0" layoutY="554.0" mnemonicParsing="false" onAction="#editPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Edit" />
     <Button fx:id="remove" layoutX="680.0" layoutY="554.0" mnemonicParsing="false" onAction="#removePart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Remove" />
     <Button fx:id="refresh" layoutX="713.0" layoutY="20.0" mnemonicParsing="false" onAction="#populateTable" stylesheets="@ButtonStyle.css" text="Refresh" />
   </children>
