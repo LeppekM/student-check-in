@@ -18,6 +18,7 @@ dependencies {
     testCompile "org.testfx:openjfx-monocle:8u76-b04"
 }
 
-test {    
+test {
+    dependsOn 'cleanTest'
     jvmArgs "-Dheadless=true"
 }
