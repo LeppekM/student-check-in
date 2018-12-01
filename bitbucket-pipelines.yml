@@ -1,5 +1,5 @@
 
-image: cogniteev/oracle-java:java8
+image: rburgst/java8-openjfx-docker
 
 pipelines:
   default:
