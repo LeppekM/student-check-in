@@ -55,6 +55,6 @@ public class CheckedOutTabTest extends ApplicationTest {
      */
     @Test
     public void verifyTableData(){
-        verifyThat("#checkedOutItems", TableViewMatchers.containsRow("Daniel Lang","Circuit Designers", 1, "2018-10-31", "2018-11-01"));
+        verifyThat("#checkedOutItems", TableViewMatchers.containsRow("Daniel Lang2","Circuit Designers", 1, "2018-10-31", "2018-11-01"));
     }
 }
