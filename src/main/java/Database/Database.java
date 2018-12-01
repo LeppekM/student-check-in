@@ -96,7 +96,7 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        JOptionPane.showMessageDialog(null, "Part with ID = " + partID + " has been successfully deleted");
+        //JOptionPane.showMessageDialog(null, "Part with ID = " + partID + " has been successfully deleted");
     }
 
     public Connection getConnection() {
