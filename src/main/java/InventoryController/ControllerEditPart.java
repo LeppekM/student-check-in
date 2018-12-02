@@ -80,7 +80,6 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
             if (vendors != null) {
                 vendorList.getItems().addAll(vendors);
             }
-            System.out.println(part.getVendor());
             vendorList.setValue(editPart.getVendorFromID(part.getVendor()));
             locationField.setText(part.getLocation());
             barcodeField.setText(part.getBarcode());
