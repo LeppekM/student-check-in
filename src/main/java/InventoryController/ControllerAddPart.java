@@ -12,30 +12,30 @@ import java.util.ResourceBundle;
 
 public class ControllerAddPart extends ControllerInventoryPage implements Initializable {
     @FXML
-    private VBox sceneAddPart;
+    public VBox sceneAddPart;
 
     @FXML
-    private TextField nameField;
+    public TextField nameField;
 
     @FXML
-    private TextField serialField;
+    public TextField serialField;
 
     @FXML
-    private TextField manufacturerField;
+    public TextField manufacturerField;
 
     @FXML
-    private TextField quantityField;
+    public TextField quantityField;
 
     @FXML
-    private TextField priceField;
+    public TextField priceField;
 
     @FXML
-    private TextField vendorField;
+    public TextField vendorField;
 
     @FXML
-    private TextField locationField;
+    public TextField locationField;
 
-    private AddPart addPart = new AddPart();
+    AddPart addPart = new AddPart();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
