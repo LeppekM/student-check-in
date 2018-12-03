@@ -33,7 +33,7 @@
                         <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="214.0" text="Price:" />
                         <TextField id="priceField" fx:id="priceField" layoutX="175.0" layoutY="214.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="nameLabel" font="$x1" layoutX="100.0" layoutY="254.0" text="Vendor:" />
-                        <ComboBox id="vendorList" fx:id="vendorList" layoutX="175.0" layoutY="254.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <ComboBox id="vendorList" fx:id="vendorList" layoutX="175.0" layoutY="254.0" prefHeight="23.94140625" prefWidth="153.5078125"/>
 
                         <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="294.0" text="Location:" />
                         <TextField id="locationField" fx:id="locationField" layoutX="175.0" layoutY="294.0" prefHeight="23.94140625" prefWidth="153.5078125" />
