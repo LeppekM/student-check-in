@@ -8,10 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -41,6 +43,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Label emptytableLabel = new Label("No parts found.");
+        emptytableLabel.setFont(new Font(18));
+        historyTable.setPlaceholder(emptytableLabel);
         ObservableList<HistoryItems> list = historyParts.getHistoryItems();
         populateTable(list);
 //        historyTable.setRowFactory(tv -> {

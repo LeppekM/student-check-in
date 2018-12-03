@@ -77,7 +77,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
 
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
-            priceField.setText("" + df.format(part.getPrice()/100));
+            priceField.setText("$" + df.format(part.getPrice()/100));
             ArrayList<String> vendors = editPart.getVendorList();
             if (vendors != null) {
                 vendorList.getItems().addAll(vendors);

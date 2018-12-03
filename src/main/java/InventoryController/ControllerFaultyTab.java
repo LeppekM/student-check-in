@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -33,6 +34,9 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Label emptytableLabel = new Label("No parts found.");
+        emptytableLabel.setFont(new Font(18));
+        tableView.setPlaceholder(emptytableLabel);
         database = new Database();
         populateTable();
     }
