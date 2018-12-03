@@ -23,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -148,10 +149,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      */
     @FXML
     public void removePart() {
-        if (tableView.getSelectionModel().getSelectedItems().size() == 1) {
-            database.deleteItem(tableView.getSelectionModel().getSelectedItem().getPartID());
+        Part part = tableView.getSelectionModel().getSelectedItem();
+        if(JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + part.getPartID() + "?") == JOptionPane.YES_OPTION) {
+            if (tableView.getSelectionModel().getSelectedItems().size() == 1) {
+                database.deleteItem(part.getPartID());
+            }
+            tableView.getItems().remove(part);
         }
-        tableView.getItems().remove(tableView.getSelectionModel().getSelectedItem());
     }
 
 //    @FXML

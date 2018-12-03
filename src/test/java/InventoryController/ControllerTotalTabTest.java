@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ControllerTotalTabTest {
     private Database database;
-    ObservableList<Part> data = FXCollections.observableArrayList(new Part("HDMI Cable", "H12312", "Sony", 5.99, "MSOE", "Cabinet", "", false, 0, false));
+    ObservableList<Part> data = FXCollections.observableArrayList(new Part("HDMI Cable", "H12312", "Sony", 5.99, "MSOE", "Cabinet", "", false, 0, 0));
     @Before
     public void before(){
         database =new Database();

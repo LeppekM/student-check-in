@@ -2,6 +2,8 @@ package Database;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import javax.swing.*;
 import java.sql.*;
@@ -96,8 +98,7 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").showWarning();
-        JOptionPane.showMessageDialog(null, "Part with ID = " + partID + " has been successfully deleted");
+        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").hideAfter(new Duration(5000)).show();//.showWarning();
     }
 
     public Connection getConnection() {
