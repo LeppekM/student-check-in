@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;
@@ -17,11 +18,27 @@ import java.io.IOException;
 import java.net.URL;
 
 import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.api.FxToolkit.registerPrimaryStage;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
 public class CheckedOutTabTest extends ApplicationTest {
 
 
+    @BeforeClass
+    public static void setupHeadlessMode()throws Exception{
+        System.setProperty("testfx.robot", "glass");
+        System.setProperty("testfx.headless", "true");
+        System.setProperty("prism.order", "sw");
+        System.setProperty("prism.text", "t2k");
+//        if(Boolean.getBoolean("headless")){
+//            System.setProperty("testfx.robot", "glass");
+//            System.setProperty("testfx.headless", "true");
+//            System.setProperty("prism.order", "sw");
+//            System.setProperty("prism.txt", "t2k");
+//            System.setProperty("java.awt.headless", "true");
+//        }
+//        registerPrimaryStage();
+    }
 
     @Override
     public void start (Stage stage)throws IOException {

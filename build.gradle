@@ -15,4 +15,8 @@ dependencies {
     compile 'mysql:mysql-connector-java:5.1.47'
     testCompile "org.testfx:testfx-core:4.0.15-alpha"
     testCompile "org.testfx:testfx-junit:4.0.15-alpha"
+    testCompile "org.testfx:openjfx-monocle:8u76-b04"
+}
+test {
+    exclude 'InventoryController/**'
 }

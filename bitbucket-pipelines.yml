@@ -1,0 +1,11 @@
+
+image: rburgst/java8-openjfx-docker
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - gradle
+        script:  
+           - chmod +x gradlew
+           - ./gradlew clean build
