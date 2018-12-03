@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -25,6 +26,7 @@ public class StudentCheckIn extends Application  {
         primaryStage.setResizable(false);
         primaryStage.setTitle("Barcode Scanner");
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image("msoe.png"));
 //        scene.getStylesheets().add(ControllerMenu.class.getResource("MenuStyle.css").toExternalForm());
         primaryStage.show();
     }

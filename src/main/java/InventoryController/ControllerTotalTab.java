@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -129,6 +130,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 stage.initOwner(totalTabPage.getScene().getWindow());
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
+                stage.getIcons().add(new Image("msoe.png"));
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
