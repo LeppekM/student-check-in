@@ -60,7 +60,7 @@ public class Database {
             while (resultSet.next()) {
                 data.add(new OverdueItems(resultSet.getInt("checkouts.studentID"), resultSet.getString("parts.partName"),
                         resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
-                        resultSet.getInt("parts.price/100")));
+                        resultSet.getString("parts.price/100")));
             }
             resultSet.close();
             statement.close();
