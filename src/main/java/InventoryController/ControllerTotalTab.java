@@ -16,6 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -49,6 +51,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Label emptytableLabel = new Label("No parts found.");
+        emptytableLabel.setFont(new Font(18));
+        tableView.setPlaceholder(emptytableLabel);
         database = new Database();
         populateTable();
     }
@@ -72,16 +77,16 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         tableView.getItems().clear();
         tableView.getItems().setAll(this.data);
 
-        tableView.setRowFactory(tv -> {
-            TableRow<Part> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    Part rowData = row.getItem();
-                    editPart(rowData);
-                }
-            });
-            return row;
-        });
+//        tableView.setRowFactory(tv -> {
+//            TableRow<Part> row = new TableRow<>();
+//            row.setOnMouseClicked(event -> {
+//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+//                    Part rowData = row.getItem();
+//                    editPart(rowData);
+//                }
+//            });
+//            return row;
+//        });
     }
 
     /**
@@ -107,32 +112,30 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     }
 
     /**
-     * Called when a part is double-clicked in the table. Brings up the EditPart FXML scene
-     * @param part the part that was double clicked
+     * Called when a row is highlighted in the table and the edit button is clicked.
      */
     @FXML
-    public void editPart(Part part) {
-        //Called when a part is double clicked in a table.
-        //@param part the part that was double clicked
-        Stage stage = new Stage();
-        try {
-            //URL myFxmlURL = ClassLoader.getSystemResource("EditPart.fxml");
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditPart.fxml"));
-            Parent root = loader.load();
+    public void editPart() {
+        if (tableView.getSelectionModel().getSelectedItems().size() == 1) {
+            Stage stage = new Stage();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditPart.fxml"));
+                Parent root = loader.load();
 
-            ((ControllerEditPart) loader.getController()).initPart(part);
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Edit a Part");
-            stage.initOwner(totalTabPage.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            populateTable();
+                ((ControllerEditPart) loader.getController()).initPart(
+                        tableView.getSelectionModel().getSelectedItem());
+                Scene scene = new Scene(root, 400, 400);
+                stage.setTitle("Edit a Part");
+                stage.initOwner(totalTabPage.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                populateTable();
+            }
         }
-
     }
 
     /**

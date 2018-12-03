@@ -12,30 +12,30 @@ import java.util.ResourceBundle;
 
 public class ControllerAddPart extends ControllerInventoryPage implements Initializable {
     @FXML
-    private VBox sceneAddPart;
+    public VBox sceneAddPart;
 
     @FXML
-    private TextField nameField;
+    public TextField nameField;
 
     @FXML
-    private TextField serialField;
+    public TextField serialField;
 
     @FXML
-    private TextField manufacturerField;
+    public TextField manufacturerField;
 
     @FXML
-    private TextField quantityField;
+    public TextField quantityField;
 
     @FXML
-    private TextField priceField;
+    public TextField priceField;
 
     @FXML
-    private TextField vendorField;
+    public TextField vendorField;
 
     @FXML
-    private TextField locationField;
+    public TextField locationField;
 
-    private AddPart addPart = new AddPart();
+    AddPart addPart = new AddPart();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,6 +77,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         String location = locationField.getText();
         String barcode = serialField.getText();
         String quantity = quantityField.getText();
+        int isDeleted = 0; //Part won't ever be deleted when adding
         //If the price or quantity isn't filled out, the invalid value -1 is passed instead.
         if(price.isEmpty()){
             price = failedCheck;
@@ -85,7 +86,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
             quantity = failedCheck;
         }
 
-        return new Part(partname, serialNumber, manufacturer, priceCheck(price), vendor, location, barcode, quantityCheck(quantity));
+        return new Part(partname, serialNumber, manufacturer, priceCheck(price), vendor, location, barcode, quantityCheck(quantity), isDeleted);
     }
 
 
@@ -203,6 +204,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * Creates an alert informing user that part was added successfully
      */
     private void partAddedSuccess(){
+//        Notifications.create().title("Successful!").text("Part added successfully.").showWarning();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Confirmation");
         alert.setContentText("Part added successfully");

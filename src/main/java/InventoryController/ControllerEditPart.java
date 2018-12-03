@@ -4,11 +4,13 @@ import Database.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -28,20 +30,23 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     private TextField manufacturerField;
 
     @FXML
-    private TextField quantityField;
-
-    @FXML
     private TextField priceField;
 
     @FXML
-    private TextField vendorField;
+    private ComboBox vendorList;
 
     @FXML
     private TextField locationField;
 
+    @FXML
+    private TextField barcodeField;
+
+    @FXML
+    private TextField quantityField;
+
     private Part part;
 
-    private EditPart editPart = new EditPart();    // change this to get part
+    private EditPart editPart = new EditPart();
 
     private int originalQuantity;
 
@@ -67,10 +72,17 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
             serialField.setText(part.getSerialNumber());
             manufacturerField.setText(part.getManufacturer());
             quantityField.setText("" + part.getQuantity());
-            priceField.setText("" + df.format(part.getPrice()));
-            vendorField.setText(part.getVendor());
-            locationField.setText(part.getLocation());
 
+            // Note: price divided by 100, because it is stored in the database as an integer 100 times
+            // larger than actual value.
+            priceField.setText("$" + df.format(part.getPrice()/100));
+            ArrayList<String> vendors = editPart.getVendorList();
+            if (vendors != null) {
+                vendorList.getItems().addAll(vendors);
+            }
+            vendorList.setValue(editPart.getVendorFromID(part.getVendor()));
+            locationField.setText(part.getLocation());
+            barcodeField.setText(part.getBarcode());
             originalQuantity = part.getQuantity();
         }
     }
@@ -81,7 +93,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     public void updateItem(){
         if (validateInput()) {
             editPart.editItem(getPartFromInput());
-            //partEditedSuccess();
+            partEditedSuccess();
             close();
         }
     }
@@ -93,10 +105,13 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
         String partName = nameField.getText().trim();
         String serialNumber = serialField.getText().trim();
         String manufacturer = manufacturerField.getText().trim();
-        double price = Double.parseDouble(priceField.getText().replaceAll(",", "").trim());
-        String vendor = vendorField.getText().trim();
+
+        // Note: price multiplied by 100, because it is stored in the database as an integer 100 times
+        // larger than actual value.
+        double price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").trim());
+        String vendor = vendorList.getValue().toString();
         String location = locationField.getText().trim();
-        String barcode = serialField.getText().trim();
+        String barcode = barcodeField.getText().trim();
         int quantity = Integer.parseInt(quantityField.getText().trim());
         part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode, quantity);
         return part;
@@ -108,13 +123,16 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      */
     private boolean validateInput() {
         boolean isValid = true;
-        if (!validateAllFieldsFilledIn(nameField.getText().trim(), serialField.getText().trim(),
-                manufacturerField.getText().trim(),
-                priceField.getText().replaceAll(",", "").trim(),
-                vendorField.getText().trim(), locationField.getText().trim(),
-                serialField.getText().trim(), quantityField.getText().trim())) {
+        if (!validateAllFieldsFilledIn(nameField.getText(), serialField.getText(),
+                manufacturerField.getText(),
+                priceField.getText().replaceAll(",", ""),
+                locationField.getText(),
+                barcodeField.getText(), quantityField.getText())) {
             isValid = false;
             fieldErrorAlert();
+        } else if (vendorList.getValue() == null) {
+            isValid = false;
+            nullVendorAlert();
         } else if (!validateNumberInputsContainNumber(priceField.getText()) ||
                 !validateNumberInputsContainNumber(quantityField.getText())) {
             isValid = false;
@@ -134,16 +152,15 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      * @return true if the fields are not empty, false otherwise
      */
     protected boolean validateAllFieldsFilledIn(String partName, String serialNumber,
-                                                String manufacturer, String price, String vendor,
+                                                String manufacturer, String price,
                                                 String location, String barcode, String quantity) {
-        return partName != ""
-                && serialNumber != ""
-                && manufacturer != ""
-                && price != ""
-                && vendor != ""
-                && location != ""
-                && barcode != ""
-                && quantity != "";
+        return partName != null && partName.trim() != ""
+                && serialNumber != null && serialNumber.trim() != ""
+                && manufacturer != null && manufacturer.trim() != ""
+                && price != null && price.trim() != ""
+                && location != null && location.trim() != ""
+                && barcode != null && barcode.trim() != ""
+                && quantity != null && quantity.trim() != "";
     }
 
     /**
@@ -189,8 +206,15 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     private void fieldErrorAlert(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("Please fill out all fields before submitting info");
+        alert.setContentText("Please fill out all fields");
 
+        alert.showAndWait();
+    }
+
+    private void nullVendorAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("Please select a vendor");
         alert.showAndWait();
     }
 
@@ -232,6 +256,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      * Creates an alert informing user that part was edited successfully
      */
     private void partEditedSuccess(){
+//        Notifications.create().title("Successful!").text("Part edited successfully.").showWarning();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Confirmation");
         alert.setContentText("Part Edited successfully");

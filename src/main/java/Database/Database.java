@@ -60,7 +60,7 @@ public class Database {
             while (resultSet.next()) {
                 data.add(new OverdueItems(resultSet.getInt("checkouts.studentID"), resultSet.getString("parts.partName"),
                         resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
-                        resultSet.getInt("parts.price/100")));
+                        resultSet.getString("parts.price/100")));
             }
             resultSet.close();
             statement.close();
@@ -96,6 +96,7 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+//        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").showWarning();
         JOptionPane.showMessageDialog(null, "Part with ID = " + partID + " has been successfully deleted");
     }
 
@@ -152,7 +153,7 @@ public class Database {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getString("barcode"), false,
-                        resultSet.getInt("partID"), resultSet.getBoolean("isDeleted"));
+                        resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
             }
             resultSet.close();
             statement.close();

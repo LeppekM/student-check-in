@@ -6,12 +6,13 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 
+<?import java.net.URL?>
 <AnchorPane fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerHistoryTab">
     <children>
         <Label layoutX="20.0" layoutY="14.0" text="Transaction History">
-            <font>
-                <Font size="24.0" fx:id="x1" />
-            </font>
+            <stylesheets>
+                <URL value="@HeaderStyle.css" />
+            </stylesheets>
         </Label>
         <TableView id="historyTable" fx:id="historyTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
             <columns>
@@ -22,6 +23,9 @@
                 <TableColumn prefWidth="50.0" resizable="false" text="Quantity" fx:id="quantity" />
                 <TableColumn prefWidth="80.0" resizable="false" text="Date" fx:id="date" />
             </columns>
+            <stylesheets>
+                <URL value="@TableStyle.css" />
+            </stylesheets>
         </TableView>
     </children>
 </AnchorPane>
