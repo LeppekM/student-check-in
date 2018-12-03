@@ -20,7 +20,7 @@ public class AddAndDeleteTest {
     @Test
     public void addParts(){
         AddPart addPart = new AddPart();
-        Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 1000, false);
+        Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 1000, 0);
         addPart.addItem(part);
         Part test = database.selectPart(1000);
         assertEquals(part.getPartName(), test.getPartName());
@@ -38,6 +38,6 @@ public class AddAndDeleteTest {
     public void deleteTest(){
         database.deleteItem(1000);
         Part test = database.selectPart(1000);
-        assertTrue(test.getIsDeleted());
+        assertEquals(test.getIsDeleted(), 0);
     }
 }
