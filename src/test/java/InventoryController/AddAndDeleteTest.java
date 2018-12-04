@@ -38,6 +38,6 @@ public class AddAndDeleteTest {
     public void deleteTest(){
         database.deleteItem(1000);
         Part test = database.selectPart(1000);
-        assertEquals(test.getIsDeleted(), 0);
+        assertEquals(1, test.getIsDeleted());
     }
 }
