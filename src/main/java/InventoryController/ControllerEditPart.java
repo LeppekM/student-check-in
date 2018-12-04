@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.*;
+import com.jfoenix.controls.JFXSpinner;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -45,6 +46,9 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
 
     @FXML
     private TextField quantityField;
+
+    @FXML
+    private JFXSpinner loader;
 
     private Part part;
 
@@ -94,6 +98,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      */
     public void updateItem(){
         if (validateInput()) {
+            loader.setVisible(true);
             editPart.editItem(getPartFromInput());
 //            partEditedSuccess();
             close();

@@ -5,7 +5,7 @@
 .root {
     -fx-background-image: url("abstract.jpg");
     -fx-background-size: 400px 400px;
-    /*-fx-background-repeat: repeat;*/
+    -fx-background-repeat: no-repeat;
 }
 
 .label {
@@ -23,17 +23,21 @@
 }
 
 .combo-box .list-view{
-    -fx-background-color: #424242;
+    /*-fx-background-color: #424242;*/
     -fx-text-fill: white;
+    -fx-font-weight: bold;
     -fx-border-color: white;
+    -fx-alignment: center;
+    -fx-background-color: #424242;
 }
 
-.combo-box{
-    -fx-background-color: #424242;
-    -fx-text-fill: white;
-}
+/*.combo-box{*/
+    /*-fx-background-color: #424242;*/
+    /*-fx-text-fill: white;*/
+/*}*/
 
 .text-field{
-    -fx-background-color: #424242;
+    /*-fx-background-color: #424242;*/
     -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
