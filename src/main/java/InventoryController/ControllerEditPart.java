@@ -1,12 +1,18 @@
 package InventoryController;
 
 import Database.*;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
@@ -95,7 +101,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     public void updateItem(){
         if (validateInput()) {
             editPart.editItem(getPartFromInput());
-//            partEditedSuccess();
+            partEditedSuccess();
             close();
             Notifications.create().title("Successful!").text("Part edited successfully.").hideAfter(new Duration(5000)).show();
         }
@@ -259,10 +265,25 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      * Creates an alert informing user that part was edited successfully
      */
     private void partEditedSuccess(){
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//        alert.setTitle("Confirmation");
-//        alert.setContentText("Part Edited successfully");
-//        alert.showAndWait();
+        new Thread(new Runnable() {
+            @Override public void run() {
+                Platform.runLater(() -> {
+                    Stage owner = new Stage(StageStyle.TRANSPARENT);
+                    StackPane root = new StackPane();
+                    root.setStyle("-fx-background-color: TRANSPARENT");
+                    Scene scene = new Scene(root, 1, 1);
+                    owner.setScene(scene);
+                    owner.setWidth(1);
+                    owner.setHeight(1);
+                    owner.toBack();
+                    owner.show();
+                    Notifications.create().title("Successful!").text("Part edited successfully.").hideAfter(new Duration(5000)).show();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(5));
+                    delay.setOnFinished( event -> owner.close() );
+                    delay.play();
+                });
+            }
+        }).start();
     }
 
     /**

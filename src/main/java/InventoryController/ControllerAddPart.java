@@ -1,11 +1,17 @@
 package InventoryController;
 
 import Database.*;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
@@ -52,8 +58,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
         setPartFields();
         addPart.addItem(setPartFields());
-        Notifications.create().title("Successful!").text("Part added successfully.").hideAfter(new Duration(5000)).show();//.showWarning();
-//        partAddedSuccess();
+        partAddedSuccess();
         close();
         return true;
         }
@@ -203,14 +208,29 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         alert.showAndWait();
     }
 
-    /**
+       /**
      * Creates an alert informing user that part was added successfully
      */
     private void partAddedSuccess(){
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//        alert.setTitle("Confirmation");
-//        alert.setContentText("Part added successfully");
-//        alert.showAndWait();
+        new Thread(new Runnable() {
+            @Override public void run() {
+                Platform.runLater(() -> {
+                    Stage owner = new Stage(StageStyle.TRANSPARENT);
+                    StackPane root = new StackPane();
+                    root.setStyle("-fx-background-color: TRANSPARENT");
+                    Scene scene = new Scene(root, 1, 1);
+                    owner.setScene(scene);
+                    owner.setWidth(1);
+                    owner.setHeight(1);
+                    owner.toBack();
+                    owner.show();
+                    Notifications.create().title("Successful!").text("Part added successfully.").hideAfter(new Duration(5000)).show();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(5));
+                    delay.setOnFinished( event -> owner.close() );
+                    delay.play();
+                });
+            }
+        }).start();
     }
 
     /**
