@@ -34,7 +34,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     private TableColumn<HistoryItems,String> studentName, partName, serialNumber, location, date;
 
     //private HistoryItems historyItems = new HistoryItems();
-    private HistoryParts historyParts = new HistoryParts();
+    private HistoryParts historyParts;
 
     /**
      * This method sets the data in the history page.
@@ -46,7 +46,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
         historyTable.setPlaceholder(emptytableLabel);
-        populateTable();
+//        populateTable();
 //        historyTable.setRowFactory(tv -> {
 //            TableRow<Part> row = new TableRow<>();
 //            row.setOnMouseClicked(event -> {
@@ -63,9 +63,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     /**
      * This method adds content to the table.
      */
-    private void populateTable() {
+    public void populateTable() {
+        historyParts = new HistoryParts();
         ObservableList<HistoryItems> list = historyParts.getHistoryItems();
-
         historyTable.getItems().clear();
         historyTable.getColumns().clear();
 
@@ -90,7 +90,6 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             data.add(new SimpleStringProperty(list.get(i).getDate()));
             historyTable.getItems().add(data);
         }
-
     }
 
     /**

@@ -1,6 +1,8 @@
 package InventoryController;
 
 import Database.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +34,21 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private TabPane tabPane;
 
     @FXML
+    private Tab totalTab, historyTab, checkedOutTab, overdueTab, faultsTab;
+
+    @FXML
+    private ControllerHistoryTab historyTabPageController;
+
+    @FXML
+    private ControllerCheckedOutTab checkedOutTabPageController;
+
+    @FXML
+    private ControllerOverdueTab overdueTabPageController;
+
+    @FXML
+    private ControllerFaultyTab faultyTabPageController;
+
+    @FXML
     private Button back;
 
     protected static Database database = new Database();
@@ -39,6 +56,37 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
+                // if the user was on the total tab
+                if (newTab == historyTab) {
+                    updateHistoryTab();
+                } else if (newTab == checkedOutTab) {
+                    updateCheckedOutTab();
+                } else if (newTab == overdueTab) {
+                    updateOverdueTab();
+                } else if (newTab == faultsTab) {
+                    updateFaultsTab();
+                }
+            }
+        });
+    }
+
+    private void updateHistoryTab() {
+        historyTabPageController.populateTable();
+    }
+
+    private void updateCheckedOutTab() {
+        checkedOutTabPageController.populateTable();
+    }
+
+    private void updateOverdueTab() {
+
+    }
+
+    private void updateFaultsTab() {
+
     }
 
     /** Takes a raw statement and a data list as parameters, then returns the data list populated with the appropriate
@@ -48,7 +96,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
      * @returns The list of parts filled with the parts based on what was requested in the raw statement.
      * @author Matthew Karcz
      */
-    public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data){
+    public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
         Statement currentStatement = null;
         try {
             Connection connection = database.getConnection();

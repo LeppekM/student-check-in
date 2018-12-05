@@ -57,7 +57,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
      *
      * @author Bailey Terry
      */
-    private void populteTable() {
+    public void populteTable() {
         studentID.setCellValueFactory(new PropertyValueFactory<>("ID"));
         partID.setCellValueFactory(new PropertyValueFactory<>("part"));
         serial.setCellValueFactory(new PropertyValueFactory<>("serial"));

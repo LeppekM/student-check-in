@@ -33,7 +33,7 @@ public class CheckedOutParts {
     /**
      * Queries the database for items that are checked out.
      */
-    public void getCheckedOutItems(){
+    public ObservableList<CheckedOutItems> getCheckedOutItems(){
 
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             statement = connection.createStatement();
@@ -46,6 +46,7 @@ public class CheckedOutParts {
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database", e);
         }
+        return data;
     }
 
     /**

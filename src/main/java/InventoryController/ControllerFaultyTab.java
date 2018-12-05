@@ -46,7 +46,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
      * @author Matthew Karcz
      */
     @FXML
-    private void populateTable() {
+    public void populateTable() {
         this.data.clear();
         this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 AND faultQuantity = 1 ORDER BY partID", this.data);
 

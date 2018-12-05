@@ -65,7 +65,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * @author Matthew Karcz
      */
     @FXML
-    private void populateTable() {
+    public void populateTable() {
         this.data.clear();
         this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
 
