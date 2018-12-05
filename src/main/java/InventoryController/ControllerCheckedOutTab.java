@@ -53,9 +53,9 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         // SET COLUMN WIDTH HERE (TOTAL = 800)
         checkedOutTable.getColumns().add(createColumn(0, "Student"));
         checkedOutTable.getColumns().add(createColumn(1, "Part Name"));
-        checkedOutTable.getColumns().add(createColumn(4, "Quantity"));
-        checkedOutTable.getColumns().add(createColumn(2, "CheckedOutAt"));
-        checkedOutTable.getColumns().add(createColumn(5, "Date"));
+        checkedOutTable.getColumns().add(createColumn(2, "Quantity"));
+        checkedOutTable.getColumns().add(createColumn(3, "CheckedOutAt"));
+        checkedOutTable.getColumns().add(createColumn(4, "Date"));
 
         for (int i = 0; i < list.size(); i++) {
             for (int columnIndex = checkedOutTable.getColumns().size(); columnIndex < list.size(); columnIndex++) {

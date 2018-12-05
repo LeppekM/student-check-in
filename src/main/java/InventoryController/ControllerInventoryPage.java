@@ -82,11 +82,11 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     }
 
     private void updateOverdueTab() {
-
+        overdueTabPageController.populteTable();
     }
 
     private void updateFaultsTab() {
-
+        faultyTabPageController.populateTable();
     }
 
     /** Takes a raw statement and a data list as parameters, then returns the data list populated with the appropriate
