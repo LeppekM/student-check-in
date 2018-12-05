@@ -85,7 +85,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
      *
      * @author Bailey Terry
      */
-    public void populteTable() {
+    public void populateTable() {
         ObservableList<OverdueItems> list = database.getOverdue();
         overdueTable.getItems().clear();
         overdueTable.getColumns().clear();
