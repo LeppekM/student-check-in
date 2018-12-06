@@ -13,6 +13,8 @@ public class AddPart {
             "ORDER BY partID DESC\n" +
             "LIMIT 1";
 
+    VendorInformation vendorInformation = new VendorInformation();
+
     /**
      * This method adds an item to the database
      * @param part The part to be added
@@ -21,6 +23,7 @@ public class AddPart {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
             insertQuery(part, preparedStatement).execute();
+            vendorInformation.getVendorList();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -40,7 +43,7 @@ public class AddPart {
             preparedStatement.setString(4, part.getManufacturer());
             preparedStatement.setDouble(5, part.getPrice());
             //Hardcoded vendorID for now.
-            preparedStatement.setInt(6, 2);
+            preparedStatement.setInt(6, vendorInformation.getVendorIDFromVendor(part.getVendor()));
             preparedStatement.setString(7, part.getLocation());
             preparedStatement.setString(8, part.getBarcode());
             preparedStatement.setInt(9, part.getQuantity());

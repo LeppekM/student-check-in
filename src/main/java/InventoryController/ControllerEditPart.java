@@ -1,8 +1,10 @@
 package InventoryController;
 
 import Database.*;
+
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import com.jfoenix.controls.JFXSpinner;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -52,9 +54,14 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     @FXML
     private TextField quantityField;
 
+    @FXML
+    private JFXSpinner loader;
+
     private Part part;
 
     private EditPart editPart = new EditPart();
+
+    private VendorInformation vendorInformation = new VendorInformation();
 
     private int originalQuantity;
 
@@ -84,11 +91,11 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
             priceField.setText("$" + df.format(part.getPrice()/100));
-            ArrayList<String> vendors = editPart.getVendorList();
+            ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
                 vendorList.getItems().addAll(vendors);
             }
-            vendorList.setValue(editPart.getVendorFromID(part.getVendor()));
+            vendorList.setValue(vendorInformation.getVendorFromID(part.getVendor()));
             locationField.setText(part.getLocation());
             barcodeField.setText(part.getBarcode());
             originalQuantity = part.getQuantity();
@@ -100,6 +107,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
      */
     public void updateItem(){
         if (validateInput()) {
+            loader.setVisible(true);
             editPart.editItem(getPartFromInput());
             partEditedSuccess();
             close();
