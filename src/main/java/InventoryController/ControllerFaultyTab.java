@@ -51,7 +51,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     public void populateTable() {
         this.data.clear();
         database = new Database();
-        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 AND faultQuantity = 1 ORDER BY partID", this.data);
+        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 AND isFaulty = 1 ORDER BY partID", this.data);
 
         //Add student ID to faults
         partName.setCellValueFactory(new PropertyValueFactory("partName"));
