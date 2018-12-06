@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -52,25 +53,23 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     AddPart addPart = new AddPart();
 
     VendorInformation vendorInformation = new VendorInformation();
-
-    ArrayList<String> vendors = vendorInformation.getVendorList();
+    private ArrayList <String> vendors = vendorInformation.getVendorList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showVendors();
-
     }
 
     /**
      * Adds the part to database
      */
     public boolean submitItem(){
-        //loadNotification.setVisible(true);
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
-        setPartFields();
-        addPart.addItem(setPartFields());
-        partAddedSuccess();
-        close();
+            if(!vendorExists(getVendorName())){
+                vendorInformation.createNewVendor(getVendorName());
+                vendorInformation();
+            }
+        submitTasks();
         return true;
         }
         else {
@@ -79,13 +78,54 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         }
     }
 
+    /**
+     * Helper method that runs when adding a new part
+     */
+    private void submitTasks(){
+        setPartFields();
+        addPart.addItem(setPartFields());
+        partAddedSuccess();
+        close();
+    }
+
+    /**
+     * If new vendor is created, this popup asks for vendor information
+     * Currently nothing is done with the result of the text
+     */
+    private void vendorInformation(){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Vendor Information");
+        dialog.setHeaderText("New vendor created, please enter vendor information");
+        dialog.setContentText("Please enter vendor information");
+        dialog.showAndWait();
+    }
+
+    /**
+     * Helper method to get vendor selection
+     * @return Vendor name
+     */
+    private String getVendorName(){
+        String failedCheck = "-1";
+        if(vendorField.getValue() != null) {
+            return vendorField.getValue().toString();
+        }
+        return failedCheck;
+    }
+
+    /**
+     * Helper method to show vendors
+     */
     private void showVendors(){
-        ArrayList vendors = vendorInformation.getVendorList();
         vendorField.getItems().addAll(vendors);
-//        if (vendors != null) {
-//            vendorField.getItems().addAll(vendors);
-//        }
-//        vendorField.setValue(vendorInformation.getVendorFromID(part.getVendor()));
+    }
+
+    /**
+     * Checks to see if vendor is new
+     * @param vendorName Name to be checked against list of vendors
+     * @return True if vendor name is new
+     */
+    private boolean vendorExists(String vendorName){
+        return vendors.contains(vendorName);
     }
 
 
@@ -100,7 +140,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         String serialNumber = serialField.getText();
         String manufacturer = manufacturerField.getText();
         String price = priceField.getText();
-        String vendor = vendorField.getValue().toString();
+        String vendor = getVendorName();
         String location = locationField.getText();
         String barcode = serialField.getText();
         String quantity = quantityField.getText();
@@ -115,6 +155,8 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
 
         return new Part(partname, serialNumber, manufacturer, priceCheck(price), vendor, location, barcode, quantityCheck(quantity), isDeleted);
     }
+
+
 
 
     /**
@@ -186,7 +228,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private boolean validateFieldsNotEmpty(){
         if(nameField.getText().isEmpty() | serialField.getText().isEmpty() | manufacturerField.getText().isEmpty() |
         priceField.getText().isEmpty() | locationField.getText().isEmpty()|
-        serialField.getText().isEmpty()| quantityField.getText().isEmpty()){
+        serialField.getText().isEmpty()| quantityField.getText().isEmpty() | getVendorName().contains("-1")){
             return false;
         }
         return true;
