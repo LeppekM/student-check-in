@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
@@ -33,7 +32,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     private AnchorPane overduePage;
 
     @FXML
-    private TableView overdueTable;
+    public TableView overdueTable;
 
     @FXML
     TableColumn<OverdueItems, String> partID, serial, date;
@@ -56,27 +55,29 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
         overdueTable.setPlaceholder(emptytableLabel);
+    }
 
-        overdueTable.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                Stage stage = new Stage();
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/OverduePopup.fxml"));
-                    Parent root = loader.load();
-//
-////                    ((ControllerOverdueTab) loader.getController()).init(overdueTable.getSelectionModel().getSelectedItem());
-                    Scene scene = new Scene(root, 400, 400);
-                    stage.setTitle("Overdue Item");
-//                    stage.initOwner(overduePage.getScene().getWindow());
-//                    stage.initModality(Modality.WINDOW_MODAL);
-                    stage.setScene(scene);
-                    stage.getIcons().add(new Image("msoe.png"));
-                    stage.show();
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        });
+    /**
+     * Creates an informational pop up on double click
+     *
+     * @author Bailey Terry
+     */
+    public void popUp(){
+        Stage stage = new Stage();
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("OverduePopup.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load(myFxmlURL);
+            Scene scene = new Scene(root, 400, 400);
+            stage.setTitle("Overdue Item");
+            stage.initOwner(overduePage.getScene().getWindow());
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("msoe.png"));
+            stage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -114,23 +115,8 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
                     list.get(j).setPrice("$" + df.format(p));
                 }
             }
-//            overdueTable.setItems(data);
             overdueTable.getItems().add(data);
         }
-
-//        overdueTable.getItems().clear();
-//        overdueTable.getColumns().clear();
-//        DecimalFormat df = new DecimalFormat("#,###,##0.00");
-//        for (int i = 0; i < data.size(); i++){
-//            double p = Double.parseDouble(data.get(i).getPrice());
-//            data.get(i).setPrice("$" + df.format(p));
-//        }
-//        studentID.setCellValueFactory(new PropertyValueFactory<>("ID"));
-//        partID.setCellValueFactory(new PropertyValueFactory<>("part"));
-//        serial.setCellValueFactory(new PropertyValueFactory<>("serial"));
-//        date.setCellValueFactory(new PropertyValueFactory<>("date"));
-//        price.setCellValueFactory(new PropertyValueFactory<>("price"));
-//        overdueTable.setItems(data);
     }
 
     /**

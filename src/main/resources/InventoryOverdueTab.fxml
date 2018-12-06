@@ -16,7 +16,7 @@
        </Label>
       <Pane prefHeight="600.0" prefWidth="800.0">
          <children>
-            <TableView fx:id="overdueTable" layoutY="65.0" prefHeight="476.0" prefWidth="800.0">
+            <TableView fx:id="overdueTable" layoutY="65.0" onMouseClicked="#popUp" prefHeight="476.0" prefWidth="800.0">
               <columns>
                 <TableColumn fx:id="studentID" editable="false" minWidth="159.0" prefWidth="155.0" text="Student ID" />
                 <TableColumn fx:id="partID" editable="false" minWidth="159.0" prefWidth="180.0" text="Part" />
