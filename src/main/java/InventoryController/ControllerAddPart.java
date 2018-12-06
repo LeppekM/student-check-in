@@ -1,6 +1,8 @@
 package InventoryController;
 
 import Database.*;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXSpinner;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerAddPart extends ControllerInventoryPage implements Initializable {
@@ -38,16 +41,23 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public TextField priceField;
 
     @FXML
-    public TextField vendorField;
+    public JFXComboBox vendorField;
 
     @FXML
     public TextField locationField;
 
+    @FXML
+    public JFXSpinner loadNotification;
+
     AddPart addPart = new AddPart();
+
+    VendorInformation vendorInformation = new VendorInformation();
+
+    ArrayList<String> vendors = vendorInformation.getVendorList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        showVendors();
 
     }
 
@@ -55,6 +65,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * Adds the part to database
      */
     public boolean submitItem(){
+        //loadNotification.setVisible(true);
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
         setPartFields();
         addPart.addItem(setPartFields());
@@ -68,6 +79,14 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         }
     }
 
+    private void showVendors(){
+        ArrayList vendors = vendorInformation.getVendorList();
+        vendorField.getItems().addAll(vendors);
+//        if (vendors != null) {
+//            vendorField.getItems().addAll(vendors);
+//        }
+//        vendorField.setValue(vendorInformation.getVendorFromID(part.getVendor()));
+    }
 
 
     /**
@@ -81,7 +100,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         String serialNumber = serialField.getText();
         String manufacturer = manufacturerField.getText();
         String price = priceField.getText();
-        String vendor = vendorField.getText();
+        String vendor = vendorField.getValue().toString();
         String location = locationField.getText();
         String barcode = serialField.getText();
         String quantity = quantityField.getText();
@@ -166,7 +185,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      */
     private boolean validateFieldsNotEmpty(){
         if(nameField.getText().isEmpty() | serialField.getText().isEmpty() | manufacturerField.getText().isEmpty() |
-        priceField.getText().isEmpty() | vendorField.getText().isEmpty() | locationField.getText().isEmpty()|
+        priceField.getText().isEmpty() | locationField.getText().isEmpty()|
         serialField.getText().isEmpty()| quantityField.getText().isEmpty()){
             return false;
         }
