@@ -41,7 +41,6 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     @FXML
     TableColumn<OverdueItems, Integer> studentID, price;
 
-    private ObservableList<OverdueItems> data;
     private Database database;
 
     /**
@@ -108,6 +107,14 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             data.add(new SimpleStringProperty(list.get(i).getSerial()));
             data.add(new SimpleStringProperty("" + list.get(i).getDate()));
             data.add(new SimpleStringProperty(list.get(i).getPrice()));
+            DecimalFormat df = new DecimalFormat("#,###,##0.00");
+            for (int j = 0; j < list.size(); j++){
+                if (!list.get(j).getPrice().substring(0,1).equals("$")) {
+                    double p = Double.parseDouble(list.get(j).getPrice());
+                    list.get(j).setPrice("$" + df.format(p));
+                }
+            }
+//            overdueTable.setItems(data);
             overdueTable.getItems().add(data);
         }
 
