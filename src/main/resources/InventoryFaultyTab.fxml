@@ -23,13 +23,12 @@
         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
       <columns>
-        <TableColumn editable="false" prefWidth="169.0" text="Part Name" fx:id="partName" />
-        <TableColumn editable="false" prefWidth="124.0" text="Serial Number" fx:id="serialNumber" />
-        <TableColumn editable="false" prefWidth="73.0" text="Location" fx:id="location" />
-        <TableColumn editable="false" prefWidth="73.0" text="Barcode" fx:id="barcode" />
-        <TableColumn editable="false" prefWidth="73.0" text="Fault" fx:id="fault" />
-        <TableColumn editable="false" prefWidth="73.0" text="Fault Description" fx:id="faultDesc" />
-        <TableColumn editable="false" prefWidth="73.0" text="Part ID" fx:id="partID" />
+        <TableColumn editable="false" prefWidth="150.0" text="Part Name" fx:id="partName" />
+        <TableColumn editable="false" prefWidth="125.0" text="Serial Number" fx:id="serialNumber" />
+        <TableColumn editable="false" prefWidth="150.0" text="Location" fx:id="location" />
+        <TableColumn editable="false" prefWidth="100.0" text="Barcode" fx:id="barcode" />
+        <TableColumn editable="false" prefWidth="175.0" text="Fault Description" fx:id="faultDesc" />
+        <TableColumn editable="false" prefWidth="100.0" text="Part ID" fx:id="partID" />
       </columns>
       <stylesheets>
         <URL value="@TableStyle.css" />

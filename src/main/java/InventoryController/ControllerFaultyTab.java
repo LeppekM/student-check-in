@@ -2,6 +2,9 @@ package InventoryController;
 
 import Database.Database;
 import Database.Part;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,8 +41,6 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
         tableView.setPlaceholder(emptytableLabel);
-        database = new Database();
-        populateTable();
     }
 
     /**
@@ -48,6 +50,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     @FXML
     public void populateTable() {
         this.data.clear();
+        database = new Database();
         this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 AND faultQuantity = 1 ORDER BY partID", this.data);
 
         //Add student ID to faults
@@ -57,8 +60,6 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         barcode.setCellValueFactory(new PropertyValueFactory("barcode"));
         faultDesc.setCellValueFactory(new PropertyValueFactory("faultDesc"));
         partID.setCellValueFactory(new PropertyValueFactory("partID"));
-        fault.setCellFactory(CheckBoxTableCell.forTableColumn(fault));
-        fault.setCellValueFactory(new PropertyValueFactory("fault"));
 
         this.tableView.getItems().clear();
         this.tableView.getItems().setAll(this.data);
