@@ -166,34 +166,13 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     public void populateTable() {
         historyParts = new HistoryParts();
         ObservableList<HistoryItems> list = historyParts.getHistoryItems();
-//        historyTable.getItems().clear();
-//        historyTable.getColumns().clear();
-
-        // SET COLUMN WIDTH HERE (TOTAL = 800)
-//        historyTable.getColumns().add(createColumn(0, "Student"));
-//        historyTable.getColumns().add(createColumn(1, "Part Name"));
-//        historyTable.getColumns().add(createColumn(2, "Serial Number"));
-//        historyTable.getColumns().add(createColumn(3, "Location"));
-//        historyTable.getColumns().add(createColumn(4, "Quantity"));
-//        historyTable.getColumns().add(createColumn(5, "Date"));
+        tableRows = FXCollections.observableArrayList();
 
         for (int i = 0; i < list.size(); i++) {
-//            for (int columnIndex = historyTable.getColumns().size(); columnIndex < list.size(); columnIndex++) {
-//                historyTable.getColumns().add(createColumn(columnIndex, ""));
-//            }
-//            ObservableList<StringProperty> data = FXCollections.observableArrayList();
-//            data.add(new SimpleStringProperty(list.get(i).getStudent()));
-//            data.add(new SimpleStringProperty(list.get(i).getPartName()));
-//            data.add(new SimpleStringProperty(list.get(i).getSerialNumber()));
-//            data.add(new SimpleStringProperty(list.get(i).getLocation()));
-//            data.add(new SimpleStringProperty("" + list.get(i).getQuantity()));
-//            data.add(new SimpleStringProperty(list.get(i).getDate()));
-
             tableRows.add(new HistoryTabTableRow(list.get(i).getStudent(),
                     list.get(i).getPartName(), list.get(i).getSerialNumber(),
                     list.get(i).getLocation(), "" + list.get(i).getQuantity(),
                     list.get(i).getDate()));
-            //historyTable.getItems().add(data);
         }
 
         final TreeItem<HistoryTabTableRow> root = new RecursiveTreeItem<HistoryTabTableRow>(tableRows, RecursiveTreeObject::getChildren);
@@ -201,42 +180,4 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         historyTable.setRoot(root);
         historyTable.setShowRoot(false);
     }
-
-    /**
-     * This method creates a column with the correct format for the table
-     * @param columnIndex
-     * @param columnTitle
-     * @return
-     */
-    private TableColumn<ObservableList<StringProperty>, String> createColumn(
-            final int columnIndex, String columnTitle) {
-        TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
-        column.setPrefWidth(150);
-        String title;
-        if (columnTitle == null || columnTitle.trim().length() == 0) {
-            title = "Column " + (columnIndex + 1);  // DELETE??
-        } else {
-            title = columnTitle;
-        }
-        column.setText(title);
-        column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(
-                    TableColumn.CellDataFeatures<ObservableList<StringProperty>, String> cellDataFeatures) {
-                ObservableList<StringProperty> values = cellDataFeatures.getValue();
-                if (columnIndex >= values.size()) {
-                    return new SimpleStringProperty("");
-                } else {
-                    return cellDataFeatures.getValue().get(columnIndex);
-                }
-            }
-        });
-        // width of column set to width of table / number of columns
-        column.setPrefWidth(800 / 6);
-        return column;
-    }
-
-//    public void search() {
-//
-//    }
 }
