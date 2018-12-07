@@ -6,6 +6,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,6 +22,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
@@ -106,8 +108,14 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    populateTable();
+                    stage.close();
+                }
+            });
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -132,11 +140,16 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("msoe.png"));
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+                        populateTable();
+                        stage.close();
+                    }
+                });
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                populateTable();
             }
         }
     }
@@ -155,11 +168,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 database.deleteItem(part.getPartID());
             }
             tableView.getItems().remove(part);
+            populateTable();
         }
     }
-
-//    @FXML
-//    public void search(){
-//        System.out.println(searchTotal.getText());
-//    }
 }
