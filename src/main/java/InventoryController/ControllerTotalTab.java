@@ -154,7 +154,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             if (tableView.getSelectionModel().getSelectedItems().size() == 1) {
                 database.deleteItem(part.getPartID());
             }
-            tableView.getItems().remove(part);
+            populateTable();
+//            tableView.getItems().remove(part);
         }
     }
 
