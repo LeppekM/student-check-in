@@ -1,31 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.text.Font?>
-
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import java.net.URL?>
-<AnchorPane fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerHistoryTab">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
     <children>
         <Label layoutX="20.0" layoutY="14.0" text="Transaction History">
             <stylesheets>
                 <URL value="@HeaderStyle.css" />
             </stylesheets>
         </Label>
-        <TableView id="historyTable" fx:id="historyTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0">
-            <columns>
-                <TableColumn prefWidth="125.0" resizable="false" text="Student" fx:id="studentName" />
-                <TableColumn prefWidth="125.0" resizable="false" text="Part Name" fx:id="partName" />
-                <TableColumn prefWidth="110.0" resizable="false" text="Serial Number" fx:id="serialNumber" />
-                <TableColumn prefWidth="110.0" resizable="false" text="Location" fx:id="location" />
-                <TableColumn prefWidth="50.0" resizable="false" text="Quantity" fx:id="quantity" />
-                <TableColumn prefWidth="80.0" resizable="false" text="Date" fx:id="date" />
-            </columns>
-            <stylesheets>
-                <URL value="@TableStyle.css" />
-            </stylesheets>
-        </TableView>
+      <JFXTreeTableView fx:id="historyTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0" stylesheets="@TableStyle.css" />
+      <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
+
     </children>
 </AnchorPane>
