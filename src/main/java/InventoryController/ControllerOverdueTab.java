@@ -32,7 +32,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     private AnchorPane overduePage;
 
     @FXML
-    public TableView overdueTable;
+    private TableView overdueTable;
 
     @FXML
     TableColumn<OverdueItems, String> partID, serial, date;
@@ -68,6 +68,8 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             URL myFxmlURL = ClassLoader.getSystemResource("OverduePopup.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load(myFxmlURL);
+            ((OverduePopUp) loader.getController()).populate(
+                    ((OverdueItems) overdueTable.getSelectionModel().getSelectedItem()));
             Scene scene = new Scene(root, 400, 400);
             stage.setTitle("Overdue Item");
             stage.initOwner(overduePage.getScene().getWindow());
@@ -77,8 +79,17 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         }catch (IOException e){
             e.printStackTrace();
         }
-
+//        OverduePopUp overduePopUp = new OverduePopUp();
+//        OverdueItems list = ((OverdueItems) overdueTable.getSelectionModel().getSelectedItem());
+//        if (list.size() == 1) {
+//            overduePopUp.populate(list);
+//        }
     }
+
+//    public OverdueItems convert(ObservableList observableList){
+//        Object item = observableList.get(0);
+//        return ((OverdueItems) item);
+//    }
 
     /**
      * This method populates the gui based off of the data in the Observable list
