@@ -1,5 +1,7 @@
 package CheckItemsController;
 
+import InventoryController.ControllerInventoryPage;
+import InventoryController.ControllerMenu;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.IntegerValidator;
@@ -7,12 +9,18 @@ import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerCheckoutTab implements Initializable {
+public class ControllerCheckoutTab extends ControllerMenu implements Initializable {
+    @FXML
+    private AnchorPane main;
 
     @FXML
     private JFXSpinner loadIndicator;
@@ -20,24 +28,48 @@ public class ControllerCheckoutTab implements Initializable {
     @FXML
     private JFXTextField studentID, barcode, quantity;
 
+    ControllerInventoryPage stage = new ControllerInventoryPage();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        IntegerValidator intValidate = new IntegerValidator();
-        studentID.getValidators().add(intValidate);
-        intValidate.setMessage("Only numbers allowed!");
-        studentID.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(!newValue){
-                    studentID.validate();
-                }
-            }
-        });
+//        System.out.println(getStudentID());
 
+        //studentID.setText(getStudentID());
+//        IntegerValidator intValidate = new IntegerValidator();
+//        studentID.getValidators().add(intValidate);
+//        intValidate.setMessage("Only numbers allowed!");
+//        studentID.focusedProperty().addListener(new ChangeListener<Boolean>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                if(!newValue){
+//                    studentID.validate();
+//                }
+//            }
+//        });
+
+    }
+
+    private String getStudentID(){
+        String studentID = null;
+        for (int i =0; i<studentIDArray.size(); i++){
+            studentID +=Integer.parseInt(studentIDArray.get(i));
+        }
+        return studentID;
     }
 
     public void submit(){
         loadIndicator.setVisible(true);
+    }
 
+    public void returnHome(){
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            main.getChildren().clear();
+            main.getScene().setRoot(loader.load(myFxmlURL));
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+        }
     }
 }
