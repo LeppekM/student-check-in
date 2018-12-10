@@ -13,11 +13,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+import java.util.function.UnaryOperator;
 
 public class ControllerCheckoutTab extends ControllerMenu implements Initializable {
     @FXML
@@ -34,33 +37,36 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        System.out.println(getStudentID());
+        acceptIntegerOnly();
 
-        //studentID.setText(getStudentID());
-//        IntegerValidator intValidate = new IntegerValidator();
-//        studentID.getValidators().add(intValidate);
-//        intValidate.setMessage("Only numbers allowed!");
-//        studentID.focusedProperty().addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                if(!newValue){
-//                    studentID.validate();
-//                }
-//            }
-//        });
 
     }
 
-    private String getStudentID(){
-        String studentID = null;
-        for (int i =0; i<studentIDArray.size(); i++){
-            studentID +=Integer.parseInt(studentIDArray.get(i));
+    private void acceptIntegerOnly(){
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if (text.matches("[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+        studentID.setTextFormatter(textFormatter);
+    }
+
+    public void moveToBarcodeField(){
+        //System.out.println("test");
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")){
+           barcode.requestFocus();
         }
-        return studentID;
     }
+
+
 
     public void submit(){
         loadIndicator.setVisible(true);
+
+
     }
 
     public void checkIn(){

@@ -13,7 +13,7 @@
 
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutTab">
    <children>
-      <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="164.0" prefHeight="24.0" prefWidth="90.0" />
+      <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="164.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="90.0" />
       <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" prefHeight="24.0" prefWidth="90.0" />
       <JFXCheckBox layoutX="347.0" layoutY="322.0" text="Extended?" />
       <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" layoutX="346.0" layoutY="366.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #D3D3D3#D3D3D3;" text="Submit" />

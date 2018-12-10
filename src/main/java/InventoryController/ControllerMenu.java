@@ -58,14 +58,18 @@ public class ControllerMenu implements Initializable {
     }
 
     public void openCheckoutFromScanner(KeyEvent keyEvent){
-        int studentIDLength = 6;
-
-        if(keyEvent.getCharacter().matches("^[0-9]$")) {
-            studentIDArray.add(keyEvent.getCode().toString());
-            if (studentIDArray.size() == studentIDLength) {
+        studentIDArray.add(keyEvent.getCharacter());
+        if(getStudentID().matches("^(rfid)$")) {
                 newStage("CheckOutItems.fxml");
             }
+    }
+
+    private String getStudentID(){
+        StringBuilder studentID = new StringBuilder();
+        for (int i =0; i<studentIDArray.size(); i++){
+            studentID.append(studentIDArray.get(i));
         }
+        return studentID.toString();
     }
 
 
