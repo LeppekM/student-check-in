@@ -69,16 +69,17 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                URL myFxmlURL = ClassLoader.getSystemResource("OverduePopup.fxml");
-                FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                Parent root = loader.load(myFxmlURL);
-                loader.setController(new OverduePopUp());
-                ((OverduePopUp) loader.getController()).populate(
-                        (((OverdueItem) overdueTable.getSelectionModel().getSelectedItem())));
+//                URL myFxmlURL = ClassLoader.getSystemResource("OverduePopup.fxml");
+//                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/OverduePopup.fxml"));
+//                Parent root = loader.load(myFxmlURL);
+                Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 400);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(overduePage.getScene().getWindow());
                 stage.setScene(scene);
+                ((OverduePopUp) loader.getController()).populate(
+                        (((OverdueItem) overdueTable.getSelectionModel().getSelectedItem())));
                 stage.getIcons().add(new Image("msoe.png"));
                 stage.show();
             } catch (IOException e) {

@@ -7,11 +7,11 @@ import javafx.fxml.FXML;
 public class OverduePopUp extends ControllerOverdueTab {
 
     @FXML
-    private JFXTextField name, email, serialNumber, partName, dueDate, fee;
+    private JFXTextField nameField, email, serialNumber, partName, dueDate, fee;
 
     public void populate(OverdueItem overdueItems){
 //        System.out.println(overdueItems.getName());
-        name.setText(overdueItems.getName());
+        nameField.setText(overdueItems.getName());
         email.setText(overdueItems.getEmail());
         serialNumber.setText(overdueItems.getSerial());
         partName.setText(overdueItems.getPart());
