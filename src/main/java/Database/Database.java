@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import javax.swing.*;
 import java.sql.*;
 
 public class Database {
@@ -49,8 +48,8 @@ public class Database {
      * @return a list of overdue items
      * @author Bailey Terry
      */
-    public ObservableList getOverdue() {
-        ObservableList<OverdueItems> data = FXCollections.observableArrayList();
+    public ObservableList<OverdueItem> getOverdue(ObservableList<OverdueItem> data) {
+//        ObservableList<OverdueItem> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
             String overdue = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
@@ -63,7 +62,7 @@ public class Database {
             ResultSet resultSet = statement.executeQuery(overdue);
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
-                data.add(new OverdueItems(resultSet.getInt("checkouts.studentID"), resultSet.getString("students.studentName"),
+                data.add(new OverdueItem(resultSet.getInt("checkouts.studentID"), resultSet.getString("students.studentName"),
                         resultSet.getString("students.email"), resultSet.getString("parts.partName"),
                         resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
                         resultSet.getString("parts.price/100")));

@@ -1,7 +1,7 @@
 package InventoryController;
 
 import Database.Database;
-import Database.OverdueItems;
+import OverdueItem;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -35,12 +36,13 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     private TableView overdueTable;
 
     @FXML
-    TableColumn<OverdueItems, String> partID, serial, date;
+    TableColumn<OverdueItem, String> partID, serial, date;
 
     @FXML
-    TableColumn<OverdueItems, Integer> studentID, price;
+    TableColumn<OverdueItem, Integer> studentID, price;
 
     private Database database;
+    private ObservableList<OverdueItem> list = FXCollections.observableArrayList();
 
     /**
      * This method puts all overdue items into the list for populating the gui table
@@ -62,32 +64,34 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
      *
      * @author Bailey Terry
      */
-    public void popUp(){
-        Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("OverduePopup.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load(myFxmlURL);
-            ((OverduePopUp) loader.getController()).populate(
-                    (overdueTable.getSelectionModel().getSelectedItem()));
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Overdue Item");
-            stage.initOwner(overduePage.getScene().getWindow());
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
-            stage.show();
-        }catch (IOException e){
-            e.printStackTrace();
+    public void popUp(MouseEvent event){
+        if (event.getClickCount() == 2) {
+            Stage stage = new Stage();
+            try {
+                URL myFxmlURL = ClassLoader.getSystemResource("OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                Parent root = loader.load(myFxmlURL);
+                ((OverduePopUp) loader.getController()).populate(
+                        (overdueTable.getSelectionModel().getSelectedItem()));
+                Scene scene = new Scene(root, 400, 400);
+                stage.setTitle("Overdue Item");
+                stage.initOwner(overduePage.getScene().getWindow());
+                stage.setScene(scene);
+                stage.getIcons().add(new Image("msoe.png"));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     /**
      * This method populates the gui based off of the data in the Observable list
      *
-     * @author Bailey Terry
+     * @author Joe Gilpin
      */
     public void populateTable() {
-        ObservableList<OverdueItems> list = database.getOverdue();
+        list = database.getOverdue(list);
         overdueTable.getItems().clear();
         overdueTable.getColumns().clear();
 
