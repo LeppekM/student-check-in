@@ -12,10 +12,16 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
@@ -144,6 +150,30 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                             || (date != null & date.toLowerCase().contains(input)));
                     }
                 });
+            }
+        });
+
+        // Click to select if unselected and unselect if selected
+        historyTable.setRowFactory(new Callback<TreeTableView<HistoryTabTableRow>, TreeTableRow<HistoryTabTableRow>>() {
+            @Override
+            public TreeTableRow<HistoryTabTableRow> call(TreeTableView<HistoryTabTableRow> param) {
+                final TreeTableRow<HistoryTabTableRow> row = new TreeTableRow<>();
+                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        final int index = row.getIndex();
+                        if (index >= 0 && index < historyTable.getCurrentItemsCount() && historyTable.getSelectionModel().isSelected(index)) {
+                            historyTable.getSelectionModel().clearSelection();
+                            event.consume();
+                        }
+                    }
+                });
+                row.hoverProperty().addListener(observable -> {
+                    if (row.isHover() && row != null && row.getItem() != null) {
+                        System.out.println("TEST");
+                    }
+                });
+                return row;
             }
         });
 
