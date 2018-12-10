@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class OverdueItems {
+public class OverdueItem {
     private SimpleIntegerProperty ID;
     private SimpleStringProperty part;
     private SimpleStringProperty serial;
@@ -13,7 +13,7 @@ public class OverdueItems {
     private SimpleStringProperty name;
     private SimpleStringProperty email;
 
-    public OverdueItems(int studentID, String name, String email, String partCon, String serialCon, String dateCon, String priceCon){
+    public OverdueItem(int studentID, String name, String email, String partCon, String serialCon, String dateCon, String priceCon){
         this.ID = new SimpleIntegerProperty(studentID);
         this.part = new SimpleStringProperty(partCon);
         this.serial = new SimpleStringProperty(serialCon);

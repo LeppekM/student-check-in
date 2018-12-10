@@ -1,42 +1,21 @@
 package InventoryController;
 
-import Database.Database;
-import Database.OverdueItems;
+import Database.OverdueItem;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
 
-import java.net.URL;
-import java.sql.*;
-import java.util.ResourceBundle;
-
-public class OverduePopUp implements Initializable {
+public class OverduePopUp extends ControllerOverdueTab {
 
     @FXML
     private JFXTextField name, email, serialNumber, partName, dueDate, fee;
 
-    private Database database;
-
-    /**
-     * This method puts all overdue items into the list for populating the gui table
-     *
-     * @param location
-     * @param resources
-     * @author Bailey Terry
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        database = new Database();
-    }
-
-    public void populate(Object overdueItems){
-        OverdueItems item = ((OverdueItems) overdueItems);
-        name.setText(item.getName());
-        email.setText(item.getEmail());
-        serialNumber.setText(item.getSerial());
-        partName.setText(item.getPart());
-        dueDate.setText(item.getDate());
-        fee.setText(item.getPrice());
+    public void populate(OverdueItem overdueItems){
+//        System.out.println(overdueItems.getName());
+        name.setText(overdueItems.getName());
+        email.setText(overdueItems.getEmail());
+        serialNumber.setText(overdueItems.getSerial());
+        partName.setText(overdueItems.getPart());
+        dueDate.setText(overdueItems.getDate());
+        fee.setText(overdueItems.getPrice());
     }
 }
