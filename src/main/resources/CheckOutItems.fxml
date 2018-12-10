@@ -14,19 +14,19 @@
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutTab">
    <children>
       <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="164.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="90.0" />
-      <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" prefHeight="24.0" prefWidth="90.0" />
-      <JFXCheckBox layoutX="347.0" layoutY="322.0" text="Extended?" />
+      <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" onKeyReleased="#setItemStatus" prefHeight="24.0" prefWidth="90.0" />
+      <JFXCheckBox fx:id="extended" layoutX="347.0" layoutY="322.0" text="Extended?" />
       <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" layoutX="346.0" layoutY="366.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #D3D3D3#D3D3D3;" text="Submit" />
       <JFXTextField fx:id="quantity" layoutX="347.0" layoutY="275.0" prefHeight="25.0" prefWidth="90.0" text="1" />
       <Label layoutX="346.0" layoutY="261.0" text="Quantity" />
-      <Label layoutX="317.0" layoutY="77.0" text="Checkout Item">
+      <Label layoutX="317.0" layoutY="77.0" text="Checkout/In Item">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
       <Label layoutX="346.0" layoutY="149.0" text="Scan Student ID" />
       <Label layoutX="346.0" layoutY="206.0" text="Scan Barcode" />
-      <JFXSpinner fx:id="loadIndicator" layoutX="346.0" layoutY="307.0" prefHeight="35.0" prefWidth="17.0" visible="false" />
+      <JFXSpinner fx:id="loadIndicator" layoutX="437.0" layoutY="375.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
       <Button layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnHome">
          <graphic>
             <ImageView fitHeight="35.0" fitWidth="39.0">
@@ -37,5 +37,6 @@
          </graphic>
       </Button>
       <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="24.0" onAction="#checkIn" prefHeight="42.0" prefWidth="125.0" style="-fx-background-color: #D3D3D3#D3D3D3;" text="Switch to Check In" />
+      <JFXCheckBox fx:id="faulty" layoutX="347.0" layoutY="323.0" text="Faulty?" visible="false" />
    </children>
 </AnchorPane>

@@ -1,25 +1,20 @@
 package CheckItemsController;
 
 import HelperClasses.StageWrapper;
-import InventoryController.ControllerInventoryPage;
 import InventoryController.ControllerMenu;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.validation.IntegerValidator;
-import com.jfoenix.validation.RequiredFieldValidator;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 import java.util.function.UnaryOperator;
 
 public class ControllerCheckoutTab extends ControllerMenu implements Initializable {
@@ -32,6 +27,9 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     @FXML
     private JFXTextField studentID, barcode, quantity;
 
+    @FXML
+    private JFXCheckBox faulty, extended;
+
     private StageWrapper stageWrapper = new StageWrapper();
 
 
@@ -40,7 +38,9 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         acceptIntegerOnly();
 
 
+
     }
+
 
     private void acceptIntegerOnly(){
         UnaryOperator<TextFormatter.Change> filter = change -> {
@@ -74,6 +74,60 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     }
 
     public void returnHome(){
+        if(!userReturnsHome()){
+            return;
+        }
         stageWrapper.newStage("Menu.fxml", main);
     }
+
+    public void setItemStatus() {
+
+        if (checkInValidator()) {
+            stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
+            setCheckinCheckBox();
+        } else if (checkOutValidator()){
+            stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
+            setCheckoutCheckBox();
+        }
+    }
+
+    private boolean checkInValidator(){
+        return barcode.getText().equals("test");
+    }
+
+    private boolean checkOutValidator(){
+        return barcode.getText().equals("checkout");
+    }
+
+    private boolean fieldsFilled(){
+        return !studentID.getText().isEmpty() | !barcode.getText().isEmpty();
+    }
+
+    private boolean userReturnsHome(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Information may be lost");
+        alert.setHeaderText("If you leave, unsubmitted information may be lost");
+        alert.setContentText("Are you ok with this?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            return true;
+        }
+        return false;
+
+    }
+
+
+
+
+    private void setCheckinCheckBox(){
+        extended.setVisible(false);
+        faulty.setVisible(true);
+    }
+
+    private void setCheckoutCheckBox(){
+        faulty.setVisible(false);
+        extended.setVisible(true);
+    }
+
 }
