@@ -36,5 +36,6 @@
             </ImageView>
          </graphic>
       </Button>
+      <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="24.0" onAction="#checkIn" prefHeight="42.0" prefWidth="125.0" style="-fx-background-color: #D3D3D3#D3D3D3;" text="Switch to Check In" />
    </children>
 </AnchorPane>

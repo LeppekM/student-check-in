@@ -1,5 +1,6 @@
 package CheckItemsController;
 
+import HelperClasses.StageWrapper;
 import InventoryController.ControllerInventoryPage;
 import InventoryController.ControllerMenu;
 import com.jfoenix.controls.JFXSpinner;
@@ -28,7 +29,8 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     @FXML
     private JFXTextField studentID, barcode, quantity;
 
-    ControllerInventoryPage stage = new ControllerInventoryPage();
+    private StageWrapper stageWrapper = new StageWrapper();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,15 +63,11 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         loadIndicator.setVisible(true);
     }
 
+    public void checkIn(){
+        stageWrapper.newStage("CheckInItems.fxml", main);
+    }
+
     public void returnHome(){
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            main.getChildren().clear();
-            main.getScene().setRoot(loader.load(myFxmlURL));
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-        }
+        stageWrapper.newStage("Menu.fxml", main);
     }
 }
