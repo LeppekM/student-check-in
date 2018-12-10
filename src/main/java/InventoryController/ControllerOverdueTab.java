@@ -32,7 +32,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     private AnchorPane overduePage;
 
     @FXML
-    public TableView overdueTable;
+    private TableView overdueTable;
 
     @FXML
     TableColumn<OverdueItems, String> partID, serial, date;
@@ -54,7 +54,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         database = new Database();
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
-        overdueTable.setPlaceholder(emptytableLabel);
+//        overdueTable.setPlaceholder(emptytableLabel);
     }
 
     /**
@@ -68,6 +68,8 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             URL myFxmlURL = ClassLoader.getSystemResource("OverduePopup.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load(myFxmlURL);
+            ((OverduePopUp) loader.getController()).populate(
+                    (overdueTable.getSelectionModel().getSelectedItem()));
             Scene scene = new Scene(root, 400, 400);
             stage.setTitle("Overdue Item");
             stage.initOwner(overduePage.getScene().getWindow());
@@ -77,7 +79,6 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         }catch (IOException e){
             e.printStackTrace();
         }
-
     }
 
     /**

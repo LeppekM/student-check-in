@@ -53,14 +53,18 @@ public class Database {
         ObservableList<OverdueItems> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
-            String overdue = "select checkout_parts.partID, checkouts.studentID, parts.partName, parts.serialNumber, checkout_parts.dueAt, parts.price/100" +
-                    " from checkout_parts left join parts on checkout_parts.partID = parts.partID left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID" +
-                    " where checkout_parts.dueAt < date('" + date.toString() + "');";
+            String overdue = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
+                    " parts.serialNumber, checkout_parts.dueAt, parts.price/100 from checkout_parts " +
+                    "left join parts on checkout_parts.partID = parts.partID " +
+                    "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
+                    "left join students on checkouts.studentID = students.studentID " +
+                    "where checkout_parts.dueAt < date('" + date.toString() + "');";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(overdue);
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
-                data.add(new OverdueItems(resultSet.getInt("checkouts.studentID"), resultSet.getString("parts.partName"),
+                data.add(new OverdueItems(resultSet.getInt("checkouts.studentID"), resultSet.getString("students.studentName"),
+                        resultSet.getString("students.email"), resultSet.getString("parts.partName"),
                         resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
                         resultSet.getString("parts.price/100")));
             }
