@@ -30,41 +30,13 @@ public class OverduePopUp implements Initializable {
         database = new Database();
     }
 
-    public void populate(OverdueItems overdueItems){
-        try {
-            Connection connection = database.getConnection();
-            PreparedStatement statement1;
-            PreparedStatement statement2;
-            ResultSet resultSet;
-            ResultSetMetaData resultSetMetaData;
-            String query1 = "select studentName, email from students where studentID = ?";
-            String query2 = "select p.part, p.serialNumber, cp.dueAt, p.price \n" +
-                    "from parts p\n" +
-                    "left join checkout_parts cp on cp.partID = p.partID where p.partName = ?;";
-            statement1 = connection.prepareStatement(query1);
-            statement1.setInt(1, overdueItems.getID());
-            resultSet = statement1.executeQuery(query1);
-            resultSetMetaData = resultSet.getMetaData();
-            while(resultSet.next()){
-                name.setText(resultSet.getString("studentName"));
-                email.setText(resultSet.getString("email"));
-            }
-            resultSet.close();
-            statement1.close();
-            statement2 = connection.prepareStatement(query2);
-            statement2.setString(1, overdueItems.getPart());
-            resultSet = statement2.executeQuery(query2);
-            resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()){
-                partName.setText(resultSet.getString("p.part"));
-                serialNumber.setText(resultSet.getString("p.serialNumber"));
-                dueDate.setText(resultSet.getString("cp.dueAt"));
-                fee.setText(resultSet.getString("p.price"));
-            }
-            resultSet.close();
-            statement2.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+    public void populate(Object overdueItems){
+        OverdueItems item = ((OverdueItems) overdueItems);
+        name.setText(item.getName());
+        email.setText(item.getEmail());
+        serialNumber.setText(item.getSerial());
+        partName.setText(item.getPart());
+        dueDate.setText(item.getDate());
+        fee.setText(item.getPrice());
     }
 }

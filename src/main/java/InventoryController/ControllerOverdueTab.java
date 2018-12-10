@@ -54,7 +54,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         database = new Database();
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
-        overdueTable.setPlaceholder(emptytableLabel);
+//        overdueTable.setPlaceholder(emptytableLabel);
     }
 
     /**
@@ -69,7 +69,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load(myFxmlURL);
             ((OverduePopUp) loader.getController()).populate(
-                    ((OverdueItems) overdueTable.getSelectionModel().getSelectedItem()));
+                    (overdueTable.getSelectionModel().getSelectedItem()));
             Scene scene = new Scene(root, 400, 400);
             stage.setTitle("Overdue Item");
             stage.initOwner(overduePage.getScene().getWindow());
@@ -79,17 +79,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         }catch (IOException e){
             e.printStackTrace();
         }
-//        OverduePopUp overduePopUp = new OverduePopUp();
-//        OverdueItems list = ((OverdueItems) overdueTable.getSelectionModel().getSelectedItem());
-//        if (list.size() == 1) {
-//            overduePopUp.populate(list);
-//        }
     }
-
-//    public OverdueItems convert(ObservableList observableList){
-//        Object item = observableList.get(0);
-//        return ((OverdueItems) item);
-//    }
 
     /**
      * This method populates the gui based off of the data in the Observable list

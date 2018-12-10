@@ -6,15 +6,21 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class OverdueItems {
     private SimpleIntegerProperty ID;
-//    private SimpleDoubleProperty price;
-    private SimpleStringProperty part, serial, date, price;
+    private SimpleStringProperty part;
+    private SimpleStringProperty serial;
+    private SimpleStringProperty date;
+    private SimpleStringProperty price;
+    private SimpleStringProperty name;
+    private SimpleStringProperty email;
 
-    public OverdueItems(int partID, String partCon, String serialCon, String dateCon, String priceCon){
-        this.ID = new SimpleIntegerProperty(partID);
+    public OverdueItems(int studentID, String name, String email, String partCon, String serialCon, String dateCon, String priceCon){
+        this.ID = new SimpleIntegerProperty(studentID);
         this.part = new SimpleStringProperty(partCon);
         this.serial = new SimpleStringProperty(serialCon);
         this.date = new SimpleStringProperty(dateCon);
         this.price = new SimpleStringProperty(priceCon);
+        this.name = new SimpleStringProperty(name);
+        this.email = new SimpleStringProperty(email);
     }
 
     public int getID() {
@@ -75,5 +81,29 @@ public class OverdueItems {
 
     public void setDate(String date) {
         this.date.set(date);
+    }
+
+    public String getName() {
+        return name.get();
+    }
+
+    public SimpleStringProperty nameProperty() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
+    public String getEmail() {
+        return email.get();
+    }
+
+    public SimpleStringProperty emailProperty() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email.set(email);
     }
 }
