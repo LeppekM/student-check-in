@@ -1,0 +1,90 @@
+drop table if exists parts;
+create table parts (
+partID int NOT NULL,
+partName varchar(50),
+serialNumber varchar(20),
+manufacturer varchar(50),
+price int,
+vendorID int NOT NULL,
+location varchar(20),
+barcode varchar(20),
+totalQuantity int,
+isFaulty bit,
+availableQuantity int,
+createdAt date,
+updatedAt date,
+deletedAt date,
+createdBy varchar(50),
+updatedBy varchar(50),
+deletedBy varchar(50),
+isDeleted bit,
+PRIMARY KEY (partID));
+-- #FOREIGN KEY (partID) REFERENCES checkout_parts (partID),
+-- #FOREIGN KEY (vendorID) REFERENCES vendors (vendorID));
+
+drop table if exists checkouts;
+create table checkouts (
+checkoutID int NOT NULL,
+studentID int NOT NULL,
+checkoutAt date,
+reservedAt date,
+createdAt date,
+updatedAt date,
+deletedAt date,
+createdBy varchar(50),
+updatedBy varchar(50),
+deletedBy varchar(50),
+PRIMARY KEY (checkoutID));
+-- #FOREIGN KEY (checkoutID) REFERENCES checkout_parts (checkoutID),
+-- #FOREIGN KEY (studentID) REFERENCES students (studentID));
+
+drop table if exists checkout_parts;
+create table checkout_parts (
+checkoutID int NOT NULL,
+partID int NOT NULL,
+checkoutQuantity int,
+checkinQuantity int,
+checkedInAt date,
+dueAt date,
+createdAt date,
+updatedAt date,
+deletedAt date,
+createdBy varchar(50),
+updatedBy varchar(50),
+deletedBy varchar(50),
+PRIMARY KEY (checkoutID, partID));
+-- #FOREIGN KEY (partID) REFERENCES parts (partID));
+
+drop table if exists vendors;
+create table vendors (
+vendorID int NOT NULL,
+vendor varchar(50),
+PRIMARY KEY (vendorID));
+
+drop table if exists students;
+create table students (
+studentID int NOT NULL,
+email varchar(50),
+studentName varchar(50),
+createdAt date,
+updatedAt date,
+deletedAt date,
+createdBy varchar(50),
+updatedBy varchar(50),
+deletedBy varchar(50),
+PRIMARY KEY (studentID));
+
+drop table if exists fault;
+create table fault (
+checkoutID int NOT NULL,
+partID int NOT NULL,
+description varchar(500),
+price int,
+createdAt date,
+updatedAt date,
+deletedAt date,
+createdBy varchar(50),
+updatedBy varchar(50),
+deletedBy varchar(50),
+PRIMARY KEY (checkoutID, partID));
+-- #FOREIGN KEY (checkoutID, partID) REFERENCES checkout_parts (checkoutID, partID));
