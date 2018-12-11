@@ -8,12 +8,15 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     private StringProperty partName, serialNumber, location, barcode, partID;
 
+    private boolean fault;
+
     public TotalTabTableRow(String partName, String serialNumber, String location,
-                            String barcode, String partID) {
+                            String barcode, boolean fault, String partID) {
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.location = new SimpleStringProperty(location);
         this.barcode = new SimpleStringProperty(barcode);
+        this.fault = fault;
         this.partID = new SimpleStringProperty(partID);
     }
 
@@ -31,6 +34,10 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     public StringProperty getBarcode() {
         return barcode;
+    }
+
+    public boolean getFault() {
+        return fault;
     }
 
     public StringProperty getPartID() {

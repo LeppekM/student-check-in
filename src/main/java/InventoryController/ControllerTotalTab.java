@@ -8,6 +8,7 @@ import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,7 +22,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -61,6 +64,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private JFXTreeTableColumn<TotalTabTableRow, String> partNameCol, serialNumberCol, locationCol,
             barcodeCol, partIDCol;
 
+    @FXML
+    private JFXTreeTableColumn<TotalTabTableRow, Boolean> faultCol;
+
     private String partName, serialNumber, loc, barcode, partID;
 
     private static ObservableList<Part> data
@@ -71,8 +77,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
         totalTable.setPlaceholder(emptytableLabel);
-        database = new Database();
-//        populateTable();
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.setPrefWidth(150);
@@ -110,8 +114,38 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             }
         });
 
+        faultCol = new JFXTreeTableColumn<>("Fault?");
+        faultCol.setPrefWidth(100);
+//        faultCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, CheckBoxTableCell>, ObservableValue<CheckBoxTableCell>>() {
+//            @Override
+//            public ObservableValue<CheckBoxTableCell> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, CheckBoxTableCell> param) {
+//                return null;
+//            }
+//        });
+
+        faultCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, Boolean>,
+                ObservableValue<Boolean>>() {
+
+            @Override
+            public ObservableValue<Boolean> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, Boolean> param) {
+                TreeItem<TotalTabTableRow> treeItem = param.getValue();
+                TotalTabTableRow tRow = treeItem.getValue();
+                SimpleBooleanProperty booleanProp= new SimpleBooleanProperty(tRow.getFault());
+                return booleanProp;
+            }
+        });
+
+        faultCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, Boolean>, TreeTableCell<TotalTabTableRow, Boolean>>() {
+            @Override
+            public TreeTableCell<TotalTabTableRow, Boolean> call( TreeTableColumn<TotalTabTableRow, Boolean> p ) {
+                CheckBoxTreeTableCell<TotalTabTableRow,Boolean> cell = new CheckBoxTreeTableCell<TotalTabTableRow,Boolean>();
+                cell.setAlignment(Pos.CENTER);
+                return cell;
+            }
+        });
+
         partIDCol = new JFXTreeTableColumn<>("Part ID");
-        partIDCol.setPrefWidth(150);
+        partIDCol.setPrefWidth(100);
         partIDCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, String> param) {
@@ -178,6 +212,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      */
     @FXML
     public void populateTable() {
+        tableRows.clear();
+        totalTable.getColumns().clear();
         this.data.clear();
         this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
 
@@ -194,13 +230,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         for (int i = 0; i < data.size(); i++) {
             tableRows.add(new TotalTabTableRow(data.get(i).getPartName(),
                     data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                    data.get(i).getBarcode(), "" + data.get(i).getPartID()));
+                    data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
         }
 
         final TreeItem<TotalTabTableRow> root = new RecursiveTreeItem<TotalTabTableRow>(
                 tableRows, RecursiveTreeObject::getChildren
         );
-        totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, partIDCol);
+        totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
         totalTable.setRoot(root);
         totalTable.setShowRoot(false);
 
@@ -257,13 +293,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("msoe.png"));
-                stage.show();
+                stage.showAndWait();
+                populateTable();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                populateTable();
             }
         }
     }
