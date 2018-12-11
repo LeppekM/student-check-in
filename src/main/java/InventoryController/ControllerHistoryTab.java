@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  */
 public class ControllerHistoryTab  extends ControllerInventoryPage implements Initializable {
 
-    ObservableList<HistoryTabTableRow> tableRows;
+    private ObservableList<HistoryTabTableRow> tableRows;
 
     @FXML
     private JFXTreeTableView<HistoryTabTableRow> historyTable;
@@ -39,19 +39,10 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     //private HistoryItems historyItems = new HistoryItems();
     private HistoryParts historyParts;
 
-    private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol;
-    private JFXTreeTableColumn<HistoryTabTableRow, String> partNameCol;
-    private JFXTreeTableColumn<HistoryTabTableRow, String> serialNumberCol;
-    private JFXTreeTableColumn<HistoryTabTableRow, String> locationCol;
-    private JFXTreeTableColumn<HistoryTabTableRow, String> quantityCol;
-    private JFXTreeTableColumn<HistoryTabTableRow, String> dateCol;
+    private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
+    serialNumberCol, locationCol, quantityCol, dateCol;
 
-    private String student;
-    private String partName;
-    private String serialNumber;
-    private String loc;
-    private String quantity;
-    private String date;
+    private String student, partName, serialNumber, loc, quantity, date;
 
     /**
      * This method sets the data in the history page.
@@ -60,9 +51,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        Label emptytableLabel = new Label("No parts found.");
-//        emptytableLabel.setFont(new Font(18));
-//        historyTable.setPlaceholder(emptytableLabel);
+        Label emptytableLabel = new Label("No parts found.");
+        emptytableLabel.setFont(new Font(18));
+        historyTable.setPlaceholder(emptytableLabel);
 //        populateTable();
 
 
