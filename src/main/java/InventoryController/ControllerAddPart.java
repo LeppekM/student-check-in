@@ -7,6 +7,7 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -14,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
@@ -67,13 +69,15 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public boolean submitItem(){
         //loadNotification.setVisible(true);
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
-        setPartFields();
-        addPart.addItem(setPartFields());
-        partAddedSuccess();
-        close();
-        return true;
-        }
-        else {
+            setPartFields();
+            addPart.addItem(setPartFields());
+            partAddedSuccess();
+
+            // calls this class' close method, which closes the scene, which
+            // sends a close request, which repopulates the table in total tab
+            this.close();
+            return true;
+        } else {
             errorHandler();
             return false;
         }
@@ -260,14 +264,11 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     }
 
     /**
-     * Helper method to close platform
+     * Helper method to send close request to total tab, which receives the request and
+     * repopulates the table.
      */
     private void close(){
-        sceneAddPart.getScene().getWindow().hide();
+        //sceneAddPart.getScene().getWindow().hide();
+        sceneAddPart.fireEvent(new WindowEvent(((Node) sceneAddPart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
-
-
-
-
-
 }

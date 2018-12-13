@@ -32,6 +32,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
@@ -316,8 +317,14 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    populateTable();
+                    stage.close();
+                }
+            });
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
