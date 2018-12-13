@@ -191,7 +191,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                         if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                             Part rowData = database.selectPart(Integer.parseInt(totalTable.getSelectionModel().getModelItem(index).getValue().getPartID().get()));
                             showInfoPage(rowData);
-                            System.out.println("Hi " + rowData.toString());
+                            //System.out.println("Hi " + rowData.toString());
                         }
                         if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
                             totalTable.getSelectionModel().clearSelection();
@@ -244,17 +244,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
         totalTable.setRoot(root);
         totalTable.setShowRoot(false);
-
-//        tableView.setRowFactory(tv -> {
-//            TableRow<Part> row = new TableRow<>();
-//            row.setOnMouseClicked(event -> {
-//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-//                    Part rowData = row.getItem();
-//                    editPart(rowData);
-//                }
-//            });
-//            return row;
-//        });
     }
 
     /**
