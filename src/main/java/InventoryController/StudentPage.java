@@ -1,6 +1,6 @@
 package InventoryController;
 
-import Database.OverdueItems;
+import Database.OverdueItem;
 import Database.Student;
 import Database.Part;
 import HelperClasses.StageWrapper;

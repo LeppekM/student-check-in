@@ -12,11 +12,11 @@ public class Student {
     private int ID;
     private String email;
     private ObservableList<CheckedOutItems> checkedOut;
-    private ObservableList<OverdueItems> overdueItems;
+    private ObservableList<OverdueItem> overdueItems;
     private ObservableList<Part> savedItems;
 
     public Student(String name, int ID, String email, ObservableList<CheckedOutItems> checkedOut,
-                   ObservableList<OverdueItems> overdueItems, ObservableList<Part> savedItems){
+                   ObservableList<OverdueItem> overdueItems, ObservableList<Part> savedItems){
         this.name = name;
         this.ID = ID;
         this.email = email;
@@ -57,11 +57,11 @@ public class Student {
         this.checkedOut = FXCollections.observableArrayList(checkedOut);
     }
 
-    public ObservableList<OverdueItems> getOverdueItems() {
+    public ObservableList<OverdueItem> getOverdueItems() {
         return overdueItems;
     }
 
-    public void setOverdueItems(ObservableList<OverdueItems> overdueItems) {
+    public void setOverdueItems(ObservableList<OverdueItem> overdueItems) {
         this.overdueItems = FXCollections.observableArrayList(overdueItems);
     }
 
