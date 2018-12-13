@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.Student;
+import com.jfoenix.controls.JFXTreeTableView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -13,6 +14,9 @@ public class StudentPage implements Initializable {
 
     @FXML
     private Label studentName, email, RFID;
+
+    @FXML
+    private JFXTreeTableView coTable, oTable, sTable;
 
     private Database database;
     private Student student;

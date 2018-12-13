@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
@@ -11,9 +12,12 @@
             <Label fx:id="studentName" layoutX="270.0" layoutY="14.0" stylesheets="@HeaderStyle.css" text="Student Name" />
             <Label fx:id="email" layoutX="345.0" layoutY="91.0" stylesheets="@HeaderStyle.css" text="Email" />
             <Label fx:id="RFID" layoutX="352.0" layoutY="174.0" stylesheets="@HeaderStyle.css" text="RFID" />
-            <Label layoutX="14.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Checked Out" />
+            <Label layoutX="19.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Checked Out" />
             <Label layoutX="321.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Overdue" />
-            <Label layoutX="624.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Saved" />
+            <Label layoutX="604.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Saved" />
+            <JFXTreeTableView fx:id="coTable" layoutX="31.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
+            <JFXTreeTableView fx:id="oTable" layoutX="294.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
+            <JFXTreeTableView fx:id="sTable" layoutX="557.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
          </children>
       </Pane>
    </children>
