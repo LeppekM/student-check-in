@@ -14,26 +14,8 @@
         <URL value="@HeaderStyle.css" />
       </stylesheets>
     </Label>
-    <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <children>
-        <TableView id="tableInv" fx:id="tableView" prefHeight="480.0" prefWidth="820.0" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="66.0">
-          <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-          </columnResizePolicy>
-          <columns>
-            <TableColumn fx:id="partName" editable="false" prefWidth="155.0" text="Part Name" />
-            <TableColumn fx:id="serialNumber" editable="false" prefWidth="52.0" text="Serial No." />
-            <TableColumn fx:id="location" editable="false" prefWidth="78.0" text="Location" />
-            <TableColumn fx:id="barcode" editable="false" prefWidth="68.0" text="Barcode" />
-            <TableColumn fx:id="fault" editable="false" prefWidth="129.0" text="Fault" />
-            <TableColumn fx:id="partID" editable="false" prefWidth="89.0" text="Part ID" />
-          </columns>
-          <stylesheets>
-            <URL value="@TableStyle.css" />
-          </stylesheets>
-        </TableView>
-     </children>
-    </AnchorPane>
+    <JFXTreeTableView fx:id="totalTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0" stylesheets="@TableStyle.css" />
+    <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
     <JFXButton fx:id="add" layoutX="440.0" layoutY="554.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Add" />
     <JFXButton fx:id="edit" layoutX="560.0" layoutY="554.0" mnemonicParsing="false" onAction="#editPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Edit" />
     <JFXButton fx:id="remove" layoutX="680.0" layoutY="554.0" mnemonicParsing="false" onAction="#removePart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Remove" />
