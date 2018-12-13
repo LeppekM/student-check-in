@@ -28,6 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
@@ -119,13 +120,21 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 setText(null);
                             } else {
                                 final JFXButton editOne = new JFXButton("Edit");
-                                HBox content = new HBox();
+                                VBox column = new VBox();
+                                HBox actionButtons = new HBox();
+                                actionButtons.setPrefHeight(column.getHeight()/4);
+                                actionButtons.setAlignment(Pos.TOP_RIGHT);
                                 editOne.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOne.setOnAction(event -> {
+                                    System.out.println("test");
                                     editPart();
                                 });
-                                content.getChildren().addAll(partName, editOne);
-                                setGraphic(content);
+                                actionButtons.getChildren().add(editOne);
+                                HBox text = new HBox();
+                                text.setAlignment(Pos.TOP_LEFT);
+                                text.getChildren().add(partName);
+                                column.getChildren().addAll(actionButtons, partName);
+                                setGraphic(column);
                                 setText(null);
                             }
                         }
@@ -238,7 +247,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                         final int index = row.getIndex();
                         if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
                             totalTable.getSelectionModel().clearSelection();
-                            event.consume();
+//                            event.consume();
                         }
                     }
                 });

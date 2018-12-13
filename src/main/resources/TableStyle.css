@@ -84,7 +84,7 @@
 }
 
 .tree-table-row-cell:selected {
-    -fx-background-color: rgba(230, 7, 1, 0.73);
+    -fx-background-color: rgba(230, 7, 1, 0.6);
     -fx-background-insets: 0;
     -fx-background-radius: 1;
 }
