@@ -3,13 +3,19 @@ package HelperClasses;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -17,6 +23,9 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
@@ -56,6 +65,23 @@ public class StageWrapper {
                 });
             }
         }).start();
+    }
+
+    public void requiredInputValidator(JFXTextField textField){
+        RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
+        textField.getValidators().addAll(requiredFieldValidator);
+        requiredFieldValidator.setMessage("This field is required");
+        requiredFieldValidator.autosize();
+        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue){
+                    textField.validate();
+                }
+            }
+        });
+
+
     }
 
 
