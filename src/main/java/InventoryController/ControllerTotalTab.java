@@ -2,13 +2,12 @@ package InventoryController;
 
 import Database.Database;
 import Database.Part;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -29,10 +28,12 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
@@ -62,6 +63,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private JFXTreeTableView<TotalTabTableRow> totalTable;
 
     @FXML
+    private JFXTreeTableColumn<TotalTabTableRow, String> actionButtonsCol;
+
+    @FXML JFXTreeTableColumn<TotalTabTableRow, JFXTreeTableColumn> outerPartNameCol;
+
+    @FXML
     private JFXTreeTableColumn<TotalTabTableRow, String> partNameCol, serialNumberCol, locationCol,
             barcodeCol, partIDCol;
 
@@ -79,12 +85,55 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         emptytableLabel.setFont(new Font(18));
         totalTable.setPlaceholder(emptytableLabel);
 
+        outerPartNameCol = new JFXTreeTableColumn<>("Outer Part Name Col");
+        outerPartNameCol.setPrefWidth(150);
+        outerPartNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, JFXTreeTableColumn>, ObservableValue<JFXTreeTableColumn>>() {
+            @Override
+            public ObservableValue<JFXTreeTableColumn> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, JFXTreeTableColumn> param) {
+                return null;
+            }
+        });
+
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.setPrefWidth(150);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, String> param) {
                 return param.getValue().getValue().getPartName();
+            }
+        });
+
+        partNameCol.setPrefWidth(150);
+        partNameCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, String>, TreeTableCell<TotalTabTableRow, String>>() {
+            @Override
+            public TreeTableCell<TotalTabTableRow, String> call(TreeTableColumn<TotalTabTableRow, String> param) {
+                final TreeTableCell<TotalTabTableRow, String> cell = new TreeTableCell<TotalTabTableRow, String>() {
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (this.getTreeTableRow().getItem() != null) {
+                            String name = this.getTreeTableRow().getItem().getPartName().getValue();
+                            Label partName = new Label();
+                            partName.setText(name);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                final JFXButton editOne = new JFXButton("Edit");
+                                HBox content = new HBox();
+                                editOne.setButtonType(JFXButton.ButtonType.RAISED);
+                                editOne.setOnAction(event -> {
+                                    editPart();
+                                });
+                                content.getChildren().addAll(partName, editOne);
+                                setGraphic(content);
+                                setText(null);
+                            }
+                        }
+
+                    }
+                };
+                return cell;
             }
         });
 
@@ -233,7 +282,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 //        tableView.getItems().setAll(this.data);
 
         for (int i = 0; i < data.size(); i++) {
-            tableRows.add(new TotalTabTableRow(data.get(i).getPartName(),
+            Button button = new Button("Edit");
+            tableRows.add(new TotalTabTableRow(data.get(i).getPartName(), new HBox(button),
                     data.get(i).getSerialNumber(), data.get(i).getLocation(),
                     data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
         }
@@ -261,8 +311,14 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    populateTable();
+                    stage.close();
+                }
+            });
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -287,11 +343,15 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("msoe.png"));
-                stage.showAndWait();
-                populateTable();
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+                        populateTable();
+                        stage.close();
+                    }
+                });
+                stage.show();
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -305,9 +365,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      */
     @FXML
     public void removePart() {
-        String partID = totalTable.getSelectionModel().getSelectedItem().getValue().getPartID().getValue();
-        if(JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
-            if (totalTable.getSelectionModel().getSelectedItems().size() == 1) {
+        if (totalTable.getSelectionModel().getSelectedItems().size() == 1) {
+            String partID = totalTable.getSelectionModel().getSelectedItem().getValue().getPartID().getValue();
+            if(JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
                 try {
                     database.deleteItem(Integer.parseInt(partID));
                     populateTable();
@@ -317,6 +377,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             }
 
 //            tableView.getItems().remove(part);
+//            populateTable();
         }
     }
 

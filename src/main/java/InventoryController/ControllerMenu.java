@@ -1,5 +1,6 @@
 package InventoryController;
 
+import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,12 +8,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ControllerMenu implements Initializable {
@@ -23,6 +28,9 @@ public class ControllerMenu implements Initializable {
     @FXML
     private Button inventory;
 
+    public List <String> studentIDArray = new ArrayList<>();
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inventory.setOnAction(event -> openInventory());
@@ -32,23 +40,7 @@ public class ControllerMenu implements Initializable {
         newStage("InventoryPage.fxml");
     }
 
-    public void openCheckItemsPage(){
-        Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("CheckOutItems.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load(myFxmlURL);
-            Scene scene = new Scene(root, 600, 400);
-            stage.setTitle("Checkout Tab");
-            stage.initOwner(mainMenuScene.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public void openCheckItemsPage(){ newStage("CheckOutItems.fxml"); }
 
     public void newStage(String fxml){
         try {
@@ -63,6 +55,21 @@ public class ControllerMenu implements Initializable {
             invoke.printStackTrace();
 
         }
+    }
+
+    public void openCheckoutFromScanner(KeyEvent keyEvent){
+        studentIDArray.add(keyEvent.getCharacter());
+        if(getStudentID().matches("^(rfid)$")) {
+                newStage("CheckOutItems.fxml");
+            }
+    }
+
+    private String getStudentID(){
+        StringBuilder studentID = new StringBuilder();
+        for (int i =0; i<studentIDArray.size(); i++){
+            studentID.append(studentIDArray.get(i));
+        }
+        return studentID.toString();
     }
 
 

@@ -40,7 +40,7 @@
                      </effect>
                   </JFXButton>
                   <JFXButton layoutX="328.0" layoutY="322.0" onAction="#goBack" style="-fx-border-color: #DC143C;" text="Cancel" />
-                  <JFXComboBox fx:id="vendorField" layoutX="193.0" layoutY="228.0" prefHeight="25.0" prefWidth="135.0" />
+                  <JFXComboBox fx:id="vendorField" editable="true" layoutX="193.0" layoutY="228.0" prefHeight="25.0" prefWidth="135.0" />
                   <JFXSpinner fx:id="loadNotification" layoutX="217.0" layoutY="322.0" prefHeight="27.0" prefWidth="25.0" visible="false" />
           </children>
         </Pane>

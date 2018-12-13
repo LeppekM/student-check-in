@@ -106,7 +106,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 String manufacturer = rs.getString("manufacturer");
                 String location = rs.getString("location");
                 String barcode = rs.getString("barcode");
-                boolean fault = rs.getBoolean("isFaulty");
+                boolean fault = (rs.getInt("isFaulty") == 1) ? true : false;
                 int partID = rs.getInt("partID");
                 int isDeleted = rs.getInt("isDeleted");
 //                String faultDesc = rs.getString("faultDesc");

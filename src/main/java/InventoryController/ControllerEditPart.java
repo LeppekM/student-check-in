@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import com.jfoenix.controls.JFXSpinner;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -15,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
@@ -303,11 +305,11 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     }
 
     /**
-     * Helper method to close platform
+     * Helper method to send close request to total tab, which receives the request and
+     * repopulates the table.
      */
     private void close(){
-        sceneEditPart.getScene().getWindow().hide();
+        //sceneAddPart.getScene().getWindow().hide();
+        sceneEditPart.fireEvent(new WindowEvent(((Node) sceneEditPart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
-
-
 }

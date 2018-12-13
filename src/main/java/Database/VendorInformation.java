@@ -11,6 +11,14 @@ public class VendorInformation {
 
     private String getVendorListQuery = "SELECT vendor FROM vendors;";
 
+    private String getVendorIDQuery = "SELECT vendorID\n" +
+            "FROM vendors\n" +
+            "ORDER BY vendorID DESC\n" +
+            "LIMIT 1";
+
+    private String createNewVendorQuery = "INSERT INTO vendors(vendorID, vendor)\n" +
+             " values (?, ?)";
+
     /**
      * This method queries the database to get the vendor corresponding to a particular vendorID.
      * @param vendorID the vendorID of the vendor to be returned
@@ -51,6 +59,41 @@ public class VendorInformation {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return result;
+    }
+
+    /**
+     * Creates a new vendor
+     * @param vendorName Name of vendor
+     */
+    public void createNewVendor(String vendorName){
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(createNewVendorQuery);
+            preparedStatement.setInt(1, getNewVendorID());
+            preparedStatement.setString(2, vendorName);
+            preparedStatement.execute();
+
+        } catch (SQLException e){
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    /**
+     * Gets max vendor ID, adds one to it to generate a new vendor id
+     * @return Vendor ID
+     */
+    private int getNewVendorID(){
+        int vendorID = 0;
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(getVendorIDQuery);
+            while(rs.next()){
+                vendorID = rs.getInt("vendorID");
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        //Gets max id from table, then increments to create new partID
+        return vendorID + 1;
     }
 
     /**
