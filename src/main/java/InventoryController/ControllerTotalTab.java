@@ -342,11 +342,15 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("msoe.png"));
-                stage.showAndWait();
-                populateTable();
+                stage.setOnClose(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+                        populateTable();
+                        stage.close();
+                    }
+                });
+                stage.show();
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -371,7 +375,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 }
             }
 
-//            tableView.getItems().remove(part);
+            tableView.getItems().remove(part);
+            populateTable();
         }
     }
 }
