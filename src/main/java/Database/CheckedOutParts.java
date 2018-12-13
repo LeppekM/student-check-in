@@ -5,14 +5,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class queries the database for checked out items, and returns a student name, part name, quantity checked out, date checked out, and due date
  */
 public class CheckedOutParts {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-//    private final String username = "langdk";
-//    private final String password = "password";
     private final String SELECTQUERY = "SELECT students.studentName, parts.partName, checkout_parts.checkoutQuantity, checkouts.checkoutAt, checkout_parts.dueAt\n" +
             "FROM checkout_parts\n" +
             "INNER JOIN parts \n" +
@@ -21,6 +21,10 @@ public class CheckedOutParts {
             "ON checkout_parts.checkoutID = checkouts.checkoutID\n" +
             "INNER JOIN students\n" +
             "ON checkouts.studentID = students.studentID";
+    private final String SELECT_BARCODES = "select parts.barcode\n" +
+            "from checkout_parts\n" +
+            "inner join parts\n" +
+            "on checkout_parts.partID=parts.partID";
     private Statement statement;
     private int checkoutQuantity;
     private String checkedOutAt;
@@ -29,6 +33,7 @@ public class CheckedOutParts {
     private String studentName;
 
     public ObservableList<CheckedOutItems> data = FXCollections.observableArrayList();
+    private List<String> barcodes = new ArrayList<>();
 
     /**
      * Queries the database for items that are checked out.
@@ -47,6 +52,26 @@ public class CheckedOutParts {
             throw new IllegalStateException("Cannot connect the database", e);
         }
         return data;
+    }
+
+    /**
+     * Returns barcodes of items that are checked out
+     * @return A list of barcodes in the checked out tab
+     */
+    public List<String> returnBarcodes(){
+        if(barcodes.size()!=0){
+            barcodes.clear();
+        }
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SELECT_BARCODES);
+            while(resultSet.next()){
+                barcodes.add(resultSet.getString("barcode"));
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return barcodes;
     }
 
     /**

@@ -14,8 +14,8 @@
 
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutTab">
    <children>
-      <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="164.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" />
-      <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" onKeyReleased="#setItemStatus" prefHeight="24.0" prefWidth="125.0" />
+      <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="160.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" />
+      <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" prefHeight="24.0" prefWidth="125.0" />
       <JFXCheckBox fx:id="extended" layoutX="347.0" layoutY="332.0" text="Extended?" />
       <JFXTextField fx:id="quantity" layoutX="347.0" layoutY="282.0" prefHeight="25.0" prefWidth="125.0" text="1" />
       <Label layoutX="346.0" layoutY="268.0" text="Quantity" />
@@ -24,8 +24,8 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="345.0" layoutY="149.0" text="Scan Student ID" />
-      <Label layoutX="346.0" layoutY="211.0" text="Scan Barcode" />
+      <Label layoutX="345.0" layoutY="143.0" text="Scan Student ID" />
+      <Label layoutX="346.0" layoutY="208.0" text="Scan Barcode" />
       <JFXSpinner fx:id="loadIndicator" layoutX="515.0" layoutY="386.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
       <Button layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnHome">
          <graphic>
