@@ -4,7 +4,7 @@
 
 .root {
     -fx-background-image: url("abstract.jpg");
-    -fx-background-size: 400px 400px;
+    -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
 }
 

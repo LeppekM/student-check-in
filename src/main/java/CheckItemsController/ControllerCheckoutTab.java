@@ -2,20 +2,28 @@ package CheckItemsController;
 
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
+
+import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 public class ControllerCheckoutTab extends ControllerMenu implements Initializable {
     @FXML
@@ -30,15 +38,15 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     @FXML
     private JFXCheckBox faulty, extended;
 
+    @FXML
+    private JFXButton studentInfo;
+
     private StageWrapper stageWrapper = new StageWrapper();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         acceptIntegerOnly();
-
-
-
     }
 
 
@@ -56,8 +64,10 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
 
     public void moveToBarcodeField(){
         //System.out.println("test");
+        studentInfo.setDisable(true);
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")){
            barcode.requestFocus();
+           studentInfo.setDisable(false);
         }
     }
 
@@ -128,6 +138,20 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     private void setCheckoutCheckBox(){
         faulty.setVisible(false);
         extended.setVisible(true);
+    }
+
+    public void goToStudent(ActionEvent actionEvent) {
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("Student.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            main.getScene().setRoot(loader.load(myFxmlURL));
+        }
+        catch(IOException invoke){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+            invoke.printStackTrace();
+
+        }
     }
 
 }
