@@ -79,44 +79,13 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
      * @param part
      */
     public void initPart(Part part) {
-        DecimalFormat df = new DecimalFormat("#,###,##0.00");
-        if (this.part == null && part != null) {
-            this.part = part;
-            nameField.setText(part.getPartName());
-            serialField.setText(part.getSerialNumber());
-            manufacturerField.setText(part.getManufacturer());
-            quantityField.setText("" + part.getQuantity());
-
-            // Note: price divided by 100, because it is stored in the database as an integer 100 times
-            // larger than actual value.
-            priceField.setText("$" + df.format(part.getPrice()/100));
-            ArrayList<String> vendors = vendorInformation.getVendorList();
-            if (vendors != null) {
-                vendorList.getItems().addAll(vendors);
-            }
-            vendorList.setValue(vendorInformation.getVendorFromID(part.getVendor()));
-            locationField.setText(part.getLocation());
-            barcodeField.setText(part.getBarcode());
-            originalQuantity = part.getQuantity();
-        }
+        this.part = part;
     }
 
     /**
      * Helper method that sets the part info from the user input
      */
     private Part getPart() {
-        String partName = nameField.getText().trim();
-        String serialNumber = serialField.getText().trim();
-        String manufacturer = manufacturerField.getText().trim();
-
-        // Note: price multiplied by 100, because it is stored in the database as an integer 100 times
-        // larger than actual value.
-        double price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").trim());
-        String vendor = vendorList.getValue().toString();
-        String location = locationField.getText().trim();
-        String barcode = barcodeField.getText().trim();
-        int quantity = Integer.parseInt(quantityField.getText().trim());
-        part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode, quantity);
         return part;
     }
 
