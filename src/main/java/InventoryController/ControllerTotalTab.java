@@ -371,9 +371,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      */
     @FXML
     public void removePart() {
-        String partID = totalTable.getSelectionModel().getSelectedItem().getValue().getPartID().getValue();
-        if(JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
-            if (totalTable.getSelectionModel().getSelectedItems().size() == 1) {
+        if (totalTable.getSelectionModel().getSelectedItems().size() == 1) {
+            String partID = totalTable.getSelectionModel().getSelectedItem().getValue().getPartID().getValue();
+            if(JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
                 try {
                     database.deleteItem(Integer.parseInt(partID));
                     populateTable();
@@ -382,8 +382,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 }
             }
 
-            tableView.getItems().remove(part);
-            populateTable();
+//            tableView.getItems().remove(part);
+//            populateTable();
         }
     }
 }
