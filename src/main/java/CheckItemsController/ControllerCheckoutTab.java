@@ -1,5 +1,6 @@
 package CheckItemsController;
 
+import Database.CheckedOutParts;
 import Database.Database;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
@@ -44,50 +45,31 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     private JFXButton studentInfo;
 
     private StageWrapper stageWrapper = new StageWrapper();
+    private CheckedOutParts checkedOutParts = new CheckedOutParts();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        acceptIntegerOnly();
-        setRequiredFieldValidator();
-
-
-
+        setFieldValidator();
+        setItemStatus();
     }
 
 
-    private void acceptIntegerOnly(){
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getText();
-            if (text.matches("[0-9]*")) {
-                return change;
-            }
-            return null;
-        };
-        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-        studentID.setTextFormatter(textFormatter);
-    }
-
-    public void moveToBarcodeField(){
-        //System.out.println("test");
-        studentInfo.setDisable(true);
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")){
-           barcode.requestFocus();
-           studentInfo.setDisable(false);
+    public void moveToBarcodeField() {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+            barcode.requestFocus();
         }
     }
 
 
-
-    public void submit(){
+    public void submit() {
+        System.out.println(checkedOutParts.returnBarcodes());
         loadIndicator.setVisible(true);
-
-
     }
 
 
-    public void returnHome(){
-        if(fieldsFilled()) {
+    public void returnHome() {
+        if (fieldsFilled()) {
             if (!userReturnsHome()) {
                 return;
             }
@@ -95,18 +77,25 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         stageWrapper.newStage("Menu.fxml", main);
     }
 
+    /**
+     * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
+     */
     public void setItemStatus() {
-
-        if (checkInValidator()) {
-            stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
-            setCheckinCheckBox();
-        } else if (checkOutValidator()){
-            stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
-            setCheckoutCheckBox();
-        }
+        barcode.focusedProperty().addListener((ov, oldV, newV)->{
+            if (!newV){
+                if(checkInValidator()){
+                    stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
+                    setCheckinCheckBox();
+                }
+                else {
+                    stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
+                    setCheckoutCheckBox();
+                }
+            }
+        });
     }
 
-    public void reset(){
+    public void reset() {
         studentID.clear();
         barcode.clear();
         quantity.setText("1");
@@ -114,41 +103,34 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         faulty.setSelected(false);
     }
 
-    private boolean checkInValidator(){
-        return barcode.getText().equals("test");
+    private boolean checkInValidator() {
+        return checkedOutParts.returnBarcodes().contains(barcode.getText());
     }
 
-    private boolean checkOutValidator(){
-        return barcode.getText().equals("checkout");
-    }
-
-    private boolean fieldsFilled(){
+    private boolean fieldsFilled() {
         return !studentID.getText().isEmpty() | !barcode.getText().isEmpty();
     }
 
-    private boolean userReturnsHome(){
+    private boolean userReturnsHome() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Information may be lost");
         alert.setHeaderText("If you leave, unsubmitted information may be lost");
         alert.setContentText("Are you ok with this?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
+        if (result.get() == ButtonType.OK) {
             return true;
         }
         return false;
-
     }
 
 
-
-
-    private void setCheckinCheckBox(){
+    private void setCheckinCheckBox() {
         extended.setVisible(false);
         faulty.setVisible(true);
     }
 
-    private void setCheckoutCheckBox(){
+    private void setCheckoutCheckBox() {
         faulty.setVisible(false);
         extended.setVisible(true);
     }
@@ -178,13 +160,12 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
 //        }
     }
 
-    private void setRequiredFieldValidator(){
+    private void setFieldValidator() {
         stageWrapper.requiredInputValidator(studentID);
         stageWrapper.requiredInputValidator(barcode);
         stageWrapper.requiredInputValidator(quantity);
+        stageWrapper.acceptIntegerOnly(studentID);
+        stageWrapper.acceptIntegerOnly(quantity);
     }
 
-
-    public void checkIn(ActionEvent actionEvent) {
-    }
 }
