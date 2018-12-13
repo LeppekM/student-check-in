@@ -342,7 +342,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("msoe.png"));
-                stage.setOnClose(new EventHandler<WindowEvent>() {
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                     @Override
                     public void handle(WindowEvent event) {
                         populateTable();
