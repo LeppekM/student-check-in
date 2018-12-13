@@ -69,14 +69,12 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public boolean submitItem(){
         //loadNotification.setVisible(true);
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
-            setPartFields();
-            addPart.addItem(setPartFields());
-            partAddedSuccess();
-
-            // calls this class' close method, which closes the scene, which
-            // sends a close request, which repopulates the table in total tab
-            this.close();
-            return true;
+            if(!vendorExists(getVendorName())){
+                vendorInformation.createNewVendor(getVendorName());
+                vendorInformation();
+            }
+        submitTasks();
+        return true;
         } else {
             errorHandler();
             return false;
