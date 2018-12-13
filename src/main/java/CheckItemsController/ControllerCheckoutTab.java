@@ -1,5 +1,6 @@
 package CheckItemsController;
 
+import Database.Database;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import InventoryController.StudentPage;
@@ -158,18 +159,23 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
      * @author Bailey Terry
      */
     public void goToStudent() {
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("Student.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            main.getScene().setRoot(loader.load(myFxmlURL));
-            StudentPage studentPage = new StudentPage();
-            studentPage.setStudent(studentID.getText());
-        }
-        catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-            invoke.printStackTrace();
-        }
+        Database database = new Database();
+//        if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
+            try {
+                URL myFxmlURL = ClassLoader.getSystemResource("Student.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                main.getScene().setRoot(loader.load(myFxmlURL));
+                StudentPage studentPage = new StudentPage();
+                studentPage.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
+            } catch (IOException invoke) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+                alert.showAndWait();
+                invoke.printStackTrace();
+            }
+//        }else {
+//            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no student found with associated RFID");
+//            alert.showAndWait();
+//        }
     }
 
     private void setRequiredFieldValidator(){

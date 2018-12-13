@@ -5,9 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import javax.swing.*;
 import java.sql.*;
-import java.util.ArrayList;
 
 public class Database {
     //DB root pass: Userpassword123
@@ -181,8 +179,7 @@ public class Database {
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 student = new Student(resultSet.getString("studentName"), resultSet.getInt("studentID"),
-                        resultSet.getString("email"), new ArrayList<>(), new ArrayList<>(),
-                        new ArrayList<>());
+                        resultSet.getString("email"), null, null,null);
             }
             resultSet.close();
             statement.close();

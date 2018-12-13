@@ -1,5 +1,9 @@
 package Database;
 
+import InventoryController.CheckedOutItems;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 public class Student {
@@ -7,11 +11,12 @@ public class Student {
     private String name;
     private int ID;
     private String email;
-    private ArrayList<Part> checkedOut;
-    private ArrayList<OverdueItems> overdueItems;
-    private ArrayList<Part> savedItems;
+    private ObservableList<CheckedOutItems> checkedOut;
+    private ObservableList<OverdueItems> overdueItems;
+    private ObservableList<Part> savedItems;
 
-    public Student(String name, int ID, String email, ArrayList<Part> checkedOut, ArrayList<OverdueItems> overdueItems, ArrayList<Part> savedItems){
+    public Student(String name, int ID, String email, ObservableList<CheckedOutItems> checkedOut,
+                   ObservableList<OverdueItems> overdueItems, ObservableList<Part> savedItems){
         this.name = name;
         this.ID = ID;
         this.email = email;
@@ -44,28 +49,28 @@ public class Student {
         this.email = email;
     }
 
-    public ArrayList<Part> getCheckedOut() {
+    public ObservableList<CheckedOutItems> getCheckedOut() {
         return checkedOut;
     }
 
-    public void setCheckedOut(ArrayList<Part> checkedOut) {
-        this.checkedOut = checkedOut;
+    public void setCheckedOut(ObservableList<CheckedOutItems> checkedOut) {
+        this.checkedOut = FXCollections.observableArrayList(checkedOut);
     }
 
-    public ArrayList<OverdueItems> getOverdueItems() {
+    public ObservableList<OverdueItems> getOverdueItems() {
         return overdueItems;
     }
 
-    public void setOverdueItems(ArrayList<OverdueItems> overdueItems) {
-        this.overdueItems = overdueItems;
+    public void setOverdueItems(ObservableList<OverdueItems> overdueItems) {
+        this.overdueItems = FXCollections.observableArrayList(overdueItems);
     }
 
-    public ArrayList<Part> getSavedItems() {
+    public ObservableList<Part> getSavedItems() {
         return savedItems;
     }
 
-    public void setSavedItems(ArrayList<Part> savedItems) {
-        this.savedItems = savedItems;
+    public void setSavedItems(ObservableList<Part> savedItems) {
+        this.savedItems = FXCollections.observableArrayList(savedItems);
     }
 
 }

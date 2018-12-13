@@ -21,7 +21,7 @@
             <JFXTreeTableView fx:id="coTable" layoutX="31.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
             <JFXTreeTableView fx:id="oTable" layoutX="294.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
             <JFXTreeTableView fx:id="sTable" layoutX="557.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
-            <Button layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#goHome" stylesheets="@ButtonStyle.css">
+            <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#goHome" stylesheets="@ButtonStyle.css">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -30,7 +30,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button layoutX="10.0" layoutY="21.0" mnemonicParsing="false" onAction="#goBack" stylesheets="@ButtonStyle.css">
+            <Button layoutX="10.0" layoutY="16.0" mnemonicParsing="false" onAction="#goBack" stylesheets="@ButtonStyle.css">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                      <image>
