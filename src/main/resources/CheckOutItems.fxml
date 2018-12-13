@@ -13,15 +13,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutTab">
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutTab">
    <children>
-      <JFXTextField fx:id="studentID" layoutX="324.0" layoutY="164.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="163.0" />
-      <JFXTextField fx:id="barcode" layoutX="323.0" layoutY="228.0" onKeyReleased="#setItemStatus" prefHeight="24.0" prefWidth="163.0" />
-      <JFXCheckBox fx:id="extended" layoutX="367.0" layoutY="342.0" text="Extended?" />
-      <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="320.0" layoutY="377.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #008000;" text="Submit" textFill="GREEN" />
-      <JFXTextField fx:id="quantity" layoutX="321.0" layoutY="291.0" prefHeight="25.0" prefWidth="163.0" text="1" />
-      <Label layoutX="324.0" layoutY="274.0" text="Quantity" />
-      <Label layoutX="317.0" layoutY="77.0" text="Checkout/In Item">
       <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="164.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="90.0" />
       <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" onKeyReleased="#setItemStatus" prefHeight="24.0" prefWidth="90.0" />
       <JFXCheckBox fx:id="extended" layoutX="347.0" layoutY="322.0" text="Extended?" />
@@ -37,10 +29,6 @@
       <Label layoutX="327.0" layoutY="211.0" text="Scan Barcode" />
       <JFXSpinner fx:id="loadIndicator" layoutX="515.0" layoutY="386.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
       <Button layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnHome">
-      <Label layoutX="346.0" layoutY="149.0" text="Scan Student ID" />
-      <Label layoutX="346.0" layoutY="206.0" text="Scan Barcode" />
-      <JFXSpinner fx:id="loadIndicator" layoutX="437.0" layoutY="375.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
-      <JFXButton buttonType="RAISED" layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnHome" ripplerFill="WHITE" stylesheets="@ButtonStyle.css">
          <graphic>
             <ImageView fitHeight="35.0" fitWidth="39.0">
                <image>
@@ -54,9 +42,7 @@
             <Insets top="-3.0" />
          </opaqueInsets></JFXCheckBox>
       <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="424.0" layoutY="377.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;" text="Reset" textFill="#043993" />
-      </JFXButton>
       <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" layoutX="36.0" layoutY="24.0" onAction="#checkIn" prefHeight="42.0" prefWidth="125.0" ripplerFill="WHITE" stylesheets="@ButtonStyle.css" text="Switch to Check In" />
       <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="165.0" layoutY="24.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" stylesheets="@ButtonStyle.css" text="Switch to Student Info" />
-      <JFXCheckBox fx:id="faulty" layoutX="347.0" layoutY="323.0" text="Faulty?" visible="false" />
    </children>
 </AnchorPane>
