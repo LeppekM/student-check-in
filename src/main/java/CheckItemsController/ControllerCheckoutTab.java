@@ -36,6 +36,7 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         acceptIntegerOnly();
+        setRequiredFieldValidator();
 
 
 
@@ -65,17 +66,14 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
 
     public void submit(){
         loadIndicator.setVisible(true);
-
-
     }
 
-    public void checkIn(){
-        stageWrapper.newStage("CheckInItems.fxml", main);
-    }
 
     public void returnHome(){
-        if(!userReturnsHome()){
-            return;
+        if(fieldsFilled()) {
+            if (!userReturnsHome()) {
+                return;
+            }
         }
         stageWrapper.newStage("Menu.fxml", main);
     }
@@ -89,6 +87,14 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
             stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
             setCheckoutCheckBox();
         }
+    }
+
+    public void reset(){
+        studentID.clear();
+        barcode.clear();
+        quantity.setText("1");
+        extended.setSelected(false);
+        faulty.setSelected(false);
     }
 
     private boolean checkInValidator(){
@@ -114,7 +120,6 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
             return true;
         }
         return false;
-
     }
 
 
@@ -129,5 +134,13 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         faulty.setVisible(false);
         extended.setVisible(true);
     }
+
+    private void setRequiredFieldValidator(){
+        stageWrapper.requiredInputValidator(studentID);
+        stageWrapper.requiredInputValidator(barcode);
+        stageWrapper.requiredInputValidator(quantity);
+    }
+
+
 
 }
