@@ -42,7 +42,6 @@ public class AddPart {
             preparedStatement.setString(3, part.getSerialNumber());
             preparedStatement.setString(4, part.getManufacturer());
             preparedStatement.setDouble(5, part.getPrice());
-            //Hardcoded vendorID for now.
             preparedStatement.setInt(6, vendorInformation.getVendorIDFromVendor(part.getVendor()));
             preparedStatement.setString(7, part.getLocation());
             preparedStatement.setString(8, part.getBarcode());
