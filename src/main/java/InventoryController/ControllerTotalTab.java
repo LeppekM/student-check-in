@@ -26,6 +26,7 @@ import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
@@ -187,6 +188,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     @Override
                     public void handle(MouseEvent event) {
                         final int index = row.getIndex();
+                        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                            Part rowData = database.selectPart(Integer.parseInt(totalTable.getSelectionModel().getModelItem(index).getValue().getPartID().get()));
+                            showInfoPage(rowData);
+                            System.out.println("Hi " + rowData.toString());
+                        }
                         if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
                             totalTable.getSelectionModel().clearSelection();
                             event.consume();
@@ -201,7 +207,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 return row;
             }
         });
-
         populateTable();
 
     }
@@ -323,6 +328,32 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             }
 
 //            tableView.getItems().remove(part);
+        }
+    }
+
+    /**
+     * This method brings up the FXML page for showing the info about the selected part
+     *
+     * @author Matthew Karcz
+     */
+    public void showInfoPage(Part part){
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            Parent root = loader.load();
+            ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()));
+            Scene scene = new Scene(root, 400, 400);
+            stage.setTitle("Part Information");
+            stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("msoe.png"));
+            stage.showAndWait();
+            populateTable();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

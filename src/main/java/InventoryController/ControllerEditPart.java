@@ -271,6 +271,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
 
     /**
      * Creates an alert informing user that part was edited successfully
+     * @author Matthew Karcz
      */
     private void partEditedSuccess(){
         new Thread(new Runnable() {
