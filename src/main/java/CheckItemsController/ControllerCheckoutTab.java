@@ -60,8 +60,20 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
 
 
     public void submit() {
-        System.out.println(checkedOutParts.returnBarcodes());
-        loadIndicator.setVisible(true);
+        if(itemStatus.getText().equals("Checking Out")){
+            checkedOutParts.insertIntoCheckoutParts(getBarcode(), getQuantity());
+            checkedOutParts.insertIntoCheckouts(getstudentID());
+        }
+        else if (itemStatus.getText().equals("Checking In")){
+            System.out.println("Check in");
+            //Remove from checkout tables
+        }
+        else {
+            //Print error
+            System.out.println("Error");
+        }
+//        //System.out.println(checkedOutParts.returnBarcodes());
+//        loadIndicator.setVisible(true);
     }
 
 
@@ -166,5 +178,17 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         stageWrapper.acceptIntegerOnly(studentID);
         stageWrapper.acceptIntegerOnly(quantity);
     }
+
+    private int getBarcode(){
+        return Integer.parseInt(barcode.getText());
+    }
+    private int getQuantity(){
+        return Integer.parseInt(quantity.getText());
+    }
+    private int getstudentID(){
+        return Integer.parseInt(studentID.getText());
+    }
+
+
 
 }

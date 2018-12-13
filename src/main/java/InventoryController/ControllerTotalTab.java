@@ -382,7 +382,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 }
             }
 
-            tableView.getItems().remove(part);
+            //tableView.getItems().remove(part);
             populateTable();
         }
     }
