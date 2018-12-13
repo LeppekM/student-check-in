@@ -8,24 +8,18 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
-
-import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 public class ControllerCheckoutTab extends ControllerMenu implements Initializable {
     @FXML
@@ -42,6 +36,9 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
 
     @FXML
     private JFXButton studentInfo;
+
+    @FXML
+    private Label itemStatus;
 
     private StageWrapper stageWrapper = new StageWrapper();
     private CheckedOutParts checkedOutParts = new CheckedOutParts();
@@ -84,11 +81,11 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
             if (!newV){
                 if(checkInValidator()){
                     stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
-                    setCheckinCheckBox();
+                    setCheckinInformation();
                 }
                 else {
                     stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
-                    setCheckoutCheckBox();
+                    setCheckoutInformation();
                 }
             }
         });
@@ -124,14 +121,16 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     }
 
 
-    private void setCheckinCheckBox() {
+    private void setCheckinInformation() {
         extended.setVisible(false);
         faulty.setVisible(true);
+        itemStatus.setText("Checking In");
     }
 
-    private void setCheckoutCheckBox() {
+    private void setCheckoutInformation() {
         faulty.setVisible(false);
         extended.setVisible(true);
+        itemStatus.setText("Checking Out");
     }
 
     /**

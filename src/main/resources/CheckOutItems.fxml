@@ -43,5 +43,7 @@
       <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="414.0" layoutY="377.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;" text="Reset" textFill="#043993" />
       <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="165.0" layoutY="24.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" stylesheets="@ButtonStyle.css" text="Switch to Student Info" />
       <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="314.0" layoutY="377.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;" text="Submit" textFill="#043993" />
+      <Label layoutX="14.0" layoutY="589.0" text="Current Item Status:" />
+      <Label fx:id="itemStatus" layoutX="127.0" layoutY="589.0" />
    </children>
 </AnchorPane>
