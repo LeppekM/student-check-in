@@ -52,9 +52,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public AnchorPane totalTabPage;
 
     @FXML
-    private Button add, remove, refresh;
-
-    @FXML
     private ObservableList<TotalTabTableRow> tableRows;
 
     @FXML
@@ -62,9 +59,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     @FXML
     private JFXTreeTableView<TotalTabTableRow> totalTable;
-
-    @FXML
-    private JFXTreeTableColumn<TotalTabTableRow, String> actionButtonsCol;
 
     @FXML JFXTreeTableColumn<TotalTabTableRow, JFXTreeTableColumn> outerPartNameCol;
 
@@ -125,10 +119,17 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 HBox actionButtons = new HBox();
                                 actionButtons.setPrefHeight(column.getHeight()/4);
                                 actionButtons.setAlignment(Pos.TOP_RIGHT);
+                                actionButtons.setOpacity(0);
+                                actionButtons.hoverProperty().addListener(observable -> {
+                                    if (actionButtons.isHover() && actionButtons != null) {
+                                        actionButtons.setOpacity(1);
+                                    } else {
+                                        actionButtons.setOpacity(0);
+                                    }
+                                });
                                 editOne.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOne.setOnAction(event -> {
-                                    System.out.println("test");
-                                    editPart();
+                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
                                 });
                                 actionButtons.getChildren().add(editOne);
                                 HBox text = new HBox();
@@ -175,16 +176,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         faultCol = new JFXTreeTableColumn<>("Fault?");
         faultCol.setPrefWidth(100);
-//        faultCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, CheckBoxTableCell>, ObservableValue<CheckBoxTableCell>>() {
-//            @Override
-//            public ObservableValue<CheckBoxTableCell> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, CheckBoxTableCell> param) {
-//                return null;
-//            }
-//        });
-
         faultCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, Boolean>,
                 ObservableValue<Boolean>>() {
-
             @Override
             public ObservableValue<Boolean> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, Boolean> param) {
                 TreeItem<TotalTabTableRow> treeItem = param.getValue();
@@ -250,10 +243,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                             Part rowData = database.selectPart(Integer.parseInt(totalTable.getSelectionModel().getModelItem(index).getValue().getPartID().get()));
                             showInfoPage(rowData);
                             //System.out.println("Hi " + rowData.toString());
-                        }
-                        if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
-                            totalTable.getSelectionModel().clearSelection();
-//                            event.consume();
                         }
                     }
                 });
@@ -337,32 +326,29 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * Called when a row is highlighted in the table and the edit button is clicked.
      */
     @FXML
-    public void editPart() {
-        if (totalTable.getSelectionModel().getSelectedItems().size() == 1) {
+    public void editPart(String partID) {
+        try {
+            Part part = database.selectPart(Integer.parseInt(partID));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditPart.fxml"));
+            Parent root = loader.load();
+            ((ControllerEditPart) loader.getController()).initPart(part);
+            Scene scene = new Scene(root, 400, 400);
             Stage stage = new Stage();
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditPart.fxml"));
-                Parent root = loader.load();
-                ((ControllerEditPart) loader.getController()).initPart(
-                        database.selectPart(
-                        Integer.parseInt(totalTable.getSelectionModel().getSelectedItem().getValue().getPartID().getValue())));
-                Scene scene = new Scene(root, 400, 400);
-                stage.setTitle("Edit a Part");
-                stage.initOwner(totalTabPage.getScene().getWindow());
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.setScene(scene);
-                stage.getIcons().add(new Image("msoe.png"));
-                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                    @Override
-                    public void handle(WindowEvent event) {
-                        populateTable();
-                        stage.close();
-                    }
-                });
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            stage.setTitle("Edit a Part");
+            stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("msoe.png"));
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    populateTable();
+                    stage.close();
+                }
+            });
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
