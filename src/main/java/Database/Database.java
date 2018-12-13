@@ -7,6 +7,7 @@ import org.controlsfx.control.Notifications;
 
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     //DB root pass: Userpassword123
@@ -164,28 +165,31 @@ public class Database {
         return part;
     }
 
-    //    private static ObservableList<HistoryItems> executeQuery(Connection connection, String query) {
-//        ResultSet results = null;
-//        ArrayList<String> resultList = new ArrayList<>();
-//        Statement statement = null;
-//        try {
-//            statement = connection.createStatement();
-//            results = statement.executeQuery(query);
-//            while (results.next()) {
-//                resultList.add(results.getString(1));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.exit(0);
-//        } finally {
-//            try {
-//                results.close();
-//                statement.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return resultList;
-//    }
+    /**
+     * Gets a student from the database based on their RFID
+     *
+     * @param ID RFID to search for
+     * @return a student
+     * @author Bailey Terry
+     */
+    public Student selectStudent(int ID){
+        String query = "select * from students where studentID = " + ID;
+        Student student = null;
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            while (resultSet.next()){
+                student = new Student(resultSet.getString("studentName"), resultSet.getInt("studentID"),
+                        resultSet.getString("email"), new ArrayList<>(), new ArrayList<>(),
+                        new ArrayList<>());
+            }
+            resultSet.close();
+            statement.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return student;
+    }
 
 }

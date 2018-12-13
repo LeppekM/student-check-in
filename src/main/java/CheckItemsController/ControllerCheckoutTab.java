@@ -2,6 +2,7 @@ package CheckItemsController;
 
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
+import InventoryController.StudentPage;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSpinner;
@@ -127,9 +128,6 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
 
     }
 
-
-
-
     private void setCheckinCheckBox(){
         extended.setVisible(false);
         faulty.setVisible(true);
@@ -140,17 +138,23 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         extended.setVisible(true);
     }
 
-    public void goToStudent(ActionEvent actionEvent) {
+    /**
+     * Changes to student info tab
+     *
+     * @author Bailey Terry
+     */
+    public void goToStudent() {
         try {
             URL myFxmlURL = ClassLoader.getSystemResource("Student.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             main.getScene().setRoot(loader.load(myFxmlURL));
+            StudentPage studentPage = new StudentPage();
+            studentPage.setStudent(studentID.getText());
         }
         catch(IOException invoke){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
             invoke.printStackTrace();
-
         }
     }
 
