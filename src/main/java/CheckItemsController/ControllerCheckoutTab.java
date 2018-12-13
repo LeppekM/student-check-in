@@ -179,5 +179,6 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     }
 
 
-
+    public void checkIn(ActionEvent actionEvent) {
+    }
 }
