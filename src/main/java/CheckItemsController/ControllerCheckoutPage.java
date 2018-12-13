@@ -9,6 +9,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
+import javafx.beans.binding.BooleanBinding;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,7 +24,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ControllerCheckoutTab extends ControllerMenu implements Initializable {
+public class ControllerCheckoutPage extends ControllerMenu implements Initializable {
     @FXML
     private AnchorPane main;
 
@@ -36,7 +38,7 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     private JFXCheckBox faulty, extended;
 
     @FXML
-    private JFXButton studentInfo;
+    private JFXButton studentInfo, submitButton;
 
     @FXML
     private Label itemStatus;
@@ -49,34 +51,44 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
     public void initialize(URL location, ResourceBundle resources) {
         setFieldValidator();
         setItemStatus();
+        unlockFields();
     }
 
-
+    /**
+     * Sets cursor to next field
+     */
     public void moveToBarcodeField() {
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
             barcode.requestFocus();
         }
     }
 
-
+    /**
+     * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
+     */
     public void submit() {
-        if(itemStatus.getText().equals("Checking Out")){
-            checkedOutParts.insertIntoCheckoutParts(getBarcode(), getQuantity());
-            checkedOutParts.insertIntoCheckouts(getstudentID());
+        if(itemStatus.getText().equals("Checking Out")){//Item is being checked out
+            if(checkedOutParts.insertIntoCheckoutParts(getBarcode(), getQuantity())) {//Order is important or checkoutID will get incremented twice
+                //There is a check in the above method that checks if barcode is found in system. If it isn't, both methods will not execute.
+                checkedOutParts.insertIntoCheckouts(getstudentID());
+            }
+            else {
+                return;  //If an error occurred then an alert will show, and then this method will exit.
+            }
         }
-        else if (itemStatus.getText().equals("Checking In")){
+        else if (itemStatus.getText().equals("Checking In")){ //Item is being checked in
             System.out.println("Check in");
             //Remove from checkout tables
         }
-        else {
-            //Print error
-            System.out.println("Error");
+        else {//This case should never be reached, but error will be thrown just in case.
+            stageWrapper.errorAlert("Please fill out all fields");
         }
-//        //System.out.println(checkedOutParts.returnBarcodes());
-//        loadIndicator.setVisible(true);
+        reset();
     }
 
-
+    /**
+     * Returns to home, contains check if fields are filled out
+     */
     public void returnHome() {
         if (fieldsFilled()) {
             if (!userReturnsHome()) {
@@ -104,22 +116,50 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         });
     }
 
+    /**
+     * Resets all fields
+     */
     public void reset() {
         studentID.clear();
         barcode.clear();
         quantity.setText("1");
         extended.setSelected(false);
         faulty.setSelected(false);
+        itemStatus.setText("");
     }
 
+
+
+    /**
+     * Checks if item is being checked in or out
+     * @return True if item is being checked in
+     */
     private boolean checkInValidator() {
         return checkedOutParts.returnBarcodes().contains(barcode.getText());
     }
 
+    /**
+     * Checks if fields are filled
+     * @return True if fields are not empty
+     */
     private boolean fieldsFilled() {
-        return !studentID.getText().isEmpty() | !barcode.getText().isEmpty();
+        return !studentID.getText().isEmpty() | !barcode.getText().isEmpty() | quantity.getText().isEmpty();
     }
 
+    /**
+     * Only allows user to submit when all fields are filled out
+     */
+    private void unlockFields(){
+        BooleanBinding booleanBind = quantity.textProperty().isEmpty()
+                .or(studentID.textProperty().isEmpty())
+                .or(barcode.textProperty().isEmpty());
+        submitButton.disableProperty().bind(booleanBind);
+    }
+
+    /**
+     * Alert if user tries to return home and fields are filled
+     * @return True if user pressed ok, false otherwise
+     */
     private boolean userReturnsHome() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Information may be lost");
@@ -127,19 +167,21 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
         alert.setContentText("Are you ok with this?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            return true;
-        }
-        return false;
+        return result.get() == ButtonType.OK;
     }
 
-
+    /**
+     * Sets checkin information
+     */
     private void setCheckinInformation() {
         extended.setVisible(false);
         faulty.setVisible(true);
         itemStatus.setText("Checking In");
     }
 
+    /**
+     * Sets checkout information
+     */
     private void setCheckoutInformation() {
         faulty.setVisible(false);
         extended.setVisible(true);
@@ -171,24 +213,40 @@ public class ControllerCheckoutTab extends ControllerMenu implements Initializab
 //        }
     }
 
+    /**
+     * Helper method to set the validators for fields
+     */
     private void setFieldValidator() {
         stageWrapper.requiredInputValidator(studentID);
         stageWrapper.requiredInputValidator(barcode);
         stageWrapper.requiredInputValidator(quantity);
         stageWrapper.acceptIntegerOnly(studentID);
         stageWrapper.acceptIntegerOnly(quantity);
+        stageWrapper.acceptIntegerOnly(barcode);
     }
 
+    /**
+     * Gets barcode as text, returns as int
+     * @return barcode as integer
+     */
     private int getBarcode(){
         return Integer.parseInt(barcode.getText());
     }
+
+    /**
+     * Gets quantity as text, returns as int
+     * @return quantity as integer
+     */
     private int getQuantity(){
         return Integer.parseInt(quantity.getText());
     }
+
+    /**
+     * Gets studentID as text, returns as int
+     * @return StudentID as integer
+     */
     private int getstudentID(){
         return Integer.parseInt(studentID.getText());
     }
-
-
 
 }

@@ -1,5 +1,6 @@
 package Database;
 
+import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,6 +54,7 @@ public class CheckedOutParts {
 
     public ObservableList<CheckedOutItems> data = FXCollections.observableArrayList();
     private List<String> barcodes = new ArrayList<>();
+    private StageWrapper stageWrapper = new StageWrapper();
 
 
     /**
@@ -136,27 +138,30 @@ public class CheckedOutParts {
      * @param barcode Barcode of part
      * @return Part ID
      */
-    public int getPartIDFromBarcode(String barcode){
-        String partID = "";
+    public int getPartIDFromBarcode(int barcode){
+        int partID = 0;
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(getPartIDFromBarcode);
-            statement.setString(1, barcode);
+            statement.setInt(1, barcode);
             ResultSet rs = statement.executeQuery();
             if(rs.next()){
-                partID = rs.getString("partID");
+                partID = rs.getInt("partID");
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
-        if(partID!=null) {
-            return Integer.parseInt(partID);
+        if(partID==0) {
+            //If part ID isn't found, then return 0;
+            return 0;
         }
-        //This means an error occurred
-        return -1;
+        return partID;
     }
 
+    /**
+     * Inserts values into the checkouts table.
+     * @param studentID ID of the student
+     */
     public void insertIntoCheckouts(int studentID){
-
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(insertIntoCheckouts);
             insertCheckoutsQuery(studentID, statement).execute();
@@ -165,16 +170,33 @@ public class CheckedOutParts {
         }
     }
 
-    public void insertIntoCheckoutParts(int barcode, int quantity){
+    /**
+     * Inserts values into the checkoutParts table
+     * @param barcode Barcode of the part
+     * @param quantity Quantity of parts being checked out
+     * @return
+     */
+    public boolean insertIntoCheckoutParts(int barcode, int quantity){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(insertIntoCheckoutParts);
+            //Checks if barcode is found in database. If it isn't, then it will throw an error and exit the method.
+            if(insertCheckoutPartsQuery(barcode, quantity, statement)==null){
+                stageWrapper.errorAlert("The barcode was not found in the system");
+                return false;
+            }
             insertCheckoutPartsQuery(barcode, quantity, statement).execute();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
+        return true;
     }
 
-
+    /**
+     * Helper method for inserting into checkouts
+     * @param studentID Student ID associated with part
+     * @param preparedStatement Statement to be returned
+     * @return
+     */
     private PreparedStatement insertCheckoutsQuery( int studentID, PreparedStatement preparedStatement){
         try {
             preparedStatement.setInt(1, getCheckoutID());
@@ -189,10 +211,21 @@ public class CheckedOutParts {
         return preparedStatement;
     }
 
+    /**
+     * Helper method for inserting into checkoutparts
+     * @param barcode Barcode of part
+     * @param quantity Quantity being checked in
+     * @param preparedStatement Statement to be returned
+     * @return
+     */
     private PreparedStatement insertCheckoutPartsQuery(int barcode, int quantity, PreparedStatement preparedStatement){
+        //If barcode isn't in database, returns a null statement.
+        if (getPartIDFromBarcode(barcode) == 0){
+            return null;
+        }
         try {
             preparedStatement.setInt(1, getCheckoutID());
-            preparedStatement.setInt(2, getPartIDFromBarcode(String.valueOf(barcode)));
+            preparedStatement.setInt(2, getPartIDFromBarcode(barcode));
             preparedStatement.setInt(3, quantity);
             preparedStatement.setString(4, getTomorrowDate());
             preparedStatement.setString(5, getCurrentDate());
@@ -212,6 +245,10 @@ public class CheckedOutParts {
         return LocalDateTime.now().toString();
     }
 
+    /**
+     * Helper method gets tomorrow's date.
+     * @return Tomorrow's date
+     */
     private String getTomorrowDate(){
         Date dt = new Date();
         return LocalDateTime.from(dt.toInstant().atZone(ZoneId.of("UTC"))).plusDays(1).toString();

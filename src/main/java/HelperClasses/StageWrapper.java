@@ -96,6 +96,13 @@ public class StageWrapper {
         textField.setTextFormatter(textFormatter);
     }
 
+    public void errorAlert(String errorText){
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setHeaderText("Input not valid");
+        errorAlert.setContentText(errorText);
+        errorAlert.showAndWait();
+    }
+
 
 }
 
