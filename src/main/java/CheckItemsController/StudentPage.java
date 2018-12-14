@@ -1,8 +1,6 @@
-package InventoryController;
+package CheckItemsController;
 
-import Database.OverdueItem;
 import Database.Student;
-import Database.Part;
 import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
@@ -47,10 +45,16 @@ public class StudentPage /*implements Initializable*/ {
 
     public void setStudent(Student s){
         student = s;
+        studentName = new Label("");
+        email = new Label("");
+        RFID = new Label( "");
         studentName.setText(student.getName());
+        System.out.println(studentName.getText());
         email.setText(student.getEmail());
+        System.out.println(email.getText());
         RFID.setText(student.getID() + "");
-        setTables();
+        System.out.println(RFID.getText());
+//        setTables();
     }
 
     private void setTables() {

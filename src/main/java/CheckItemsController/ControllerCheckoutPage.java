@@ -4,13 +4,11 @@ import Database.CheckedOutParts;
 import Database.Database;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
-import InventoryController.StudentPage;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 import javafx.beans.binding.BooleanBinding;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -58,8 +56,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Sets cursor to next field
      */
     public void moveToBarcodeField() {
+        studentInfo.setDisable(true);
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
             barcode.requestFocus();
+            studentInfo.setDisable(false);
         }
     }
 
@@ -195,22 +195,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     public void goToStudent() {
         Database database = new Database();
-//        if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
-            try {
-                URL myFxmlURL = ClassLoader.getSystemResource("Student.fxml");
-                FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                main.getScene().setRoot(loader.load(myFxmlURL));
-                StudentPage studentPage = new StudentPage();
-                studentPage.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
-            } catch (IOException invoke) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-                alert.showAndWait();
-                invoke.printStackTrace();
-            }
-//        }else {
-//            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no student found with associated RFID");
-//            alert.showAndWait();
-//        }
+        if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
+            stageWrapper.newStage("Student.fxml", main);
+            StudentPage studentPage = new StudentPage();
+            studentPage.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no student found with associated RFID");
+            alert.showAndWait();
+        }
     }
 
     /**
