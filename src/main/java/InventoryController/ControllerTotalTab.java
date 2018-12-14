@@ -16,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,10 +26,12 @@ import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -38,6 +41,8 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -114,7 +119,51 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 setGraphic(null);
                                 setText(null);
                             } else {
-                                final JFXButton editOne = new JFXButton("Edit");
+                                Image editOneImage = new Image("edit.png");
+                                ImageView editOneImageView = new ImageView(editOneImage);
+                                editOneImageView.setFitHeight(12);
+                                editOneImageView.setFitWidth(12);
+                                final JFXButton editOneButton = new JFXButton();
+                                editOneButton.setGraphic(editOneImageView);
+                                editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
+                                editOneButton.setOnAction(event -> {
+                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
+                                });
+
+                                Image editAllImage = new Image("edit_all.png");
+                                ImageView editAllImageView = new ImageView(editAllImage);
+                                editAllImageView.setFitHeight(12);
+                                editAllImageView.setFitWidth(12);
+                                final JFXButton editAllButton = new JFXButton();
+                                editAllButton.setGraphic(editAllImageView);
+                                editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
+//                                editAllButton.setOnAction(event -> {
+//                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
+//                                });
+
+                                Image deleteOneImage = new Image("delete.png");
+                                ImageView deleteOneImageView = new ImageView(deleteOneImage);
+                                deleteOneImageView.setFitHeight(12);
+                                deleteOneImageView.setFitWidth(12);
+                                final JFXButton deleteOneButton = new JFXButton();
+                                deleteOneButton.setGraphic(deleteOneImageView);
+                                deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
+                                deleteOneButton.setOnAction(event -> {
+                                    deletePart(getTreeTableRow().getItem().getPartID().getValue());
+                                });
+
+                                Image deleteAllImage = new Image("delete_all.png");
+                                ImageView deleteAllImageView = new ImageView(deleteAllImage);
+                                deleteAllImageView.setFitHeight(12);
+                                deleteAllImageView.setFitWidth(12);
+                                final JFXButton deleteAllButton = new JFXButton();
+                                deleteAllButton.setGraphic(deleteAllImageView);
+                                deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
+//                                deleteOneButton.setOnAction(event -> {
+//                                    deletePart(getTreeTableRow().getItem().getPartID().getValue());
+//                                });
+
+
                                 VBox column = new VBox();
                                 HBox actionButtons = new HBox();
                                 actionButtons.setPrefHeight(column.getHeight()/4);
@@ -127,15 +176,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                         actionButtons.setOpacity(0);
                                     }
                                 });
-                                editOne.setButtonType(JFXButton.ButtonType.RAISED);
-                                editOne.setOnAction(event -> {
-                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
-                                });
-                                actionButtons.getChildren().add(editOne);
-                                HBox text = new HBox();
+                                actionButtons.getChildren().addAll(editOneButton, editAllButton, deleteOneButton, deleteAllButton);
+                                actionButtons.setMaxHeight(12);
+                                VBox text = new VBox();
+//                                text.setMinHeight(30);
                                 text.setAlignment(Pos.TOP_LEFT);
                                 text.getChildren().add(partName);
-                                column.getChildren().addAll(actionButtons, partName);
+                                column.getChildren().addAll(actionButtons, text);
                                 setGraphic(column);
                                 setText(null);
                             }
@@ -242,7 +289,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                         if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                             Part rowData = database.selectPart(Integer.parseInt(totalTable.getSelectionModel().getModelItem(index).getValue().getPartID().get()));
                             showInfoPage(rowData);
+                            totalTable.getSelectionModel().clearSelection();
+                            event.consume();
                             //System.out.println("Hi " + rowData.toString());
+                        } else if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
+                            totalTable.getSelectionModel().clearSelection();
+                            event.consume();
                         }
                     }
                 });
@@ -359,20 +411,19 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * @author Bailey Terry
      */
     @FXML
-    public void removePart() {
-        if (totalTable.getSelectionModel().getSelectedItems().size() == 1) {
-            String partID = totalTable.getSelectionModel().getSelectedItem().getValue().getPartID().getValue();
-            if(JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
-                try {
+    public void deletePart(String partID) {
+        try {
+            if (database.selectPart(Integer.parseInt(partID)) != null) {
+                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
                     database.deleteItem(Integer.parseInt(partID));
                     populateTable();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
 
 //            tableView.getItems().remove(part);
 //            populateTable();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
