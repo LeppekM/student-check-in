@@ -14,15 +14,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.util.Callback;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class StudentPage /*implements Initializable*/ {
+public class StudentPage {
 
     @FXML
-    private AnchorPane main;
+    private Pane main = new Pane();
 
     @FXML
     private Label studentName, email, RFID;
@@ -33,27 +32,36 @@ public class StudentPage /*implements Initializable*/ {
     @FXML
     private JFXTreeTableColumn<Student, String> coTableCol, oTableCol, sTableCol;
 
-//    private Database database;
     private Student student;
     private StageWrapper stageWrapper = new StageWrapper();
 
 
-//    @Override
-//    public void initialize(URL location, ResourceBundle resources) {
-//        database = new Database();
-//    }
-
     public void setStudent(Student s){
         student = s;
         studentName = new Label("");
-        email = new Label("");
-        RFID = new Label( "");
+        studentName.setLayoutX(270);
+        studentName.setLayoutY(14);
+        studentName.setFont(Font.font(32));
         studentName.setText(student.getName());
-        System.out.println(studentName.getText());
+        email = new Label("");
+        email.setLayoutX(345);
+        email.setLayoutY(91);
+        email.setFont(Font.font(32));
         email.setText(student.getEmail());
-        System.out.println(email.getText());
+        RFID = new Label( "");
+        RFID.setLayoutX(352);
+        RFID.setLayoutY(174);
+        RFID.setFont(Font.font(32));
         RFID.setText(student.getID() + "");
-        System.out.println(RFID.getText());
+        main.getChildren().add(studentName);
+        main.getChildren().add(email);
+        main.getChildren().add(RFID);
+//        studentName.setText(student.getName());
+//        System.out.println(studentName.getText());
+//        email.setText(student.getEmail());
+//        System.out.println(email.getText());
+//        RFID.setText(student.getID() + "");
+//        System.out.println(RFID.getText());
 //        setTables();
     }
 
