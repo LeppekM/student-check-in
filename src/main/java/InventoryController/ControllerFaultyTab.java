@@ -8,13 +8,21 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -22,6 +30,9 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
 //    @FXML
 //    private TextField searchTotal;
+
+    @FXML
+    public AnchorPane faultyPage;
 
     @FXML
     private TableView<Part> tableView;
@@ -41,6 +52,17 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
         tableView.setPlaceholder(emptytableLabel);
+        tableView.setRowFactory( tv -> {
+            TableRow<Part> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    Part rowData = row.getItem();
+                    showInfoPage(rowData);
+                    System.out.println("Hi, " + rowData.toString());
+                }
+            });
+            return row ;
+        });
     }
 
     /**
@@ -65,8 +87,29 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         this.tableView.getItems().setAll(this.data);
     }
 
-//    @FXML
-//    public void search(){
-//        System.out.println(searchTotal.getText());
-//    }
+    /**
+     * This method brings up the FXML page for showing the info about the selected part
+     *
+     * @author Matthew Karcz
+     */
+    public void showInfoPage(Part part){
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            Parent root = loader.load();
+            ((ControllerShowPart) loader.getController()).initPart(part, "fault");
+            Scene scene = new Scene(root, 400, 400);
+            stage.setTitle("Part Information");
+            stage.initOwner(faultyPage.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("msoe.png"));
+            stage.showAndWait();
+            populateTable();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

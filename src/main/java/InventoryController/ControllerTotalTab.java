@@ -437,7 +437,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
             Parent root = loader.load();
-            ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()));
+            ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()), "total");
             Scene scene = new Scene(root, 400, 400);
             stage.setTitle("Part Information");
             stage.initOwner(totalTabPage.getScene().getWindow());

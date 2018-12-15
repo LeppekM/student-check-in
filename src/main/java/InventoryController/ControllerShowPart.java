@@ -60,6 +60,10 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
 
     private Part part;
 
+    private CheckedOutItems checkedOutPart;
+
+    private String type;
+
     private VendorInformation vendorInformation = new VendorInformation();
 
     private int originalQuantity;
@@ -78,8 +82,18 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
      * This method is used to pass data into the tab to initialize the text representing the edited part
      * @param part
      */
-    public void initPart(Part part) {
+    public void initPart(Part part, String type) {
         this.part = part;
+        this.type = type;
+    }
+
+    /**
+     * This method is used to pass data into the tab to initialize the text representing the edited part
+     * @param part
+     */
+    public void initPart(CheckedOutItems part, String type) {
+        this.checkedOutPart = part;
+        this.type = type;
     }
 
     /**
