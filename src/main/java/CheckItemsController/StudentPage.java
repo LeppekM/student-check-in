@@ -6,22 +6,21 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 public class StudentPage {
 
     @FXML
     private Pane main = new Pane();
+
+    @FXML
+    private VBox vbox = new VBox();
 
     @FXML
     private Label studentName, email, RFID;
@@ -39,30 +38,20 @@ public class StudentPage {
     public void setStudent(Student s){
         student = s;
         studentName = new Label("");
-        studentName.setLayoutX(270);
-        studentName.setLayoutY(14);
-        studentName.setFont(Font.font(32));
         studentName.setText(student.getName());
+        studentName.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         email = new Label("");
-        email.setLayoutX(345);
-        email.setLayoutY(91);
-        email.setFont(Font.font(32));
         email.setText(student.getEmail());
+        email.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         RFID = new Label( "");
-        RFID.setLayoutX(352);
-        RFID.setLayoutY(174);
-        RFID.setFont(Font.font(32));
         RFID.setText(student.getID() + "");
-        main.getChildren().add(studentName);
-        main.getChildren().add(email);
-        main.getChildren().add(RFID);
-//        studentName.setText(student.getName());
-//        System.out.println(studentName.getText());
-//        email.setText(student.getEmail());
-//        System.out.println(email.getText());
-//        RFID.setText(student.getID() + "");
-//        System.out.println(RFID.getText());
-//        setTables();
+        RFID.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        vbox.getChildren().add(studentName);
+        vbox.getChildren().add(email);
+        vbox.getChildren().add(RFID);
+        vbox.setAlignment(Pos.TOP_CENTER);
+        vbox.setSpacing(35);
+        setTables();
     }
 
     private void setTables() {
