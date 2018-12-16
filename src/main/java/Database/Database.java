@@ -1,5 +1,6 @@
 package Database;
 
+import InventoryController.CheckedOutItems;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Duration;
@@ -176,17 +177,57 @@ public class Database {
      */
     public Student selectStudent(int ID){
         String query = "select * from students where studentID = " + ID;
+        String coList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkout_parts.dueAt  \n" +
+                "from students\n" +
+                "left join checkouts on students.studentID = checkouts.studentID\n" +
+                "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
+                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID  + ";";
+        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt\n" +
+                "from students\n" +
+                "left join checkouts on students.studentID = checkouts.studentID\n" +
+                "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
+                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID + ";";
         Student student = null;
+        String name = "";
+        String email = "";
+        int id = 0;
+        ObservableList<CheckedOutItems> checkedOutItems = FXCollections.observableArrayList();
+        ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
+        ObservableList<SavedPart> savedParts = FXCollections.observableArrayList();
         try{
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
-                student = new Student(resultSet.getString("studentName"), resultSet.getInt("studentID"),
-                        resultSet.getString("email"), null, null,null);
+                name = resultSet.getString("studentName");
+                email = resultSet.getString("email");
+                id = resultSet.getInt("studentID");
             }
             resultSet.close();
             statement.close();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(coList);
+            resultSetMetaData = resultSet.getMetaData();
+            while (resultSet.next()){
+                checkedOutItems.add(new CheckedOutItems(resultSet.getString("students.studentName"),
+                        resultSet.getString("parts.partName"), resultSet.getInt("checkout_parts.checkoutQuantity"),
+                        resultSet.getString("checkouts.checkoutAt"), resultSet.getString("checkout_parts.dueAt")));
+            }
+            statement.close();
+            resultSet.close();
+            overdueItems = getOverdue(overdueItems);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(pList);
+            resultSetMetaData = resultSet.getMetaData();
+            while (resultSet.next()){
+                savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
+                        resultSet.getString("parts.partName"), resultSet.getString("checkouts.checkoutAt"),
+                        resultSet.getInt("checkout_parts.checkoutQuantity"), resultSet.getString("checkouts.checkoutAt"),
+                        resultSet.getString("checkout_parts.dueAt")));
+            }
+            statement.close();
+            resultSet.close();
+            student = new Student(name,id,email,checkedOutItems,overdueItems,savedParts);
         }catch (SQLException e){
             e.printStackTrace();
         }
