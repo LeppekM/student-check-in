@@ -148,7 +148,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
             Parent root = loader.load();
-            ((ControllerShowPart) loader.getController()).initPart(part, "checkedOut");
+            ((ControllerShowPart) loader.getController()).initPart(part);
             Scene scene = new Scene(root, 400, 400);
             stage.setTitle("Part Information");
             stage.initOwner(checkedOutPage.getScene().getWindow());
