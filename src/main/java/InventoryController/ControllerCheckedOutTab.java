@@ -86,11 +86,11 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
                 checkedOutTable.getColumns().add(createColumn(columnIndex, ""));
             }
             ObservableList<StringProperty> data = FXCollections.observableArrayList();
-            data.add(new SimpleStringProperty(list.get(i).getStudentName()));
-            data.add(new SimpleStringProperty(list.get(i).getPartName()));
+            data.add(list.get(i).getStudentName());
+            data.add(list.get(i).getPartName());
             data.add(new SimpleStringProperty("" + list.get(i).getQuantity()));
-            data.add(new SimpleStringProperty(list.get(i).getCheckedOutAt()));
-            data.add(new SimpleStringProperty(list.get(i).getDueDate()));
+            data.add(list.get(i).getCheckedOutAt());
+            data.add(list.get(i).getDueDate());
             checkedOutTable.getItems().add(data);
         }
 
