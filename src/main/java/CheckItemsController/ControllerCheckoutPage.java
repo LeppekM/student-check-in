@@ -12,6 +12,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -196,9 +197,17 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     public void goToStudent() {
         Database database = new Database();
         if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
-            stageWrapper.newStage("Student.fxml", main);
-            StudentPage studentPage = new StudentPage();
-            studentPage.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Student.fxml"));
+                Parent root = (Parent) loader.load();
+                StudentPage sp = loader.getController();
+                sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
+                main.getScene().setRoot(root);
+            } catch (IOException invoke) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+                alert.showAndWait();
+                invoke.printStackTrace();
+            }
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no student found with associated RFID");
             alert.showAndWait();

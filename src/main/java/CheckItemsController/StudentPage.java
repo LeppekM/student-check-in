@@ -14,18 +14,19 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class StudentPage /*implements Initializable*/ {
+public class StudentPage implements Initializable {
 
     @FXML
     private AnchorPane main;
 
     @FXML
-    private Label studentName, email, RFID;
+    private static Label studentName, email, RFID;
 
     @FXML
     private JFXTreeTableView coTable, oTable, sTable;
@@ -46,9 +47,13 @@ public class StudentPage /*implements Initializable*/ {
     public void setStudent(Student s){
         student = s;
         studentName = new Label("");
+        studentName.setLayoutX(270);
+        studentName.setLayoutY(14);
+        studentName.setText(student.getName());
+        studentName.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         email = new Label("");
         RFID = new Label( "");
-        studentName.setText(student.getName());
+        main.getChildren().add(studentName);
         System.out.println(studentName.getText());
         email.setText(student.getEmail());
         System.out.println(email.getText());
@@ -91,5 +96,14 @@ public class StudentPage /*implements Initializable*/ {
 
     public void goHome() {
         stageWrapper.newStage("Menu.fxml", main);
+    }
+
+    public StudentPage() {
+//        setStudent(new Student("Test Student", 00000, "john@msoe.edu", null, null, null));
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+ //       setStudent(new Student("Test Student", 00000, "john@msoe.edu", null, null, null));
     }
 }
