@@ -127,7 +127,7 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
 
         // Note: price multiplied by 100, because it is stored in the database as an integer 100 times
         // larger than actual value.
-        double price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").trim());
+        double price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").replace("$", "").trim());
         String vendor = vendorList.getValue().toString();
         String location = locationField.getText().trim();
         String barcode = barcodeField.getText().trim();
@@ -152,11 +152,11 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
         } else if (vendorList.getValue() == null) {
             isValid = false;
             nullVendorAlert();
-        } else if (!validateNumberInputsContainNumber(priceField.getText()) ||
+        } else if (!validateNumberInputsContainNumber(priceField.getText().replace("$", "")) ||
                 !validateNumberInputsContainNumber(quantityField.getText())) {
             isValid = false;
             invalidNumberAlert();
-        } else if (!validateNumberInputsWithinRange(priceField.getText(), quantityField.getText())) {
+        } else if (!validateNumberInputsWithinRange(priceField.getText().replace("$", ""), quantityField.getText())) {
             isValid = false;
             numberOutOfRangeAlert();
         } else if (!validateQuantityIsGreaterThanPreviousValue(quantityField.getText())) {
@@ -204,8 +204,8 @@ public class ControllerEditPart extends ControllerInventoryPage implements Initi
     protected boolean validateNumberInputsWithinRange(String price, String quantity) {
         // quantity is not checked to be greater than 0, because another test ensures
         // that quantity is greater than the unedited quantity
-        return Double.parseDouble(price.replace(",", "")) >= 0
-                && Double.parseDouble(price.replace(",", "")) < Double.MAX_VALUE
+        return Double.parseDouble(price.replace(",", "").replace("$", "")) >= 0
+                && Double.parseDouble(price.replace(",", "").replace("$", "")) < Double.MAX_VALUE
                 && Double.parseDouble(quantity.replace(",", "")) < Double.MAX_VALUE;
     }
 
