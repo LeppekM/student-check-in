@@ -5,19 +5,29 @@ import Database.SavedPart;
 import Database.Student;
 import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
+import InventoryController.OverduePopUp;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import java.io.IOException;
 
 public class StudentPage {
 
@@ -73,7 +83,7 @@ public class StudentPage {
 
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
-        coTableCol.setPrefWidth(200);
+        coTableCol.setPrefWidth(197);
         coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutItems, String> param) {
@@ -82,7 +92,7 @@ public class StudentPage {
         });
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
-        oTableCol.setPrefWidth(200);
+        oTableCol.setPrefWidth(197);
         oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueItem, String> param) {
@@ -91,7 +101,7 @@ public class StudentPage {
         });
 
         sTableCol = new JFXTreeTableColumn<>("Part Name");
-        sTableCol.setPrefWidth(200);
+        sTableCol.setPrefWidth(197);
         sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<SavedPart, String> param) {
@@ -115,7 +125,6 @@ public class StudentPage {
         sTable.getColumns().setAll(sTableCol);
         sTable.setRoot(sItems);
         sTable.setShowRoot(false);
-
     }
 
     public void goBack() {
@@ -124,5 +133,32 @@ public class StudentPage {
 
     public void goHome() {
         stageWrapper.newStage("Menu.fxml", main);
+    }
+
+    public void coPopUp(MouseEvent event) {
+    }
+
+    public void oPopUp(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            Stage stage = new Stage();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/OverduePopup.fxml"));
+                Parent root = loader.load();
+                Scene scene = new Scene(root, 400, 400);
+                stage.setTitle("Overdue Item");
+                stage.initOwner(main.getScene().getWindow());
+                stage.setScene(scene);
+                int index = oTable.getSelectionModel().getSelectedIndex();
+                OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
+                    ((OverduePopUp) loader.getController()).populate(item);
+                stage.getIcons().add(new Image("msoe.png"));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sPopUp(MouseEvent event) {
     }
 }

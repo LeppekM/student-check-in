@@ -187,6 +187,12 @@ public class Database {
                 "left join checkouts on students.studentID = checkouts.studentID\n" +
                 "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
                 "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID + ";";
+        String oList = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
+                " parts.serialNumber, checkout_parts.dueAt, parts.price/100 from checkout_parts " +
+                "left join parts on checkout_parts.partID = parts.partID " +
+                "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
+                "left join students on checkouts.studentID = students.studentID " +
+                "where checkout_parts.dueAt < date('" + gettoday().toString() + "') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";
         String email = "";
@@ -215,7 +221,17 @@ public class Database {
             }
             statement.close();
             resultSet.close();
-            overdueItems = getOverdue(overdueItems);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(oList);
+            resultSetMetaData = resultSet.getMetaData();
+            while (resultSet.next()){
+                overdueItems.add(new OverdueItem(resultSet.getInt("checkouts.studentID"),
+                        resultSet.getString("students.studentName"), resultSet.getString("students.email"),
+                        resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
+                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("parts.price/100")));
+            }
+            statement.close();
+            resultSet.close();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(pList);
             resultSetMetaData = resultSet.getMetaData();
