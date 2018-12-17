@@ -19,13 +19,14 @@ import java.util.List;
 public class CheckedOutParts {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
     private final String SELECTQUERY = "SELECT students.studentName, parts.partName, checkout_parts.checkoutQuantity, checkouts.checkoutAt, checkout_parts.dueAt\n" +
-            "FROM checkout_parts\n" +
-            "INNER JOIN parts \n" +
-            "ON checkout_parts.partID = parts.partID\n" +
-            "INNER JOIN checkouts\n" +
-            "ON checkout_parts.checkoutID = checkouts.checkoutID\n" +
-            "INNER JOIN students\n" +
-            "ON checkouts.studentID = students.studentID";
+            "            FROM checkout_parts\n" +
+            "            INNER JOIN parts\n" +
+            "            ON checkout_parts.partID = parts.partID\n" +
+            "            INNER JOIN checkouts\n" +
+            "            ON checkout_parts.checkoutID = checkouts.checkoutID\n" +
+            "            INNER JOIN students\n" +
+            "            ON checkouts.studentID = students.studentID\n" +
+            "            WHERE (checkout_parts.checkedInAt is null or checkedInAt ='')";
 
     private final String SELECT_BARCODES = "select parts.barcode\n" +
             "from checkout_parts\n" +
@@ -45,6 +46,13 @@ public class CheckedOutParts {
 
     private final String insertIntoCheckoutParts = "INSERT INTO checkout_parts(checkoutId, partID, checkoutQuantity, dueAt, createdAt, createdBy)\n" +
             "VALUE(?, ?, ?, ?, ?, ?);";
+
+    private final String getCheckoutIDFromPartid = "SELECT checkoutID FROM checkout_parts\n" +
+            "WHERE partID = ?";
+
+    private final String deleteCheckoutsQuery = "DELETE FROM checkouts WHERE checkoutID = ?;\n" +
+            "DELETE FROM checkout_parts WHERE checkoutID = ?";
+
     private Statement statement;
     private int checkoutQuantity;
     private String checkedOutAt;
@@ -118,7 +126,7 @@ public class CheckedOutParts {
      * the next checkoutID when adding a part
      * @return The new part ID to be added to the database for the corresponding part
      */
-    public int getCheckoutID(){
+    public int createNewCheckoutID(){
         int checkOutID = 0;
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             Statement statement = connection.createStatement();
@@ -132,6 +140,34 @@ public class CheckedOutParts {
         //Gets max id from table, then increments to create new partID
         return checkOutID + 1;
     }
+
+    /**
+     * This method takes a part id as parameter and returns the corresponding part id
+     * @param partID Part id of part
+     * @return Checkout id
+     */
+    public int getCheckoutIDFromPartid(int partID){
+        int checkoutID = 0;
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(getCheckoutIDFromPartid);
+            statement.setInt(1, checkoutID);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                checkoutID = rs.getInt("checkoutID");
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        if(checkoutID==0) {
+            //If part ID isn't found, then return 0;
+            return 0;
+        }
+        return checkoutID;
+    }
+
+//    public int deleteFromCheckoutTables(int checkoutID){
+//
+//    }
 
     /**
      * This method takes a barcode as parameter and returns the corresponding part id
@@ -199,7 +235,7 @@ public class CheckedOutParts {
      */
     private PreparedStatement insertCheckoutsQuery( int studentID, PreparedStatement preparedStatement){
         try {
-            preparedStatement.setInt(1, getCheckoutID());
+            preparedStatement.setInt(1, createNewCheckoutID());
             preparedStatement.setInt(2, studentID);
             preparedStatement.setString(3, getCurrentDate());
             preparedStatement.setString(4, getCurrentDate());
@@ -224,7 +260,7 @@ public class CheckedOutParts {
             return null;
         }
         try {
-            preparedStatement.setInt(1, getCheckoutID());
+            preparedStatement.setInt(1, createNewCheckoutID());
             preparedStatement.setInt(2, getPartIDFromBarcode(barcode));
             preparedStatement.setInt(3, quantity);
             preparedStatement.setString(4, getTomorrowDate());
@@ -236,6 +272,8 @@ public class CheckedOutParts {
         }
         return preparedStatement;
     }
+
+
 
     /**
      * This method gets the current date
