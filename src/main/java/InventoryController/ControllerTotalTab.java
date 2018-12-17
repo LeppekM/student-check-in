@@ -298,11 +298,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                         }
                     }
                 });
-                row.hoverProperty().addListener(observable -> {
-                    if (row.isHover() && row != null && row.getItem() != null) {
-                        System.out.println("TEST");
-                    }
-                });
                 return row;
             }
         });
