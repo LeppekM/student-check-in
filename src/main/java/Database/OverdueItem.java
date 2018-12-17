@@ -1,10 +1,11 @@
 package Database;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class OverdueItem {
+public class OverdueItem extends RecursiveTreeObject{
     private SimpleIntegerProperty ID;
     private SimpleStringProperty part;
     private SimpleStringProperty serial;
@@ -23,8 +24,8 @@ public class OverdueItem {
         this.email = new SimpleStringProperty(email);
     }
 
-    public int getID() {
-        return ID.get();
+    public SimpleIntegerProperty getID() {
+        return ID;
     }
 
     public SimpleIntegerProperty IDProperty() {
@@ -35,8 +36,8 @@ public class OverdueItem {
         this.ID.set(ID);
     }
 
-    public String getPrice() {
-        return price.get();
+    public SimpleStringProperty getPrice() {
+        return price;
     }
 
     public SimpleStringProperty priceProperty() {
@@ -47,8 +48,8 @@ public class OverdueItem {
         this.price.set(price);
     }
 
-    public String getPart() {
-        return part.get();
+    public SimpleStringProperty getPart() {
+        return part;
     }
 
     public SimpleStringProperty partProperty() {
@@ -59,8 +60,8 @@ public class OverdueItem {
         this.part.set(part);
     }
 
-    public String getSerial() {
-        return serial.get();
+    public SimpleStringProperty getSerial() {
+        return serial;
     }
 
     public SimpleStringProperty serialProperty() {
@@ -71,8 +72,8 @@ public class OverdueItem {
         this.serial.set(serial);
     }
 
-    public String getDate() {
-        return date.get();
+    public SimpleStringProperty getDate() {
+        return date;
     }
 
     public SimpleStringProperty dateProperty() {
@@ -83,8 +84,8 @@ public class OverdueItem {
         this.date.set(date);
     }
 
-    public String getName() {
-        return name.get();
+    public SimpleStringProperty getName() {
+        return name;
     }
 
     public SimpleStringProperty nameProperty() {
@@ -95,8 +96,8 @@ public class OverdueItem {
         this.name.set(name);
     }
 
-    public String getEmail() {
-        return email.get();
+    public SimpleStringProperty getEmail() {
+        return email;
     }
 
     public SimpleStringProperty emailProperty() {

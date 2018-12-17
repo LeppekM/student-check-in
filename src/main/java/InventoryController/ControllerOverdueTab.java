@@ -91,11 +91,11 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         list = database.getOverdue(list);
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         for (int j = 0; j < list.size(); j++){
-            if (!list.get(j).getPrice().substring(0,1).equals("$")) {
-                double p = Double.parseDouble(list.get(j).getPrice());
+            if (!list.get(j).getPrice().get().substring(0,1).equals("$")) {
+                double p = Double.parseDouble(list.get(j).getPrice().get());
                 list.get(j).setPrice("$" + df.format(p));
             }else {
-                String p = list.get(j).getPrice();
+                String p = list.get(j).getPrice().get();
                 list.get(j).setPrice(p.substring(1));
             }
         }

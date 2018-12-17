@@ -197,16 +197,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     public void goToStudent() {
         Database database = new Database();
         if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Student.fxml"));
+            try{
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Student.fxml"));
                 Parent root = (Parent) loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
                 main.getScene().setRoot(root);
-            } catch (IOException invoke) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            }catch (IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student page");
                 alert.showAndWait();
-                invoke.printStackTrace();
+                e.printStackTrace();
             }
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no student found with associated RFID");

@@ -1,93 +1,121 @@
 package CheckItemsController;
 
+import Database.OverdueItem;
+import Database.SavedPart;
 import Database.Student;
 import HelperClasses.StageWrapper;
+import InventoryController.CheckedOutItems;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
-import javafx.beans.property.SimpleStringProperty;
+import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Font;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class StudentPage implements Initializable {
+public class StudentPage {
 
     @FXML
-    private AnchorPane main;
+    private Pane main = new Pane();
 
     @FXML
-    private static Label studentName, email, RFID;
+    private VBox vbox = new VBox();
 
     @FXML
-    private JFXTreeTableView coTable, oTable, sTable;
+    private Label studentName, email, RFID;
 
     @FXML
-    private JFXTreeTableColumn<Student, String> coTableCol, oTableCol, sTableCol;
+    private JFXTreeTableView coTable;
 
-//    private Database database;
+    @FXML
+    private JFXTreeTableView oTable;
+
+    @FXML
+    private JFXTreeTableView sTable;
+
+    @FXML
+    private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
+
+    @FXML
+    private JFXTreeTableColumn<OverdueItem, String> oTableCol;
+
+    @FXML
+    private JFXTreeTableColumn<SavedPart, String> sTableCol;
+
     private Student student;
     private StageWrapper stageWrapper = new StageWrapper();
 
 
-//    @Override
-//    public void initialize(URL location, ResourceBundle resources) {
-//        database = new Database();
-//    }
-
     public void setStudent(Student s){
         student = s;
         studentName = new Label("");
-        studentName.setLayoutX(270);
-        studentName.setLayoutY(14);
         studentName.setText(student.getName());
         studentName.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         email = new Label("");
-        RFID = new Label( "");
-        main.getChildren().add(studentName);
-        System.out.println(studentName.getText());
         email.setText(student.getEmail());
-        System.out.println(email.getText());
+        email.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        RFID = new Label( "");
         RFID.setText(student.getID() + "");
-        System.out.println(RFID.getText());
-//        setTables();
+        RFID.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        vbox.getChildren().add(studentName);
+        vbox.getChildren().add(email);
+        vbox.getChildren().add(RFID);
+        vbox.setAlignment(Pos.TOP_CENTER);
+        vbox.setSpacing(35);
+        setTables();
     }
 
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
         coTableCol.setPrefWidth(200);
-        coTableCol.setCellValueFactory((Callback<TreeTableColumn.CellDataFeatures<Student, String>, ObservableValue<String>>) param ->
-                new SimpleStringProperty(param.getValue().getValue().getCheckedOut().get(0).getPartName()));
+        coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutItems, String> param) {
+                return param.getValue().getValue().getPartName();
+            }
+        });
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
         oTableCol.setPrefWidth(200);
-        oTableCol.setCellValueFactory((Callback<TreeTableColumn.CellDataFeatures<Student, String>, ObservableValue<String>>) param ->
-                new SimpleStringProperty(param.getValue().getValue().getOverdueItems().get(0).getPart()));
+        oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueItem, String> param) {
+                return param.getValue().getValue().getPart();
+            }
+        });
 
         sTableCol = new JFXTreeTableColumn<>("Part Name");
         sTableCol.setPrefWidth(200);
-        sTableCol.setCellValueFactory((Callback<TreeTableColumn.CellDataFeatures<Student, String>, ObservableValue<String>>) param ->
-                new SimpleStringProperty(param.getValue().getValue().getSavedItems().get(0).getPartName()));
+        sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<SavedPart, String> param) {
+                return param.getValue().getValue().getPartName();
+            }
+        });
 
         populateTables();
     }
 
     private void populateTables(){
-        coTable.getColumns().clear();
-        oTable.getColumns().clear();
-        sTable.getColumns().clear();
-        coTable.getColumns().setAll(student.getCheckedOut());
-        oTable.getColumns().setAll(student.getOverdueItems());
-        sTable.getColumns().setAll(student.getSavedItems());
+        final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
+        final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
+        final TreeItem<SavedPart> sItems = new RecursiveTreeItem<>(student.getSavedItems(), RecursiveTreeObject::getChildren);
+        coTable.getColumns().setAll(coTableCol);
+        coTable.setRoot(coItems);
+        coTable.setShowRoot(false);
+        oTable.getColumns().setAll(oTableCol);
+        oTable.setRoot(oItems);
+        oTable.setShowRoot(false);
+        sTable.getColumns().setAll(sTableCol);
+        sTable.setRoot(sItems);
+        sTable.setShowRoot(false);
+
     }
 
     public void goBack() {
@@ -96,14 +124,5 @@ public class StudentPage implements Initializable {
 
     public void goHome() {
         stageWrapper.newStage("Menu.fxml", main);
-    }
-
-    public StudentPage() {
-//        setStudent(new Student("Test Student", 00000, "john@msoe.edu", null, null, null));
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
- //       setStudent(new Student("Test Student", 00000, "john@msoe.edu", null, null, null));
     }
 }

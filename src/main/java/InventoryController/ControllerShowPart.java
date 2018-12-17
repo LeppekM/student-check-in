@@ -60,6 +60,10 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
 
     private Part part;
 
+    private CheckedOutItems checkedOutPart;
+
+    private String type;
+
     private VendorInformation vendorInformation = new VendorInformation();
 
     private int originalQuantity;
@@ -78,8 +82,68 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
      * This method is used to pass data into the tab to initialize the text representing the edited part
      * @param part
      */
-    public void initPart(Part part) {
-        this.part = part;
+    public void initPart(Part part, String type) {
+        this.type = type;
+        DecimalFormat df = new DecimalFormat("#,###,##0.00");
+        if (this.part == null && part != null) {
+            this.part = part;
+            this.nameField.setText(part.getPartName());
+            this.serialField.setText(part.getSerialNumber());
+            this.manufacturerField.setText(part.getManufacturer());
+            this.quantityField.setText("" + part.getQuantity());
+
+            // Note: price divided by 100, because it is stored in the database as an integer 100 times
+            // larger than actual value.
+            this.priceField.setText("$" + df.format(part.getPrice()/100));
+            ArrayList<String> vendors = vendorInformation.getVendorList();
+            if (vendors != null) {
+                this.vendorList.getItems().addAll(vendors);
+            }
+            this.vendorList.setValue(vendorInformation.getVendorFromID(part.getVendor()));
+            this.locationField.setText(part.getLocation());
+            this.barcodeField.setText(part.getBarcode());
+            this.originalQuantity = part.getQuantity();
+        }
+    }
+
+    /**
+     * This method is used to pass data into the tab to initialize the text representing the edited part
+     * @param part
+     */
+    public void initPart(CheckedOutItems part) {
+        DecimalFormat df = new DecimalFormat("#,###,##0.00");
+        this.checkedOutPart = part;
+        if (this.part == null && part != null) {
+            this.nameField.setText(part.getPartName().toString());
+            this.quantityField.setText("" + part.getQuantity());
+
+            // Note: price divided by 100, because it is stored in the database as an integer 100 times
+            // larger than actual value.
+            ArrayList<String> vendors = vendorInformation.getVendorList();
+            if (vendors != null) {
+                this.vendorList.getItems().addAll(vendors);
+            }
+            this.originalQuantity = part.getQuantity().get();
+        }
+    }
+
+    /**
+     * Helper method that sets the part info from the user input
+     */
+    private Part getPartFromInput() {
+        String partName = nameField.getText().trim();
+        String serialNumber = serialField.getText().trim();
+        String manufacturer = manufacturerField.getText().trim();
+
+        // Note: price multiplied by 100, because it is stored in the database as an integer 100 times
+        // larger than actual value.
+        double price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").trim());
+        String vendor = vendorList.getValue().toString();
+        String location = locationField.getText().trim();
+        String barcode = barcodeField.getText().trim();
+        int quantity = Integer.parseInt(quantityField.getText().trim());
+        part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode, quantity);
+        return part;
     }
 
     /**

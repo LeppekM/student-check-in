@@ -7,19 +7,18 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="main" prefHeight="620.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.StudentPage">
+<AnchorPane prefHeight="620.0" prefWidth="789.0" stylesheets="@PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.StudentPage">
    <children>
-      <Pane prefHeight="620.0" prefWidth="789.0">
+      <Pane fx:id="main" prefHeight="620.0" prefWidth="789.0">
          <children>
-            <Label fx:id="email" layoutX="345.0" layoutY="91.0" stylesheets="@HeaderStyle.css" text="Email" />
-            <Label fx:id="RFID" layoutX="352.0" layoutY="174.0" stylesheets="@HeaderStyle.css" text="RFID" />
             <Label layoutX="19.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Checked Out" />
             <Label layoutX="321.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Overdue" />
             <Label layoutX="604.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Saved" />
-            <JFXTreeTableView fx:id="coTable" layoutX="31.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
-            <JFXTreeTableView fx:id="oTable" layoutX="294.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
-            <JFXTreeTableView fx:id="sTable" layoutX="557.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" />
+            <JFXTreeTableView fx:id="coTable" layoutX="31.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
+            <JFXTreeTableView fx:id="oTable" layoutX="294.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
+            <JFXTreeTableView fx:id="sTable" layoutX="557.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
             <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#goHome" stylesheets="@ButtonStyle.css">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
@@ -38,6 +37,7 @@
                   </ImageView>
                </graphic>
             </Button>
+            <VBox fx:id="vbox" layoutX="92.0" layoutY="16.0" prefHeight="237.0" prefWidth="584.0" />
          </children>
       </Pane>
    </children>

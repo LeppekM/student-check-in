@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import java.net.URL?>
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerFaultyTab">
+<AnchorPane fx:id="faultyPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerFaultyTab">
   <children>
     <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
       <stylesheets>
