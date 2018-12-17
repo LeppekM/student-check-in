@@ -1,12 +1,13 @@
 package InventoryController;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
  * This class allows the tableview for checked out items to be populated
  */
-public class CheckedOutItems {
+public class CheckedOutItems extends RecursiveTreeObject{
     private final SimpleIntegerProperty quantity;
     private final SimpleStringProperty partName, dueDate, checkedOutAt, studentName;
 
@@ -18,20 +19,20 @@ public class CheckedOutItems {
         this.dueDate = new SimpleStringProperty(due);
     }
 
-    public String getCheckedOutAt() { return checkedOutAt.get(); }
+    public SimpleStringProperty getCheckedOutAt() { return checkedOutAt; }
 
-    public String getStudentName() { return studentName.get(); }
+    public SimpleStringProperty getStudentName() { return studentName; }
 
-    public int getQuantity() {
-        return quantity.get();
+    public SimpleIntegerProperty getQuantity() {
+        return quantity;
     }
 
-    public String getPartName() {
-        return partName.get();
+    public SimpleStringProperty getPartName() {
+        return partName;
     }
 
-    public String getDueDate() {
-        return dueDate.get();
+    public SimpleStringProperty getDueDate() {
+        return dueDate;
     }
 
 }

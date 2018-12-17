@@ -1,5 +1,6 @@
 package Database;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -21,8 +22,8 @@ public class SavedPart {
         dueAt = new SimpleStringProperty(dAt);
     }
 
-    public String getStudentName() {
-        return studentName.get();
+    public SimpleStringProperty getStudentName() {
+        return studentName;
     }
 
     public SimpleStringProperty studentNameProperty() {
@@ -33,8 +34,8 @@ public class SavedPart {
         this.studentName.set(studentName);
     }
 
-    public String getPartName() {
-        return partName.get();
+    public SimpleStringProperty getPartName() {
+        return partName;
     }
 
     public SimpleStringProperty partNameProperty() {
@@ -45,8 +46,8 @@ public class SavedPart {
         this.partName.set(partName);
     }
 
-    public String getCheckedOutAt() {
-        return checkedOutAt.get();
+    public SimpleStringProperty getCheckedOutAt() {
+        return checkedOutAt;
     }
 
     public SimpleStringProperty checkedOutAtProperty() {
@@ -57,8 +58,8 @@ public class SavedPart {
         this.checkedOutAt.set(checkedOutAt);
     }
 
-    public int getQuantity() {
-        return quantity.get();
+    public SimpleIntegerProperty getQuantity() {
+        return quantity;
     }
 
     public SimpleIntegerProperty quantityProperty() {
@@ -69,8 +70,8 @@ public class SavedPart {
         this.quantity.set(quantity);
     }
 
-    public String getSavedAt() {
-        return savedAt.get();
+    public SimpleStringProperty getSavedAt() {
+        return savedAt;
     }
 
     public SimpleStringProperty savedAtProperty() {
@@ -81,8 +82,8 @@ public class SavedPart {
         this.savedAt.set(savedAt);
     }
 
-    public String getDueAt() {
-        return dueAt.get();
+    public SimpleStringProperty getDueAt() {
+        return dueAt;
     }
 
     public SimpleStringProperty dueAtProperty() {
