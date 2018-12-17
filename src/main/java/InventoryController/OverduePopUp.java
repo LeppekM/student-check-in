@@ -10,12 +10,11 @@ public class OverduePopUp extends ControllerOverdueTab {
     private JFXTextField nameField, email, serialNumber, partName, dueDate, fee;
 
     public void populate(OverdueItem overdueItems){
-//        System.out.println(overdueItems.getName());
-        nameField.setText(overdueItems.getName());
-        email.setText(overdueItems.getEmail());
-        serialNumber.setText(overdueItems.getSerial());
-        partName.setText(overdueItems.getPart());
-        dueDate.setText(overdueItems.getDate());
-        fee.setText(overdueItems.getPrice());
+        nameField.setText(overdueItems.getName().get());
+        email.setText(overdueItems.getEmail().get());
+        serialNumber.setText(overdueItems.getSerial().get());
+        partName.setText(overdueItems.getPart().get());
+        dueDate.setText(overdueItems.getDate().get());
+        fee.setText(overdueItems.getPrice().get());
     }
 }

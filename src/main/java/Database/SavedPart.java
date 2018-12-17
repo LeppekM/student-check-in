@@ -4,7 +4,7 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class SavedPart {
+public class SavedPart extends RecursiveTreeObject{
 
     private SimpleStringProperty studentName;
     private SimpleStringProperty partName;

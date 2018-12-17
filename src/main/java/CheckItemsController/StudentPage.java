@@ -31,13 +31,13 @@ public class StudentPage {
     private Label studentName, email, RFID;
 
     @FXML
-    private JFXTreeTableView<CheckedOutItems> coTable;
+    private JFXTreeTableView coTable;
 
     @FXML
-    private JFXTreeTableView<OverdueItem> oTable;
+    private JFXTreeTableView oTable;
 
     @FXML
-    private JFXTreeTableView<SavedPart> sTable;
+    private JFXTreeTableView sTable;
 
     @FXML
     private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
@@ -103,9 +103,9 @@ public class StudentPage {
     }
 
     private void populateTables(){
-        final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<CheckedOutItems>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
-        final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<OverdueItem>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
-        final TreeItem<SavedPart> sItems = new RecursiveTreeItem<SavedPart>(student.getSavedItems(), RecursiveTreeObject::getChildren);
+        final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
+        final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
+        final TreeItem<SavedPart> sItems = new RecursiveTreeItem<>(student.getSavedItems(), RecursiveTreeObject::getChildren);
         coTable.getColumns().setAll(coTableCol);
         coTable.setRoot(coItems);
         coTable.setShowRoot(false);
