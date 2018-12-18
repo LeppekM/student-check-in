@@ -106,6 +106,18 @@ public class Database {
         Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").hideAfter(new Duration(5000)).show();//.showWarning();
     }
 
+    public void deleteParts(String partName) {
+        try {
+            String deleteQuery = "UPDATE parts p set p.deletedBy = 'root', p.isDeleted = 1, " +
+                    "p.deletedAt = date('" + gettoday() + "') WHERE p.partName = '" + partName + "';";
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(deleteQuery);
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Connection getConnection() {
         return connection;
     }
@@ -167,6 +179,18 @@ public class Database {
             e.printStackTrace();
         }
         return part;
+    }
+
+    public boolean hasPartName(String partName) {
+        String query = "SELECT * from parts where partName = '" + partName + "';";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

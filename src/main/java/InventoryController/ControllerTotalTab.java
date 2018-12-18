@@ -136,7 +136,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setGraphic(deleteOneImageView);
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteOneButton.setOnAction(event -> {
-                                    deletePart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                    deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                 });
 
                                 Image deleteAllImage = new Image("delete_all.png");
@@ -145,9 +145,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllImageView.setFitWidth(12);
                                 final JFXButton deleteAllButton = new JFXButton();
                                 deleteAllButton.setGraphic(deleteAllImageView);
-                                deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
-                                deleteOneButton.setOnAction(event -> {
-                                    deletePart(getTreeTableRow().getItem().getPartID().getValue(), true);
+                                deleteAllButton.setButtonType(JFXButton.ButtonType.RAISED);
+                                deleteAllButton.setOnAction(event -> {
+                                    deletePartType(getTreeTableRow().getItem().getPartName().getValue());
                                 });
 
 
@@ -397,8 +397,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      *
      * @author Bailey Terry
      */
-    @FXML
-    public void deletePart(String partID, boolean isBatchDelete) {
+    public void deletePart(String partID) {
         try {
             if (database.selectPart(Integer.parseInt(partID)) != null) {
                 if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
@@ -409,6 +408,19 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
 //            tableView.getItems().remove(part);
 //            populateTable();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePartType(String partName) {
+        try {
+            if (database.hasPartName(partName)) {
+                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part " + partName) == JOptionPane.YES_OPTION) {
+                    database.deleteParts(partName);
+                    populateTable();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
