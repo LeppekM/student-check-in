@@ -106,9 +106,9 @@ public class ControllerEditPartType extends ControllerEditPart {
     public void updateItem(){
         if (validateInput()) {
             loader.setVisible(true);
-            String updatedPartName = getPartFromInput().getPartName();
-            ArrayList<Part> parts = database.selectPartsWithPartName(part.getPartName(), updatedPartName);
-            editPart.editAllOfType(part.getPartName(), parts);
+            String originalPartName = part.getPartName();
+            Part inputPart = updatePartFromInput();
+            editPart.editAllOfType(originalPartName, inputPart);
             close();
             partEditedSuccess();
         }
@@ -117,7 +117,7 @@ public class ControllerEditPartType extends ControllerEditPart {
     /**
      * Helper method that sets the part info from the user input
      */
-    private Part getPartFromInput() {
+    private Part updatePartFromInput() {
         String partName = nameField.getText().trim();
         String serialNumber = serialField.getText().trim();
         String manufacturer = manufacturerField.getText().trim();

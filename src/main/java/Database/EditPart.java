@@ -13,6 +13,10 @@ public class EditPart {
             "price = ?, vendorID = ?, location = ?, barcode = ?, totalQuantity = ?," +
             "updatedAt = ? WHERE partID = ?;";
 
+    private String editAllQuery = "UPDATE parts SET partName = ?, serialNumber = ?, manufacturer = ?, " +
+            "price = ?, vendorID = ?, location = ?, barcode = ?, totalQuantity = ?, " +
+            "updatedAt = ? WHERE partName = ?;";
+
     VendorInformation vendorInformation = new VendorInformation();
 
     /**
@@ -69,9 +73,9 @@ public class EditPart {
      * @param preparedStatement The statement that has items being set to it
      * @return the statement that has items being set to it
      */
-    private PreparedStatement editAllQuery(String partName, Part part, PreparedStatement preparedStatement){
+    private PreparedStatement editAllQuery(String originalPartName, Part part, PreparedStatement preparedStatement){
         try {
-            preparedStatement.setString(1, partName);
+            preparedStatement.setString(1, part.getPartName());
             preparedStatement.setString(2, part.getSerialNumber());
             preparedStatement.setString(3, part.getManufacturer());
             preparedStatement.setDouble(4, part.getPrice());
@@ -80,22 +84,20 @@ public class EditPart {
             preparedStatement.setString(7, part.getBarcode());
             preparedStatement.setInt(8, part.getQuantity());
             preparedStatement.setString(9, getCurrentDate());
-            preparedStatement.setString(10, "" + part.getPartID());
+            preparedStatement.setString(10, originalPartName);
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return preparedStatement;
     }
 
-    public void editAllOfType(String partName, ArrayList<Part> parts) {
+    public void editAllOfType(String originalPartName, Part updatedPart) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            for (Part part : parts) {
-                PreparedStatement preparedStatement = connection.prepareStatement(editQuery);
-                preparedStatement = editAllQuery(partName, part, preparedStatement);
-                preparedStatement.execute();
-                preparedStatement.close();
-                vendorInformation.getVendorList();
-            }
+            PreparedStatement preparedStatement = connection.prepareStatement(editAllQuery);
+            preparedStatement = editAllQuery(originalPartName, updatedPart, preparedStatement);
+            preparedStatement.execute();
+            preparedStatement.close();
+            vendorInformation.getVendorList(); //NEEDED?
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
