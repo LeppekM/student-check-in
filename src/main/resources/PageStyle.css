@@ -19,3 +19,11 @@
 .button:hover {
     -fx-background-color: linear-gradient(#842727, #e22828);
 }
+
+.label {
+    -fx-text-fill: white;
+}
+
+.jfx-text-field {
+    -fx-text-fill: white;
+}

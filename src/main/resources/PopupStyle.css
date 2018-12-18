@@ -31,10 +31,10 @@
     -fx-background-color: #424242;
 }
 
-/*.combo-box{*/
-    /*-fx-background-color: #424242;*/
-    /*-fx-text-fill: white;*/
-/*}*/
+.text-area {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
 
 .text-field{
     /*-fx-background-color: #424242;*/
