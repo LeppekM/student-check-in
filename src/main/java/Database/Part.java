@@ -145,7 +145,7 @@ public class Part {
         this.faultDesc.set(faultDesc);
     }
 
-    public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, int quantity) {
+    public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode) {
         this.partName.set(partName);
         this.serialNumber.set(serialNumber);
         this.manufacturer.set(manufacturer);
@@ -153,7 +153,6 @@ public class Part {
         this.vendor.set(vendor);
         this.location.set(location);
         this.barcode.set(barcode);
-        this.quantity.set(quantity);
     }
 
     @Override

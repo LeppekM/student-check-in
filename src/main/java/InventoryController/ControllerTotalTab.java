@@ -1,13 +1,9 @@
 package InventoryController;
 
-import Database.Database;
 import Database.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,33 +12,24 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -127,7 +114,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editOneButton.setGraphic(editOneImageView);
                                 editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOneButton.setOnAction(event -> {
-                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
+                                    editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                 });
 
                                 Image editAllImage = new Image("edit_all.png");
@@ -137,9 +124,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 final JFXButton editAllButton = new JFXButton();
                                 editAllButton.setGraphic(editAllImageView);
                                 editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
-//                                editAllButton.setOnAction(event -> {
-//                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
-//                                });
+                                editAllButton.setOnAction(event -> {
+                                    editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
+                                });
 
                                 Image deleteOneImage = new Image("delete.png");
                                 ImageView deleteOneImageView = new ImageView(deleteOneImage);
@@ -149,7 +136,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setGraphic(deleteOneImageView);
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteOneButton.setOnAction(event -> {
-                                    deletePart(getTreeTableRow().getItem().getPartID().getValue());
+                                    deletePart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                 });
 
                                 Image deleteAllImage = new Image("delete_all.png");
@@ -159,9 +146,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 final JFXButton deleteAllButton = new JFXButton();
                                 deleteAllButton.setGraphic(deleteAllImageView);
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
-//                                deleteOneButton.setOnAction(event -> {
-//                                    deletePart(getTreeTableRow().getItem().getPartID().getValue());
-//                                });
+                                deleteOneButton.setOnAction(event -> {
+                                    deletePart(getTreeTableRow().getItem().getPartID().getValue(), true);
+                                });
 
 
                                 VBox column = new VBox();
@@ -373,12 +360,17 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * Called when a row is highlighted in the table and the edit button is clicked.
      */
     @FXML
-    public void editPart(String partID) {
+    public void editPart(String partID, boolean isBatchEdit) {
         try {
             Part part = database.selectPart(Integer.parseInt(partID));
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditPart.fxml"));
+            FXMLLoader loader;
+            if (isBatchEdit) {
+                loader = new FXMLLoader(getClass().getResource("/EditPartType.fxml"));
+            } else {
+                loader = new FXMLLoader(getClass().getResource("/EditOnePart.fxml"));
+            }
             Parent root = loader.load();
-            ((ControllerEditPart) loader.getController()).initPart(part);
+            ((ControllerEditPart) loader.getController()).initPart(part );
             Scene scene = new Scene(root, 400, 400);
             Stage stage = new Stage();
             stage.setTitle("Edit a Part");
@@ -406,7 +398,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * @author Bailey Terry
      */
     @FXML
-    public void deletePart(String partID) {
+    public void deletePart(String partID, boolean isBatchDelete) {
         try {
             if (database.selectPart(Integer.parseInt(partID)) != null) {
                 if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {

@@ -7,6 +7,7 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     //DB root pass: Userpassword123
@@ -166,6 +167,27 @@ public class Database {
             e.printStackTrace();
         }
         return part;
+    }
+
+    public ArrayList<Part> selectPartsWithPartName(String partName, String updatedPartName) {
+        String query = "select * from parts where partName = '" + partName + "'";
+        ArrayList<Part> parts = new ArrayList<Part>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            while (resultSet.next()) {
+                parts.add(new Part(updatedPartName, resultSet.getString("serialNumber"),
+                        resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
+                        resultSet.getString("location"), resultSet.getString("barcode"), false,
+                        resultSet.getInt("partID"), resultSet.getInt("isDeleted")));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return parts;
     }
 
     /**

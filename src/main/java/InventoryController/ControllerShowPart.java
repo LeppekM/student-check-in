@@ -53,9 +53,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     private TextField barcodeField;
 
     @FXML
-    private TextField quantityField;
-
-    @FXML
     private JFXSpinner loader;
 
     private Part part;
@@ -65,8 +62,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     private String type;
 
     private VendorInformation vendorInformation = new VendorInformation();
-
-    private int originalQuantity;
 
     /**
      * This method sets the data in the history page.
@@ -90,7 +85,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.nameField.setText(part.getPartName());
             this.serialField.setText(part.getSerialNumber());
             this.manufacturerField.setText(part.getManufacturer());
-            this.quantityField.setText("" + part.getQuantity());
 
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
@@ -102,7 +96,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.vendorList.setValue(vendorInformation.getVendorFromID(part.getVendor()));
             this.locationField.setText(part.getLocation());
             this.barcodeField.setText(part.getBarcode());
-            this.originalQuantity = part.getQuantity();
         }
     }
 
@@ -115,7 +108,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         this.checkedOutPart = part;
         if (this.part == null && part != null) {
             this.nameField.setText(part.getPartName().toString());
-            this.quantityField.setText("" + part.getQuantity());
 
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
@@ -123,7 +115,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             if (vendors != null) {
                 this.vendorList.getItems().addAll(vendors);
             }
-            this.originalQuantity = part.getQuantity().get();
         }
     }
 
@@ -141,8 +132,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         String vendor = vendorList.getValue().toString();
         String location = locationField.getText().trim();
         String barcode = barcodeField.getText().trim();
-        int quantity = Integer.parseInt(quantityField.getText().trim());
-        part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode, quantity);
+        part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode);
         return part;
     }
 

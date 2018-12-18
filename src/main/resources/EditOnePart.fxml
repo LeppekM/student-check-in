@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sceneEditPart" prefHeight="374.0" prefWidth="389.0" stylesheets="@PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerEditPart">
+<VBox fx:id="sceneEditOnePart" prefHeight="374.0" prefWidth="389.0" stylesheets="@PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerEditOnePart">
     <children>
         <AnchorPane prefHeight="468.0" prefWidth="410.0">
             <children>
@@ -25,21 +25,18 @@
                         <JFXTextField id="nameField" fx:id="nameField" alignment="CENTER" layoutX="175.0" layoutY="14.0" prefHeight="24" prefWidth="153.5078125" />
                         <Label id="nameLabel" font="$x1" layoutX="45.0" layoutY="54.0" text="Serial Number:" />
                         <JFXTextField id="serialField" fx:id="serialField" alignment="CENTER" layoutX="175.0" layoutY="54.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="92.0" layoutY="93.0" text="Barcode:" />
+                        <Label id="nameLabel" font="$x1" layoutX="92.0" layoutY="94.0" text="Barcode:" />
                         <JFXTextField id="barcodeField" fx:id="barcodeField" alignment="CENTER" layoutX="175.0" layoutY="94.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="nameLabel" font="$x1" layoutX="52.0" layoutY="134.0" text="Manufacturer:" />
                         <JFXTextField id="manufacturerField" fx:id="manufacturerField" alignment="CENTER" layoutX="175.0" layoutY="134.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="90.0" layoutY="174.0" text="Quantity:" />
-                        <JFXTextField id="quantityField" fx:id="quantityField" alignment="CENTER" layoutX="175.0" layoutY="174.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="214.0" text="Price:" />
-                        <JFXTextField id="priceField" fx:id="priceField" alignment="CENTER" layoutX="175.0" layoutY="214.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="100.0" layoutY="254.0" text="Vendor:" />
-
-                        <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="294.0" text="Location:" />
-                        <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" layoutX="175.0" layoutY="294.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Hyperlink layoutX="255.0" layoutY="334.0" onAction="#goBack" text="Cancel" />
-                        <JFXButton layoutX="308.0" layoutY="334.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="22.0" prefWidth="59.0" stylesheets="@ButtonStyle.css" text="Save" />
-                        <JFXComboBox id="vendorList" fx:id="vendorList" layoutX="175.0" layoutY="254.0" prefHeight="24.0" prefWidth="153.5" />
+                        <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="174.0" text="Price:" />
+                        <JFXTextField id="priceField" fx:id="priceField" alignment="CENTER" layoutX="175.0" layoutY="174.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <Label id="nameLabel" font="$x1" layoutX="100.0" layoutY="214.0" text="Vendor:" />
+                        <JFXComboBox id="vendorList" fx:id="vendorList" layoutX="175.0" layoutY="214.0" prefHeight="24.0" prefWidth="153.5" />
+                        <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="254.0" text="Location:" />
+                        <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" layoutX="175.0" layoutY="254.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <Hyperlink layoutX="255.0" layoutY="294.0" onAction="#goBack" text="Cancel" />
+                        <JFXButton layoutX="308.0" layoutY="294.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="22.0" prefWidth="59.0" stylesheets="@ButtonStyle.css" text="Save" />
                   <JFXSpinner fx:id="loader" layoutX="367.0" layoutY="332.0" prefHeight="28.0" prefWidth="33.0" visible="false" />
                     </children>
                 </Pane>
