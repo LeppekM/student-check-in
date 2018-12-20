@@ -3,9 +3,6 @@
  */
 
 .root {
-    /*-fx-background-image: url("wall.jpg");*/
-    /*-fx-background-size: cover;*/
-    /*-fx-background-repeat: no-repeat;*/
     -fx-background-color: linear-gradient(#FFFFFF, #6B6B6B);
 }
 

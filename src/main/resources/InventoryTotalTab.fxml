@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import java.net.URL?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<?import com.jfoenix.controls.JFXTreeTableView?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="totalTabPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerTotalTab">
   <children>
     <Label layoutX="20.0" layoutY="14.0" text="Total Inventory">
@@ -20,6 +16,6 @@
     </Label>
     <JFXTreeTableView fx:id="totalTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0" stylesheets="@TableStyle.css" />
     <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
-    <JFXButton fx:id="add" layoutX="440.0" layoutY="554.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Add" />
+    <JFXButton fx:id="add" layoutX="440.0" layoutY="554.0" mnemonicParsing="false" onAction="#addPart" prefHeight="33.0" prefWidth="106.0" text="Add" />
   </children>
 </AnchorPane>

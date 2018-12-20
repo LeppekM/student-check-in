@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 public class StudentPage {
 
@@ -62,7 +63,7 @@ public class StudentPage {
     private StageWrapper stageWrapper = new StageWrapper();
 
 
-    public void setStudent(Student s){
+    public void setStudent(Student s) {
         student = s;
         double overdueFees = 0.00;
         studentName = new Label("");
@@ -71,26 +72,21 @@ public class StudentPage {
         email = new Label("");
         email.setText(student.getEmail());
         email.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
-        RFID = new Label( "");
+        RFID = new Label("");
         RFID.setText(student.getID() + "");
         RFID.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         fees = new Label("");
-//        for (int i = 0; i < student.getOverdueItems().size(); i++){
-//            for (int j = 0; j < student.getSavedItems().size(); j++) {
-//                int oID = Integer.parseInt(student.getOverdueItems().get(i).getCheckID());
-//                int sID = Integer.parseInt(student.getSavedItems().get(j).getCheckID());
-//                if (oID != sID) {
-//                    double price = 0;
-//                    for (int k = 0; k < student.getOverdueItems().size(); k++){
-//                        if (student.getOverdueItems().get(k).getCheckID().equals(oID+"")){
-//                            price = Double.parseDouble(student.getOverdueItems().get(k).getPrice().get());
-//                        }
-//                        overdueFees += price;
-//                    }
-                    overdueFees += Double.parseDouble(student.getOverdueItems().get(0).getPrice().get());
-//                }
-//            }
-//        }
+        int[] sID = new int[student.getSavedItems().size()];
+        for (int i = 0; i < student.getSavedItems().size(); i++) {
+            sID[i] = Integer.parseInt(student.getSavedItems().get(i).getCheckID());
+        }
+        for (int j = 0; j < student.getOverdueItems().size(); j++) {
+            int oID = Integer.parseInt(student.getOverdueItems().get(j).getCheckID());
+            boolean result = IntStream.of(sID).anyMatch(x -> x == oID);
+            if (!result) {
+                overdueFees += Double.parseDouble(student.getOverdueItems().get(j).getPrice().get());
+            }
+        }
         fees.setText("Outstanding fees: $" + overdueFees);
         fees.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         vbox.getChildren().add(studentName);
@@ -136,7 +132,7 @@ public class StudentPage {
         populateTables();
     }
 
-    private void populateTables(){
+    private void populateTables() {
         final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
         final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
         final TreeItem<SavedPart> sItems = new RecursiveTreeItem<>(student.getSavedItems(), RecursiveTreeObject::getChildren);
@@ -222,7 +218,7 @@ public class StudentPage {
         }
     }
 
-    public static Student getStudent(){
+    public static Student getStudent() {
         return student;
     }
 }

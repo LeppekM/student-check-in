@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" style="-fx-background-color: #FFFFFF;" stylesheets="@PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" stylesheets="@PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
    <children>
       <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="160.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" />
       <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" prefHeight="24.0" prefWidth="125.0" />

@@ -3,7 +3,6 @@
  */
 
 .root {
-    /*-fx-background-image: url("linen.jpg");*/
     -fx-background-color: linear-gradient(#FFFFFF, #6B6B6B);
 }
 

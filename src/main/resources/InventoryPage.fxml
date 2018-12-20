@@ -3,14 +3,11 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import javafx.scene.control.Tab?>
-
-
 <?import javafx.scene.layout.AnchorPane?>
 
-<?import javafx.scene.control.Label?>
 <AnchorPane fx:id="inventoryScene" prefHeight="620.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
   <children>
-    <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="800.0" stylesheets="@TabStyle.css" tabClosingPolicy="UNAVAILABLE" >
+    <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="800.0" stylesheets="@TabStyle.css" tabClosingPolicy="UNAVAILABLE">
       <tabs>
         <Tab fx:id="totalTab" text="Total Inventory">
           <content>
@@ -40,6 +37,6 @@
         </Tab>
       </tabs>
     </JFXTabPane>
-    <JFXButton fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack" prefHeight="33.0" prefWidth="106.0" stylesheets="@ButtonStyle.css" text="Back to Home" />
+    <JFXButton fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack" prefHeight="33.0" prefWidth="106.0" text="Back to Home" />
   </children>
 </AnchorPane>

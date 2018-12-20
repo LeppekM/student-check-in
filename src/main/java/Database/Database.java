@@ -181,7 +181,8 @@ public class Database {
                 "left join checkouts on students.studentID = checkouts.studentID\n" +
                 "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
                 "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID  + ";";
-        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt, checkouts.checkoutID\n" +
+        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt," +
+                " checkouts.checkoutID, checkouts.prof, checkouts.course, checkouts.reason\n" +
                 "from students\n" +
                 "left join checkouts on students.studentID = checkouts.studentID\n" +
                 "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
@@ -240,8 +241,8 @@ public class Database {
                 savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
                         resultSet.getString("parts.partName"), resultSet.getString("checkouts.checkoutAt"),
                         resultSet.getInt("checkout_parts.checkoutQuantity"), resultSet.getString("checkouts.reservedAt"),
-                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("checkouts.checkoutID"), null,
-                        null, null));
+                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("checkouts.checkoutID"),
+                        resultSet.getString("checkouts.prof"), resultSet.getString("checkouts.course"), resultSet.getString("checkouts.reason")));
             }
             statement.close();
             resultSet.close();
