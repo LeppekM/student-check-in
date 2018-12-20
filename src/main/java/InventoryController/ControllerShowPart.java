@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -32,31 +33,12 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     private VBox sceneShowPart;
 
     @FXML
-    private TextField nameField;
+    private TextField nameField, serialField, manufacturerField, priceField, vendorList, locationField, barcodeField,
+            quantityField, faultDescriptionField;
 
     @FXML
-    private TextField serialField;
-
-    @FXML
-    private TextField manufacturerField;
-
-    @FXML
-    private TextField priceField;
-
-    @FXML
-    private TextField vendorList;
-
-    @FXML
-    private TextField locationField;
-
-    @FXML
-    private TextField barcodeField;
-
-    @FXML
-    private TextField quantityField;
-
-    @FXML
-    private JFXSpinner loader;
+    private Label nameLabel, serialLabel, manufacturerLabel, priceLabel, vendorLabel, locationLabel, barcodeLabel,
+            quantityLabel, faultDescriptionLabel;
 
     private Part part;
 
@@ -65,8 +47,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     private String type;
 
     private VendorInformation vendorInformation = new VendorInformation();
-
-    private int originalQuantity;
 
     /**
      * This method sets the data in the history page.
@@ -84,6 +64,24 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         this.vendorList.setEditable(false);
         this.locationField.setEditable(false);
         this.barcodeField.setEditable(false);
+        this.faultDescriptionField.setEditable(false);
+
+        this.nameField.managedProperty().bind(this.nameField.visibleProperty());
+        this.serialField.managedProperty().bind(this.serialField.visibleProperty());
+        this.manufacturerField.managedProperty().bind(this.manufacturerField.visibleProperty());
+        this.quantityField.managedProperty().bind(this.quantityField.visibleProperty());
+        this.priceField.managedProperty().bind(this.priceField.visibleProperty());
+        this.vendorList.managedProperty().bind(this.vendorList.visibleProperty());
+        this.locationField.managedProperty().bind(this.locationField.visibleProperty());
+        this.barcodeField.managedProperty().bind(this.barcodeField.visibleProperty());
+        this.faultDescriptionField.managedProperty().bind(this.faultDescriptionField.visibleProperty());
+
+        System.out.println(this.type);
+        determineVisibility();
+
+        if(this.type.equals("none")){
+            this.nameLabel.setText("Error: No info found. Please report this to the developers.");
+        }
     }
 
     /**
@@ -106,7 +104,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.vendorList.setText(vendorInformation.getVendorFromID(part.getVendor()));
             this.locationField.setText(part.getLocation());
             this.barcodeField.setText(part.getBarcode());
-            this.originalQuantity = part.getQuantity();
+            this.faultDescriptionField.setText(part.getFaultDesc());
         }
     }
 
@@ -120,15 +118,61 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         if (this.part == null && part != null) {
             this.nameField.setText(part.getPartName().toString());
             this.quantityField.setText("" + part.getQuantity());
-            this.originalQuantity = part.getQuantity().get();
         }
+        this.type = "checkedOut";
     }
 
     /**
-     * Helper method that sets the part info from the user input
+     * Helper method that sets the visibility of Nodes in the FXML
      */
-    private Part getPart() {
-        return part;
+    private void determineVisibility(){
+        switch(this.type){
+            case "total":
+                this.nameField.setVisible(true);
+                this.serialField.setVisible(true);
+                this.manufacturerField.setVisible(true);
+                this.quantityField.setVisible(true);
+                this.priceField.setVisible(true);
+                this.vendorList.setVisible(true);
+                this.locationField.setVisible(true);
+                this.faultDescriptionField.setVisible(false);
+                this.barcodeField.setVisible(true);
+                break;
+            case "fault":
+                this.nameField.setVisible(true);
+                this.serialField.setVisible(true);
+                this.manufacturerField.setVisible(true);
+                this.quantityField.setVisible(true);
+                this.priceField.setVisible(true);
+                this.vendorList.setVisible(true);
+                this.locationField.setVisible(false);
+                this.faultDescriptionField.setVisible(true);
+                this.barcodeField.setVisible(true);
+                break;
+            case "checkedOut":
+                this.nameField.setVisible(true);
+                this.serialField.setVisible(true);
+                this.manufacturerField.setVisible(false);
+                this.quantityField.setVisible(true);
+                this.priceField.setVisible(false);
+                this.vendorList.setVisible(false);
+                this.locationField.setVisible(true);
+                this.faultDescriptionField.setVisible(false);
+                this.barcodeField.setVisible(false);
+                break;
+            default:
+                this.nameField.setVisible(true);
+                this.serialField.setVisible(false);
+                this.manufacturerField.setVisible(false);
+                this.quantityField.setVisible(false);
+                this.priceField.setVisible(false);
+                this.vendorList.setVisible(false);
+                this.locationField.setVisible(false);
+                this.faultDescriptionField.setVisible(false);
+                this.barcodeField.setVisible(false);
+                this.type = "none";
+
+        }
     }
 
     /**
