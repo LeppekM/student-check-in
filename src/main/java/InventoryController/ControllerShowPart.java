@@ -36,7 +36,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     private TextField nameField, serialField, manufacturerField, priceField, vendorList, locationField, barcodeField,
             quantityField, faultDescriptionField;
 
-
     @FXML
     private Label nameLabel, serialLabel, manufacturerLabel, priceLabel, vendorLabel, locationLabel, barcodeLabel,
             quantityLabel, faultDescriptionLabel, typeConfig;
