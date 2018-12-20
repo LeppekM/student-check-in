@@ -121,9 +121,9 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
-            ArrayList<String> vendors = vendorInformation.getVendorLost();
+            ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
-                this.vendorList.getItems().addAll(vendors);
+//                this.vendorList.getItems().addAll(vendors);
             }
             
         }
@@ -184,7 +184,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         setElements("name", true);
         setElements("serial", true);
         setElements("manufacturer", false);
-        setElements("quantity", 52, 134, true);
+        setElements("quantity", 175, 134, true);
         setElements("price", false);
         setElements("vendor", false);
         setElements("location", false);
@@ -200,10 +200,10 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         setElements("serial", true);
         setElements("manufacturer", false);
         setElements("quantity", false);
-        setElements("price", true);
+        setElements("price", 175, 134, true);
         setElements("vendor", false);
         setElements("location", false);
-        setElements("faultDesc", true);
+        setElements("faultDesc", 175, 214, true);
         setElements("barcode", true);
     }
 
@@ -214,65 +214,69 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         switch(element){
             case "name":
                 this.nameField.setLayoutX(x);
-                this.nameField.setLayoutX(y);
+                this.nameField.setLayoutY(y);
                 this.nameLabel.setLayoutX(x);
-                this.nameLabel.setLayoutX(y);
+                this.nameLabel.setLayoutY(y);
                 this.nameField.setVisible(visible);
                 this.nameLabel.setVisible(visible);
                 break;
             case "serial":
                 this.serialField.setLayoutX(x);
-                this.serialField.setLayoutX(y);
+                this.serialField.setLayoutY(y);
                 this.serialLabel.setLayoutX(x);
-                this.serialLabel.setLayoutX(y);
+                this.serialLabel.setLayoutY(y);
                 this.serialField.setVisible(visible);
                 this.serialLabel.setVisible(visible);
                 break;
             case "manufacturer":
                 this.manufacturerLabel.setLayoutX(x);
-                this.manufacturerLabel.setLayoutX(y);
+                this.manufacturerLabel.setLayoutY(y);
                 this.manufacturerField.setLayoutX(x);
-                this.manufacturerField.setLayoutX(y);
+                this.manufacturerField.setLayoutY(y);
                 this.manufacturerField.setVisible(visible);
                 this.manufacturerLabel.setVisible(visible);
                 break;
             case "quantity":
                 this.quantityField.setLayoutX(x);
-                this.quantityField.setLayoutX(y);
-                this.quantityLabel.setLayoutX(x);
-                this.quantityLabel.setLayoutX(y + 123);
+                this.quantityField.setLayoutY(y);
+                this.quantityLabel.setLayoutX(x - 100);
+                this.quantityLabel.setLayoutY(y);
                 this.quantityField.setVisible(visible);
                 this.quantityLabel.setVisible(visible);
                 break;
             case "price":
-                this.priceLabel.setLayoutX(x);
-                this.priceLabel.setLayoutX(y);
+                this.priceLabel.setLayoutX(x - 75);
+                this.priceLabel.setLayoutY(y);
+                this.priceField.setLayoutX(x);
+                this.priceField.setLayoutY(y);
                 this.priceField.setVisible(visible);
                 this.priceLabel.setVisible(visible);
                 break;
             case "vendor":
                 this.vendorLabel.setLayoutX(x);
-                this.vendorLabel.setLayoutX(y);
+                this.vendorLabel.setLayoutY(y);
+                this.vendorList.setLayoutX(x);
+                this.vendorList.setLayoutY(y);
                 this.vendorList.setVisible(visible);
                 this.vendorLabel.setVisible(visible);
                 break;
             case "location":
                 this.locationLabel.setLayoutX(x);
-                this.locationLabel.setLayoutX(y);
+                this.locationLabel.setLayoutY(y);
                 this.locationField.setVisible(visible);
                 this.locationLabel.setVisible(visible);
                 break;
             case "faultDesc":
                 this.faultDescriptionField.setLayoutX(x);
-                this.faultDescriptionField.setLayoutX(y);
-                this.faultDescriptionLabel.setLayoutX(x);
-                this.faultDescriptionLabel.setLayoutX(y);
+                this.faultDescriptionField.setLayoutY(y);
+                this.faultDescriptionLabel.setLayoutX(x - 120);
+                this.faultDescriptionLabel.setLayoutY(y);
                 this.faultDescriptionField.setVisible(visible);
                 this.faultDescriptionLabel.setVisible(visible);
                 break;
             case "barcode":
                 this.barcodeLabel.setLayoutX(x);
-                this.barcodeLabel.setLayoutX(y);
+                this.barcodeLabel.setLayoutY(y);
                 this.barcodeField.setVisible(visible);
                 this.barcodeLabel.setVisible(visible);
                 break;

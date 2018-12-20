@@ -37,7 +37,7 @@
                         <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" layoutX="175.0" layoutY="294.0" prefHeight="23.94140625" prefWidth="153.5078125" />
 
                         <Label id="faultDescriptionLabel" fx:id="faultDescriptionLabel" font="$x1" layoutX="52.0" layoutY="134.0" text="Description:" />
-                        <JFXTextField id="faultDescriptionField" fx:id="faultDescriptionField" alignment="CENTER" layoutX="175.0" layoutY="174.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <JFXTextField id="faultDescriptionField" fx:id="faultDescriptionField" alignment="CENTER" layoutX="175.0" layoutY="134.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Hyperlink layoutX="255.0" layoutY="334.0" onAction="#goBack" text="Go Back" />
 
                   <JFXSpinner fx:id="loader" layoutX="367.0" layoutY="332.0" prefHeight="28.0" prefWidth="33.0" visible="false" />
