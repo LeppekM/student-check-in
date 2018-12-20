@@ -5,14 +5,14 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class HistoryItems {
     private final SimpleIntegerProperty quantity;
-    private final SimpleStringProperty student, partName, serialNumber, location, date;
+    private final SimpleStringProperty student, partName, serialNumber, status, date;
 
-    public HistoryItems(String student, String partName, String serialNumber, String location, int quantity, String date) {
+    public HistoryItems(String student, String partName, String serialNumber, int quantity, String status, String date) {
         this.student = new SimpleStringProperty(student);
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
-        this.location = new SimpleStringProperty(location);
         this.quantity = new SimpleIntegerProperty(quantity);
+        this.status = new SimpleStringProperty(status);
         this.date = new SimpleStringProperty(date);
     }
 
@@ -52,16 +52,16 @@ public class HistoryItems {
         this.serialNumber.set(serialNumber);
     }
 
-    public String getLocation() {
-        return location.get();
+    public String getStatus() {
+        return status.get();
     }
 
-    public SimpleStringProperty getLocationProperty() {
-        return this.location;
+    public SimpleStringProperty getStatusProperty() {
+        return this.status;
     }
 
-    public void setLocation(String location) {
-        this.location.set(location);
+    public void setStatus(String status) {
+        this.status.set(status);
     }
 
     public int getQuantity() {

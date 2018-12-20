@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.sql.*;
 
 /**
- * This class queries the database for the transaction history, and returns a student name, part name, serial number, location, quantity, date
+ * This class queries the database for the transaction history, and returns a student name, part name, serial number, status, quantity, date
  */
 public class HistoryParts {
 
@@ -16,9 +16,11 @@ public class HistoryParts {
     private static final String dbname = "student_check_in";
     private static Connection connection;
 
-    private static final String HISTORY_QUERY = "SELECT studentName, partName, serialNumber, location, " +
-            "checkoutQuantity - checkInQuantity AS 'quantity', CASE " +
-            "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
+    private static final String HISTORY_QUERY = "SELECT studentName, partName, serialNumber, " +
+            "checkoutQuantity - checkInQuantity AS 'quantity'," +
+            "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
+            "THEN 'In' ELSE 'Out' END AS 'Status', " +
+            "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
             "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END AS 'date' " +
             "FROM parts " +
             "INNER JOIN checkout_parts ON parts.partID = checkout_parts.partID " +
@@ -31,7 +33,7 @@ public class HistoryParts {
 
     private Statement statement;
     private int quantity;
-    private String studentName, partName, serialNumber, location, date;
+    private String studentName, partName, serialNumber, status, date;
 
     public ObservableList<HistoryItems> data = FXCollections.observableArrayList();
 
@@ -70,7 +72,7 @@ public class HistoryParts {
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                HistoryItems historyItems = new HistoryItems(studentName, partName, serialNumber, location, quantity, date);
+                HistoryItems historyItems = new HistoryItems(studentName, partName, serialNumber, quantity, status, date);
                 data.add(historyItems);
             }
         } catch (SQLException e) {
@@ -88,8 +90,8 @@ public class HistoryParts {
             studentName = resultSet.getString("studentName");
             partName = resultSet.getString("partName");
             serialNumber = resultSet.getString("serialNumber");
-            location = resultSet.getString("location");
             quantity = resultSet.getInt("quantity");
+            status = resultSet.getString("status");
             date = resultSet.getString("date");
 
         } catch (SQLException e){
