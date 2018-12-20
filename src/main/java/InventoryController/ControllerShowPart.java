@@ -32,28 +32,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     private VBox sceneShowPart;
 
     @FXML
-    private TextField nameField;
-
-    @FXML
-    private TextField serialField;
-
-    @FXML
-    private TextField manufacturerField;
-
-    @FXML
-    private TextField priceField;
-
-    @FXML
-    private TextField vendorList;
-
-    @FXML
-    private TextField locationField;
-
-    @FXML
-    private TextField barcodeField;
-
-    @FXML
-    private TextField quantityField;
+    private TextField nameField, serialField, manufacturerField, priceField, vendorList, locationField, barcodeField, quantityField;
 
     @FXML
     private JFXSpinner loader;
