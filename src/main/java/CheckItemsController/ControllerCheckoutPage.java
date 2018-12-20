@@ -78,13 +78,21 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             }
         }
         else if (itemStatus.getText().equals("Checking In")){ //Item is being checked in
-            System.out.println("Check in");
-            //Remove from checkout tables
+            checkInHelper();
         }
         else {//This case should never be reached, but error will be thrown just in case.
             stageWrapper.errorAlert("Please fill out all fields");
         }
         reset();
+    }
+
+    /**
+     * Helper method that sets items to be checked back in.
+     */
+    private void checkInHelper(){
+        //Get part id from barcode, and checkoutID from part ID.
+        int checkoutID = checkedOutParts.getCheckoutIDFromPartid(checkedOutParts.getPartIDFromBarcode(getBarcode()));
+        checkedOutParts.setItemToCheckedIn(getQuantity(), checkoutID);
     }
 
     /**
