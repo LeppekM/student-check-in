@@ -40,6 +40,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     private Label nameLabel, serialLabel, manufacturerLabel, priceLabel, vendorLabel, locationLabel, barcodeLabel,
             quantityLabel, faultDescriptionLabel;
 
+
     private Part part;
 
     private CheckedOutItems checkedOutPart;
@@ -104,7 +105,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.vendorList.setText(vendorInformation.getVendorFromID(part.getVendor()));
             this.locationField.setText(part.getLocation());
             this.barcodeField.setText(part.getBarcode());
-            this.faultDescriptionField.setText(part.getFaultDesc());
         }
         determineVisibility(type);
     }
@@ -118,7 +118,14 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         this.checkedOutPart = part;
         if (this.part == null && part != null) {
             this.nameField.setText(part.getPartName().toString());
-            this.quantityField.setText("" + part.getQuantity());
+            
+            // Note: price divided by 100, because it is stored in the database as an integer 100 times
+            // larger than actual value.
+            ArrayList<String> vendors = vendorInformation.getVendorLost();
+            if (vendors != null) {
+                this.vendorList.getItems().addAll(vendors);
+            }
+            
         }
         determineVisibility("checkedOut");
     }
