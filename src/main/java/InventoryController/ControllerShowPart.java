@@ -32,6 +32,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     @FXML
     private VBox sceneShowPart;
 
+    @FXML
     private TextField nameField, serialField, manufacturerField, priceField, vendorList, locationField, barcodeField,
             quantityField, faultDescriptionField;
 
