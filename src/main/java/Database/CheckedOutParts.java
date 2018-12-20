@@ -31,7 +31,8 @@ public class CheckedOutParts {
     private final String SELECT_BARCODES = "select parts.barcode\n" +
             "from checkout_parts\n" +
             "inner join parts\n" +
-            "on checkout_parts.partID=parts.partID";
+            "on checkout_parts.partID=parts.partID\n"+
+            "WHERE (checkedInAt is null or checkedInAt ='')";
 
     private final String getCheckoutIDQuery = "SELECT checkoutID\n" +
             "FROM checkouts\n" +
@@ -50,8 +51,9 @@ public class CheckedOutParts {
     private final String getCheckoutIDFromPartid = "SELECT checkoutID FROM checkout_parts\n" +
             "WHERE partID = ?";
 
-    private final String deleteCheckoutsQuery = "DELETE FROM checkouts WHERE checkoutID = ?;\n" +
-            "DELETE FROM checkout_parts WHERE checkoutID = ?";
+    private final String updateCheckoutPartsToCheckedIn = "UPDATE checkout_parts\n" +
+            "SET checkinQuantity = ?, checkedInAt = ?\n" +
+            "WHERE checkoutID = ?";
 
     private Statement statement;
     private int checkoutQuantity;
@@ -142,7 +144,7 @@ public class CheckedOutParts {
     }
 
     /**
-     * This method takes a part id as parameter and returns the corresponding part id
+     * This method takes a part id as parameter and returns the corresponding checkout id
      * @param partID Part id of part
      * @return Checkout id
      */
@@ -150,7 +152,7 @@ public class CheckedOutParts {
         int checkoutID = 0;
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(getCheckoutIDFromPartid);
-            statement.setInt(1, checkoutID);
+            statement.setInt(1, partID);
             ResultSet rs = statement.executeQuery();
             if(rs.next()){
                 checkoutID = rs.getInt("checkoutID");
@@ -291,4 +293,39 @@ public class CheckedOutParts {
         Date dt = new Date();
         return LocalDateTime.from(dt.toInstant().atZone(ZoneId.of("UTC"))).plusDays(1).toString();
     }
+
+
+    /**
+     * Sets item to checked in s tats
+     * @param quantity Quantity being checked in
+     * @param checkoutID Checkout id of item.
+     */
+    public void setItemToCheckedIn(int quantity, int checkoutID){
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateCheckoutPartsToCheckedIn);
+            preparedStatement = setCheckInHelper(preparedStatement, quantity, checkoutID);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    /**
+     * This method sets the item being checkedin to a checkedin status.
+     * @param preparedStatement The statement that has items being set to it
+     * @return the statement that has items being set to it
+     */
+    private PreparedStatement setCheckInHelper(PreparedStatement preparedStatement, int quantity, int checkoutID){
+        try {
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setString(2, getCurrentDate());
+            preparedStatement.setInt(3, checkoutID);
+
+        }catch (SQLException e){
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return preparedStatement;
+    }
+
 }
