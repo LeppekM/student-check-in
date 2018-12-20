@@ -121,10 +121,10 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
-            ArrayList<String> vendors = vendorInformation.getVendorLost();
-            if (vendors != null) {
-                this.vendorList.getItems().addAll(vendors);
-            }
+//            ArrayList<String> vendors = vendorInformation.getVendorLost();
+//            if (vendors != null) {
+//                this.vendorList.getItems().addAll(vendors);
+//            }
             
         }
         determineVisibility("checkedOut");

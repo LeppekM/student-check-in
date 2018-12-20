@@ -3,9 +3,10 @@
  */
 
 .root {
-    -fx-background-image: url("wall.jpg");
-    -fx-background-size: cover;
-    -fx-background-repeat: no-repeat;
+    /*-fx-background-image: url("wall.jpg");*/
+    /*-fx-background-size: cover;*/
+    /*-fx-background-repeat: no-repeat;*/
+    -fx-background-color: linear-gradient(#FFFFFF, #6B6B6B);
 }
 
 .button {
@@ -21,13 +22,13 @@
 }
 
 .label {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 
 .jfx-text-field {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 
 .check-box{
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
