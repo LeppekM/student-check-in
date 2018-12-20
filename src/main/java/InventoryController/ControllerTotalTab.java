@@ -32,6 +32,7 @@ import javafx.util.Callback;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -51,6 +52,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     @FXML
     private JFXTreeTableView<TotalTabTableRow> totalTable;
+
+    private TreeItem<TotalTabTableRow> root;
 
     @FXML JFXTreeTableColumn<TotalTabTableRow, JFXTreeTableColumn> outerPartNameCol;
 
@@ -244,23 +247,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         searchInput.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                totalTable.setPredicate(new Predicate<TreeItem<TotalTabTableRow>>() {
-                    @Override
-                    public boolean test(TreeItem<TotalTabTableRow> tableRow) {
-                        String input = newValue.toLowerCase();
-                        partName = tableRow.getValue().getPartName().getValue();
-                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
-                        loc = tableRow.getValue().getLocation().getValue();
-                        barcode = tableRow.getValue().getBarcode().getValue();
-                        partID = tableRow.getValue().getPartID().getValue();
-
-                        return ((partName != null && partName.toLowerCase().contains(input))
-                            || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                            || (loc != null && loc.toLowerCase().contains(input))
-                            || (barcode != null && barcode.toLowerCase().contains((input))
-                            || (partID != null && partID.toLowerCase().contains(input))));
-                    }
-                });
+                filterChanged(newValue);
             }
         });
 
@@ -292,6 +279,44 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     }
 
+    private void filter(TreeItem<TotalTabTableRow> root, String filter, TreeItem<TotalTabTableRow> filteredRoot) {
+        for (TreeItem<TotalTabTableRow> child : root.getChildren()) {
+            TreeItem<TotalTabTableRow> filteredChild = new TreeItem<>();
+            filteredChild.setValue(child.getValue());
+            filteredChild.setExpanded(true);
+            filter(child, filter, filteredChild);
+            if (!filteredChild.getChildren().isEmpty() || isMatch(filteredChild.getValue(), filter)) {
+                filteredRoot.getChildren().add(filteredChild);
+            }
+        }
+    }
+
+    private void filterChanged(String filter) {
+        if (filter.isEmpty()) {
+            totalTable.setRoot(root);
+        }
+        else {
+            TreeItem<TotalTabTableRow> filteredRoot = new TreeItem<>();
+            filter(root, filter, filteredRoot);
+            totalTable.setRoot(filteredRoot);
+        }
+    }
+
+    private boolean isMatch(TotalTabTableRow value, String filter) {
+        String input = filter.toLowerCase();
+        partName = value.getPartName().getValue();
+        serialNumber = value.getSerialNumber().getValue();
+        loc = value.getLocation().getValue();
+        barcode = value.getBarcode().getValue();
+        partID = value.getPartID().getValue();
+
+        return ((partName != null && partName.toLowerCase().contains(input))
+                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
+                || (loc != null && loc.toLowerCase().contains(input))
+                || (barcode != null && barcode.toLowerCase().contains((input))
+                || (partID != null && partID.toLowerCase().contains(input))));
+    }
+
     /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
      * @author Matthew Karcz
@@ -320,7 +345,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
         }
 
-        final TreeItem<TotalTabTableRow> root = new RecursiveTreeItem<TotalTabTableRow>(
+        root = new RecursiveTreeItem<TotalTabTableRow>(
                 tableRows, RecursiveTreeObject::getChildren
         );
         totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
