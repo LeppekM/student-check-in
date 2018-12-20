@@ -38,7 +38,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
 
     @FXML
     private Label nameLabel, serialLabel, manufacturerLabel, priceLabel, vendorLabel, locationLabel, barcodeLabel,
-            quantityLabel, faultDescriptionLabel;
+            quantityLabel, faultDescriptionLabel, typeConfig;
 
     private Part part;
 
@@ -76,11 +76,23 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         this.barcodeField.managedProperty().bind(this.barcodeField.visibleProperty());
         this.faultDescriptionField.managedProperty().bind(this.faultDescriptionField.visibleProperty());
 
+        this.nameLabel.managedProperty().bind(this.nameLabel.visibleProperty());
+        this.serialLabel.managedProperty().bind(this.serialLabel.visibleProperty());
+        this.manufacturerLabel.managedProperty().bind(this.manufacturerLabel.visibleProperty());
+        this.quantityLabel.managedProperty().bind(this.quantityLabel.visibleProperty());
+        this.priceLabel.managedProperty().bind(this.priceLabel.visibleProperty());
+        this.vendorLabel.managedProperty().bind(this.vendorLabel.visibleProperty());
+        this.locationLabel.managedProperty().bind(this.locationLabel.visibleProperty());
+        this.barcodeLabel.managedProperty().bind(this.barcodeLabel.visibleProperty());
+        this.faultDescriptionLabel.managedProperty().bind(this.faultDescriptionLabel.visibleProperty());
+
+
+        this.type = this.typeConfig.getText();
         System.out.println(this.type);
         determineVisibility();
 
         if(this.type.equals("none")){
-            this.nameLabel.setText("Error: No info found. Please report this to the developers.");
+            this.nameLabel.setText("Error: No info found. Please report \nthis to the developers.");
         }
     }
 
@@ -89,7 +101,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
      * @param part
      */
     public void initPart(Part part, String type) {
-        this.type = type;
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         if (this.part == null && part != null) {
             this.part = part;
@@ -106,6 +117,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.barcodeField.setText(part.getBarcode());
             this.faultDescriptionField.setText(part.getFaultDesc());
         }
+        this.typeConfig.setText(type);
     }
 
     /**
@@ -119,7 +131,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.nameField.setText(part.getPartName().toString());
             this.quantityField.setText("" + part.getQuantity());
         }
-        this.type = "checkedOut";
+        this.typeConfig.setText("checkedOut");
     }
 
     /**
@@ -129,47 +141,83 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         switch(this.type){
             case "total":
                 this.nameField.setVisible(true);
+                this.nameLabel.setVisible(true);
                 this.serialField.setVisible(true);
+                this.serialLabel.setVisible(true);
                 this.manufacturerField.setVisible(true);
+                this.manufacturerLabel.setVisible(true);
                 this.quantityField.setVisible(true);
+                this.quantityLabel.setVisible(true);
                 this.priceField.setVisible(true);
+                this.priceLabel.setVisible(true);
                 this.vendorList.setVisible(true);
+                this.vendorLabel.setVisible(true);
                 this.locationField.setVisible(true);
+                this.locationLabel.setVisible(true);
                 this.faultDescriptionField.setVisible(false);
+                this.faultDescriptionLabel.setVisible(false);
                 this.barcodeField.setVisible(true);
+                this.barcodeLabel.setVisible(true);
                 break;
             case "fault":
                 this.nameField.setVisible(true);
+                this.nameLabel.setVisible(true);
                 this.serialField.setVisible(true);
+                this.serialLabel.setVisible(true);
                 this.manufacturerField.setVisible(true);
+                this.manufacturerLabel.setVisible(true);
                 this.quantityField.setVisible(true);
+                this.quantityLabel.setVisible(true);
                 this.priceField.setVisible(true);
+                this.priceLabel.setVisible(true);
                 this.vendorList.setVisible(true);
+                this.vendorLabel.setVisible(true);
                 this.locationField.setVisible(false);
-                this.faultDescriptionField.setVisible(true);
+                this.locationLabel.setVisible(false);
+                this.faultDescriptionField.setVisible(false);
+                this.faultDescriptionLabel.setVisible(false);
                 this.barcodeField.setVisible(true);
+                this.barcodeLabel.setVisible(true);
                 break;
             case "checkedOut":
                 this.nameField.setVisible(true);
+                this.nameLabel.setVisible(true);
                 this.serialField.setVisible(true);
+                this.serialLabel.setVisible(true);
                 this.manufacturerField.setVisible(false);
+                this.manufacturerLabel.setVisible(false);
                 this.quantityField.setVisible(true);
+                this.quantityLabel.setVisible(true);
                 this.priceField.setVisible(false);
+                this.priceLabel.setVisible(false);
                 this.vendorList.setVisible(false);
+                this.vendorLabel.setVisible(false);
                 this.locationField.setVisible(true);
+                this.locationLabel.setVisible(true);
                 this.faultDescriptionField.setVisible(false);
-                this.barcodeField.setVisible(false);
+                this.faultDescriptionLabel.setVisible(false);
+                this.barcodeField.setVisible(true);
+                this.barcodeLabel.setVisible(true);
                 break;
             default:
-                this.nameField.setVisible(true);
+                this.nameField.setVisible(false);
+                this.nameLabel.setVisible(true);
                 this.serialField.setVisible(false);
+                this.serialLabel.setVisible(false);
                 this.manufacturerField.setVisible(false);
+                this.manufacturerLabel.setVisible(false);
                 this.quantityField.setVisible(false);
+                this.quantityLabel.setVisible(false);
                 this.priceField.setVisible(false);
+                this.priceLabel.setVisible(false);
                 this.vendorList.setVisible(false);
+                this.vendorLabel.setVisible(false);
                 this.locationField.setVisible(false);
+                this.locationLabel.setVisible(false);
                 this.faultDescriptionField.setVisible(false);
+                this.faultDescriptionLabel.setVisible(false);
                 this.barcodeField.setVisible(false);
+                this.barcodeLabel.setVisible(false);
                 this.type = "none";
 
         }
