@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -32,12 +33,15 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     private VBox sceneShowPart;
 
     @FXML
-    private TextField nameField, serialField, manufacturerField, priceField, vendorList, locationField, barcodeField,
+    private TextField nameField, serialField, manufacturerField, priceField, locationField, barcodeField,
             quantityField, faultDescriptionField;
-    
+
     @FXML
     private Label nameLabel, serialLabel, manufacturerLabel, priceLabel, vendorLabel, locationLabel, barcodeLabel,
             quantityLabel, faultDescriptionLabel, typeConfig;
+
+    @FXML
+    private ComboBox vendorList;
 
     private Part part;
 

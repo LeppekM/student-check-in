@@ -16,9 +16,9 @@
             <Label layoutX="19.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Checked Out" />
             <Label layoutX="321.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Overdue" />
             <Label layoutX="604.0" layoutY="279.0" stylesheets="@HeaderStyle.css" text="Saved" />
-            <JFXTreeTableView fx:id="coTable" layoutX="31.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
-            <JFXTreeTableView fx:id="oTable" layoutX="294.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
-            <JFXTreeTableView fx:id="sTable" layoutX="557.5" layoutY="337.0" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
+            <JFXTreeTableView fx:id="coTable" layoutX="31.5" layoutY="337.0" onMouseClicked="#coPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
+            <JFXTreeTableView fx:id="oTable" layoutX="294.5" layoutY="337.0" onMouseClicked="#oPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
+            <JFXTreeTableView fx:id="sTable" layoutX="557.5" layoutY="337.0" onMouseClicked="#sPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@TableStyle.css" />
             <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#goHome" stylesheets="@ButtonStyle.css">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">

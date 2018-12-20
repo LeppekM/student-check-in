@@ -47,11 +47,11 @@
 
 
 .tree-table-view{
-    -fx-background-color: transparent;
+    -fx-background-color: white;
 }
 
 .tree-table-view:focused{
-    -fx-background-color: transparent;
+    -fx-background-color: white;
 }
 
 .tree-table-view .column-header-background{
