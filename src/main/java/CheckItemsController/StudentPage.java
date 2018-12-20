@@ -38,7 +38,7 @@ public class StudentPage {
     private VBox vbox = new VBox();
 
     @FXML
-    private Label studentName, email, RFID;
+    private Label studentName, email, RFID, fees;
 
     @FXML
     private JFXTreeTableView coTable;
@@ -58,12 +58,13 @@ public class StudentPage {
     @FXML
     private JFXTreeTableColumn<SavedPart, String> sTableCol;
 
-    private Student student;
+    private static Student student;
     private StageWrapper stageWrapper = new StageWrapper();
 
 
     public void setStudent(Student s){
         student = s;
+        double overdueFees = 0.00;
         studentName = new Label("");
         studentName.setText(student.getName());
         studentName.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
@@ -73,17 +74,27 @@ public class StudentPage {
         RFID = new Label( "");
         RFID.setText(student.getID() + "");
         RFID.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        fees = new Label("");
+        for (int i = 0; i < student.getOverdueItems().size(); i++){
+            if (!student.getSavedItems().get(i).getPartName().get().equals(student.getOverdueItems().get(i).getPart().get())) {
+                overdueFees += Double.parseDouble(student.getOverdueItems().get(i).getPrice().get());
+            }
+        }
+        fees.setText("Outstanding fees: $" + overdueFees);
+        fees.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         vbox.getChildren().add(studentName);
         vbox.getChildren().add(email);
         vbox.getChildren().add(RFID);
+        vbox.getChildren().add(fees);
         vbox.setAlignment(Pos.TOP_CENTER);
-        vbox.setSpacing(35);
+        vbox.setSpacing(15);
         setTables();
     }
 
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
         coTableCol.setPrefWidth(197);
+        coTableCol.setResizable(false);
         coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutItems, String> param) {
@@ -93,6 +104,7 @@ public class StudentPage {
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
         oTableCol.setPrefWidth(197);
+        oTableCol.setResizable(false);
         oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueItem, String> param) {
@@ -102,6 +114,7 @@ public class StudentPage {
 
         sTableCol = new JFXTreeTableColumn<>("Part Name");
         sTableCol.setPrefWidth(197);
+        sTableCol.setResizable(false);
         sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<SavedPart, String> param) {
@@ -136,6 +149,24 @@ public class StudentPage {
     }
 
     public void coPopUp(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            Stage stage = new Stage();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/StudentCheckPopUp.fxml"));
+                Parent root = loader.load();
+                Scene scene = new Scene(root, 400, 300);
+                stage.setTitle("Checked Out Item");
+                stage.initOwner(main.getScene().getWindow());
+                stage.setScene(scene);
+                int index = coTable.getSelectionModel().getSelectedIndex();
+                CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
+                ((CheckoutPopUp) loader.getController()).populate(item);
+                stage.getIcons().add(new Image("msoe.png"));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void oPopUp(MouseEvent event) {
@@ -144,13 +175,13 @@ public class StudentPage {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/OverduePopup.fxml"));
                 Parent root = loader.load();
-                Scene scene = new Scene(root, 400, 400);
+                Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
                 int index = oTable.getSelectionModel().getSelectedIndex();
                 OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
-                    ((OverduePopUp) loader.getController()).populate(item);
+                ((OverduePopUp) loader.getController()).populate(item);
                 stage.getIcons().add(new Image("msoe.png"));
                 stage.show();
             } catch (IOException e) {
@@ -160,5 +191,27 @@ public class StudentPage {
     }
 
     public void sPopUp(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            Stage stage = new Stage();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/SavedPopUp.fxml"));
+                Parent root = loader.load();
+                Scene scene = new Scene(root, 600, 400);
+                stage.setTitle("Saved Item");
+                stage.initOwner(main.getScene().getWindow());
+                stage.setScene(scene);
+                int index = sTable.getSelectionModel().getSelectedIndex();
+                SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
+                ((SavedPopUp) loader.getController()).populate(item);
+                stage.getIcons().add(new Image("msoe.png"));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static Student getStudent(){
+        return student;
     }
 }
