@@ -104,7 +104,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 return;
             }
         }
-        stageWrapper.newStage("Menu.fxml", main);
+        stageWrapper.newStage("fxml/Menu.fxml", main);
     }
 
     /**
@@ -206,7 +206,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         Database database = new Database();
         if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
             try{
-                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Student.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Student.fxml"));
                 Parent root = (Parent) loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));

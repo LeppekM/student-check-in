@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" stylesheets="@PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
    <children>
       <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="160.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" />
       <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" prefHeight="24.0" prefWidth="125.0" />
@@ -31,7 +31,7 @@
          <graphic>
             <ImageView fitHeight="35.0" fitWidth="39.0">
                <image>
-                  <Image url="@home.png" />
+                  <Image url="@../images/home.png" />
                </image>
             </ImageView>
          </graphic>
@@ -41,7 +41,7 @@
             <Insets top="-3.0" />
          </opaqueInsets></JFXCheckBox>
       <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="414.0" layoutY="377.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: red;" text="Reset" textFill="#043993" />
-      <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="20.0" layoutY="24.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" stylesheets="@ButtonStyle.css" text="Switch to Student Info" />
+      <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="20.0" layoutY="24.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" stylesheets="@../css/ButtonStyle.css" text="Switch to Student Info" />
       <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="314.0" layoutY="377.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: red;" text="Submit" textFill="#043993" />
       <Label layoutX="14.0" layoutY="589.0" text="Current Item Status:" />
       <Label fx:id="itemStatus" layoutX="127.0" layoutY="589.0" />

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainMenuScene" onKeyTyped="#openCheckoutFromScanner" prefHeight="620.0" prefWidth="800.0" stylesheets="@MenuStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerMenu">
+<VBox fx:id="mainMenuScene" onKeyTyped="#openCheckoutFromScanner" prefHeight="620.0" prefWidth="800.0" stylesheets="@../css/MenuStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerMenu">
   <children>
     <StackPane fx:id="pane" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
@@ -24,7 +24,7 @@
                     <Insets right="50.0" />
                   </padding>
                   <stylesheets>
-                    <URL value="@MenuStyle.css" />
+                    <URL value="@../css/MenuStyle.css" />
                   </stylesheets>
                 </VBox>
               </children>

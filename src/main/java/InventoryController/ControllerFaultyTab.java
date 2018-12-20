@@ -2,9 +2,6 @@ package InventoryController;
 
 import Database.Database;
 import Database.Part;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,15 +10,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -96,7 +90,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     public void showInfoPage(Part part){
         Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ShowPart.fxml"));
             Parent root = loader.load();
             ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()), "fault");
             Scene scene = new Scene(root, 400, 400);
@@ -104,7 +98,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
             stage.initOwner(faultyPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
+            stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
             populateTable();
         } catch (IOException e) {

@@ -7,7 +7,7 @@
 
 <AnchorPane fx:id="inventoryScene" prefHeight="620.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
   <children>
-    <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="800.0" stylesheets="@TabStyle.css" tabClosingPolicy="UNAVAILABLE">
+    <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="800.0" stylesheets="@../css/TabStyle.css" tabClosingPolicy="UNAVAILABLE">
       <tabs>
         <Tab fx:id="totalTab" text="Total Inventory">
           <content>

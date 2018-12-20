@@ -11,7 +11,6 @@ import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -68,13 +67,13 @@ public class StudentPage {
         double overdueFees = 0.00;
         studentName = new Label("");
         studentName.setText(student.getName());
-        studentName.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        studentName.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         email = new Label("");
         email.setText(student.getEmail());
-        email.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        email.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         RFID = new Label("");
         RFID.setText(student.getID() + "");
-        RFID.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        RFID.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         fees = new Label("");
         int[] sID = new int[student.getSavedItems().size()];
         for (int i = 0; i < student.getSavedItems().size(); i++) {
@@ -88,7 +87,7 @@ public class StudentPage {
             }
         }
         fees.setText("Outstanding fees: $" + overdueFees);
-        fees.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        fees.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         vbox.getChildren().add(studentName);
         vbox.getChildren().add(email);
         vbox.getChildren().add(RFID);
@@ -152,14 +151,14 @@ public class StudentPage {
     }
 
     public void goHome() {
-        stageWrapper.newStage("Menu.fxml", main);
+        stageWrapper.newStage("fxml/Menu.fxml", main);
     }
 
     public void coPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/StudentCheckPopUp.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StudentCheckPopUp.fxml"));
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Checked Out Item");
@@ -168,7 +167,7 @@ public class StudentPage {
                 int index = coTable.getSelectionModel().getSelectedIndex();
                 CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
                 ((CheckoutPopUp) loader.getController()).populate(item);
-                stage.getIcons().add(new Image("msoe.png"));
+                stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -180,7 +179,7 @@ public class StudentPage {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/OverduePopup.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopup.fxml"));
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
@@ -189,7 +188,7 @@ public class StudentPage {
                 int index = oTable.getSelectionModel().getSelectedIndex();
                 OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
                 ((OverduePopUp) loader.getController()).populate(item);
-                stage.getIcons().add(new Image("msoe.png"));
+                stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -201,7 +200,7 @@ public class StudentPage {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/SavedPopUp.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SavedPopUp.fxml"));
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 600, 400);
                 stage.setTitle("Saved Item");
@@ -210,7 +209,7 @@ public class StudentPage {
                 int index = sTable.getSelectionModel().getSelectedIndex();
                 SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
                 ((SavedPopUp) loader.getController()).populate(item);
-                stage.getIcons().add(new Image("msoe.png"));
+                stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();

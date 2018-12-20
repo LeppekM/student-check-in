@@ -1,13 +1,9 @@
 package InventoryController;
 
-import Database.Database;
 import Database.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,30 +12,22 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -116,7 +104,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 setGraphic(null);
                                 setText(null);
                             } else {
-                                Image editOneImage = new Image("edit.png");
+                                Image editOneImage = new Image("images/edit.png");
                                 ImageView editOneImageView = new ImageView(editOneImage);
                                 editOneImageView.setFitHeight(12);
                                 editOneImageView.setFitWidth(12);
@@ -127,7 +115,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     editPart(getTreeTableRow().getItem().getPartID().getValue());
                                 });
 
-                                Image editAllImage = new Image("edit_all.png");
+                                Image editAllImage = new Image("images/edit_all.png");
                                 ImageView editAllImageView = new ImageView(editAllImage);
                                 editAllImageView.setFitHeight(12);
                                 editAllImageView.setFitWidth(12);
@@ -138,7 +126,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 //                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
 //                                });
 
-                                Image deleteOneImage = new Image("delete.png");
+                                Image deleteOneImage = new Image("images/delete.png");
                                 ImageView deleteOneImageView = new ImageView(deleteOneImage);
                                 deleteOneImageView.setFitHeight(12);
                                 deleteOneImageView.setFitWidth(12);
@@ -149,7 +137,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                 });
 
-                                Image deleteAllImage = new Image("delete_all.png");
+                                Image deleteAllImage = new Image("images/delete_all.png");
                                 ImageView deleteAllImageView = new ImageView(deleteAllImage);
                                 deleteAllImageView.setFitHeight(12);
                                 deleteAllImageView.setFitWidth(12);
@@ -345,7 +333,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public void addPart() {
         Stage stage = new Stage();
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource("AddPart.fxml");
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/AddPart.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load(myFxmlURL);
             Scene scene = new Scene(root, 400, 400);
@@ -373,7 +361,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public void editPart(String partID) {
         try {
             Part part = database.selectPart(Integer.parseInt(partID));
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditPart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditPart.fxml"));
             Parent root = loader.load();
             ((ControllerEditPart) loader.getController()).initPart(part);
             Scene scene = new Scene(root, 400, 400);
@@ -382,7 +370,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
+            stage.getIcons().add(new Image("images/msoe.png"));
             stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
@@ -427,7 +415,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public void showInfoPage(Part part){
         Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ShowPart.fxml"));
             Parent root = loader.load();
             ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()), "total");
             Scene scene = new Scene(root, 400, 400);
@@ -435,7 +423,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
+            stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
             populateTable();
         } catch (IOException e) {
