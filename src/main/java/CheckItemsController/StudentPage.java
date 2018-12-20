@@ -75,11 +75,22 @@ public class StudentPage {
         RFID.setText(student.getID() + "");
         RFID.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         fees = new Label("");
-        for (int i = 0; i < student.getOverdueItems().size(); i++){
-            if (!student.getSavedItems().get(i).getPartName().get().equals(student.getOverdueItems().get(i).getPart().get())) {
-                overdueFees += Double.parseDouble(student.getOverdueItems().get(i).getPrice().get());
-            }
-        }
+//        for (int i = 0; i < student.getOverdueItems().size(); i++){
+//            for (int j = 0; j < student.getSavedItems().size(); j++) {
+//                int oID = Integer.parseInt(student.getOverdueItems().get(i).getCheckID());
+//                int sID = Integer.parseInt(student.getSavedItems().get(j).getCheckID());
+//                if (oID != sID) {
+//                    double price = 0;
+//                    for (int k = 0; k < student.getOverdueItems().size(); k++){
+//                        if (student.getOverdueItems().get(k).getCheckID().equals(oID+"")){
+//                            price = Double.parseDouble(student.getOverdueItems().get(k).getPrice().get());
+//                        }
+//                        overdueFees += price;
+//                    }
+                    overdueFees += Double.parseDouble(student.getOverdueItems().get(0).getPrice().get());
+//                }
+//            }
+//        }
         fees.setText("Outstanding fees: $" + overdueFees);
         fees.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         vbox.getChildren().add(studentName);

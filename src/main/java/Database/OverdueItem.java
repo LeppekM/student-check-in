@@ -13,8 +13,9 @@ public class OverdueItem extends RecursiveTreeObject{
     private SimpleStringProperty price;
     private SimpleStringProperty name;
     private SimpleStringProperty email;
+    private SimpleStringProperty checkID;
 
-    public OverdueItem(int studentID, String name, String email, String partCon, String serialCon, String dateCon, String priceCon){
+    public OverdueItem(int studentID, String name, String email, String partCon, String serialCon, String dateCon, String priceCon, String checkID){
         this.ID = new SimpleIntegerProperty(studentID);
         this.part = new SimpleStringProperty(partCon);
         this.serial = new SimpleStringProperty(serialCon);
@@ -22,6 +23,7 @@ public class OverdueItem extends RecursiveTreeObject{
         this.price = new SimpleStringProperty(priceCon);
         this.name = new SimpleStringProperty(name);
         this.email = new SimpleStringProperty(email);
+        this.checkID = new SimpleStringProperty(checkID);
     }
 
     public SimpleIntegerProperty getID() {
@@ -106,5 +108,17 @@ public class OverdueItem extends RecursiveTreeObject{
 
     public void setEmail(String email) {
         this.email.set(email);
+    }
+
+    public String getCheckID() {
+        return checkID.get();
+    }
+
+    public SimpleStringProperty checkIDProperty() {
+        return checkID;
+    }
+
+    public void setCheckID(String checkID) {
+        this.checkID.set(checkID);
     }
 }

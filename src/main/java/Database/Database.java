@@ -53,7 +53,7 @@ public class Database {
         try {
             Date date = gettoday();
             String overdue = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
-                    " parts.serialNumber, checkout_parts.dueAt, parts.price/100 from checkout_parts " +
+                    " parts.serialNumber, checkout_parts.dueAt, parts.price/100, checkouts.checkoutID from checkout_parts " +
                     "left join parts on checkout_parts.partID = parts.partID " +
                     "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
                     "left join students on checkouts.studentID = students.studentID " +
@@ -65,7 +65,7 @@ public class Database {
                 data.add(new OverdueItem(resultSet.getInt("checkouts.studentID"), resultSet.getString("students.studentName"),
                         resultSet.getString("students.email"), resultSet.getString("parts.partName"),
                         resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
-                        resultSet.getString("parts.price/100")));
+                        resultSet.getString("parts.price/100"), resultSet.getString("checkouts.checkoutID")));
             }
             resultSet.close();
             statement.close();
@@ -185,9 +185,9 @@ public class Database {
                 "from students\n" +
                 "left join checkouts on students.studentID = checkouts.studentID\n" +
                 "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
-                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID + " and checkouts.reservedAt != NULL;";
+                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID + " and checkouts.reservedAt != '';";
         String oList = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
-                " parts.serialNumber, checkout_parts.dueAt, parts.price/100 from checkout_parts " +
+                " parts.serialNumber, checkout_parts.dueAt, parts.price/100, checkouts.checkoutID from checkout_parts " +
                 "left join parts on checkout_parts.partID = parts.partID " +
                 "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
                 "left join students on checkouts.studentID = students.studentID " +
@@ -228,7 +228,8 @@ public class Database {
                 overdueItems.add(new OverdueItem(resultSet.getInt("checkouts.studentID"),
                         resultSet.getString("students.studentName"), resultSet.getString("students.email"),
                         resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
-                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("parts.price/100")));
+                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("parts.price/100"),
+                        resultSet.getString("checkouts.checkoutID")));
             }
             statement.close();
             resultSet.close();
