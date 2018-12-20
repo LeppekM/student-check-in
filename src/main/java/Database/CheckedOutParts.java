@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class CheckedOutParts {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-    private final String SELECTQUERY = "SELECT students.studentName, parts.partName, checkout_parts.checkoutQuantity, checkouts.checkoutAt, checkout_parts.dueAt\n" +
+    private final String SELECTQUERY = "SELECT students.studentName, parts.partName, checkout_parts.checkoutQuantity, checkouts.checkoutAt, checkout_parts.dueAt, checkouts.checkoutID\n" +
             "            FROM checkout_parts\n" +
             "            INNER JOIN parts\n" +
             "            ON checkout_parts.partID = parts.partID\n" +
@@ -59,6 +59,7 @@ public class CheckedOutParts {
     private String dueDate;
     private String partName;
     private String studentName;
+    private int checkoutID;
 
     public ObservableList<CheckedOutItems> data = FXCollections.observableArrayList();
     private List<String> barcodes = new ArrayList<>();
@@ -75,7 +76,7 @@ public class CheckedOutParts {
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                CheckedOutItems checkedOutItems = new CheckedOutItems(studentName, partName, checkoutQuantity, checkedOutAt, dueDate);
+                CheckedOutItems checkedOutItems = new CheckedOutItems(studentName, partName, checkoutQuantity, checkedOutAt, dueDate, checkoutID);
                 data.add(checkedOutItems);
             }
         } catch (SQLException e) {
@@ -115,7 +116,7 @@ public class CheckedOutParts {
             checkoutQuantity = resultSet.getInt("checkoutQuantity");
             checkedOutAt = resultSet.getString("checkoutAt");
             dueDate = resultSet.getString("dueAt");
-
+            checkoutID = resultSet.getInt("checkoutID");
         } catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database");
         }
@@ -127,18 +128,18 @@ public class CheckedOutParts {
      * @return The new part ID to be added to the database for the corresponding part
      */
     public int createNewCheckoutID(){
-        int checkOutID = 0;
+//        int checkOutID = 0;
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(getCheckoutIDQuery);
             while(rs.next()){
-                checkOutID = rs.getInt("checkoutID");
+                checkoutID = rs.getInt("checkoutID");
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         //Gets max id from table, then increments to create new partID
-        return checkOutID + 1;
+        return checkoutID + 1;
     }
 
     /**

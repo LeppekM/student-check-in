@@ -50,7 +50,6 @@ public class Database {
      * @author Bailey Terry
      */
     public ObservableList<OverdueItem> getOverdue(ObservableList<OverdueItem> data) {
-//        ObservableList<OverdueItem> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
             String overdue = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
@@ -177,16 +176,16 @@ public class Database {
      */
     public Student selectStudent(int ID){
         String query = "select * from students where studentID = " + ID;
-        String coList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkout_parts.dueAt  \n" +
+        String coList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkout_parts.dueAt, checkouts.checkoutID \n" +
                 "from students\n" +
                 "left join checkouts on students.studentID = checkouts.studentID\n" +
                 "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
                 "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID  + ";";
-        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt\n" +
+        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt, checkouts.checkoutID\n" +
                 "from students\n" +
                 "left join checkouts on students.studentID = checkouts.studentID\n" +
                 "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
-                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID + ";";
+                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID + " and checkouts.reservedAt != NULL;";
         String oList = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
                 " parts.serialNumber, checkout_parts.dueAt, parts.price/100 from checkout_parts " +
                 "left join parts on checkout_parts.partID = parts.partID " +
@@ -217,7 +216,8 @@ public class Database {
             while (resultSet.next()){
                 checkedOutItems.add(new CheckedOutItems(resultSet.getString("students.studentName"),
                         resultSet.getString("parts.partName"), resultSet.getInt("checkout_parts.checkoutQuantity"),
-                        resultSet.getString("checkouts.checkoutAt"), resultSet.getString("checkout_parts.dueAt")));
+                        resultSet.getString("checkouts.checkoutAt"), resultSet.getString("checkout_parts.dueAt"),
+                        resultSet.getInt("checkouts.checkoutID")));
             }
             statement.close();
             resultSet.close();
@@ -238,8 +238,9 @@ public class Database {
             while (resultSet.next()){
                 savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
                         resultSet.getString("parts.partName"), resultSet.getString("checkouts.checkoutAt"),
-                        resultSet.getInt("checkout_parts.checkoutQuantity"), resultSet.getString("checkouts.checkoutAt"),
-                        resultSet.getString("checkout_parts.dueAt")));
+                        resultSet.getInt("checkout_parts.checkoutQuantity"), resultSet.getString("checkouts.reservedAt"),
+                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("checkouts.checkoutID"), null,
+                        null, null));
             }
             statement.close();
             resultSet.close();

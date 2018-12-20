@@ -12,14 +12,22 @@ public class SavedPart extends RecursiveTreeObject{
     private SimpleIntegerProperty quantity;
     private SimpleStringProperty savedAt;
     private SimpleStringProperty dueAt;
+    private SimpleStringProperty checkID;
+    private SimpleStringProperty prof;
+    private SimpleStringProperty course;
+    private SimpleStringProperty reason;
 
-    public SavedPart(String sName, String pName, String coAt, int quantity, String sAt, String dAt){
+    public SavedPart(String sName, String pName, String coAt, int quantity, String sAt, String dAt, String cID, String prof, String course, String reason){
         studentName = new SimpleStringProperty(sName);
         partName = new SimpleStringProperty(pName);
         checkedOutAt = new SimpleStringProperty(coAt);
         this.quantity = new SimpleIntegerProperty(quantity);
         savedAt = new SimpleStringProperty(sAt);
         dueAt = new SimpleStringProperty(dAt);
+        checkID = new SimpleStringProperty(cID);
+        this.prof = new SimpleStringProperty(prof);
+        this.course = new SimpleStringProperty(course);
+        this.reason = new SimpleStringProperty(reason);
     }
 
     public SimpleStringProperty getStudentName() {
@@ -92,5 +100,53 @@ public class SavedPart extends RecursiveTreeObject{
 
     public void setDueAt(String dueAt) {
         this.dueAt.set(dueAt);
+    }
+
+    public String getCheckID() {
+        return checkID.get();
+    }
+
+    public SimpleStringProperty checkIDProperty() {
+        return checkID;
+    }
+
+    public void setCheckID(String checkID) {
+        this.checkID.set(checkID);
+    }
+
+    public String getProf() {
+        return prof.get();
+    }
+
+    public SimpleStringProperty profProperty() {
+        return prof;
+    }
+
+    public void setProf(String prof) {
+        this.prof.set(prof);
+    }
+
+    public String getCourse() {
+        return course.get();
+    }
+
+    public SimpleStringProperty courseProperty() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course.set(course);
+    }
+
+    public String getReason() {
+        return reason.get();
+    }
+
+    public SimpleStringProperty reasonProperty() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason.set(reason);
     }
 }
