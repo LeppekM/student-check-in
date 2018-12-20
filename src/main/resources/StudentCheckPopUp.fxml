@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="271.0" prefWidth="410.0" stylesheets="@PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.CheckoutPopUp">
+<AnchorPane fx:id="main" prefHeight="271.0" prefWidth="410.0" stylesheets="@PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.CheckoutPopUp">
     <children>
         <Pane layoutX="0.0" layoutY="0.0" prefHeight="283.0" prefWidth="410.0">
             <children>
@@ -16,14 +17,20 @@
                     </font>
                 </Label>
                 <JFXTextField fx:id="student" alignment="CENTER" editable="false" layoutX="175.0" layoutY="14.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                <Label font="$x1" layoutX="45.0" layoutY="54.0" text="Part Name:" />
+                <Label font="$x1" layoutX="73.0" layoutY="54.0" text="Part Name:" />
                 <JFXTextField fx:id="part" alignment="CENTER" editable="false" layoutX="175.0" layoutY="54.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                <Label font="$x1" layoutX="127.0" layoutY="94.0" text="Quantity:" />
+                <Label font="$x1" layoutX="100.0" layoutY="94.0" text="Quantity:" />
                 <JFXTextField fx:id="quantity" alignment="CENTER" editable="false" layoutX="175.0" layoutY="94.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                <Label font="$x1" layoutX="41.0" layoutY="134.0" text="Checked Out On:" />
+                <Label font="$x1" layoutX="32.0" layoutY="134.0" text="Checked Out On:" />
                 <JFXTextField fx:id="date" alignment="CENTER" editable="false" layoutX="175.0" layoutY="134.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                <Label font="$x1" layoutX="85.0" layoutY="174.0" text="Due Date:" />
+                <Label font="$x1" layoutX="93.0" layoutY="174.0" text="Due Date:" />
                 <JFXTextField fx:id="dueDate" alignment="CENTER" editable="false" layoutX="175.0" layoutY="174.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+            <JFXCheckBox fx:id="check" layoutX="140.0" layoutY="220.0" mnemonicParsing="false" onAction="#savePart" text="Save Part?">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXCheckBox>
+            <Label fx:id="cID" layoutX="7.0" layoutY="261.0" style="-fx-font-size: 14;" text="Checkout ID:" />
             </children>
         </Pane>
     </children>

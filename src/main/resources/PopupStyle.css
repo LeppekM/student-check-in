@@ -23,7 +23,6 @@
 }
 
 .combo-box .list-view{
-    /*-fx-background-color: #424242;*/
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-border-color: white;
@@ -37,7 +36,10 @@
 }
 
 .text-field{
-    /*-fx-background-color: #424242;*/
     -fx-text-fill: white;
     -fx-font-weight: bold;
+}
+
+.check-box{
+    -fx-text-fill: white;
 }

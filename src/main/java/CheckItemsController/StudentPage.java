@@ -38,7 +38,7 @@ public class StudentPage {
     private VBox vbox = new VBox();
 
     @FXML
-    private Label studentName, email, RFID;
+    private Label studentName, email, RFID, fees;
 
     @FXML
     private JFXTreeTableView coTable;
@@ -58,12 +58,13 @@ public class StudentPage {
     @FXML
     private JFXTreeTableColumn<SavedPart, String> sTableCol;
 
-    private Student student;
+    private static Student student;
     private StageWrapper stageWrapper = new StageWrapper();
 
 
     public void setStudent(Student s){
         student = s;
+        double overdueFees = 0.00;
         studentName = new Label("");
         studentName.setText(student.getName());
         studentName.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
@@ -73,11 +74,20 @@ public class StudentPage {
         RFID = new Label( "");
         RFID.setText(student.getID() + "");
         RFID.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
+        fees = new Label("");
+        for (int i = 0; i < student.getOverdueItems().size(); i++){
+            if (!student.getSavedItems().get(i).getPartName().get().equals(student.getOverdueItems().get(i).getPart().get())) {
+                overdueFees += Double.parseDouble(student.getOverdueItems().get(i).getPrice().get());
+            }
+        }
+        fees.setText("Outstanding fees: $" + overdueFees);
+        fees.getStylesheets().add(getClass().getResource("/HeaderStyle.css").toExternalForm());
         vbox.getChildren().add(studentName);
         vbox.getChildren().add(email);
         vbox.getChildren().add(RFID);
+        vbox.getChildren().add(fees);
         vbox.setAlignment(Pos.TOP_CENTER);
-        vbox.setSpacing(35);
+        vbox.setSpacing(15);
         setTables();
     }
 
@@ -199,5 +209,9 @@ public class StudentPage {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static Student getStudent(){
+        return student;
     }
 }
