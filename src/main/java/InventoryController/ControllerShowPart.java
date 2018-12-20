@@ -38,13 +38,11 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
 
     @FXML
     private Label nameLabel, serialLabel, manufacturerLabel, priceLabel, vendorLabel, locationLabel, barcodeLabel,
-            quantityLabel, faultDescriptionLabel, typeConfig;
+            quantityLabel, faultDescriptionLabel;
 
     private Part part;
 
     private CheckedOutItems checkedOutPart;
-
-    private String type;
 
     private VendorInformation vendorInformation = new VendorInformation();
 
@@ -85,15 +83,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         this.locationLabel.managedProperty().bind(this.locationLabel.visibleProperty());
         this.barcodeLabel.managedProperty().bind(this.barcodeLabel.visibleProperty());
         this.faultDescriptionLabel.managedProperty().bind(this.faultDescriptionLabel.visibleProperty());
-
-
-        this.type = this.typeConfig.getText();
-        System.out.println(this.type);
-        determineVisibility();
-
-        if(this.type.equals("none")){
-            this.nameLabel.setText("Error: No info found. Please report \nthis to the developers.");
-        }
     }
 
     /**
@@ -117,7 +106,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.barcodeField.setText(part.getBarcode());
             this.faultDescriptionField.setText(part.getFaultDesc());
         }
-        this.typeConfig.setText(type);
+        determineVisibility(type);
     }
 
     /**
@@ -131,95 +120,199 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.nameField.setText(part.getPartName().toString());
             this.quantityField.setText("" + part.getQuantity());
         }
-        this.typeConfig.setText("checkedOut");
+        determineVisibility("checkedOut");
     }
 
     /**
      * Helper method that sets the visibility of Nodes in the FXML
      */
-    private void determineVisibility(){
-        switch(this.type){
+    private void determineVisibility(String type){
+        System.out.println(type);
+        switch(type){
             case "total":
-                this.nameField.setVisible(true);
-                this.nameLabel.setVisible(true);
-                this.serialField.setVisible(true);
-                this.serialLabel.setVisible(true);
-                this.manufacturerField.setVisible(true);
-                this.manufacturerLabel.setVisible(true);
-                this.quantityField.setVisible(true);
-                this.quantityLabel.setVisible(true);
-                this.priceField.setVisible(true);
-                this.priceLabel.setVisible(true);
-                this.vendorList.setVisible(true);
-                this.vendorLabel.setVisible(true);
-                this.locationField.setVisible(true);
-                this.locationLabel.setVisible(true);
-                this.faultDescriptionField.setVisible(false);
-                this.faultDescriptionLabel.setVisible(false);
-                this.barcodeField.setVisible(true);
-                this.barcodeLabel.setVisible(true);
+                setTotalElements();
                 break;
             case "fault":
-                this.nameField.setVisible(true);
-                this.nameLabel.setVisible(true);
-                this.serialField.setVisible(true);
-                this.serialLabel.setVisible(true);
-                this.manufacturerField.setVisible(true);
-                this.manufacturerLabel.setVisible(true);
-                this.quantityField.setVisible(true);
-                this.quantityLabel.setVisible(true);
-                this.priceField.setVisible(true);
-                this.priceLabel.setVisible(true);
-                this.vendorList.setVisible(true);
-                this.vendorLabel.setVisible(true);
-                this.locationField.setVisible(false);
-                this.locationLabel.setVisible(false);
-                this.faultDescriptionField.setVisible(false);
-                this.faultDescriptionLabel.setVisible(false);
-                this.barcodeField.setVisible(true);
-                this.barcodeLabel.setVisible(true);
+                setFaultElements();
                 break;
             case "checkedOut":
-                this.nameField.setVisible(true);
-                this.nameLabel.setVisible(true);
-                this.serialField.setVisible(true);
-                this.serialLabel.setVisible(true);
-                this.manufacturerField.setVisible(false);
-                this.manufacturerLabel.setVisible(false);
-                this.quantityField.setVisible(true);
-                this.quantityLabel.setVisible(true);
-                this.priceField.setVisible(false);
-                this.priceLabel.setVisible(false);
-                this.vendorList.setVisible(false);
-                this.vendorLabel.setVisible(false);
-                this.locationField.setVisible(true);
-                this.locationLabel.setVisible(true);
-                this.faultDescriptionField.setVisible(false);
-                this.faultDescriptionLabel.setVisible(false);
-                this.barcodeField.setVisible(true);
-                this.barcodeLabel.setVisible(true);
+                setCheckedOutElements();
                 break;
             default:
-                this.nameField.setVisible(false);
+                setElements("name", false);
+                setElements("serial", false);
+                setElements("manufacturer", false);
+                setElements("quantity", false);
+                setElements("price", false);
+                setElements("vendor", false);
+                setElements("location", false);
+                setElements("faultDesc", false);
+                setElements("barcode", false);
                 this.nameLabel.setVisible(true);
-                this.serialField.setVisible(false);
-                this.serialLabel.setVisible(false);
-                this.manufacturerField.setVisible(false);
-                this.manufacturerLabel.setVisible(false);
-                this.quantityField.setVisible(false);
-                this.quantityLabel.setVisible(false);
-                this.priceField.setVisible(false);
-                this.priceLabel.setVisible(false);
-                this.vendorList.setVisible(false);
-                this.vendorLabel.setVisible(false);
-                this.locationField.setVisible(false);
-                this.locationLabel.setVisible(false);
-                this.faultDescriptionField.setVisible(false);
-                this.faultDescriptionLabel.setVisible(false);
-                this.barcodeField.setVisible(false);
-                this.barcodeLabel.setVisible(false);
-                this.type = "none";
+                this.nameLabel.setText("Error: No info found. Please report \nthis to the developers.");
+                break;
 
+        }
+    }
+
+    /**
+     * Helper method to set visibility and position of UI elements based on the total information
+     */
+    public void setTotalElements(){
+        setElements("name", true);
+        setElements("serial", true);
+        setElements("manufacturer", true);
+        setElements("quantity", true);
+        setElements("price", true);
+        setElements("vendor", true);
+        setElements("location", true);
+        setElements("faultDesc", false);
+        setElements("barcode", true);
+    }
+
+    /**
+     * Helper method to set visibility and position of UI elements based on the checked out information
+     */
+    public void setCheckedOutElements(){
+        setElements("name", true);
+        setElements("serial", true);
+        setElements("manufacturer", false);
+        setElements("quantity", 52, 134, true);
+        setElements("price", false);
+        setElements("vendor", false);
+        setElements("location", false);
+        setElements("faultDesc", false);
+        setElements("barcode", false);
+    }
+
+    /**
+     * Helper method to set visibility and position of UI elements based on the fault tab information
+     */
+    public void setFaultElements(){
+        setElements("name", true);
+        setElements("serial", true);
+        setElements("manufacturer", false);
+        setElements("quantity", false);
+        setElements("price", true);
+        setElements("vendor", false);
+        setElements("location", false);
+        setElements("faultDesc", true);
+        setElements("barcode", true);
+    }
+
+    /**
+     * Helper method to set visibility and position of UI elements
+     */
+    public void setElements(String element, int x, int y, boolean visible){
+        switch(element){
+            case "name":
+                this.nameField.setLayoutX(x);
+                this.nameField.setLayoutX(y);
+                this.nameLabel.setLayoutX(x);
+                this.nameLabel.setLayoutX(y);
+                this.nameField.setVisible(visible);
+                this.nameLabel.setVisible(visible);
+                break;
+            case "serial":
+                this.serialField.setLayoutX(x);
+                this.serialField.setLayoutX(y);
+                this.serialLabel.setLayoutX(x);
+                this.serialLabel.setLayoutX(y);
+                this.serialField.setVisible(visible);
+                this.serialLabel.setVisible(visible);
+                break;
+            case "manufacturer":
+                this.manufacturerLabel.setLayoutX(x);
+                this.manufacturerLabel.setLayoutX(y);
+                this.manufacturerField.setLayoutX(x);
+                this.manufacturerField.setLayoutX(y);
+                this.manufacturerField.setVisible(visible);
+                this.manufacturerLabel.setVisible(visible);
+                break;
+            case "quantity":
+                this.quantityField.setLayoutX(x);
+                this.quantityField.setLayoutX(y);
+                this.quantityLabel.setLayoutX(x);
+                this.quantityLabel.setLayoutX(y + 123);
+                this.quantityField.setVisible(visible);
+                this.quantityLabel.setVisible(visible);
+                break;
+            case "price":
+                this.priceLabel.setLayoutX(x);
+                this.priceLabel.setLayoutX(y);
+                this.priceField.setVisible(visible);
+                this.priceLabel.setVisible(visible);
+                break;
+            case "vendor":
+                this.vendorLabel.setLayoutX(x);
+                this.vendorLabel.setLayoutX(y);
+                this.vendorList.setVisible(visible);
+                this.vendorLabel.setVisible(visible);
+                break;
+            case "location":
+                this.locationLabel.setLayoutX(x);
+                this.locationLabel.setLayoutX(y);
+                this.locationField.setVisible(visible);
+                this.locationLabel.setVisible(visible);
+                break;
+            case "faultDesc":
+                this.faultDescriptionField.setLayoutX(x);
+                this.faultDescriptionField.setLayoutX(y);
+                this.faultDescriptionLabel.setLayoutX(x);
+                this.faultDescriptionLabel.setLayoutX(y);
+                this.faultDescriptionField.setVisible(visible);
+                this.faultDescriptionLabel.setVisible(visible);
+                break;
+            case "barcode":
+                this.barcodeLabel.setLayoutX(x);
+                this.barcodeLabel.setLayoutX(y);
+                this.barcodeField.setVisible(visible);
+                this.barcodeLabel.setVisible(visible);
+                break;
+        }
+    }
+
+    /**
+     * Helper method to set visibility and position of UI elements
+     */
+    public void setElements(String element, boolean visible){
+        switch(element){
+            case "name":
+                this.nameField.setVisible(visible);
+                this.nameLabel.setVisible(visible);
+                break;
+            case "serial":
+                this.serialField.setVisible(visible);
+                this.serialLabel.setVisible(visible);
+                break;
+            case "manufacturer":
+                this.manufacturerField.setVisible(visible);
+                this.manufacturerLabel.setVisible(visible);
+                break;
+            case "quantity":
+                this.quantityField.setVisible(visible);
+                this.quantityLabel.setVisible(visible);
+                break;
+            case "price":
+                this.priceField.setVisible(visible);
+                this.priceLabel.setVisible(visible);
+                break;
+            case "vendor":
+                this.vendorList.setVisible(visible);
+                this.vendorLabel.setVisible(visible);
+                break;
+            case "location":
+                this.locationField.setVisible(visible);
+                this.locationLabel.setVisible(visible);
+                break;
+            case "faultDesc":
+                this.faultDescriptionField.setVisible(visible);
+                this.faultDescriptionLabel.setVisible(visible);
+                break;
+            case "barcode":
+                this.barcodeField.setVisible(visible);
+                this.barcodeLabel.setVisible(visible);
+                break;
         }
     }
 

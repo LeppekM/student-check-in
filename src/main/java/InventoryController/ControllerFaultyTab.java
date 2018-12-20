@@ -17,6 +17,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -97,7 +98,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
             Parent root = loader.load();
-            ((ControllerShowPart) loader.getController()).initPart(part, "fault");
+            ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()), "fault");
             Scene scene = new Scene(root, 400, 400);
             stage.setTitle("Part Information");
             stage.initOwner(faultyPage.getScene().getWindow());
