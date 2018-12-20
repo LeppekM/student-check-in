@@ -147,7 +147,7 @@ public class StudentPage {
     }
 
     public void goBack() {
-        stageWrapper.newStage("CheckoutItems.fxml", main);
+        stageWrapper.newStage("fxml/CheckoutItems.fxml", main);
     }
 
     public void goHome() {
