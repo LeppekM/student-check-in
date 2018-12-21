@@ -5,11 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import java.io.File;
 import java.net.URL;
 
 
@@ -19,14 +16,14 @@ public class StudentCheckIn extends Application  {
     }
     @Override
     public void start(Stage primaryStage) throws Exception{
-        URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
+        URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);
         Scene scene = new Scene(root, 789, 620);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Barcode Scanner");
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image("msoe.png"));
+        primaryStage.getIcons().add(new Image("images/msoe.png"));
 //        scene.getStylesheets().add(ControllerMenu.class.getResource("MenuStyle.css").toExternalForm());
         primaryStage.show();
     }

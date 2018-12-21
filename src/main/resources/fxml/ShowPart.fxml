@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="sceneShowPart" prefHeight="374.0" prefWidth="389.0" stylesheets="@PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerShowPart">
+<VBox fx:id="sceneShowPart" prefHeight="374.0" prefWidth="389.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerShowPart">
     <children>
         <AnchorPane prefHeight="468.0" prefWidth="410.0">
             <children>

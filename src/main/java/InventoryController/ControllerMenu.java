@@ -1,17 +1,12 @@
 package InventoryController;
 
-import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 
 import java.io.IOException;
@@ -37,10 +32,10 @@ public class ControllerMenu implements Initializable {
     }
 
     public void openInventory(){
-        newStage("InventoryPage.fxml");
+        newStage("fxml/InventoryPage.fxml");
     }
 
-    public void openCheckItemsPage(){ newStage("CheckOutItems.fxml"); }
+    public void openCheckItemsPage(){ newStage("fxml/CheckOutItems.fxml"); }
 
     public void newStage(String fxml){
         try {
@@ -60,7 +55,7 @@ public class ControllerMenu implements Initializable {
     public void openCheckoutFromScanner(KeyEvent keyEvent){
         studentIDArray.add(keyEvent.getCharacter());
         if(getStudentID().matches("^(rfid)$")) {
-                newStage("CheckOutItems.fxml");
+                newStage("fxml/CheckOutItems.fxml");
             }
     }
 

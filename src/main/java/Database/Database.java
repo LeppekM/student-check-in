@@ -5,8 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import java.util.Date;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class Database {
     //DB root pass: Userpassword123
@@ -83,7 +87,7 @@ public class Database {
      */
     private static Date gettoday() {
         long date = System.currentTimeMillis();
-        return new Date(date);
+        return new java.sql.Date(date);
     }
 
     /**
@@ -104,6 +108,18 @@ public class Database {
         Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").hideAfter(new Duration(5000)).show();//.showWarning();
     }
 
+    public void deleteParts(String partName) {
+        try {
+            String deleteQuery = "UPDATE parts p set p.deletedBy = 'root', p.isDeleted = 1, " +
+                    "p.deletedAt = date('" + gettoday() + "') WHERE p.partName = '" + partName + "';";
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(deleteQuery);
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Connection getConnection() {
         return connection;
     }
@@ -111,15 +127,17 @@ public class Database {
     public static ObservableList getHistory() {
         ObservableList<HistoryItems> data = FXCollections.observableArrayList();
         try {
-            String historyQuery = "SELECT studentName, partName, serialNumber, location, " +
-                    "checkoutQuantity - checkInQuantity AS 'quantity', CASE " +
-                    "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
+            String historyQuery = "SELECT studentName, partName, serialNumber, " +
+                    "checkoutQuantity - checkInQuantity AS 'quantity'," +
+                    "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
+                    "THEN 'In' ELSE 'Out' END AS 'Status', " +
+                    "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
                     "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END AS 'date' " +
                     "FROM parts " +
                     "INNER JOIN checkout_parts ON parts.partID = checkout_parts.partID " +
                     "INNER JOIN checkouts ON checkout_parts.checkoutID = checkouts.checkoutID " +
                     "INNER JOIN students ON checkouts.studentID = students.studentID " +
-                    "WHERE parts.deleted = 0 " +
+                    "WHERE parts.isDeleted = 0 " +
                     "ORDER BY CASE " +
                     "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
                     "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END DESC;";
@@ -128,8 +146,8 @@ public class Database {
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 data.add(new HistoryItems(resultSet.getString("studentName"), resultSet.getString("partName"),
-                        resultSet.getString("serialNumber"), resultSet.getString("location"),
-                        resultSet.getInt("quantity"), resultSet.getString("date")));
+                        resultSet.getString("serialNumber"), resultSet.getInt("quantity"),
+                        resultSet.getString("location"), resultSet.getString("date")));
                 resultSet.close();
                 statement.close();
             }
@@ -167,6 +185,18 @@ public class Database {
         return part;
     }
 
+    public boolean hasPartName(String partName) {
+        String query = "SELECT * from parts where partName = '" + partName + "';";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * Gets a student from the database based on their RFID
      *
@@ -175,13 +205,15 @@ public class Database {
      * @author Bailey Terry
      */
     public Student selectStudent(int ID){
+        String todaysDate = gettoday().toString();
         String query = "select * from students where studentID = " + ID;
         String coList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkout_parts.dueAt, checkouts.checkoutID \n" +
                 "from students\n" +
                 "left join checkouts on students.studentID = checkouts.studentID\n" +
                 "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
                 "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID  + ";";
-        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt, checkouts.checkoutID\n" +
+        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt," +
+                " checkouts.checkoutID, checkouts.prof, checkouts.course, checkouts.reason\n" +
                 "from students\n" +
                 "left join checkouts on students.studentID = checkouts.studentID\n" +
                 "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
@@ -191,10 +223,11 @@ public class Database {
                 "left join parts on checkout_parts.partID = parts.partID " +
                 "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
                 "left join students on checkouts.studentID = students.studentID " +
-                "where checkout_parts.dueAt < date('" + gettoday().toString() + "') and students.studentID = " + ID + ";";
+                "where checkout_parts.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";
         String email = "";
+        String date = "";
         int id = 0;
         ObservableList<CheckedOutItems> checkedOutItems = FXCollections.observableArrayList();
         ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
@@ -240,12 +273,27 @@ public class Database {
                 savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
                         resultSet.getString("parts.partName"), resultSet.getString("checkouts.checkoutAt"),
                         resultSet.getInt("checkout_parts.checkoutQuantity"), resultSet.getString("checkouts.reservedAt"),
-                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("checkouts.checkoutID"), null,
-                        null, null));
+                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("checkouts.checkoutID"),
+                        resultSet.getString("checkouts.prof"), resultSet.getString("checkouts.course"), resultSet.getString("checkouts.reason")));
             }
             statement.close();
             resultSet.close();
-            student = new Student(name,id,email,checkedOutItems,overdueItems,savedParts);
+            if (checkedOutItems.size() > 0) {
+                date = checkedOutItems.get(0).getCheckedOutAt().get();
+            }
+            for (int i = 0; i < checkedOutItems.size(); i++){
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date d = sdf.parse(date);
+                    Date d1 = sdf.parse(checkedOutItems.get(i).getCheckedOutAt().get());
+                    if (d1.after(d)){
+                        date = checkedOutItems.get(i).getCheckedOutAt().get();
+                    }
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }
+            }
+            student = new Student(name,id,email, date, checkedOutItems,overdueItems,savedParts);
         }catch (SQLException e){
             e.printStackTrace();
         }

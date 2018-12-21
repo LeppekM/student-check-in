@@ -17,7 +17,7 @@ public class ControllerTotalTabTest extends ApplicationTest {
     @Override
     public void start (Stage stage)throws IOException {
 
-        URL myFxmlURL = ClassLoader.getSystemResource("InventoryTotalTab.fxml");
+        URL myFxmlURL = ClassLoader.getSystemResource("fxml/InventoryTotalTab.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);
         Scene scene = new Scene(root, 800, 600);

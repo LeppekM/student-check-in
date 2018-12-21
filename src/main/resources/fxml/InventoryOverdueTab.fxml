@@ -11,7 +11,7 @@
    <children>
        <Label layoutX="15.0" layoutY="11.0" text="Overdue Items">
            <stylesheets>
-               <URL value="@HeaderStyle.css" />
+               <URL value="@../css/HeaderStyle.css" />
            </stylesheets>
        </Label>
       <Pane prefHeight="600.0" prefWidth="800.0">
@@ -25,7 +25,7 @@
                   <TableColumn fx:id="price" editable="false" minWidth="159.0" prefWidth="155.0" text="Fee" />
               </columns>
                 <stylesheets>
-                    <URL value="@TableStyle.css" />
+                    <URL value="@../css/TableStyle.css" />
                 </stylesheets>
             </TableView>
          </children>

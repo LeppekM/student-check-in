@@ -1,7 +1,6 @@
 package InventoryController;
 
 import Database.CheckedOutParts;
-import Database.Part;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -16,10 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -89,7 +86,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
             ObservableList<StringProperty> data = FXCollections.observableArrayList();
             data.add(new SimpleStringProperty(list.get(i).getStudentName().get()));
             data.add(new SimpleStringProperty(list.get(i).getPartName().get()));
-            data.add(new SimpleStringProperty("" + list.get(i).getQuantity()));
+            data.add(new SimpleStringProperty("" + list.get(i).getQuantity().get()));
             data.add(new SimpleStringProperty(list.get(i).getCheckedOutAt().get()));
             data.add(new SimpleStringProperty(list.get(i).getDueDate().get()));
             checkedOutTable.getItems().add(data);
@@ -147,7 +144,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
     public void showInfoPage(CheckedOutItems part){
         Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ShowPart.fxml"));
             Parent root = loader.load();
             ((ControllerShowPart) loader.getController()).initPart(part);
             Scene scene = new Scene(root, 400, 400);
@@ -155,7 +152,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
             stage.initOwner(checkedOutPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
+            stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
             populateTable();
         } catch (IOException e) {
