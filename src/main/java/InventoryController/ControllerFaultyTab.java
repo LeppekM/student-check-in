@@ -58,7 +58,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Part rowData = row.getItem();
-                    showInfoPage(rowData);
+                    showInfoPage(rowData, "fault");
                     System.out.println("Hi, " + rowData.toString());
                 }
             });
@@ -86,31 +86,5 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         this.tableView.getItems().clear();
         this.tableView.getItems().setAll(this.data);
-    }
-
-    /**
-     * This method brings up the FXML page for showing the info about the selected part
-     *
-     * @author Matthew Karcz
-     */
-    public void showInfoPage(Part part){
-        Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
-            Parent root = loader.load();
-            ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()), "fault");
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Part Information");
-            stage.initOwner(faultyPage.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
-            stage.showAndWait();
-            populateTable();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

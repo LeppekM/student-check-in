@@ -7,11 +7,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -126,6 +131,31 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
             currentStatement = null;
         }
         return data;
+    }
+
+    /**
+     * This method brings up the FXML page for showing the info about the selected part
+     *
+     * @author Matthew Karcz
+     */
+    public void showInfoPage(Part part, String type){
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            Parent root = loader.load();
+            ((ControllerShowPart) loader.getController()).initPart(part, type);
+            Scene scene = new Scene(root, 400, 400);
+            stage.setTitle("Part Information");
+            stage.initOwner(tabPane.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("msoe.png"));
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

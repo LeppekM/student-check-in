@@ -32,6 +32,8 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     @FXML
     private VBox sceneShowPart;
 
+    //TODO Add student to information
+
     @FXML
     private TextField nameField, serialField, manufacturerField, priceField, vendorList, locationField, barcodeField,
             quantityField, faultDescriptionField;
@@ -137,7 +139,10 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         System.out.println(type);
         switch(type){
             case "total":
-                setTotalElements();
+                if(part.getFault())
+                    setFaultElements();
+                else
+                    setTotalElements();
                 break;
             case "fault":
                 setFaultElements();
