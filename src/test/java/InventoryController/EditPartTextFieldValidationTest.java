@@ -1,8 +1,6 @@
 package InventoryController;
 
-import Database.Part;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,14 +8,14 @@ import static org.junit.Assert.assertTrue;
 
 public class EditPartTextFieldValidationTest {
 
-    private ControllerEditPart controllerEditPart;
+    private ControllerEditOnePart controllerEditOnePart;
 
     @Before
     public void before(){
-        controllerEditPart = new ControllerEditPart();
+        controllerEditOnePart = new ControllerEditOnePart();
 //        Part testPart = new Part("Test Part Name", "Test Serial Number", "Test Manufacturer", 12.345,
 //                "Test Vendor", "Over Here", "Scan me, please", true, 123456, false);
-//        controllerEditPart.initPart(testPart);
+//        controllerEditOnePart.initPart(testPart);
     }
 
 
@@ -31,7 +29,7 @@ public class EditPartTextFieldValidationTest {
         boolean correctValue = false;
 
         //Act
-        boolean testValue = controllerEditPart.validateNumberInputsContainNumber(invalidInput);
+        boolean testValue = controllerEditOnePart.validateNumberInputsContainNumber(invalidInput);
 
         //Assert
         assertEquals(correctValue, testValue);
@@ -46,28 +44,28 @@ public class EditPartTextFieldValidationTest {
         boolean correctValue = false;
 
         //Act
-        boolean testPartNameEmpty = controllerEditPart.validateAllFieldsFilledIn("", "test", "test",
+        boolean testPartNameEmpty = controllerEditOnePart.validateAllFieldsFilledIn("", "test", "test",
                 "test", "test", "test", "test");
 
-        boolean testSerialNumberEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "", "test",
+        boolean testSerialNumberEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "", "test",
                 "test", "test", "test", "test");
 
-        boolean testManufacturerEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "", "",
+        boolean testManufacturerEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "", "",
                 "test", "test", "test", "test");
 
-        boolean testPriceEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
+        boolean testPriceEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test",
                 "", "test", "test", "test");
 
-        boolean testLocationEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
+        boolean testLocationEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test",
                 "test", "", "test", "test");
 
-        boolean testBarcodeEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
+        boolean testBarcodeEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test",
                 "test", "test", "", "test");
 
-        boolean testQuantityEmpty = controllerEditPart.validateAllFieldsFilledIn("test", "test", "test",
+        boolean testQuantityEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test",
                 "test", "test", "test", "");
 
-        boolean testAllEmpty = controllerEditPart.validateAllFieldsFilledIn("", "", "", "", "", "",
+        boolean testAllEmpty = controllerEditOnePart.validateAllFieldsFilledIn("", "", "", "", "", "",
                 "");
 
         //Assert
@@ -100,14 +98,14 @@ public class EditPartTextFieldValidationTest {
         String invalidQuantityTestInput3 = "-1";
 
         //Act
-        boolean invalidPrice1Test = controllerEditPart.validateNumberInputsWithinRange(invalidPriceTestInput1,
+        boolean invalidPrice1Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput1,
                 nominalValidQuantityTestInput);
-        boolean invalidPrice2Test = controllerEditPart.validateNumberInputsWithinRange(invalidPriceTestInput2,
+        boolean invalidPrice2Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput2,
                 nominalValidQuantityTestInput);
-        boolean invalidPrice3Test = controllerEditPart.validateNumberInputsWithinRange(invalidPriceTestInput2,
+        boolean invalidPrice3Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput2,
                 nominalValidQuantityTestInput);
 
-        boolean nominalValidInputTest = controllerEditPart.validateNumberInputsWithinRange(nominalValidPriceTestInput,
+        boolean nominalValidInputTest = controllerEditOnePart.validateNumberInputsWithinRange(nominalValidPriceTestInput,
                 nominalValidQuantityTestInput);
 
 

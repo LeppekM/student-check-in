@@ -20,6 +20,9 @@ import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -31,7 +34,6 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
 
@@ -49,6 +51,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     @FXML
     private JFXTreeTableView<TotalTabTableRow> totalTable;
+
+    private TreeItem<TotalTabTableRow> root;
 
     @FXML JFXTreeTableColumn<TotalTabTableRow, JFXTreeTableColumn> outerPartNameCol;
 
@@ -112,7 +116,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editOneButton.setGraphic(editOneImageView);
                                 editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOneButton.setOnAction(event -> {
-                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
+                                    editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                 });
 
                                 Image editAllImage = new Image("images/edit_all.png");
@@ -122,9 +126,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 final JFXButton editAllButton = new JFXButton();
                                 editAllButton.setGraphic(editAllImageView);
                                 editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
-//                                editAllButton.setOnAction(event -> {
-//                                    editPart(getTreeTableRow().getItem().getPartID().getValue());
-//                                });
+                                editAllButton.setOnAction(event -> {
+                                    editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
+                                });
 
                                 Image deleteOneImage = new Image("images/delete.png");
                                 ImageView deleteOneImageView = new ImageView(deleteOneImage);
@@ -143,10 +147,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllImageView.setFitWidth(12);
                                 final JFXButton deleteAllButton = new JFXButton();
                                 deleteAllButton.setGraphic(deleteAllImageView);
-                                deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
-//                                deleteOneButton.setOnAction(event -> {
-//                                    deletePart(getTreeTableRow().getItem().getPartID().getValue());
-//                                });
+                                deleteAllButton.setButtonType(JFXButton.ButtonType.RAISED);
+                                deleteAllButton.setOnAction(event -> {
+                                    deletePartType(getTreeTableRow().getItem().getPartName().getValue());
+                                });
 
 
                                 VBox column = new VBox();
@@ -242,23 +246,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         searchInput.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                totalTable.setPredicate(new Predicate<TreeItem<TotalTabTableRow>>() {
-                    @Override
-                    public boolean test(TreeItem<TotalTabTableRow> tableRow) {
-                        String input = newValue.toLowerCase();
-                        partName = tableRow.getValue().getPartName().getValue();
-                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
-                        loc = tableRow.getValue().getLocation().getValue();
-                        barcode = tableRow.getValue().getBarcode().getValue();
-                        partID = tableRow.getValue().getPartID().getValue();
-
-                        return ((partName != null && partName.toLowerCase().contains(input))
-                            || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                            || (loc != null && loc.toLowerCase().contains(input))
-                            || (barcode != null && barcode.toLowerCase().contains((input))
-                            || (partID != null && partID.toLowerCase().contains(input))));
-                    }
-                });
+                filterChanged(newValue);
             }
         });
 
@@ -290,6 +278,44 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     }
 
+    private void filter(TreeItem<TotalTabTableRow> root, String filter, TreeItem<TotalTabTableRow> filteredRoot) {
+        for (TreeItem<TotalTabTableRow> child : root.getChildren()) {
+            TreeItem<TotalTabTableRow> filteredChild = new TreeItem<>();
+            filteredChild.setValue(child.getValue());
+            filteredChild.setExpanded(true);
+            filter(child, filter, filteredChild);
+            if (!filteredChild.getChildren().isEmpty() || isMatch(filteredChild.getValue(), filter)) {
+                filteredRoot.getChildren().add(filteredChild);
+            }
+        }
+    }
+
+    private void filterChanged(String filter) {
+        if (filter.isEmpty()) {
+            totalTable.setRoot(root);
+        }
+        else {
+            TreeItem<TotalTabTableRow> filteredRoot = new TreeItem<>();
+            filter(root, filter, filteredRoot);
+            totalTable.setRoot(filteredRoot);
+        }
+    }
+
+    private boolean isMatch(TotalTabTableRow value, String filter) {
+        String input = filter.toLowerCase();
+        partName = value.getPartName().getValue();
+        serialNumber = value.getSerialNumber().getValue();
+        loc = value.getLocation().getValue();
+        barcode = value.getBarcode().getValue();
+        partID = value.getPartID().getValue();
+
+        return ((partName != null && partName.toLowerCase().contains(input))
+                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
+                || (loc != null && loc.toLowerCase().contains(input))
+                || (barcode != null && barcode.toLowerCase().contains((input))
+                || (partID != null && partID.toLowerCase().contains(input))));
+    }
+
     /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
      * @author Matthew Karcz
@@ -318,7 +344,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
         }
 
-        final TreeItem<TotalTabTableRow> root = new RecursiveTreeItem<TotalTabTableRow>(
+        root = new RecursiveTreeItem<TotalTabTableRow>(
                 tableRows, RecursiveTreeObject::getChildren
         );
         totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
@@ -358,12 +384,17 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * Called when a row is highlighted in the table and the edit button is clicked.
      */
     @FXML
-    public void editPart(String partID) {
+    public void editPart(String partID, boolean isBatchEdit) {
         try {
             Part part = database.selectPart(Integer.parseInt(partID));
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditPart.fxml"));
+            FXMLLoader loader;
+            if (isBatchEdit) {
+                loader = new FXMLLoader(getClass().getResource("/fxml/EditPartType.fxml"));
+            } else {
+                loader = new FXMLLoader(getClass().getResource("/fxml/EditOnePart.fxml"));
+            }
             Parent root = loader.load();
-            ((ControllerEditPart) loader.getController()).initPart(part);
+            ((ControllerEditPart) loader.getController()).initPart(part );
             Scene scene = new Scene(root, 400, 400);
             Stage stage = new Stage();
             stage.setTitle("Edit a Part");
@@ -390,7 +421,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      *
      * @author Bailey Terry
      */
-    @FXML
     public void deletePart(String partID) {
         try {
             if (database.selectPart(Integer.parseInt(partID)) != null) {
@@ -402,6 +432,19 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
 //            tableView.getItems().remove(part);
 //            populateTable();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePartType(String partName) {
+        try {
+            if (database.hasPartName(partName)) {
+                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part " + partName) == JOptionPane.YES_OPTION) {
+                    database.deleteParts(partName);
+                    populateTable();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

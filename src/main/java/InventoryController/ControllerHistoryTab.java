@@ -46,9 +46,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     private HistoryParts historyParts;
 
     private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
-    serialNumberCol, locationCol, quantityCol, dateCol;
+    serialNumberCol, quantityCol, statusCol, dateCol;
 
-    private String student, partName, serialNumber, loc, quantity, date;
+    private String student, partName, serialNumber, quantity, status, date;
 
     /**
      * This method sets the data in the history page.
@@ -82,20 +82,11 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
-        serialNumberCol.setPrefWidth(100);
+        serialNumberCol.setPrefWidth(150);
         serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
                 return param.getValue().getValue().getSerialNumber();
-            }
-        });
-
-        locationCol = new JFXTreeTableColumn<>("Location");
-        locationCol.setPrefWidth(150);
-        locationCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
-                return param.getValue().getValue().getLocation();
             }
         });
 
@@ -105,6 +96,15 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
                 return param.getValue().getValue().getQuantity();
+            }
+        });
+
+        statusCol = new JFXTreeTableColumn<>("Status");
+        statusCol.setPrefWidth(100);
+        statusCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
+                return param.getValue().getValue().getStatus();
             }
         });
 
@@ -129,15 +129,15 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                         student = tableRow.getValue().getStudent().getValue();
                         partName = tableRow.getValue().getPartName().getValue();
                         serialNumber = tableRow.getValue().getSerialNumber().getValue();
-                        loc = tableRow.getValue().getLocation().getValue();
                         quantity = tableRow.getValue().getQuantity().getValue();
+                        status = tableRow.getValue().getStatus().getValue();
                         date = tableRow.getValue().getDate().getValue().toLowerCase();
 
                         return ((student != null && student.toLowerCase().contains(input))
                             || (partName != null && partName.toLowerCase().contains(input))
                             || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                            || (loc != null && loc.toLowerCase().contains(input))
                             || (quantity != null && quantity.toLowerCase().contains(input))
+                            || (status != null && status.toLowerCase().contains(input))
                             || (date != null & date.toLowerCase().contains(input)));
                     }
                 });
@@ -157,11 +157,6 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                             historyTable.getSelectionModel().clearSelection();
                             event.consume();
                         }
-                    }
-                });
-                row.hoverProperty().addListener(observable -> {
-                    if (row.isHover() && row != null && row.getItem() != null) {
-                        System.out.println("TEST");
                     }
                 });
                 return row;
@@ -192,12 +187,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new HistoryTabTableRow(list.get(i).getStudent(),
                     list.get(i).getPartName(), list.get(i).getSerialNumber(),
-                    list.get(i).getLocation(), "" + list.get(i).getQuantity(),
+                    "" + list.get(i).getQuantity(), list.get(i).getStatus(),
                     list.get(i).getDate()));
         }
 
         final TreeItem<HistoryTabTableRow> root = new RecursiveTreeItem<HistoryTabTableRow>(tableRows, RecursiveTreeObject::getChildren);
-        historyTable.getColumns().setAll(studentCol, partNameCol, serialNumberCol, locationCol, quantityCol, dateCol);
+        historyTable.getColumns().setAll(studentCol, partNameCol, serialNumberCol, quantityCol, statusCol, dateCol);
         historyTable.setRoot(root);
         historyTable.setShowRoot(false);
     }
