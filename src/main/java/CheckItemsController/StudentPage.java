@@ -38,7 +38,7 @@ public class StudentPage {
     private VBox vbox = new VBox();
 
     @FXML
-    private Label studentName, email, RFID, fees;
+    private Label studentName, email, RFID, fees, date;
 
     @FXML
     private JFXTreeTableView coTable;
@@ -88,12 +88,16 @@ public class StudentPage {
         }
         fees.setText("Outstanding fees: $" + overdueFees);
         fees.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
+        date = new Label("");
+        date.setText("Date of last rental: " + student.getDate());
+        date.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         vbox.getChildren().add(studentName);
         vbox.getChildren().add(email);
         vbox.getChildren().add(RFID);
+        vbox.getChildren().add(date);
         vbox.getChildren().add(fees);
         vbox.setAlignment(Pos.TOP_CENTER);
-        vbox.setSpacing(15);
+        vbox.setSpacing(5);
         setTables();
     }
 

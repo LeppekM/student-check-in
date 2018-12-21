@@ -11,15 +11,17 @@ public class Student {
     private String name;
     private int ID;
     private String email;
+    private String date;
     private ObservableList<CheckedOutItems> checkedOut;
     private ObservableList<OverdueItem> overdueItems;
     private ObservableList<SavedPart> savedItems;
 
-    public Student(String name, int ID, String email, ObservableList<CheckedOutItems> checkedOut,
+    public Student(String name, int ID, String email, String date, ObservableList<CheckedOutItems> checkedOut,
                    ObservableList<OverdueItem> overdueItems, ObservableList<SavedPart> savedItems){
         this.name = name;
         this.ID = ID;
         this.email = email;
+        this.date = date;
         this.checkedOut = checkedOut;
         this.overdueItems = overdueItems;
         this.savedItems = savedItems;
@@ -47,6 +49,14 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setDate(String date){
+        this.date = date;
+    }
+
+    public String getDate(){
+        return date;
     }
 
     public ObservableList<CheckedOutItems> getCheckedOut() {
