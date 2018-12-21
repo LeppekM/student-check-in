@@ -135,7 +135,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     @FXML
     public void goBack(){
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             inventoryScene.getChildren().clear();
             inventoryScene.getScene().setRoot(loader.load(myFxmlURL));

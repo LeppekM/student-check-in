@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.ComboBox?>
-<VBox fx:id="sceneShowPart" prefHeight="374.0" prefWidth="389.0" stylesheets="@PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerShowPart">
+<VBox fx:id="sceneShowPart" prefHeight="374.0" prefWidth="389.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerShowPart">
     <children>
         <AnchorPane prefHeight="468.0" prefWidth="410.0">
             <children>
@@ -33,14 +32,13 @@
                         <Label id="priceLabel" fx:id="priceLabel" font="$x1" layoutX="119.0" layoutY="214.0" text="Price:" />
                         <JFXTextField id="priceField" fx:id="priceField" alignment="CENTER" layoutX="175.0" layoutY="214.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="vendorLabel" fx:id="vendorLabel" font="$x1" layoutX="100.0" layoutY="254.0" text="Vendor:" />
-                        <ComboBox id="vendorList" fx:id="vendorList" layoutX="175.0" layoutY="254.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <JFXTextField id="vendorList" fx:id="vendorList" alignment="CENTER" layoutX="175.0" layoutY="254.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="locationLabel" fx:id="locationLabel" font="$x1" layoutX="93.0" layoutY="294.0" text="Location:" />
                         <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" layoutX="175.0" layoutY="294.0" prefHeight="23.94140625" prefWidth="153.5078125" />
 
-                        <Label id="faultDescriptionLabel" fx:id="faultDescriptionLabel" font="$x1" layoutX="93.0" layoutY="294.0" text="Description:" />
-                        <JFXTextField id="faultDescriptionField" fx:id="faultDescriptionField" alignment="CENTER" layoutX="175.0" layoutY="294.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <Label id="faultDescriptionLabel" fx:id="faultDescriptionLabel" font="$x1" layoutX="52.0" layoutY="134.0" text="Description:" />
+                        <JFXTextField id="faultDescriptionField" fx:id="faultDescriptionField" alignment="CENTER" layoutX="175.0" layoutY="134.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Hyperlink layoutX="255.0" layoutY="334.0" onAction="#goBack" text="Go Back" />
-                        <Label id="typeConfig" fx:id="typeConfig" layoutX="450.0" layoutY="540.0" text="none" />
 
                   <JFXSpinner fx:id="loader" layoutX="367.0" layoutY="332.0" prefHeight="28.0" prefWidth="33.0" visible="false" />
                     </children>

@@ -3,7 +3,8 @@
  */
 
 .root {
-    -fx-background-image: url("abstract.jpg");
+    /*-fx-background-image: url("abstract.jpg");*/
+    -fx-background-color: linear-gradient(#FFFFFF, #6B6B6B);
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
 }
@@ -12,7 +13,7 @@
     -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-font-family: "Arial Narrow";
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
 }
 

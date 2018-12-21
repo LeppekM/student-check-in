@@ -20,8 +20,8 @@ public class SavedPopUp extends StudentPage {
         date.setText(part.getCheckedOutAt().get());
         dueDate.setText(part.getDueAt().get());
         saved.setText(part.getSavedAt().get());
-        prof.setText("Mr. Julio Coolio");
-        course.setText("SE8362 - 001");
-        reason.setText("He needs to be cooler with this grade 'A' " + part.getPartName().get());
+        prof.setText(part.getProf());
+        course.setText(part.getCourse());
+        reason.setText(part.getReason());
     }
 }

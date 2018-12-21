@@ -23,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,9 +33,7 @@ import javafx.util.Callback;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
 
@@ -109,7 +108,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 setGraphic(null);
                                 setText(null);
                             } else {
-                                Image editOneImage = new Image("edit.png");
+                                Image editOneImage = new Image("images/edit.png");
                                 ImageView editOneImageView = new ImageView(editOneImage);
                                 editOneImageView.setFitHeight(12);
                                 editOneImageView.setFitWidth(12);
@@ -120,7 +119,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                 });
 
-                                Image editAllImage = new Image("edit_all.png");
+                                Image editAllImage = new Image("images/edit_all.png");
                                 ImageView editAllImageView = new ImageView(editAllImage);
                                 editAllImageView.setFitHeight(12);
                                 editAllImageView.setFitWidth(12);
@@ -131,7 +130,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
                                 });
 
-                                Image deleteOneImage = new Image("delete.png");
+                                Image deleteOneImage = new Image("images/delete.png");
                                 ImageView deleteOneImageView = new ImageView(deleteOneImage);
                                 deleteOneImageView.setFitHeight(12);
                                 deleteOneImageView.setFitWidth(12);
@@ -142,7 +141,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                 });
 
-                                Image deleteAllImage = new Image("delete_all.png");
+                                Image deleteAllImage = new Image("images/delete_all.png");
                                 ImageView deleteAllImageView = new ImageView(deleteAllImage);
                                 deleteAllImageView.setFitHeight(12);
                                 deleteAllImageView.setFitWidth(12);
@@ -360,7 +359,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public void addPart() {
         Stage stage = new Stage();
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource("AddPart.fxml");
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/AddPart.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load(myFxmlURL);
             Scene scene = new Scene(root, 400, 400);
@@ -390,9 +389,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             Part part = database.selectPart(Integer.parseInt(partID));
             FXMLLoader loader;
             if (isBatchEdit) {
-                loader = new FXMLLoader(getClass().getResource("/EditPartType.fxml"));
+                loader = new FXMLLoader(getClass().getResource("/fxml/EditPartType.fxml"));
             } else {
-                loader = new FXMLLoader(getClass().getResource("/EditOnePart.fxml"));
+                loader = new FXMLLoader(getClass().getResource("/fxml/EditOnePart.fxml"));
             }
             Parent root = loader.load();
             ((ControllerEditPart) loader.getController()).initPart(part );
@@ -402,7 +401,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
+            stage.getIcons().add(new Image("images/msoe.png"));
             stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
@@ -459,7 +458,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public void showInfoPage(Part part){
         Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ShowPart.fxml"));
             Parent root = loader.load();
             ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()), "total");
             Scene scene = new Scene(root, 400, 400);
@@ -467,7 +466,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
+            stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
             populateTable();
         } catch (IOException e) {
@@ -476,4 +475,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             e.printStackTrace();
         }
     }
+
+
 }
