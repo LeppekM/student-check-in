@@ -87,7 +87,7 @@ public class Database {
      */
     private static Date gettoday() {
         long date = System.currentTimeMillis();
-        return new Date(date);
+        return new java.sql.Date(date);
     }
 
     /**
@@ -205,6 +205,7 @@ public class Database {
      * @author Bailey Terry
      */
     public Student selectStudent(int ID){
+        String todaysDate = gettoday().toString();
         String query = "select * from students where studentID = " + ID;
         String coList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkout_parts.dueAt, checkouts.checkoutID \n" +
                 "from students\n" +
@@ -222,7 +223,7 @@ public class Database {
                 "left join parts on checkout_parts.partID = parts.partID " +
                 "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
                 "left join students on checkouts.studentID = students.studentID " +
-                "where checkout_parts.dueAt < date('" + gettoday().toString() + "') and students.studentID = " + ID + ";";
+                "where checkout_parts.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";
         String email = "";
@@ -253,21 +254,6 @@ public class Database {
             }
             statement.close();
             resultSet.close();
-            if (checkedOutItems.size() > 0) {
-                date = checkedOutItems.get(0).getCheckedOutAt().get();
-            }
-            for (int i = 0; i < checkedOutItems.size(); i++){
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date d = sdf.parse(date);
-                    Date d1 = sdf.parse(checkedOutItems.get(i).getCheckedOutAt().get());
-                    if (d1.after(d)){
-                        date = checkedOutItems.get(i).getCheckedOutAt().get();
-                    }
-                }catch (ParseException e){
-                    e.printStackTrace();
-                }
-            }
             statement = connection.createStatement();
             resultSet = statement.executeQuery(oList);
             resultSetMetaData = resultSet.getMetaData();
@@ -292,6 +278,21 @@ public class Database {
             }
             statement.close();
             resultSet.close();
+            if (checkedOutItems.size() > 0) {
+                date = checkedOutItems.get(0).getCheckedOutAt().get();
+            }
+            for (int i = 0; i < checkedOutItems.size(); i++){
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date d = sdf.parse(date);
+                    Date d1 = sdf.parse(checkedOutItems.get(i).getCheckedOutAt().get());
+                    if (d1.after(d)){
+                        date = checkedOutItems.get(i).getCheckedOutAt().get();
+                    }
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }
+            }
             student = new Student(name,id,email, date, checkedOutItems,overdueItems,savedParts);
         }catch (SQLException e){
             e.printStackTrace();
