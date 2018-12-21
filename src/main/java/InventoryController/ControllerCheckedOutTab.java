@@ -86,7 +86,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
             ObservableList<StringProperty> data = FXCollections.observableArrayList();
             data.add(new SimpleStringProperty(list.get(i).getStudentName().get()));
             data.add(new SimpleStringProperty(list.get(i).getPartName().get()));
-            data.add(new SimpleStringProperty("" + list.get(i).getQuantity()));
+            data.add(new SimpleStringProperty("" + list.get(i).getQuantity().get()));
             data.add(new SimpleStringProperty(list.get(i).getCheckedOutAt().get()));
             data.add(new SimpleStringProperty(list.get(i).getDueDate().get()));
             checkedOutTable.getItems().add(data);

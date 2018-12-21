@@ -1,6 +1,7 @@
 package CheckItemsController;
 
 import Database.CheckedOutParts;
+import Database.StudentInfo;
 import Database.Database;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
@@ -40,16 +41,18 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXButton studentInfo, submitButton;
 
     @FXML
-    private Label itemStatus;
+    private Label itemStatus, studentNameText;
 
     private StageWrapper stageWrapper = new StageWrapper();
     private CheckedOutParts checkedOutParts = new CheckedOutParts();
+    private StudentInfo student = new StudentInfo();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setFieldValidator();
         setItemStatus();
+        getStudentName();
         unlockFields();
     }
 
@@ -110,9 +113,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     /**
      * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
      */
-    public void setItemStatus() {
+    private void setItemStatus() {
         barcode.focusedProperty().addListener((ov, oldV, newV)->{
-            if (!newV){
+            if (!newV && !barcode.getText().isEmpty()){
                 if(checkInValidator()){
                     stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
                     setCheckinInformation();
@@ -122,6 +125,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                     setCheckoutInformation();
                 }
             }
+        });
+    }
+
+    private void getStudentName(){
+        studentID.focusedProperty().addListener((ov, oldV, newV)->{
+            if(!newV){
+                studentNameText.setText(student.getStudentNameFromID(studentID.getText()));
+            }
+
         });
     }
 
