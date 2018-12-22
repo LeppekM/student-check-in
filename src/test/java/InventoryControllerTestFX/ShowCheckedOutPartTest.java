@@ -1,5 +1,7 @@
 package InventoryControllerTestFX;
+import Database.CheckedOutParts;
 import Database.Part;
+import InventoryController.CheckedOutItems;
 import InventoryController.ControllerShowPart;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,16 +11,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.api.FxToolkit.registerPrimaryStage;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
-public class ShowPartTest extends ApplicationTest {
+public class ShowCheckedOutPartTest extends ApplicationTest {
 
 
 
@@ -40,12 +39,12 @@ public class ShowPartTest extends ApplicationTest {
 
     @Override
     public void start (Stage stage)throws IOException{
-        Part partTotal = new Part("HDMI", "H86234", "SONY", 3.99, "MSOE", "Closet", "123456", false, 1, 0);
+        CheckedOutItems part = new CheckedOutItems("Matt K", "HDMI", 1, "12-21-18", "12-22-18", 0);
 
         URL myFxmlURL = ClassLoader.getSystemResource("ShowPart.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);
-        ((ControllerShowPart) loader.getController()).initPart(partTotal);
+        ((ControllerShowPart) loader.getController()).initPart(part);
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Show Part Test");
         stage.setScene(scene);
