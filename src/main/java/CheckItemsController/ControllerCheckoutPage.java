@@ -147,6 +147,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         extended.setSelected(false);
         faulty.setSelected(false);
         itemStatus.setText("");
+        studentNameText.setText("");
     }
 
 
