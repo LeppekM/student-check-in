@@ -24,6 +24,7 @@ public class AddPart {
             PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
             insertQuery(part, preparedStatement).execute();
             vendorInformation.getVendorList();
+            preparedStatement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -78,6 +79,8 @@ public class AddPart {
             while(rs.next()){
                 partID = rs.getInt("partID");
             }
+            statement.close();
+
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }

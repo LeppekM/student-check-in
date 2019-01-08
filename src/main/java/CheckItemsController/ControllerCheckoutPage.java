@@ -150,8 +150,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         studentNameText.setText("");
     }
 
-
-
     /**
      * Checks if item is being checked in or out
      * @return True if item is being checked in

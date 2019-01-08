@@ -304,8 +304,7 @@ public class CheckedOutParts {
     public void setItemToCheckedIn(int quantity, int checkoutID){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement preparedStatement = connection.prepareStatement(updateCheckoutPartsToCheckedIn);
-            preparedStatement = setCheckInHelper(preparedStatement, quantity, checkoutID);
-            preparedStatement.execute();
+            setCheckInHelper(preparedStatement, quantity, checkoutID).execute();
             preparedStatement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
@@ -322,7 +321,6 @@ public class CheckedOutParts {
             preparedStatement.setInt(1, quantity);
             preparedStatement.setString(2, getCurrentDate());
             preparedStatement.setInt(3, checkoutID);
-
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
