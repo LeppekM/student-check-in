@@ -20,7 +20,6 @@ public class OverduePopUp extends ControllerOverdueTab {
         dueDate.setText(overdueItems.getDate().get());
         overdueItems.setPrice(overdueItems.getPrice().get().replaceAll("\\$", ""));
         overdueItems.setPrice(overdueItems.getPrice().get().replaceAll(",", ""));
-//        overdueItems.setPrice(overdueItems.getPrice().get().trim());
         fee.setText("$" + df.format(Double.parseDouble(overdueItems.getPrice().get())));
     }
 }
