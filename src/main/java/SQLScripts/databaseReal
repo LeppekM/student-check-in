@@ -1,90 +1,147 @@
 drop table if exists parts;
 create table parts (
-partID int NOT NULL,
-partName varchar(50),
-serialNumber varchar(20),
-manufacturer varchar(50),
-price int,
-vendorID int NOT NULL,
-location varchar(20),
-barcode varchar(20),
-totalQuantity int,
-isFaulty bit,
-availableQuantity int,
-createdAt date,
-updatedAt date,
-deletedAt date,
-createdBy varchar(50),
-updatedBy varchar(50),
-deletedBy varchar(50),
-isDeleted bit,
-PRIMARY KEY (partID));
+  partID       int NOT NULL,
+  partName     varchar(50),
+  serialNumber varchar(20),
+  manufacturer varchar(50),
+  price        int,
+  vendorID     int NOT NULL,
+  location     varchar(20),
+  barcode      varchar(20),
+  isFaulty     bit,
+  createdAt    date,
+  updatedAt    date,
+  deletedAt    date,
+  createdBy    varchar(50),
+  updatedBy    varchar(50),
+  deletedBy    varchar(50),
+  isDeleted    bit,
+  PRIMARY KEY (partID)
+);
 -- #FOREIGN KEY (partID) REFERENCES checkout_parts (partID),
 -- #FOREIGN KEY (vendorID) REFERENCES vendors (vendorID));
-
-drop table if exists checkouts;
-create table checkouts (
-checkoutID int NOT NULL,
-studentID int NOT NULL,
-checkoutAt date,
-reservedAt date,
-createdAt date,
-updatedAt date,
-deletedAt date,
-createdBy varchar(50),
-updatedBy varchar(50),
-deletedBy varchar(50),
-PRIMARY KEY (checkoutID));
+CALL load_parts();
+# drop table if exists checkouts;
+# create table checkouts (
+# checkoutID int NOT NULL,
+# studentID int NOT NULL,
+# checkoutAt date,
+# reservedAt date,
+# createdAt date,
+# updatedAt date,
+# deletedAt date,
+# createdBy varchar(50),
+# updatedBy varchar(50),
+# deletedBy varchar(50),
+# PRIMARY KEY (checkoutID));
 -- #FOREIGN KEY (checkoutID) REFERENCES checkout_parts (checkoutID),
 -- #FOREIGN KEY (studentID) REFERENCES students (studentID));
 
-drop table if exists checkout_parts;
-create table checkout_parts (
-checkoutID int NOT NULL,
-partID int NOT NULL,
-checkoutQuantity int,
-checkinQuantity int,
-checkedInAt date,
-dueAt date,
-createdAt date,
-updatedAt date,
-deletedAt date,
-createdBy varchar(50),
-updatedBy varchar(50),
-deletedBy varchar(50),
-PRIMARY KEY (checkoutID, partID));
+# drop table if exists checkout_parts;
+# create table checkout_parts (
+# checkoutID int NOT NULL,
+# partID int NOT NULL,
+# checkoutQuantity int,
+# checkinQuantity int,
+# checkedInAt date,
+# dueAt date,
+# createdAt date,
+# updatedAt date,
+# deletedAt date,
+# createdBy varchar(50),
+# updatedBy varchar(50),
+# deletedBy varchar(50),
+# PRIMARY KEY (checkoutID, partID));
 -- #FOREIGN KEY (partID) REFERENCES parts (partID));
+
+drop table if exists checkout;
+create table checkout (
+  checkoutID int NOT NULL,
+  partID     int NOT NULL,
+  studentID  int NOT NULL,
+  checkoutAt date,
+  checkinAt  date,
+  dueAt      date,
+  createdBy  varchar(50),
+  updateedBy varchar(50),
+  PRIMARY KEY (checkoutID)
+);
 
 drop table if exists vendors;
 create table vendors (
-vendorID int NOT NULL,
-vendor varchar(50),
-PRIMARY KEY (vendorID));
+  vendorID int NOT NULL,
+  vendor   varchar(50),
+  PRIMARY KEY (vendorID)
+);
 
 drop table if exists students;
 create table students (
-studentID int NOT NULL,
-email varchar(50),
-studentName varchar(50),
-createdAt date,
-updatedAt date,
-deletedAt date,
-createdBy varchar(50),
-updatedBy varchar(50),
-deletedBy varchar(50),
-PRIMARY KEY (studentID));
+  studentID   int NOT NULL,
+  email       varchar(50),
+  studentName varchar(50),
+  createdAt   date,
+  updatedAt   date,
+  deletedAt   date,
+  createdBy   varchar(50),
+  updatedBy   varchar(50),
+  deletedBy   varchar(50),
+  PRIMARY KEY (studentID)
+);
 
 drop table if exists fault;
 create table fault (
-checkoutID int NOT NULL,
-partID int NOT NULL,
-description varchar(500),
-price int,
-createdAt date,
-updatedAt date,
-deletedAt date,
-createdBy varchar(50),
-updatedBy varchar(50),
-deletedBy varchar(50),
-PRIMARY KEY (checkoutID, partID));
+  checkoutID  int NOT NULL,
+  partID      int NOT NULL,
+  description varchar(500),
+  price       int,
+  createdAt   date,
+  updatedAt   date,
+  deletedAt   date,
+  createdBy   varchar(50),
+  updatedBy   varchar(50),
+  deletedBy   varchar(50),
+  PRIMARY KEY (checkoutID, partID)
+);
 -- #FOREIGN KEY (checkoutID, partID) REFERENCES checkout_parts (checkoutID, partID));
+
+CREATE PROCEDURE load_parts()
+  BEGIN
+    DECLARE i int DEFAULT 1;
+    DECLARE j int DEFAULT 0;
+    TRUNCATE TABLE parts;
+    START TRANSACTION;
+    WHILE i < 683 DO
+      IF i < 104 THEN
+        set j = i;
+        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
+        values (i, 'Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', NULL, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 208 THEN
+        set j = i - 103;
+        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
+        values (i, 'Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', NULL, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 298 THEN
+        set j = i - 207;
+        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
+        values (i, 'Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', NULL, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 379 THEN
+        set j = i - 297;
+        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
+        values (i, 'Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9343, 3, 'S350 D1', NULL, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 440 THEN
+        set j = i - 378;
+        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
+        values (i, 'Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', NULL, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 467 THEN
+        set j = i - 439;
+        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
+        values (i, 'Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', NULL, 0, current_date, 'root', 0);
+      END IF;
+      set i = i + 1;
+    END WHILE;
+    COMMIT;
+  END;
