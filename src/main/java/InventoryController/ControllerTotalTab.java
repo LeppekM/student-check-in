@@ -68,8 +68,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
 
+    @FXML
+    private JFXButton add;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        add.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
+
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
         totalTable.setPlaceholder(emptytableLabel);
@@ -118,6 +123,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editOneButton.setOnAction(event -> {
                                     editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                 });
+                                editOneButton.setTooltip(new Tooltip("Edit this part"));
 
                                 Image editAllImage = new Image("images/edit_all.png");
                                 ImageView editAllImageView = new ImageView(editAllImage);
@@ -129,6 +135,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editAllButton.setOnAction(event -> {
                                     editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
                                 });
+                                Tooltip editAllTip = new Tooltip("Edit all parts named: " + partName.getText());
+                                editAllButton.setTooltip(editAllTip);
 
                                 Image deleteOneImage = new Image("images/delete.png");
                                 ImageView deleteOneImageView = new ImageView(deleteOneImage);
@@ -140,6 +148,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setOnAction(event -> {
                                     deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                 });
+                                Tooltip deleteOneTip = new Tooltip("Delete this part");
+                                deleteOneButton.setTooltip(deleteOneTip);
 
                                 Image deleteAllImage = new Image("images/delete_all.png");
                                 ImageView deleteAllImageView = new ImageView(deleteAllImage);
@@ -151,7 +161,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllButton.setOnAction(event -> {
                                     deletePartType(getTreeTableRow().getItem().getPartName().getValue());
                                 });
-
+                                Tooltip deleteAllTip = new Tooltip("Delete all parts named: " + partName.getText());
+                                deleteAllButton.setTooltip(deleteAllTip);
 
                                 VBox column = new VBox();
                                 HBox actionButtons = new HBox();

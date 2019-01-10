@@ -27,7 +27,7 @@
       <Label layoutX="345.0" layoutY="143.0" text="Scan Student ID" />
       <Label layoutX="346.0" layoutY="208.0" text="Scan Barcode" />
       <JFXSpinner fx:id="loadIndicator" layoutX="515.0" layoutY="386.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
-      <Button layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnHome">
+      <JFXButton fx:id="home" layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnHome">
          <graphic>
             <ImageView fitHeight="35.0" fitWidth="39.0">
                <image>
@@ -35,14 +35,14 @@
                </image>
             </ImageView>
          </graphic>
-      </Button>
+      </JFXButton>
       <JFXCheckBox fx:id="faulty" layoutX="348.0" layoutY="331.0" text="Faulty?" visible="false">
          <opaqueInsets>
             <Insets top="-3.0" />
          </opaqueInsets></JFXCheckBox>
-      <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="414.0" layoutY="377.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: red;" text="Reset" textFill="#043993" />
-      <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="20.0" layoutY="24.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" stylesheets="@../css/ButtonStyle.css" text="Switch to Student Info" />
-      <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="314.0" layoutY="377.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: red;" text="Submit" textFill="#043993" />
+      <JFXButton alignment="CENTER" contentDisplay="CENTER" layoutX="414.0" layoutY="377.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Reset" textFill="#043993" />
+      <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="20.0" layoutY="24.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" text="Switch to Student Info" />
+      <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="314.0" layoutY="377.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
       <Label layoutX="14.0" layoutY="589.0" text="Current Item Status:" />
       <Label fx:id="itemStatus" layoutX="127.0" layoutY="589.0" />
    </children>

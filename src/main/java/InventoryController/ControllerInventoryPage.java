@@ -67,6 +67,8 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 }
             }
         });
+
+        back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
     }
 
     private void updateHistoryTab() {

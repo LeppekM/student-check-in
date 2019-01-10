@@ -37,7 +37,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXCheckBox faulty, extended;
 
     @FXML
-    private JFXButton studentInfo, submitButton;
+    private JFXButton studentInfo, submitButton, home;
 
     @FXML
     private Label itemStatus;
@@ -48,6 +48,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        home.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
+        studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
         setItemStatus();
         unlockFields();

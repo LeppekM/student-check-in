@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.*;
 
+import com.jfoenix.controls.JFXButton;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import com.jfoenix.controls.JFXSpinner;
@@ -56,6 +57,9 @@ public class ControllerEditOnePart extends ControllerEditPart {
     @FXML
     private JFXSpinner loader;
 
+    @FXML
+    private JFXButton saveButton;
+
     private Part part;
 
     private EditPart editPart = new EditPart();
@@ -71,6 +75,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
     public void initialize(URL location, ResourceBundle resources) {
         nameField.setEditable(false);
         serialField.setEditable(false);
+        saveButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         part = null;
     }
 

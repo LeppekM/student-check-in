@@ -3,7 +3,7 @@
  */
 
 .root {
-    -fx-background-color: linear-gradient(#FFFFFF, #6B6B6B);
+    -fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 20%, center 50% 50%, radius 50%, reflect, #cbcbcb, #c8c8c8 75%, #c5c5c5);
 }
 
 .button {
