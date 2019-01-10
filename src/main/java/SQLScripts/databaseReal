@@ -1,6 +1,6 @@
 drop table if exists parts;
 create table parts (
-  partID       int NOT NULL,
+  partID       int NOT NULL AUTO_INCREMENT,
   partName     varchar(50),
   serialNumber varchar(20),
   manufacturer varchar(50),
@@ -9,6 +9,7 @@ create table parts (
   location     varchar(20),
   barcode      varchar(20),
   isFaulty     bit,
+  isCheckedOut bit,
   createdAt    date,
   updatedAt    date,
   deletedAt    date,
@@ -20,7 +21,9 @@ create table parts (
 );
 -- #FOREIGN KEY (partID) REFERENCES checkout_parts (partID),
 -- #FOREIGN KEY (vendorID) REFERENCES vendors (vendorID));
+
 CALL load_parts();
+
 # drop table if exists checkouts;
 # create table checkouts (
 # checkoutID int NOT NULL,
@@ -56,12 +59,15 @@ CALL load_parts();
 
 drop table if exists checkout;
 create table checkout (
-  checkoutID int NOT NULL,
+  checkoutID int NOT NULL AUTO_INCREMENT,
   partID     int NOT NULL,
   studentID  int NOT NULL,
   checkoutAt date,
+  reservedAt date,
   checkinAt  date,
   dueAt      date,
+  createdAt  date,
+  updatedAt  date,
   createdBy  varchar(50),
   updateedBy varchar(50),
   PRIMARY KEY (checkoutID)
@@ -69,10 +75,13 @@ create table checkout (
 
 drop table if exists vendors;
 create table vendors (
-  vendorID int NOT NULL,
+  vendorID int NOT NULL AUTO_INCREMENT,
   vendor   varchar(50),
+  description varchar(500),
   PRIMARY KEY (vendorID)
 );
+
+call load_vendors();
 
 drop table if exists students;
 create table students (
@@ -113,35 +122,84 @@ CREATE PROCEDURE load_parts()
     WHILE i < 683 DO
       IF i < 104 THEN
         set j = i;
-        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
-        values (i, 'Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', NULL, 0, current_date, 'root', 0);
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', NULL, 0, 0, current_date, 'root', 0);
       END IF;
       IF i < 208 THEN
         set j = i - 103;
-        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
-        values (i, 'Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', NULL, 0, current_date, 'root', 0);
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', NULL, 0, 0, current_date, 'root', 0);
       END IF;
       IF i < 298 THEN
         set j = i - 207;
-        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
-        values (i, 'Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', NULL, 0, current_date, 'root', 0);
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', NULL, 0, 0, current_date, 'root', 0);
       END IF;
       IF i < 379 THEN
         set j = i - 297;
-        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
-        values (i, 'Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9343, 3, 'S350 D1', NULL, 0, current_date, 'root', 0);
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9343, 3, 'S350 D1', NULL, 0, 0, current_date, 'root', 0);
       END IF;
       IF i < 440 THEN
         set j = i - 378;
-        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
-        values (i, 'Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', NULL, 0, current_date, 'root', 0);
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', NULL, 0, 0, current_date, 'root', 0);
       END IF;
       IF i < 467 THEN
         set j = i - 439;
-        insert into parts (partID, partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, createdAt, createdBy, isDeleted)
-        values (i, 'Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', NULL, 0, current_date, 'root', 0);
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', NULL, 0, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 480 THEN
+        set j = i - 466;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Olimex ECG/EMG', j, 'MSOE', 2453, 1, 'S350 G1', NULL, 0, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 494 THEN
+        set j = i - 479;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('TENS Unit', j, 'TENS', 4999, 4, 'S350 H1', NULL, 0, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 580 THEN
+        set j = i - 493;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Analog Discovery 2', j, 'Digilent', 27900, 5, 'S350 I1', NULL, 0, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 592 THEN
+        set j = i - 579;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Fluke 123 Scopemeter', j, 'Fluke', 189900, 6, 'S350 J1', NULL, 0, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 611 THEN
+        set j = i - 591;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Fluke 43 & 43B Power Quality Analyzer', j, 'Fluke', 346900, 6, 'S350 K1', NULL, 0, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 632 THEN
+        set j = i - 610;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', NULL, 0, 0, current_date, 'root', 0);
+      END IF;
+      IF i < 683 THEN
+        set j = i - 631;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', 15900, 8, 'S350 M1', NULL, 0, 0, current_date, 'root', 0);
       END IF;
       set i = i + 1;
     END WHILE;
     COMMIT;
+  END;
+
+CREATE PROCEDURE load_vendors()
+  BEGIN 
+    TRUNCATE TABLE vendors;
+    START TRANSACTION;
+    insert into vendors (vendor) values ('MSOE');
+    insert into vendors (vendor) values ('RSR');
+    insert into vendors (vendor) values ('Cypress');
+    insert into vendors (vendor) values ('TENS');
+    insert into vendors (vendor) values ('Digilent');
+    insert into vendors (vendor) values ('Fluke');
+    insert into vendors (vendor) values ('Nexus');
+    insert into vendors (vendor) values ('Milwaukee Tool');
   END;
