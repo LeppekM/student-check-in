@@ -2,6 +2,7 @@ package CheckItemsController;
 
 import Database.CheckedOutParts;
 import Database.StudentInfo;
+import Database.CheckingOutPart;
 import Database.Database;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
@@ -44,14 +45,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private Label itemStatus, studentNameText;
 
     private StageWrapper stageWrapper = new StageWrapper();
-    private CheckedOutParts checkedOutParts = new CheckedOutParts();
+    //private CheckedOutParts checkedOutParts = new CheckedOutParts();
+    private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setFieldValidator();
-        setItemStatus();
+        //setItemStatus();
         getStudentName();
         unlockFields();
     }
@@ -71,32 +73,33 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
      */
     public void submit() {
-        if(itemStatus.getText().equals("Checking Out")){//Item is being checked out
-            if(checkedOutParts.insertIntoCheckoutParts(getBarcode(), getQuantity())) {//Order is important or checkoutID will get incremented twice
-                //There is a check in the above method that checks if barcode is found in system. If it isn't, both methods will not execute.
-                checkedOutParts.insertIntoCheckouts(getstudentID());
-            }
-            else {
-                return;  //If an error occurred then an alert will show, and then this method will exit.
-            }
-        }
-        else if (itemStatus.getText().equals("Checking In")){ //Item is being checked in
-            checkInHelper();
-        }
-        else {//This case should never be reached, but error will be thrown just in case.
-            stageWrapper.errorAlert("Please fill out all fields");
-        }
+        checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
+//        if(itemStatus.getText().equals("Checking Out")){//Item is being checked out
+//            if(checkedOutParts.insertIntoCheckoutParts(getBarcode(), getQuantity())) {//Order is important or checkoutID will get incremented twice
+//                //There is a check in the above method that checks if barcode is found in system. If it isn't, both methods will not execute.
+//                checkedOutParts.insertIntoCheckouts(getstudentID());
+//            }
+//            else {
+//                return;  //If an error occurred then an alert will show, and then this method will exit.
+//            }
+//        }
+//        else if (itemStatus.getText().equals("Checking In")){ //Item is being checked in
+//            checkInHelper();
+//        }
+//        else {//This case should never be reached, but error will be thrown just in case.
+//            stageWrapper.errorAlert("Please fill out all fields");
+//        }
         reset();
     }
-
-    /**
-     * Helper method that sets items to be checked back in.
-     */
-    private void checkInHelper(){
-        //Get part id from barcode, and checkoutID from part ID.
-        int checkoutID = checkedOutParts.getCheckoutIDFromPartid(checkedOutParts.getPartIDFromBarcode(getBarcode()));
-        checkedOutParts.setItemToCheckedIn(getQuantity(), checkoutID);
-    }
+//
+//    /**
+//     * Helper method that sets items to be checked back in.
+//     */
+//    private void checkInHelper(){
+//        //Get part id from barcode, and checkoutID from part ID.
+//        int checkoutID = checkedOutParts.getCheckoutIDFromPartid(checkedOutParts.getPartIDFromBarcode(getBarcode()));
+//        checkedOutParts.setItemToCheckedIn(getQuantity(), checkoutID);
+//    }
 
     /**
      * Returns to home, contains check if fields are filled out
@@ -110,23 +113,23 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         stageWrapper.newStage("fxml/Menu.fxml", main);
     }
 
-    /**
-     * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
-     */
-    private void setItemStatus() {
-        barcode.focusedProperty().addListener((ov, oldV, newV)->{
-            if (!newV && !barcode.getText().isEmpty()){
-                if(checkInValidator()){
-                    stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
-                    setCheckinInformation();
-                }
-                else {
-                    stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
-                    setCheckoutInformation();
-                }
-            }
-        });
-    }
+//    /**
+//     * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
+//     */
+//    private void setItemStatus() {
+//        barcode.focusedProperty().addListener((ov, oldV, newV)->{
+//            if (!newV && !barcode.getText().isEmpty()){
+//                if(checkInValidator()){
+//                    stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
+//                    setCheckinInformation();
+//                }
+//                else {
+//                    stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
+//                    setCheckoutInformation();
+//                }
+//            }
+//        });
+//    }
 
     private void getStudentName(){
         studentID.focusedProperty().addListener((ov, oldV, newV)->{
@@ -150,13 +153,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         studentNameText.setText("");
     }
 
-    /**
-     * Checks if item is being checked in or out
-     * @return True if item is being checked in
-     */
-    private boolean checkInValidator() {
-        return checkedOutParts.returnBarcodes().contains(barcode.getText());
-    }
+//    /**
+//     * Checks if item is being checked in or out
+//     * @return True if item is being checked in
+//     */
+//    private boolean checkInValidator() {
+//        return checkedOutParts.returnBarcodes().contains(barcode.getText());
+//    }
 
     /**
      * Checks if fields are filled
