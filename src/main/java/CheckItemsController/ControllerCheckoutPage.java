@@ -1,6 +1,7 @@
 package CheckItemsController;
 
 import Database.CheckedOutParts;
+import Database.StudentInfo;
 import Database.Database;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
@@ -40,10 +41,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXButton studentInfo, submitButton, home;
 
     @FXML
-    private Label itemStatus;
+    private Label itemStatus, studentNameText;
 
     private StageWrapper stageWrapper = new StageWrapper();
     private CheckedOutParts checkedOutParts = new CheckedOutParts();
+    private StudentInfo student = new StudentInfo();
 
 
     @Override
@@ -52,6 +54,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
         setItemStatus();
+        getStudentName();
         unlockFields();
     }
 
@@ -112,9 +115,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     /**
      * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
      */
-    public void setItemStatus() {
+    private void setItemStatus() {
         barcode.focusedProperty().addListener((ov, oldV, newV)->{
-            if (!newV){
+            if (!newV && !barcode.getText().isEmpty()){
                 if(checkInValidator()){
                     stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
                     setCheckinInformation();
@@ -124,6 +127,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                     setCheckoutInformation();
                 }
             }
+        });
+    }
+
+    private void getStudentName(){
+        studentID.focusedProperty().addListener((ov, oldV, newV)->{
+            if(!newV){
+                studentNameText.setText(student.getStudentNameFromID(studentID.getText()));
+            }
+
         });
     }
 
@@ -137,6 +149,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         extended.setSelected(false);
         faulty.setSelected(false);
         itemStatus.setText("");
+        studentNameText.setText("");
     }
 
 

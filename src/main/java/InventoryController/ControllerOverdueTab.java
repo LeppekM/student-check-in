@@ -78,6 +78,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
                 e.printStackTrace();
             }
         }
+        populateTable();
     }
 
     /**

@@ -272,7 +272,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                         final int index = row.getIndex();
                         if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                             Part rowData = database.selectPart(Integer.parseInt(totalTable.getSelectionModel().getModelItem(index).getValue().getPartID().get()));
-                            showInfoPage(rowData);
+                            showInfoPage(rowData, "total");
                             totalTable.getSelectionModel().clearSelection();
                             event.consume();
                             //System.out.println("Hi " + rowData.toString());
@@ -447,7 +447,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             e.printStackTrace();
         }
     }
-
     public void deletePartType(String partName) {
         try {
             if (database.hasPartName(partName)) {
@@ -460,32 +459,4 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             e.printStackTrace();
         }
     }
-
-    /**
-     * This method brings up the FXML page for showing the info about the selected part
-     *
-     * @author Matthew Karcz
-     */
-    public void showInfoPage(Part part){
-        Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ShowPart.fxml"));
-            Parent root = loader.load();
-            ((ControllerShowPart) loader.getController()).initPart(database.selectPart(part.getPartID()), "total");
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Part Information");
-            stage.initOwner(totalTabPage.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.showAndWait();
-            populateTable();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }
