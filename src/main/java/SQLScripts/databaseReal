@@ -191,7 +191,7 @@ CREATE PROCEDURE load_parts()
   END;
 
 CREATE PROCEDURE load_vendors()
-  BEGIN 
+  BEGIN
     TRUNCATE TABLE vendors;
     START TRANSACTION;
     insert into vendors (vendor) values ('MSOE');
