@@ -3,9 +3,7 @@ package CheckItemsController;
 import Database.Database;
 import Database.SavedPart;
 import Database.Student;
-import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
-import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,12 +16,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import java.util.stream.IntStream;
 
 public class CheckoutPopUp extends StudentPage {
 
     @FXML
-    private JFXTextField student, part, quantity, date, dueDate;
+    private JFXTextField student, part, quantity, coDate, dueDate;
 
     @FXML
     private Label cID;
@@ -37,7 +34,7 @@ public class CheckoutPopUp extends StudentPage {
         student.setText(checked.getStudentName().get());
         part.setText(checked.getPartName().get());
         quantity.setText(checked.getQuantity().get() + "");
-        date.setText(checked.getCheckedOutAt().get());
+        coDate.setText(checked.getCheckedOutAt().get());
         dueDate.setText(checked.getDueDate().get());
         cID.setText("Checkout ID: " + checked.getCheckID().get());
     }
@@ -57,7 +54,7 @@ public class CheckoutPopUp extends StudentPage {
             String prof = JOptionPane.showInputDialog(null, "Please enter a Professors name");
             String course = JOptionPane.showInputDialog(null, "Please enter a course code (i.e. CS3840)");
             String reason = JOptionPane.showInputDialog(null, "Please enter a short description why they need it saved");
-            s.getSavedItems().add(new SavedPart(student.getText(), part.getText(), date.getText(), Integer.parseInt(quantity.getText()),
+            s.getSavedItems().add(new SavedPart(student.getText(), part.getText(), coDate.getText(), Integer.parseInt(quantity.getText()),
                     new Date(System.currentTimeMillis()).toString(), dueDate.getText(), cID.getText(), prof, course, reason));
             try {
                 Connection connection = database.getConnection();

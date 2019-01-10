@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 public class SavedPopUp extends StudentPage {
 
     @FXML
-    private JFXTextField student, part, quantity, date, dueDate, saved,  prof, course;
+    private JFXTextField student, part, quantity, coDate, dueDate, saved,  prof, course;
 
     @FXML
     private JFXTextArea reason;
@@ -17,7 +17,7 @@ public class SavedPopUp extends StudentPage {
         student.setText(part.getStudentName().get());
         this.part.setText(part.getPartName().get());
         quantity.setText(part.getQuantity().get() + "");
-        date.setText(part.getCheckedOutAt().get());
+        coDate.setText(part.getCheckedOutAt().get());
         dueDate.setText(part.getDueAt().get());
         saved.setText(part.getSavedAt().get());
         prof.setText(part.getProf());
