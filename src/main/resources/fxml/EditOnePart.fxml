@@ -32,7 +32,7 @@
                         <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="174.0" text="Price:" />
                         <JFXTextField id="priceField" fx:id="priceField" alignment="CENTER" layoutX="175.0" layoutY="174.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="nameLabel" font="$x1" layoutX="100.0" layoutY="214.0" text="Vendor:" />
-                        <JFXComboBox id="vendorList" fx:id="vendorList" layoutX="175.0" layoutY="214.0" prefHeight="24.0" prefWidth="153.5" />
+                        <JFXTextField id="vendorList" fx:id="vendorField" layoutX="175.0" layoutY="214.0" prefHeight="24.0" prefWidth="153.5" />
                         <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="254.0" text="Location:" />
                         <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" layoutX="175.0" layoutY="254.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Hyperlink layoutX="255.0" layoutY="294.0" onAction="#goBack" text="Cancel" />

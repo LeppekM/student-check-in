@@ -3,6 +3,7 @@ package InventoryController;
 import Database.*;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import com.jfoenix.controls.JFXSpinner;
@@ -34,25 +35,25 @@ public class ControllerEditPartType extends ControllerEditPart {
     private VBox sceneEditPartType;
 
     @FXML
-    private TextField nameField;
+    private JFXTextField nameField;
 
     @FXML
-    private TextField serialField;
+    private JFXTextField serialField;
 
     @FXML
-    private TextField manufacturerField;
+    private JFXTextField manufacturerField;
 
     @FXML
-    private TextField priceField;
+    private JFXTextField priceField;
 
     @FXML
-    private ComboBox vendorList;
+    private JFXTextField vendorField;
 
     @FXML
-    private TextField locationField;
+    private JFXTextField locationField;
 
     @FXML
-    private TextField barcodeField;
+    private JFXTextField barcodeField;
 
     @FXML
     private JFXSpinner loader;
@@ -73,7 +74,9 @@ public class ControllerEditPartType extends ControllerEditPart {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        barcodeField.setEditable(false);
+        serialField.setEditable(false);
+        manufacturerField.setEditable(false);
+        vendorField.setEditable(false);
         saveButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         part = null;
     }
@@ -96,9 +99,9 @@ public class ControllerEditPartType extends ControllerEditPart {
             priceField.setText("$" + df.format(part.getPrice()/100));
             ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
-                vendorList.getItems().addAll(vendors);
+                //vendorList.getItems().addAll(vendors);
             }
-            vendorList.setValue(vendorInformation.getVendorFromID(part.getVendor()));
+            vendorField.setText(vendorInformation.getVendorFromID(part.getVendor()));
             locationField.setText(part.getLocation());
             barcodeField.setText(part.getBarcode());
         }
@@ -130,7 +133,7 @@ public class ControllerEditPartType extends ControllerEditPart {
         // Note: price multiplied by 100, because it is stored in the database as an integer 100 times
         // larger than actual value.
         double price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").replace("$", "").trim());
-        String vendor = vendorList.getValue().toString();
+        String vendor = vendorField.getText();
         String location = locationField.getText().trim();
         String barcode = barcodeField.getText().trim();
         part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode);
@@ -143,17 +146,16 @@ public class ControllerEditPartType extends ControllerEditPart {
      */
     private boolean validateInput() {
         boolean isValid = true;
-        if (!validateAllFieldsFilledIn(nameField.getText(), serialField.getText(),
-                manufacturerField.getText(),
-                priceField.getText().replaceAll(",", ""),
-                locationField.getText(),
-                barcodeField.getText())) {
-            isValid = false;
-            fieldErrorAlert();
-        } else if (vendorList.getValue() == null) {
-            isValid = false;
-            nullVendorAlert();
-        }
+//        if (!validateAllFieldsFilledIn(nameField.getText(),
+//                priceField.getText().replaceAll(",", ""),
+//                locationField.getText(),
+//                barcodeField.getText())) {
+//            isValid = false;
+//            fieldErrorAlert();
+//        } else if (vendorList.getValue() == null) {
+//            isValid = false;
+//            nullVendorAlert();
+//        }
         return isValid;
     }
 
@@ -161,12 +163,9 @@ public class ControllerEditPartType extends ControllerEditPart {
      * This method ensures that the inputted fields are not empty.
      * @return true if the fields are not empty, false otherwise
      */
-    protected boolean validateAllFieldsFilledIn(String partName, String serialNumber,
-                                                String manufacturer, String price,
+    protected boolean validateAllFieldsFilledIn(String partName, String price,
                                                 String location, String barcode) {
         return partName != null && partName.trim() != ""
-                && serialNumber != null && serialNumber.trim() != ""
-                && manufacturer != null && manufacturer.trim() != ""
                 && price != null && price.trim() != ""
                 && location != null && location.trim() != ""
                 && barcode != null && barcode.trim() != "";
@@ -206,14 +205,6 @@ public class ControllerEditPartType extends ControllerEditPart {
 
         alert.showAndWait();
     }
-
-    private void nullVendorAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Please select a vendor");
-        alert.showAndWait();
-    }
-
     /**
      * Creates an alert informing user to enter digits
      */
