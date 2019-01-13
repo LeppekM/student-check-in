@@ -2,11 +2,14 @@ package InventoryController;
 
 import Database.*;
 
+import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import com.jfoenix.controls.JFXSpinner;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -31,29 +34,13 @@ import java.util.ResourceBundle;
  * This class acts as the controller for the history tab of the inventory page
  */
 public class ControllerEditOnePart extends ControllerEditPart {
+
     @FXML
     private VBox sceneEditOnePart;
 
     @FXML
-    private JFXTextField nameField;
-
-    @FXML
-    private JFXTextField serialField;
-
-    @FXML
-    private JFXTextField manufacturerField;
-
-    @FXML
-    private JFXTextField priceField;
-
-    @FXML
-    private JFXTextField vendorField;
-
-    @FXML
-    private JFXTextField locationField;
-
-    @FXML
-    private JFXTextField barcodeField;
+    private JFXTextField nameField, serialField, manufacturerField, priceField,
+            vendorField, locationField, barcodeField;
 
     @FXML
     private JFXSpinner loader;
@@ -67,6 +54,8 @@ public class ControllerEditOnePart extends ControllerEditPart {
 
     private VendorInformation vendorInformation = new VendorInformation();
 
+    private StageWrapper stageWrapper = new StageWrapper();
+
     /**
      * This method sets the data in the history page.
      * @param location used to resolve relative paths for the root object, or null if the location is not known.
@@ -74,15 +63,23 @@ public class ControllerEditOnePart extends ControllerEditPart {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        disableFields();
+        setFieldValidator();
+        saveButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
+        part = null;
+    }
+
+    private void disableFields() {
         nameField.setEditable(false);
         barcodeField.setEditable(false);
         manufacturerField.setEditable(false);
         vendorField.setEditable(false);
-        serialField.setEditable(false);
         priceField.setEditable(false);
+    }
 
-        saveButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
-        part = null;
+    private void setFieldValidator() {
+        stageWrapper.requiredInputValidator(serialField);
+        stageWrapper.requiredInputValidator(locationField);
     }
 
     /**
@@ -128,16 +125,37 @@ public class ControllerEditOnePart extends ControllerEditPart {
      * Helper method that sets the part info from the user input
      */
     private Part getPartFromInput() {
-        String partName = nameField.getText().trim();
-        String serialNumber = serialField.getText().trim();
-        String manufacturer = manufacturerField.getText().trim();
+        String partName = "";
+        if (nameField.getText() != null) {
+            partName=nameField.getText().trim();
+        }
+        String serialNumber = "";
+        if (serialField.getText() != null) {
+            serialNumber = serialField.getText().trim();
+        }
+        String manufacturer = "";
+        if (manufacturerField.getText() != null) {
+            manufacturer = manufacturerField.getText().trim();
+        }
+        double price = 0;
 
         // Note: price multiplied by 100, because it is stored in the database as an integer 100 times
         // larger than actual value.
-        double price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").replace("$", "").trim());
-        String vendor = vendorField.getText();
-        String location = locationField.getText().trim();
-        String barcode = barcodeField.getText().trim();
+        if (priceField.getText() != null) {
+            price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").replace("$", "").trim());
+        }
+        String vendor = "";
+        if (vendorField.getText() != null) {
+            vendor = vendorField.getText();
+        }
+        String location = "";
+        if (locationField.getText() != null) {
+            location = locationField.getText().trim();
+        }
+        String barcode = "";
+        if (barcodeField.getText() != null) {
+            barcode = barcodeField.getText().trim();
+        }
         part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode);
         return part;
     }
@@ -148,6 +166,10 @@ public class ControllerEditOnePart extends ControllerEditPart {
      */
     private boolean validateInput() {
         boolean isValid = true;
+        if (!validateUniqueSerialNumber()) {
+            uniqueSerialNumberError();
+            isValid = false;
+        }
 //        if (!validateAllFieldsFilledIn(nameField.getText(), serialField.getText(),
 //                manufacturerField.getText(),
 //                priceField.getText().replaceAll(",", ""),
@@ -160,6 +182,11 @@ public class ControllerEditOnePart extends ControllerEditPart {
 //            nullVendorAlert();
 //        }
         return isValid;
+    }
+
+    private boolean validateUniqueSerialNumber() {
+        ArrayList<String> serialNumbers = database.getSerialNumbersForBarcode(barcodeField.getText(),"" + part.getPartID());
+        return !serialNumbers.contains(serialField.getText());
     }
 
     /**
@@ -216,6 +243,13 @@ public class ControllerEditOnePart extends ControllerEditPart {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("Please select a vendor");
+        alert.showAndWait();
+    }
+
+    private void uniqueSerialNumberError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("The serial number must be unique.");
         alert.showAndWait();
     }
 
