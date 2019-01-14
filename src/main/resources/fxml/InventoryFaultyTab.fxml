@@ -11,6 +11,8 @@
 <?import javafx.scene.text.Font?>
 
 <?import java.net.URL?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import com.jfoenix.controls.JFXTextField?>
 <AnchorPane fx:id="faultyPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerFaultyTab">
   <children>
     <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
@@ -18,21 +20,14 @@
         <URL value="@../css/HeaderStyle.css" />
       </stylesheets>
     </Label>
-    <TableView id="tableInv" fx:id="tableView" layoutX="0.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0">
+    <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
+    <JFXTreeTableView id="tableInv" fx:id="faultyTable" layoutX="0.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0">
       <columnResizePolicy>
-        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        <JFXTreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
-      <columns>
-        <TableColumn editable="false" prefWidth="150.0" text="Part Name" fx:id="partName" />
-        <TableColumn editable="false" prefWidth="125.0" text="Serial Number" fx:id="serialNumber" />
-        <TableColumn editable="false" prefWidth="150.0" text="Location" fx:id="location" />
-        <TableColumn editable="false" prefWidth="100.0" text="Barcode" fx:id="barcode" />
-        <TableColumn editable="false" prefWidth="175.0" text="Fault Description" fx:id="faultDesc" />
-        <TableColumn editable="false" prefWidth="100.0" text="Part ID" fx:id="partID" />
-      </columns>
       <stylesheets>
         <URL value="@../css/TableStyle.css" />
       </stylesheets>
-    </TableView>
+    </JFXTreeTableView>
   </children>
 </AnchorPane>
