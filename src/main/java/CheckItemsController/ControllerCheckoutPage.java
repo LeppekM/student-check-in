@@ -50,6 +50,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     @FXML
     private TextArea faultyTextArea;
 
+    private CheckoutObject checkoutObject;
 
     private StageWrapper stageWrapper = new StageWrapper();
     private CheckingOutPart checkOut = new CheckingOutPart();
@@ -64,6 +65,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         setItemStatus();
         getStudentName();
         unlockFields();
+    }
+
+    public void initCheckoutObject(CheckoutObject checkoutObject) {
+        this.checkoutObject = checkoutObject;
     }
 
     /**
@@ -217,6 +222,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 Parent root = (Parent) loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
+                checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), quantity.getText(), extended.isSelected(), faulty.isSelected());
+                sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
             }catch (IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student page");

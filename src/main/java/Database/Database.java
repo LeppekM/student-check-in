@@ -128,7 +128,6 @@ public class Database {
         ObservableList<HistoryItems> data = FXCollections.observableArrayList();
         try {
             String historyQuery = "SELECT studentName, partName, serialNumber, " +
-                    "checkoutQuantity - checkInQuantity AS 'quantity'," +
                     "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
                     "THEN 'In' ELSE 'Out' END AS 'Status', " +
                     "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
@@ -146,7 +145,7 @@ public class Database {
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 data.add(new HistoryItems(resultSet.getString("studentName"), resultSet.getString("partName"),
-                        resultSet.getString("serialNumber"), resultSet.getInt("quantity"),
+                        resultSet.getString("serialNumber"),
                         resultSet.getString("location"), resultSet.getString("date")));
                 resultSet.close();
                 statement.close();
