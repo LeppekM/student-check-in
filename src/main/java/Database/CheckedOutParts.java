@@ -87,25 +87,7 @@ public class CheckedOutParts {
         return data;
     }
 
-    /**
-     * Returns barcodes of items that are checked out
-     * @return A list of barcodes in the checked out tab
-     */
-    public List<String> returnBarcodes(){
-        if(barcodes.size()!=0){
-            barcodes.clear();
-        }
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_BARCODES);
-            while(resultSet.next()){
-                barcodes.add(resultSet.getString("barcode"));
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database", e);
-        }
-        return barcodes;
-    }
+
 
     /**
      * Sets variables to the results of the query
