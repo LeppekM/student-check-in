@@ -1,6 +1,5 @@
 package CheckItemsController;
 
-import Database.CheckedOutParts;
 import Database.StudentInfo;
 import Database.CheckingOutPart;
 import Database.Database;
@@ -10,6 +9,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +19,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,13 +42,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXCheckBox faulty, extended;
 
     @FXML
-    private JFXButton studentInfo, submitButton, home;
+    private JFXButton studentInfo, submitButton, home, resetButton;
 
     @FXML
     private Label itemStatus, studentNameText;
 
+    @FXML
+    private TextArea faultyTextArea;
+
+
     private StageWrapper stageWrapper = new StageWrapper();
-    //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
 
@@ -75,7 +81,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
      */
     public void submit() {
-        if(itemBeingCheckedOut()) {
+        if(itemIsBeingCheckedOut()) {
             checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
         }
         else {
@@ -84,7 +90,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         reset();
     }
 
-    private boolean itemBeingCheckedOut(){
+    private boolean itemIsBeingCheckedOut(){
         return itemStatus.getText().equals("Checking Out");
     }
 
@@ -257,6 +263,23 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     private int getstudentID(){
         return Integer.parseInt(studentID.getText());
+    }
+
+    public void extended(){
+        TranslateTransition transition = new TranslateTransition(Duration.millis(500), submitButton);
+        TranslateTransition transition2 = new TranslateTransition(Duration.millis(500), resetButton);
+
+        transition.setByY(125);
+        transition2.setByY(125);
+        transition.play();
+        transition2.play();
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), faultyTextArea);
+        fadeTransition.setFromValue(0.0);
+        fadeTransition.setToValue(1.0);
+        fadeTransition.play();
+        faultyTextArea.setVisible(true);
+
+
     }
 
 }
