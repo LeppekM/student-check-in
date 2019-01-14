@@ -40,8 +40,11 @@ public class CheckingOutPart {
     private List<String> barcodes = new ArrayList<>();
 
 
-
-
+    /**
+     * Adds a new checkout item to the database
+     * @param barcode
+     * @param studentID
+     */
     public void addNewCheckoutItem(int barcode, int studentID){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(addToCheckouts);
@@ -52,6 +55,13 @@ public class CheckingOutPart {
         }
     }
 
+    /**
+     * Helper for adding checkout item to DB, also sets isCheckedout in parts table to 1
+     * @param barcode Barcode of part
+     * @param studentID Student ID entered
+     * @param preparedStatement Statement to be executed
+     * @return
+     */
     private PreparedStatement addNewCheckoutHelper(int barcode, int studentID, PreparedStatement preparedStatement){
         int partID = getPartIDFromBarcode(barcode, getPartIDtoAdd);
         try {
@@ -123,6 +133,11 @@ public class CheckingOutPart {
         return barcodes;
     }
 
+    /**
+     * Takes a partID and returns the corresponding checkoutID
+     * @param partID PartID to be passed in
+     * @return
+     */
     private int getCheckoutIDfromPartID(int partID){
         int checkoutID = 0;
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
@@ -139,6 +154,10 @@ public class CheckingOutPart {
         return checkoutID;
     }
 
+    /**
+     * Method to return an item to checked in status
+     * @param barcode Barcode of item
+     */
     public void setItemtoCheckedin(int barcode){
         int partID = getPartIDFromBarcode(barcode, getPartIDtoCheckin);
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {

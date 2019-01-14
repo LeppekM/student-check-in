@@ -79,36 +79,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         else {
             checkOut.setItemtoCheckedin(getBarcode());
         }
-//        if(itemStatus.getText().equals("Checking Out")){//Item is being checked out
-//            if(checkedOutParts.insertIntoCheckoutParts(getBarcode(), getQuantity())) {//Order is important or checkoutID will get incremented twice
-//                //There is a check in the above method that checks if barcode is found in system. If it isn't, both methods will not execute.
-//                checkedOutParts.insertIntoCheckouts(getstudentID());
-//            }
-//            else {
-//                return;  //If an error occurred then an alert will show, and then this method will exit.
-//            }
-//        }
-//        else if (itemStatus.getText().equals("Checking In")){ //Item is being checked in
-//            checkInHelper();
-//        }
-//        else {//This case should never be reached, but error will be thrown just in case.
-//            stageWrapper.errorAlert("Please fill out all fields");
-//        }
         reset();
     }
 
     private boolean itemBeingCheckedOut(){
         return itemStatus.getText().equals("Checking Out");
     }
-//
-//    /**
-//     * Helper method that sets items to be checked back in.
-//     */
-//    private void checkInHelper(){
-//        //Get part id from barcode, and checkoutID from part ID.
-//        int checkoutID = checkedOutParts.getCheckoutIDFromPartid(checkedOutParts.getPartIDFromBarcode(getBarcode()));
-//        checkedOutParts.setItemToCheckedIn(getQuantity(), checkoutID);
-//    }
 
     /**
      * Returns to home, contains check if fields are filled out
