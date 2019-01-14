@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 
 public class AddPart {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-    private String addQuery = "INSERT INTO parts(partID, partName, serialnumber, manufacturer, price, vendorID," +
+    private String addQuery = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
             " location, barcode, totalQuantity,  availableQuantity, createdAt, createdBy, isDeleted)"+
-            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
     private String getpartIDQuery = "SELECT partID\n" +
             "FROM parts\n" +
             "ORDER BY partID DESC\n" +
@@ -24,6 +24,7 @@ public class AddPart {
             PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
             insertQuery(part, preparedStatement).execute();
             vendorInformation.getVendorList();
+            preparedStatement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -37,20 +38,19 @@ public class AddPart {
      */
     private PreparedStatement insertQuery(Part part, PreparedStatement preparedStatement){
         try {
-            preparedStatement.setInt(1, part.getPartID());
-            preparedStatement.setString(2, part.getPartName());
-            preparedStatement.setString(3, part.getSerialNumber());
-            preparedStatement.setString(4, part.getManufacturer());
-            preparedStatement.setDouble(5, part.getPrice());
-            preparedStatement.setInt(6, vendorInformation.getVendorIDFromVendor(part.getVendor()));
-            preparedStatement.setString(7, part.getLocation());
-            preparedStatement.setString(8, part.getBarcode());
+            preparedStatement.setString(1, part.getPartName());
+            preparedStatement.setString(2, part.getSerialNumber());
+            preparedStatement.setString(3, part.getManufacturer());
+            preparedStatement.setDouble(4, part.getPrice());
+            preparedStatement.setInt(5, vendorInformation.getVendorIDFromVendor(part.getVendor()));
+            preparedStatement.setString(6, part.getLocation());
+            preparedStatement.setString(7, part.getBarcode());
+            preparedStatement.setInt(8, part.getQuantity());
             preparedStatement.setInt(9, part.getQuantity());
-            preparedStatement.setInt(10, part.getQuantity());
-            preparedStatement.setString(11, getCurrentDate());
+            preparedStatement.setString(10, getCurrentDate());
             //Hardcoded created by because we don't have workers setup yet
-            preparedStatement.setString(12, "Jim");
-            preparedStatement.setInt(13, part.getIsDeleted());
+            preparedStatement.setString(11, "Jim");
+            preparedStatement.setInt(12, part.getIsDeleted());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -78,10 +78,12 @@ public class AddPart {
             while(rs.next()){
                 partID = rs.getInt("partID");
             }
+            statement.close();
+
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         //Gets max id from table, then increments to create new partID
-        return partID + 1;
+        return partID;
     }
 }
