@@ -8,24 +8,25 @@ import javafx.beans.property.SimpleStringProperty;
  * This class allows the tableview for checked out items to be populated
  */
 public class CheckedOutItems extends RecursiveTreeObject{
-    private final SimpleIntegerProperty quantity, checkID;
+    private final SimpleIntegerProperty barcode, checkoutID;
     private final SimpleStringProperty partName, dueDate, checkedOutAt, studentName;
 
-    public CheckedOutItems(String sName, String pName, int quantityCon, String checkOutDate, String due, int cID) {
+    public CheckedOutItems(String sName, String pName, int barcodeCon, String checkOutDate, String due, int checkoutIDCon) {
         this.studentName = new SimpleStringProperty(sName);
         this.partName = new SimpleStringProperty(pName);
-        this.quantity = new SimpleIntegerProperty(quantityCon);
+        this.barcode = new SimpleIntegerProperty(barcodeCon);
         this.checkedOutAt = new SimpleStringProperty(checkOutDate);
         this.dueDate = new SimpleStringProperty(due);
-        checkID = new SimpleIntegerProperty(cID);
+        this.checkoutID = new SimpleIntegerProperty(checkoutIDCon);
+
     }
 
     public SimpleStringProperty getCheckedOutAt() { return checkedOutAt; }
 
     public SimpleStringProperty getStudentName() { return studentName; }
 
-    public SimpleIntegerProperty getQuantity() {
-        return quantity;
+    public SimpleIntegerProperty getBarcode() {
+        return barcode;
     }
 
     public SimpleStringProperty getPartName() {
@@ -36,8 +37,6 @@ public class CheckedOutItems extends RecursiveTreeObject{
         return dueDate;
     }
 
-    public SimpleIntegerProperty getCheckID() {
-        return checkID;
-    }
+    public SimpleIntegerProperty getCheckID() {return checkoutID; }
 
 }
