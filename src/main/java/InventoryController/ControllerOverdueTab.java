@@ -97,7 +97,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             }
         });
 
-        dueDateCol = new JFXTreeTableColumn<>("Part Name");
+        dueDateCol = new JFXTreeTableColumn<>("Due Date");
         dueDateCol.setPrefWidth(150);
         dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -106,7 +106,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             }
         });
 
-        feeCol = new JFXTreeTableColumn<>("Part Name");
+        feeCol = new JFXTreeTableColumn<>("Fee");
         feeCol.setPrefWidth(150);
         feeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
