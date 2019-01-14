@@ -7,6 +7,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import com.jfoenix.controls.JFXTextField?>
 <AnchorPane fx:id="overduePage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerOverdueTab">
    <children>
        <Label layoutX="15.0" layoutY="11.0" text="Overdue Items">
@@ -16,18 +18,12 @@
        </Label>
       <Pane prefHeight="600.0" prefWidth="800.0">
          <children>
-            <TableView fx:id="overdueTable" layoutY="65.0" onMouseClicked="#popUp" prefHeight="476.0" prefWidth="800.0">
-              <columns>
-                <TableColumn fx:id="studentID" editable="false" minWidth="159.0" prefWidth="155.0" text="Student ID" />
-                <TableColumn fx:id="partID" editable="false" minWidth="159.0" prefWidth="180.0" text="Part" />
-                  <TableColumn fx:id="serial" editable="false" minWidth="159.0" prefWidth="155.0" text="Serial Number" />
-                  <TableColumn fx:id="date" editable="false" minWidth="159.0" prefWidth="155.0" text="Original Due Date" />
-                  <TableColumn fx:id="price" editable="false" minWidth="159.0" prefWidth="155.0" text="Fee" />
-              </columns>
-                <stylesheets>
-                    <URL value="@../css/TableStyle.css" />
-                </stylesheets>
-            </TableView>
+             <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
+             <JFXTreeTableView fx:id="overdueTable" layoutY="65.0" onMouseClicked="#popUp" prefHeight="476.0" prefWidth="800.0">
+                 <stylesheets>
+                     <URL value="@../css/TableStyle.css" />
+                 </stylesheets>
+            </JFXTreeTableView>
          </children>
       </Pane>
    </children>

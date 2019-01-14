@@ -56,9 +56,6 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     @FXML
     private JFXTextField searchInput;
 
-    @FXML
-    private TableColumn<Part, Boolean> fault;
-
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
 
@@ -134,7 +131,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                         faultDescription = tableRow.getValue().getFaultDescription().getValue();
 
                         return ((partName != null && partName.toLowerCase().contains(input))
-                                || (partName != null && partName.toLowerCase().contains(input))
+                                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
                                 || (loc != null && loc.toLowerCase().contains(input))
                                 || (barcode != null && barcode.toLowerCase().contains(input))
                                 || (faultDescription != null && faultDescription.toLowerCase().contains(input)));
@@ -158,17 +155,6 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                 return row;
             }
         });
-
-//        faultyTable.setRowFactory( tv -> {
-//            TableRow<Part> row = new TableRow<>();
-//            row.setOnMouseClicked(event -> {
-//                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-//                    Part rowData = row.getItem();
-//                    showInfoPage(rowData, "fault");
-//                }
-//            });
-//            return row;
-//        });
     }
 
     /**
