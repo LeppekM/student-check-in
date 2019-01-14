@@ -20,7 +20,7 @@ import java.util.Date;
 public class CheckoutPopUp extends StudentPage {
 
     @FXML
-    private JFXTextField student, part, quantity, coDate, dueDate;
+    private JFXTextField student, part, barcode, coDate, dueDate;
 
     @FXML
     private Label cID;
@@ -33,7 +33,7 @@ public class CheckoutPopUp extends StudentPage {
     public void populate(CheckedOutItems checked){
         student.setText(checked.getStudentName().get());
         part.setText(checked.getPartName().get());
-        quantity.setText(checked.getQuantity().get() + "");
+        barcode.setText(checked.getBarcode().get() + "");
         coDate.setText(checked.getCheckedOutAt().get());
         dueDate.setText(checked.getDueDate().get());
         cID.setText("Checkout ID: " + checked.getCheckID().get());
@@ -54,7 +54,7 @@ public class CheckoutPopUp extends StudentPage {
             String prof = JOptionPane.showInputDialog(null, "Please enter a Professors name");
             String course = JOptionPane.showInputDialog(null, "Please enter a course code (i.e. CS3840)");
             String reason = JOptionPane.showInputDialog(null, "Please enter a short description why they need it saved");
-            s.getSavedItems().add(new SavedPart(student.getText(), part.getText(), coDate.getText(), Integer.parseInt(quantity.getText()),
+            s.getSavedItems().add(new SavedPart(student.getText(), part.getText(), coDate.getText(), Integer.parseInt(barcode.getText()),
                     new Date(System.currentTimeMillis()).toString(), dueDate.getText(), cID.getText(), prof, course, reason));
             try {
                 Connection connection = database.getConnection();
