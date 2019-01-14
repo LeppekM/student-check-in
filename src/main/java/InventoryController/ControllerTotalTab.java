@@ -338,16 +338,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         this.data.clear();
         this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
 
-//        partName.setCellValueFactory(new PropertyValueFactory("partName"));
-//        serialNumber.setCellValueFactory(new PropertyValueFactory("serialNumber"));
-//        location.setCellValueFactory(new PropertyValueFactory("location"));
-//        barcode.setCellValueFactory(new PropertyValueFactory("barcode"));
-//        partID.setCellValueFactory(new PropertyValueFactory("partID"));
-//        fault.setCellFactory(CheckBoxTableCell.forTableColumn(fault));
-//        fault.setCellValueFactory(new PropertyValueFactory("fault"));
-//        tableView.getItems().clear();
-//        tableView.getItems().setAll(this.data);
-
         for (int i = 0; i < data.size(); i++) {
             Button button = new Button("Edit");
             tableRows.add(new TotalTabTableRow(data.get(i).getPartName(), new HBox(button),

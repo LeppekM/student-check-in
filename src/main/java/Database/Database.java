@@ -53,7 +53,8 @@ public class Database {
      * @return a list of overdue items
      * @author Bailey Terry
      */
-    public ObservableList<OverdueItem> getOverdue(ObservableList<OverdueItem> data) {
+    public ObservableList<OverdueItem> getOverdue() {
+        ObservableList<OverdueItem> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
             String overdue = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
@@ -64,7 +65,6 @@ public class Database {
                     "where checkout_parts.dueAt < date('" + date.toString() + "');";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(overdue);
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 data.add(new OverdueItem(resultSet.getInt("checkouts.studentID"), resultSet.getString("students.studentName"),
                         resultSet.getString("students.email"), resultSet.getString("parts.partName"),
@@ -170,7 +170,6 @@ public class Database {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
@@ -183,6 +182,36 @@ public class Database {
             e.printStackTrace();
         }
         return part;
+    }
+
+    public ArrayList<String> getSerialNumbersForBarcode(String barcode, String partID) {
+        String query = "SELECT serialNumber FROM parts WHERE parts.isDeleted = 0 AND barcode = " + barcode + " AND partID != " + partID + ";";
+        ArrayList<String> serialNumbers = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                serialNumbers.add(resultSet.getString("serialNumber"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return serialNumbers;
+    }
+
+    public ArrayList<String> getUniqueBarcodes() {
+        String query = "SELECT distinct barcode FROM parts;";
+        ArrayList<String> barcodes = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                barcodes.add(resultSet.getString("barcode"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return barcodes;
     }
 
     public boolean hasPartName(String partName) {

@@ -57,9 +57,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Label emptytableLabel = new Label("No parts found.");
-        emptytableLabel.setFont(new Font(18));
-        historyTable.setPlaceholder(emptytableLabel);
+        Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setFont(new Font(18));
+        historyTable.setPlaceholder(emptyTableLabel);
 //        populateTable();
 
 
@@ -144,7 +144,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             }
         });
 
-        // Click to select if unselected and unselect if selected
+        // Click to select if unselected and deselect if selected
         historyTable.setRowFactory(new Callback<TreeTableView<HistoryTabTableRow>, TreeTableRow<HistoryTabTableRow>>() {
             @Override
             public TreeTableRow<HistoryTabTableRow> call(TreeTableView<HistoryTabTableRow> param) {
@@ -162,18 +162,6 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                 return row;
             }
         });
-
-//        historyTable.setRowFactory(tv -> {
-//            TableRow<Part> row = new TableRow<>();
-//            row.setOnMouseClicked(event -> {
-//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-//                    Part rowData = row.getItem();
-//                    editPart(rowData);
-//                }
-//            });
-//            return row;
-//        });
-        //database.getHistory();
     }
 
     /**
