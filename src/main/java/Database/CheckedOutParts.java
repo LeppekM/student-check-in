@@ -18,23 +18,18 @@ import java.util.List;
  */
 public class CheckedOutParts {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-    private final String SELECTQUERY = "SELECT students.studentName, parts.partName, checkout_parts.checkoutQuantity, checkouts.checkoutAt, checkout_parts.dueAt, checkouts.checkoutID\n" +
-            "            FROM checkout_parts\n" +
-            "            INNER JOIN parts\n" +
-            "            ON checkout_parts.partID = parts.partID\n" +
-            "            INNER JOIN checkouts\n" +
-            "            ON checkout_parts.checkoutID = checkouts.checkoutID\n" +
-            "            INNER JOIN students\n" +
-            "            ON checkouts.studentID = students.studentID\n" +
-            "            WHERE (checkout_parts.checkedInAt is null or checkedInAt ='')";
+    private final String SELECTQUERY = "SELECT students.studentName, parts.partName, parts.barcode, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID\n" +
+            "FROM checkout\n" +
+            "INNER JOIN parts on checkout.partID = parts.partID\n" +
+            "INNER JOIN students on checkout.studentID = students.studentID\n" +
+            "WHERE checkout.checkinAt IS NULL";
 
     private Statement statement;
-    private int checkoutQuantity;
+    private int barcode, checkoutID;
     private String checkedOutAt;
     private String dueDate;
     private String partName;
     private String studentName;
-    private int checkoutID;
 
     public ObservableList<CheckedOutItems> data = FXCollections.observableArrayList();
 
@@ -48,7 +43,7 @@ public class CheckedOutParts {
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                CheckedOutItems checkedOutItems = new CheckedOutItems(studentName, partName, checkoutQuantity, checkedOutAt, dueDate, checkoutID);
+                CheckedOutItems checkedOutItems = new CheckedOutItems(studentName, partName, barcode, checkedOutAt, dueDate, checkoutID);
                 data.add(checkedOutItems);
             }
         } catch (SQLException e) {
@@ -67,7 +62,7 @@ public class CheckedOutParts {
         try {
             studentName = resultSet.getString("studentName");
             partName = resultSet.getString("partName");
-            checkoutQuantity = resultSet.getInt("checkoutQuantity");
+            barcode = resultSet.getInt("barcode");
             checkedOutAt = resultSet.getString("checkoutAt");
             dueDate = resultSet.getString("dueAt");
             checkoutID = resultSet.getInt("checkoutID");
