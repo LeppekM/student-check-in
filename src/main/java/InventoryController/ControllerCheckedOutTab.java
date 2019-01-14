@@ -1,21 +1,26 @@
 package InventoryController;
 
 import Database.CheckedOutParts;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXTreeTableColumn;
+import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -25,6 +30,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 /**
  * This class acts as the controller for the checked out items part of the inventory tab
@@ -35,31 +41,114 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
     private AnchorPane checkedOutPage;
 
     @FXML
-    private TableView checkedOutTable;
+    private ObservableList<CheckedOutTabTableRow> tableRows;
 
     @FXML
-    private TableColumn<CheckedOutItems, Integer> quantityCol;
+    private JFXTextField searchInput;
 
     @FXML
-    private TableColumn<CheckedOutItems, String> partNameCol, dueDateCol, sNameCol, checkOutAtCol;
+    private JFXTreeTableView<CheckedOutTabTableRow> checkedOutTable;
+
+    private TreeItem<CheckedOutTabTableRow> root;
+
+    @FXML
+    private JFXTreeTableColumn<CheckedOutTabTableRow, String> studentNameCol, partNameCol,
+            barcodeCol, checkedOutAtCol, dueDateCol;
+
+    private String studentName, partName, barcode, checkedOutAt, dueDate;
 
     private CheckedOutParts checkedOutParts;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Label emptytableLabel = new Label("No parts found.");
-        emptytableLabel.setFont(new Font(18));
-        checkedOutTable.setPlaceholder(emptytableLabel);
-        checkedOutTable.setRowFactory( tv -> {
-            TableRow<CheckedOutItems> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    CheckedOutItems rowData = row.getItem();
-                    showInfoPage(rowData);
-                    System.out.println("Hi, " + rowData.toString());
-                }
-            });
-            return row ;
+        Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setFont(new Font(18));
+        checkedOutTable.setPlaceholder(emptyTableLabel);
+
+        studentNameCol = new JFXTreeTableColumn<>("Student");
+        studentNameCol.setPrefWidth(150);
+        studentNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
+                return param.getValue().getValue().getStudentName();
+            }
+        });
+
+        partNameCol = new JFXTreeTableColumn<>("Part Name");
+        partNameCol.setPrefWidth(150);
+        partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
+                return param.getValue().getValue().getPartName();
+            }
+        });
+
+        barcodeCol = new JFXTreeTableColumn<>("Barcode");
+        barcodeCol.setPrefWidth(150);
+        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
+                return param.getValue().getValue().getBarcode();
+            }
+        });
+
+        checkedOutAtCol = new JFXTreeTableColumn<>("Check Out Date");
+        checkedOutAtCol.setPrefWidth(150);
+        checkedOutAtCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
+                return param.getValue().getValue().getCheckedOutAt();
+            }
+        });
+
+        dueDateCol = new JFXTreeTableColumn<>("Due Date");
+        dueDateCol.setPrefWidth(150);
+        dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
+                return param.getValue().getValue().getDueDate();
+            }
+        });
+
+        tableRows = FXCollections.observableArrayList();
+
+        searchInput.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                checkedOutTable.setPredicate(new Predicate<TreeItem<CheckedOutTabTableRow>>() {
+                    @Override
+                    public boolean test(TreeItem<CheckedOutTabTableRow> tableRow) {
+                        String input = newValue.toLowerCase();
+                        studentName = tableRow.getValue().getStudentName().getValue();
+                        partName = tableRow.getValue().getPartName().getValue();
+                        barcode = tableRow.getValue().getBarcode().getValue();
+                        checkedOutAt = tableRow.getValue().getCheckedOutAt().getValue();
+                        dueDate = tableRow.getValue().getDueDate().getValue();
+
+                        return ((studentName != null && studentName.toLowerCase().contains(input))
+                                || (partName != null && partName.toLowerCase().contains(input))
+                                || (barcode != null && barcode.toLowerCase().contains(input))
+                                || (checkedOutAt != null && checkedOutAt.toLowerCase().contains(input))
+                                || (dueDate != null && dueDate.toLowerCase().contains(input)));
+                    }
+                });
+            }
+        });
+
+        // Click to select if unselected and deselect if selected
+        checkedOutTable.setRowFactory(new Callback<TreeTableView<CheckedOutTabTableRow>, TreeTableRow<CheckedOutTabTableRow>>() {
+            @Override
+            public TreeTableRow<CheckedOutTabTableRow> call(TreeTableView<CheckedOutTabTableRow> param) {
+                final TreeTableRow<CheckedOutTabTableRow> row = new TreeTableRow<>();
+                row.addEventFilter(MouseEvent.MOUSE_PRESSED, (EventHandler<MouseEvent>) event -> {
+                    final int index = row.getIndex();
+                    if (index >= 0 && index < checkedOutTable.getCurrentItemsCount() && checkedOutTable.getSelectionModel().isSelected(index)) {
+                        checkedOutTable.getSelectionModel().clearSelection();
+                        event.consume();
+                    }
+                });
+                return row;
+            }
         });
     }
 
@@ -67,73 +156,25 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
      * This sets each column table to the corresponding field in the CheckedOutItems class, and then populates it.
      */
     public void populateTable(){
+        tableRows.clear();
+        checkedOutTable.getColumns().clear();
         checkedOutParts = new CheckedOutParts();
         ObservableList<CheckedOutItems> list = checkedOutParts.getCheckedOutItems(); //Queries database, populating the Observable Arraylist in that class
-        checkedOutTable.getItems().clear();
-        checkedOutTable.getColumns().clear();
-
-        // SET COLUMN WIDTH HERE (TOTAL = 800)
-        checkedOutTable.getColumns().add(createColumn(0, "Student"));
-        checkedOutTable.getColumns().add(createColumn(1, "Part Name"));
-        checkedOutTable.getColumns().add(createColumn(2, "Quantity"));
-        checkedOutTable.getColumns().add(createColumn(3, "CheckedOutAt"));
-        checkedOutTable.getColumns().add(createColumn(4, "Date"));
 
         for (int i = 0; i < list.size(); i++) {
-            for (int columnIndex = checkedOutTable.getColumns().size(); columnIndex < list.size(); columnIndex++) {
-                checkedOutTable.getColumns().add(createColumn(columnIndex, ""));
-            }
-            ObservableList<StringProperty> data = FXCollections.observableArrayList();
-            data.add(new SimpleStringProperty(list.get(i).getStudentName().get()));
-            data.add(new SimpleStringProperty(list.get(i).getPartName().get()));
-            data.add(new SimpleStringProperty("" + list.get(i).getQuantity().get()));
-            data.add(new SimpleStringProperty(list.get(i).getCheckedOutAt().get()));
-            data.add(new SimpleStringProperty(list.get(i).getDueDate().get()));
-            checkedOutTable.getItems().add(data);
+            tableRows.add(new CheckedOutTabTableRow(list.get(i).getStudentName().getValue(),
+                    list.get(i).getPartName().getValue(), "" + list.get(i).getBarcode().getValue(),
+                    list.get(i).getCheckedOutAt().getValue(), list.get(i).getDueDate().getValue()));
         }
 
-//        ObservableList<CheckedOutItems> asd = checkedOutParts.data;
-//        sNameCol.setCellValueFactory(new PropertyValueFactory<>("studentName"));
-//        partNameCol.setCellValueFactory(new PropertyValueFactory<>("partName"));
-//        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-//        checkOutAtCol.setCellValueFactory(new PropertyValueFactory<>("checkedOutAt"));
-//        dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-//        checkedOutTable.setItems(checkedOutParts.data);
+        root = new RecursiveTreeItem<CheckedOutTabTableRow>(
+                tableRows, RecursiveTreeObject::getChildren
+        );
 
-    }
-
-    /**
-     * This method creates a column with the correct format for the table
-     * @param columnIndex
-     * @param columnTitle
-     * @return
-     */
-    private TableColumn<ObservableList<StringProperty>, String> createColumn(
-            final int columnIndex, String columnTitle) {
-        TableColumn<ObservableList<StringProperty>, String> column = new TableColumn<>();
-        column.setPrefWidth(150);
-        String title;
-        if (columnTitle == null || columnTitle.trim().length() == 0) {
-            title = "Column " + (columnIndex + 1);  // DELETE??
-        } else {
-            title = columnTitle;
-        }
-        column.setText(title);
-        column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(
-                    TableColumn.CellDataFeatures<ObservableList<StringProperty>, String> cellDataFeatures) {
-                ObservableList<StringProperty> values = cellDataFeatures.getValue();
-                if (columnIndex >= values.size()) {
-                    return new SimpleStringProperty("");
-                } else {
-                    return cellDataFeatures.getValue().get(columnIndex);
-                }
-            }
-        });
-        // width of column set to width of table / number of columns
-        column.setPrefWidth(800 / 6);
-        return column;
+        checkedOutTable.getColumns().setAll(studentNameCol, partNameCol, barcodeCol,
+                checkedOutAtCol, dueDateCol);
+        checkedOutTable.setRoot(root);
+        checkedOutTable.setShowRoot(false);
     }
 
     /**
