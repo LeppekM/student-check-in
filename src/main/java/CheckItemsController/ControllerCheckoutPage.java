@@ -22,6 +22,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +67,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         setItemStatus();
         getStudentName();
         unlockFields();
+        unlockExtended();
     }
 
     /**
@@ -168,10 +170,30 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Only allows user to submit when all fields are filled out
      */
     private void unlockFields(){
-        BooleanBinding booleanBind = quantity.textProperty().isEmpty()
+        BooleanBinding binding;
+        binding= quantity.textProperty().isEmpty()
                 .or(studentID.textProperty().isEmpty())
                 .or(barcode.textProperty().isEmpty());
-        submitButton.disableProperty().bind(booleanBind);
+        submitButton.disableProperty().bind(binding);
+    }
+
+    /**
+     * Disables submitting information until all fields are filled out for extended checkbox.
+     */
+    private void unlockExtended() {
+        BooleanBinding binding;
+        if (extended.isSelected()) {
+            binding = courseName.textProperty().isEmpty()
+                    .or(profName.textProperty().isEmpty())
+                    .or(studentID.textProperty().isEmpty())
+                    .or(barcode.textProperty().isEmpty())
+                    .or(quantity.textProperty().isEmpty())
+                    .or(datePicker.valueProperty().isNull());
+            submitButton.disableProperty().bind(binding);
+        }
+        else {
+            unlockFields();
+        }
     }
 
     /**
@@ -271,6 +293,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * If extended is selected, more items will be displayed
      */
     public void isExtended(){
+        unlockExtended();
         int translateDown = 190;
         int translateUp = -190;
         if(extended.isSelected()){
