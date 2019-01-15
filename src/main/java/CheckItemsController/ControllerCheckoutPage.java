@@ -5,10 +5,7 @@ import Database.CheckingOutPart;
 import Database.Database;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXSpinner;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
@@ -25,6 +22,8 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -36,7 +35,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXSpinner loadIndicator;
 
     @FXML
-    private JFXTextField studentID, barcode, quantity;
+    private JFXTextField studentID, barcode, quantity, profName, courseName;
+
+    @FXML
+    private JFXDatePicker datePicker;
 
     @FXML
     private JFXCheckBox faulty, extended;
@@ -45,7 +47,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXButton studentInfo, submitButton, home, resetButton;
 
     @FXML
-    private Label itemStatus, studentNameText;
+    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt;
 
     @FXML
     private TextArea faultyTextArea;
@@ -265,21 +267,130 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         return Integer.parseInt(studentID.getText());
     }
 
-    public void extended(){
-        TranslateTransition transition = new TranslateTransition(Duration.millis(500), submitButton);
-        TranslateTransition transition2 = new TranslateTransition(Duration.millis(500), resetButton);
+    /**
+     * If extended is selected, more items will be displayed
+     */
+    public void isExtended(){
+        int translateDown = 190;
+        int translateUp = -190;
+        if(extended.isSelected()){
+            setExtendedTransition(translateDown, true);
+        }
+        else {
+            setExtendedTransition(translateUp, false);
+        }
+    }
 
-        transition.setByY(125);
-        transition2.setByY(125);
+    /**
+     * Helper method to show extended fields
+     * @param direction Direction items will be moved in
+     * @param showItems True if items should be shown
+     */
+    private void setExtendedTransition(int direction, boolean showItems){
+        translateButtons(direction);
+        translateExtended(direction);
+        extendedItemsFadeTransition();
+        setExtendedItemsVisible(showItems);
+    }
+
+    /**
+     * Helper method to set extended items to be visible
+     * @param isVisible True if items should be shown
+     */
+    private void setExtendedItemsVisible(boolean isVisible){
+        dueAt.setVisible(isVisible);
+        courseName.setVisible(isVisible);
+        profName.setVisible(isVisible);
+        datePicker.setVisible(isVisible);
+        courseNameLabel.setVisible(isVisible);
+        profNameLabel.setVisible(isVisible);
+    }
+
+    /**
+     * If faulty checkbox is shown, more items will be displayed
+     */
+    public void isFaulty(){
+        int translateFaultyDown = 125;
+        int translateFaultyUp = -125;
+        if(faulty.isSelected()) {
+            setFaultyTransition(translateFaultyDown, true);
+        }
+        else {
+            setFaultyTransition(translateFaultyUp, false);
+        }
+    }
+
+    /**
+     * Helper method to transition all faulty items
+     * @param direction Direction to be moved in
+     * @param showTextarea True if text area will be shown
+     */
+    private void setFaultyTransition(int direction, boolean showTextarea){
+        translateButtons(direction);
+        faultyBoxFadeTransition();
+        faultyTextArea.setVisible(showTextarea);
+    }
+
+    /**
+     * Translates extended checkbox
+     * @param direction Direction to be translated
+     */
+    private void translateExtended(int direction) {
+        int duration = 500;
+        TranslateTransition t = new TranslateTransition(Duration.millis(duration), extended);
+        t.setByY(direction);
+        t.play();
+    }
+
+    /**
+     * Translates buttons vertically
+     * @param direction Direction to move
+     */
+    private void translateButtons(int direction){
+        int duration = 500;
+        TranslateTransition transition = new TranslateTransition(Duration.millis(duration), submitButton);
+        TranslateTransition transition2 = new TranslateTransition(Duration.millis(duration), resetButton);
+        transition.setByY(direction);
+        transition2.setByY(direction);
         transition.play();
         transition2.play();
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), faultyTextArea);
-        fadeTransition.setFromValue(0.0);
-        fadeTransition.setToValue(1.0);
-        fadeTransition.play();
-        faultyTextArea.setVisible(true);
-
-
     }
+
+    /**
+     * Helper method to fade faulty textbox
+     */
+    private void faultyBoxFadeTransition(){
+        int initial = 0;
+        int end = 1;
+        int duration = 500;
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(duration), faultyTextArea);
+        fadeTransition.setFromValue(initial);
+        fadeTransition.setToValue(end);
+        fadeTransition.play();
+    }
+
+    /**
+     * Helper method that transitions item to be visible
+     */
+    private void extendedItemsFadeTransition(){
+        List<FadeTransition> transitions = new ArrayList<>();
+        int initial = 0;
+        int end = 1;
+        int numItems = 6;
+        int duration = 750;
+
+        transitions.add(new FadeTransition(Duration.millis(duration), dueAt));
+        transitions.add(new FadeTransition(Duration.millis(duration), datePicker));
+        transitions.add(new FadeTransition(Duration.millis(duration), courseName));
+        transitions.add(new FadeTransition(Duration.millis(duration), courseNameLabel));
+        transitions.add(new FadeTransition(Duration.millis(duration), profName));
+        transitions.add(new FadeTransition(Duration.millis(duration), profNameLabel));
+        for (int i =0; i<numItems; i++){
+            transitions.get(i).setFromValue(initial);
+            transitions.get(i).setToValue(end);
+            transitions.get(i).play();
+        }
+    }
+
 
 }

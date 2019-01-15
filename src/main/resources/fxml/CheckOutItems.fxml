@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
@@ -12,21 +13,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
    <children>
-      <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="160.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" />
-      <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" prefHeight="24.0" prefWidth="125.0" />
-      <JFXCheckBox fx:id="extended" layoutX="347.0" layoutY="332.0" onAction="#extended" text="Extended?" />
-      <JFXTextField fx:id="quantity" layoutX="347.0" layoutY="282.0" prefHeight="25.0" prefWidth="125.0" text="1" />
-      <Label layoutX="346.0" layoutY="268.0" text="Quantity" />
-      <Label layoutX="320.0" layoutY="77.0" text="Checkout/In Item">
+      <JFXTextField fx:id="studentID" layoutX="342.0" layoutY="128.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" />
+      <JFXTextField fx:id="barcode" layoutX="343.0" layoutY="189.0" prefHeight="24.0" prefWidth="125.0" />
+      <JFXCheckBox fx:id="extended" checkedColor="#043993" layoutX="343.0" layoutY="300.0" onAction="#isExtended" text="Extended?" />
+      <JFXTextField fx:id="quantity" layoutX="343.0" layoutY="250.0" prefHeight="25.0" prefWidth="125.0" text="1" />
+      <Label layoutX="342.0" layoutY="236.0" text="Quantity" />
+      <Label layoutX="316.0" layoutY="45.0" text="Checkout/In Item">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="345.0" layoutY="143.0" text="Scan Student ID" />
-      <Label layoutX="346.0" layoutY="208.0" text="Scan Barcode" />
-      <JFXSpinner fx:id="loadIndicator" layoutX="515.0" layoutY="386.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
+      <Label layoutX="341.0" layoutY="111.0" text="Scan Student ID" />
+      <Label layoutX="342.0" layoutY="176.0" text="Scan Barcode" />
+      <JFXSpinner fx:id="loadIndicator" layoutX="511.0" layoutY="354.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
       <JFXButton fx:id="home" layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnHome">
          <graphic>
             <ImageView fitHeight="35.0" fitWidth="39.0">
@@ -36,17 +37,23 @@
             </ImageView>
          </graphic>
       </JFXButton>
-      <JFXCheckBox fx:id="faulty" layoutX="348.0" layoutY="331.0" text="Faulty?" visible="false">
+      <JFXCheckBox fx:id="faulty" checkedColor="#043993" layoutX="344.0" layoutY="299.0" onAction="#isFaulty" text="Faulty?" visible="false">
          <opaqueInsets>
             <Insets top="-3.0" />
          </opaqueInsets></JFXCheckBox>
-      <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" layoutX="426.0" layoutY="377.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Reset" textFill="#043993" />
+      <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" layoutX="422.0" layoutY="345.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Reset" textFill="#043993" />
       <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="20.0" layoutY="24.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" text="Switch to Student Info" />
-      <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="326.0" layoutY="377.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
+      <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="322.0" layoutY="345.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
       <Label layoutX="14.0" layoutY="589.0" text="Current Item Status:" />
       <Label fx:id="itemStatus" layoutX="127.0" layoutY="589.0" />
       <Label layoutX="14.0" layoutY="561.0" text="Student Name:" />
       <Label fx:id="studentNameText" layoutX="101.0" layoutY="561.0" />
-      <TextArea fx:id="faultyTextArea" layoutX="286.0" layoutY="372.0" prefHeight="95.0" prefWidth="265.0" promptText="Please enter description of fault" visible="false" />
+      <TextArea fx:id="faultyTextArea" layoutX="282.0" layoutY="340.0" prefHeight="95.0" prefWidth="265.0" promptText="Please enter description of fault" visible="false" />
+      <JFXTextField fx:id="courseName" layoutX="342.0" layoutY="316.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <JFXTextField fx:id="profName" layoutX="343.0" layoutY="377.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <Label fx:id="dueAt" layoutX="342.0" layoutY="424.0" text="Due At" visible="false" />
+      <Label fx:id="courseNameLabel" layoutX="341.0" layoutY="299.0" text="Course Name" visible="false" />
+      <Label fx:id="profNameLabel" layoutX="342.0" layoutY="364.0" text="Instructor Name" visible="false" />
+      <JFXDatePicker fx:id="datePicker" defaultColor="#4059a9" layoutX="343.0" layoutY="439.0" visible="false" />
    </children>
 </AnchorPane>
