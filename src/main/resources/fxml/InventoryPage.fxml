@@ -3,11 +3,12 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<AnchorPane fx:id="inventoryScene" prefHeight="620.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
+<?import org.controlsfx.control.CheckComboBox?>
+<AnchorPane fx:id="inventoryScene" prefHeight="620.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
   <children>
     <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="800.0" stylesheets="@../css/TabStyle.css" tabClosingPolicy="UNAVAILABLE">
       <tabs>
@@ -39,6 +40,7 @@
         </Tab>
       </tabs>
     </JFXTabPane>
+      <CheckComboBox fx:id="sortCheckBox" layoutX="472.0" layoutY="55.0" prefHeight="25.0" prefWidth="128.0" />
     <JFXButton fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack">
       <graphic>
         <ImageView fitHeight="35.0" fitWidth="39.0">
