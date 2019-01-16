@@ -77,6 +77,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     public void moveToBarcodeField() {
         studentInfo.setDisable(true);
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+            Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
+            if (thisStudent.getOverdueItems().size() != 0){
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
+                alert.showAndWait();
+            }
             barcode.requestFocus();
             studentInfo.setDisable(false);
         }
