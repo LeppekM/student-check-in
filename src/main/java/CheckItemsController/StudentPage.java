@@ -157,7 +157,7 @@ public class StudentPage {
 
     public void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/CheckoutItems.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root, 789, 620);
             Stage stage = new Stage();
