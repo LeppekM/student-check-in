@@ -69,6 +69,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
 
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
+        studentID.setText(checkoutObject.getStudentID());
+        barcode.setText(checkoutObject.getBarcode());
+        quantity.setText(checkoutObject.getQuantity());
+        if (checkoutObject.isExtended()) {
+            extended.setSelected(true);
+
+        } else if (checkoutObject.isFaulty()) {
+            faulty.setSelected(true);
+            faultyTextArea.setText(checkoutObject.getFaultyDescription());
+        }
     }
 
     /**

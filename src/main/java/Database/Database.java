@@ -235,19 +235,19 @@ public class Database {
     public Student selectStudent(int ID){
         String todaysDate = gettoday().toString();
         String query = "select * from students where studentID = " + ID;
-        String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode\n" +
-                "from students\n" +
-                "left join checkout on students.studentID = checkout.studentID\n" +
+        String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode " +
+                "from students " +
+                "left join checkout on students.studentID = checkout.studentID " +
                 "left join parts on checkout.partID = parts.partID where students.studentID = " + ID  + ";";
-        String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.prof, checkout.course, checkout.reason\n" +
-                "from students\n" +
-                "left join checkout on students.studentID = checkout.studentID\n" +
+        String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.prof, checkout.course, checkout.reason " +
+                "from students " +
+                "left join checkout on students.studentID = checkout.studentID " +
                 "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
-        String oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName,\n" +
-                "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout \n" +
-                "left join parts on checkout.partID = parts.partID \n" +
-                "left join students on checkout.studentID = students.studentID \n" +
-                "where checkout.dueAt < date('2019-01-15') and students.studentID = " + ID + ";";
+        String oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
+                "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
+                "left join parts on checkout.partID = parts.partID " +
+                "left join students on checkout.studentID = students.studentID " +
+                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";
         String email = "";
@@ -306,7 +306,8 @@ public class Database {
             if (checkedOutItems.size() > 0) {
                 date = checkedOutItems.get(0).getCheckedOutAt().get();
             }
-            for (int i = 0; i < checkedOutItems.size(); i++){
+            // date null if no checkouts
+            for (int i = 0; i < checkedOutItems.size() && date != null; i++){
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     Date d = sdf.parse(date);
