@@ -119,10 +119,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 if(checkInValidator()){
                     stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
                     setCheckinInformation();
+                    faulty.setDisable(false);
                 }
                 else {
                     stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
                     setCheckoutInformation();
+                    extended.setDisable(false);
                 }
             }
         });
@@ -141,6 +143,20 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Resets all fields
      */
     public void reset() {
+        resetFromExtended();
+        resetFromFaulty();
+        resetHelper();
+        resetExtended();
+        faulty.setVisible(false);
+        faulty.setDisable(true);
+        extended.setVisible(true);
+        extended.setDisable(true);
+    }
+
+    /**
+     * Helper method for reset button
+     */
+    private void resetHelper(){
         studentID.clear();
         barcode.clear();
         quantity.setText("1");
@@ -148,6 +164,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         faulty.setSelected(false);
         itemStatus.setText("");
         studentNameText.setText("");
+        faultyTextArea.setText("");
+        barcode.setDisable(false);
     }
 
 
@@ -177,24 +195,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         submitButton.disableProperty().bind(binding);
     }
 
-    /**
-     * Disables submitting information until all fields are filled out for extended checkbox.
-     */
-    private void unlockExtended() {
-        BooleanBinding binding;
-        if (extended.isSelected()) {
-            binding = courseName.textProperty().isEmpty()
-                    .or(profName.textProperty().isEmpty())
-                    .or(studentID.textProperty().isEmpty())
-                    .or(barcode.textProperty().isEmpty())
-                    .or(quantity.textProperty().isEmpty())
-                    .or(datePicker.valueProperty().isNull());
-            submitButton.disableProperty().bind(binding);
-        }
-        else {
-            unlockFields();
-        }
-    }
+
 
     /**
      * Alert if user tries to return home and fields are filled
@@ -290,6 +291,32 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     }
 
     /**
+     * Disables submitting information until all fields are filled out for extended checkbox.
+     */
+    private void unlockExtended() {
+        BooleanBinding binding;
+        if (extended.isSelected()) {
+            binding = courseName.textProperty().isEmpty()
+                    .or(profName.textProperty().isEmpty())
+                    .or(studentID.textProperty().isEmpty())
+                    .or(barcode.textProperty().isEmpty())
+                    .or(quantity.textProperty().isEmpty())
+                    .or(datePicker.valueProperty().isNull());
+            submitButton.disableProperty().bind(binding);
+        }
+        else {
+            unlockFields();
+        }
+    }
+
+    private void resetFromExtended(){
+        int translateUP = -190;
+        if(extended.isSelected()){
+            setExtendedTransition(translateUP, false);
+        }
+    }
+
+    /**
      * If extended is selected, more items will be displayed
      */
     public void isExtended(){
@@ -298,10 +325,22 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         int translateUp = -190;
         if(extended.isSelected()){
             setExtendedTransition(translateDown, true);
+            barcode.setDisable(true);
         }
         else {
+            resetExtended();
             setExtendedTransition(translateUp, false);
+            barcode.setDisable(false);
         }
+    }
+
+    /**
+     * Resets extended fields.
+     */
+    private void resetExtended(){
+        courseName.setText("");
+        profName.setText("");
+        datePicker.setValue(null);
     }
 
     /**
@@ -337,9 +376,22 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         int translateFaultyUp = -125;
         if(faulty.isSelected()) {
             setFaultyTransition(translateFaultyDown, true);
+            barcode.setDisable(true);
         }
         else {
             setFaultyTransition(translateFaultyUp, false);
+            faultyTextArea.setText("");
+            barcode.setDisable(false);
+        }
+    }
+
+    /**
+     * Helper method to reset faulty when it is selected
+     */
+    private void resetFromFaulty(){
+        int translateUp = -125;
+        if(faulty.isSelected()){
+            setFaultyTransition(translateUp, false);
         }
     }
 
