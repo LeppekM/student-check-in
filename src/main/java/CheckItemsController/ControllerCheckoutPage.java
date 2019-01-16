@@ -1,9 +1,6 @@
 package CheckItemsController;
 
-import Database.CheckedOutParts;
-import Database.StudentInfo;
-import Database.CheckingOutPart;
-import Database.Database;
+import Database.*;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import com.jfoenix.controls.JFXButton;
@@ -45,6 +42,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private Label itemStatus, studentNameText;
 
     private StageWrapper stageWrapper = new StageWrapper();
+    private Database database = new Database();
     //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
@@ -75,11 +73,17 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
      */
     public void submit() {
-        if(itemBeingCheckedOut()) {
-            checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
-        }
-        else {
-            checkOut.setItemtoCheckedin(getBarcode());
+        Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
+        if (thisStudent.getOverdueItems().size() == 0) {
+            if (itemBeingCheckedOut()) {
+                checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
+            } else {
+                checkOut.setItemtoCheckedin(getBarcode());
+            }
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Student has overdue items and cannot check anything" +
+                    " else out until they return or pay for these items");
+            alert.showAndWait();
         }
         reset();
     }
@@ -204,7 +208,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @author Bailey Terry
      */
     public void goToStudent() {
-        Database database = new Database();
         if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
             try{
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Student.fxml"));
