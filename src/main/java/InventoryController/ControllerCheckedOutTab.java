@@ -75,7 +75,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         });
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.setPrefWidth(150);
+        partNameCol.setPrefWidth(200);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {

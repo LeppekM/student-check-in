@@ -81,7 +81,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         });
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.setPrefWidth(150);
+        partNameCol.setPrefWidth(200);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {

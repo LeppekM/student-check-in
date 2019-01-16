@@ -7,6 +7,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +17,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,10 +40,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXCheckBox faulty, extended;
 
     @FXML
-    private JFXButton studentInfo, submitButton, home;
+    private JFXButton studentInfo, submitButton, home, resetButton;
 
     @FXML
     private Label itemStatus, studentNameText;
+
+    @FXML
+    private TextArea faultyTextArea;
+
+    private CheckoutObject checkoutObject;
 
     private StageWrapper stageWrapper = new StageWrapper();
     private Database database = new Database();
@@ -56,6 +65,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         setItemStatus();
         getStudentName();
         unlockFields();
+    }
+
+    public void initCheckoutObject(CheckoutObject checkoutObject) {
+        this.checkoutObject = checkoutObject;
     }
 
     /**
@@ -75,7 +88,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     public void submit() {
         Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
         if (thisStudent.getOverdueItems().size() == 0) {
-            if (itemBeingCheckedOut()) {
+            if (itemIsBeingCheckedOut()) {
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
             } else {
                 checkOut.setItemtoCheckedin(getBarcode());
@@ -88,7 +101,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         reset();
     }
 
-    private boolean itemBeingCheckedOut(){
+    private boolean itemIsBeingCheckedOut(){
         return itemStatus.getText().equals("Checking Out");
     }
 
@@ -214,6 +227,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 Parent root = (Parent) loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
+                checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), quantity.getText(), extended.isSelected(), faulty.isSelected());
+                sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
             }catch (IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student page");
@@ -260,6 +275,23 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     private int getstudentID(){
         return Integer.parseInt(studentID.getText());
+    }
+
+    public void extended(){
+        TranslateTransition transition = new TranslateTransition(Duration.millis(500), submitButton);
+        TranslateTransition transition2 = new TranslateTransition(Duration.millis(500), resetButton);
+
+        transition.setByY(125);
+        transition2.setByY(125);
+        transition.play();
+        transition2.play();
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), faultyTextArea);
+        fadeTransition.setFromValue(0.0);
+        fadeTransition.setToValue(1.0);
+        fadeTransition.play();
+        faultyTextArea.setVisible(true);
+
+
     }
 
 }

@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.stream.IntStream;
 
 public class StudentPage {
@@ -59,8 +60,12 @@ public class StudentPage {
     private JFXTreeTableColumn<SavedPart, String> sTableCol;
 
     private static Student student;
+    private CheckoutObject checkoutObject;
     private StageWrapper stageWrapper = new StageWrapper();
 
+    public void initCheckoutObject(CheckoutObject checkoutObject) {
+        this.checkoutObject = checkoutObject;
+    }
 
     public void setStudent(Student s) {
         student = s;
@@ -151,7 +156,20 @@ public class StudentPage {
     }
 
     public void goBack() {
-        stageWrapper.newStage("fxml/CheckoutItems.fxml", main);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/CheckoutItems.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 789, 620);
+            Stage stage = new Stage();
+            ((ControllerCheckoutPage) loader.getController()).initCheckoutObject(checkoutObject);
+            stage.setResizable(false);
+            stage.setTitle("Barcode Scanner");
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void goHome() {

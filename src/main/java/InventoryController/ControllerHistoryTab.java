@@ -46,9 +46,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     private HistoryParts historyParts;
 
     private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
-    serialNumberCol, quantityCol, statusCol, dateCol;
+    serialNumberCol, statusCol, dateCol;
 
-    private String student, partName, serialNumber, quantity, status, date;
+    private String student, partName, serialNumber, status, date;
 
     /**
      * This method sets the data in the history page.
@@ -73,7 +73,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
 
         partNameCol = new JFXTreeTableColumn<>("Part");
-        partNameCol.setPrefWidth(150);
+        partNameCol.setPrefWidth(200);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
@@ -90,17 +90,8 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             }
         });
 
-        quantityCol = new JFXTreeTableColumn<>("Quantity");
-        quantityCol.setPrefWidth(100);
-        quantityCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
-                return param.getValue().getValue().getQuantity();
-            }
-        });
-
         statusCol = new JFXTreeTableColumn<>("Status");
-        statusCol.setPrefWidth(100);
+        statusCol.setPrefWidth(150);
         statusCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
@@ -129,14 +120,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                         student = tableRow.getValue().getStudent().getValue();
                         partName = tableRow.getValue().getPartName().getValue();
                         serialNumber = tableRow.getValue().getSerialNumber().getValue();
-                        quantity = tableRow.getValue().getQuantity().getValue();
                         status = tableRow.getValue().getStatus().getValue();
                         date = tableRow.getValue().getDate().getValue().toLowerCase();
 
                         return ((student != null && student.toLowerCase().contains(input))
                             || (partName != null && partName.toLowerCase().contains(input))
                             || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                            || (quantity != null && quantity.toLowerCase().contains(input))
                             || (status != null && status.toLowerCase().contains(input))
                             || (date != null & date.toLowerCase().contains(input)));
                     }
@@ -175,12 +164,11 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new HistoryTabTableRow(list.get(i).getStudent(),
                     list.get(i).getPartName(), list.get(i).getSerialNumber(),
-                    "" + list.get(i).getQuantity(), list.get(i).getStatus(),
-                    list.get(i).getDate()));
+                    list.get(i).getStatus(), list.get(i).getDate()));
         }
 
         final TreeItem<HistoryTabTableRow> root = new RecursiveTreeItem<HistoryTabTableRow>(tableRows, RecursiveTreeObject::getChildren);
-        historyTable.getColumns().setAll(studentCol, partNameCol, serialNumberCol, quantityCol, statusCol, dateCol);
+        historyTable.getColumns().setAll(studentCol, partNameCol, serialNumberCol, statusCol, dateCol);
         historyTable.setRoot(root);
         historyTable.setShowRoot(false);
     }
