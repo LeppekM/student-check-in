@@ -93,12 +93,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             } else {
                 checkOut.setItemtoCheckedin(getBarcode());
             }
+            reset();
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Student has overdue items and cannot check anything" +
                     " else out until they return or pay for these items");
             alert.showAndWait();
         }
-        reset();
     }
 
     private boolean itemIsBeingCheckedOut(){

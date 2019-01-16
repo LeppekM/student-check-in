@@ -235,23 +235,19 @@ public class Database {
     public Student selectStudent(int ID){
         String todaysDate = gettoday().toString();
         String query = "select * from students where studentID = " + ID;
-        String coList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkout_parts.dueAt, checkouts.checkoutID \n" +
+        String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode\n" +
                 "from students\n" +
-                "left join checkouts on students.studentID = checkouts.studentID\n" +
-                "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
-                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID  + ";";
-        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt," +
-                " checkouts.checkoutID, checkouts.prof, checkouts.course, checkouts.reason\n" +
+                "left join checkout on students.studentID = checkout.studentID\n" +
+                "left join parts on checkout.partID = parts.partID where students.studentID = " + ID  + ";";
+        String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.prof, checkout.course, checkout.reason\n" +
                 "from students\n" +
-                "left join checkouts on students.studentID = checkouts.studentID\n" +
-                "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
-                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID + " and checkouts.reservedAt != '';";
-        String oList = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
-                " parts.serialNumber, checkout_parts.dueAt, parts.price/100, checkouts.checkoutID from checkout_parts " +
-                "left join parts on checkout_parts.partID = parts.partID " +
-                "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
-                "left join students on checkouts.studentID = students.studentID " +
-                "where checkout_parts.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
+                "left join checkout on students.studentID = checkout.studentID\n" +
+                "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
+        String oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName,\n" +
+                "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout \n" +
+                "left join parts on checkout.partID = parts.partID \n" +
+                "left join students on checkout.studentID = students.studentID \n" +
+                "where checkout.dueAt < date('2019-01-15') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";
         String email = "";
@@ -276,9 +272,9 @@ public class Database {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 checkedOutItems.add(new CheckedOutItems(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"), resultSet.getInt("checkout_parts.checkoutQuantity"),
-                        resultSet.getString("checkouts.checkoutAt"), resultSet.getString("checkout_parts.dueAt"),
-                        resultSet.getInt("checkouts.checkoutID")));
+                        resultSet.getString("parts.partName"), resultSet.getInt("parts.barcode"),
+                        resultSet.getString("checkout.checkoutAt"), resultSet.getString("checkout.dueAt"),
+                        resultSet.getInt("checkout.checkoutID")));
             }
             statement.close();
             resultSet.close();
@@ -286,11 +282,11 @@ public class Database {
             resultSet = statement.executeQuery(oList);
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
-                overdueItems.add(new OverdueItem(resultSet.getInt("checkouts.studentID"),
+                overdueItems.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
                         resultSet.getString("students.studentName"), resultSet.getString("students.email"),
                         resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
-                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("parts.price/100"),
-                        resultSet.getString("checkouts.checkoutID")));
+                        resultSet.getString("checkout.dueAt"), resultSet.getString("parts.price/100"),
+                        resultSet.getString("checkout.checkoutID")));
             }
             statement.close();
             resultSet.close();
@@ -299,10 +295,11 @@ public class Database {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"), resultSet.getString("checkouts.checkoutAt"),
-                        resultSet.getInt("checkout_parts.checkoutQuantity"), resultSet.getString("checkouts.reservedAt"),
-                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("checkouts.checkoutID"),
-                        resultSet.getString("checkouts.prof"), resultSet.getString("checkouts.course"), resultSet.getString("checkouts.reason")));
+                        resultSet.getString("parts.partName"), resultSet.getString("checkout.checkoutAt"),
+                        resultSet.getInt("checkout.checkoutQuantity"), resultSet.getString("checkout.reservedAt"),
+                        resultSet.getString("checkout.dueAt"), resultSet.getString("checkout.checkoutID"),
+                        resultSet.getString("checkout.prof"), resultSet.getString("checkout.course"),
+                        resultSet.getString("checkout.reason")));
             }
             statement.close();
             resultSet.close();
