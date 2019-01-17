@@ -35,6 +35,7 @@ import org.controlsfx.control.CheckComboBox;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
@@ -65,7 +66,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private JFXTreeTableColumn<TotalTabTableRow, Boolean> faultCol;
 
-    private String partName, serialNumber, loc, barcode, partID;
+    private String partName, serialNumber, loc, barcode, partID, sortFilter = "";
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
@@ -338,7 +339,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         tableRows.clear();
         totalTable.getColumns().clear();
         this.data.clear();
-        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
+        getSortTypes();
+        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 " + sortFilter + " ORDER BY partID", this.data);
 
 
         for (int i = 0; i < data.size(); i++) {
@@ -354,6 +356,15 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
         totalTable.setRoot(root);
         totalTable.setShowRoot(false);
+    }
+
+    public String getSortTypes(){
+        ArrayList<String> types = super.getSelctedFilters();
+//        for(int i = 0; i<types.size(); i++){
+//
+//        }
+//        switch()
+        return sortFilter;
     }
 
     /**

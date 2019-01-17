@@ -27,6 +27,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerInventoryPage extends ControllerMenu implements Initializable {
@@ -39,9 +40,6 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
 
     @FXML
     private Tab totalTab, historyTab, checkedOutTab, overdueTab, faultsTab;
-
-    @FXML
-    private ObservableList<String> types = FXCollections.observableArrayList();
 
     @FXML
     private CheckComboBox<String> sortCheckBox;
@@ -61,7 +59,13 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     @FXML
     private Button back;
 
+    private final ObservableList<String> types = FXCollections.observableArrayList(new String[] { "All", "Checked Out", "Overdue", "Faulty"});
+
+    private final int CHECKBOX_X = 450, CHECKBOX_Y = 55, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
+
     protected static Database database = new Database();
+
+    private ArrayList<String> selectedFilters = new ArrayList<>();
 
 
     @Override
@@ -82,29 +86,28 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
             }
         });
 
-        types.addAll(new String[] { "All", "Item 1", "Item 2", "Item 3", "Item 4" });
         sortCheckBox = new CheckComboBox<>(types);
-        System.out.println(sortCheckBox.getItems());
         sortCheckBox.getCheckModel().checkIndices(0);
+        sortCheckBox.setLayoutX(CHECKBOX_X);
+        sortCheckBox.setLayoutY(CHECKBOX_Y);
+        sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
+        inventoryScene.getChildren().add(sortCheckBox);
 
         sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-            public void onChanged(ListChangeListener.Change<? extends String> c) {
-
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        if (c.toString().contains("All")) {
-
-                            // if we call the getCheckModel().clearChecks() this will
-                            // cause to "remove" the 'All' too at least inside the model.
-                            // So we need to manually clear everything else
+            public void onChanged(ListChangeListener.Change<? extends String> s) {
+                while (s.next()) {
+                    if (s.wasAdded()) {
+                        if (s.toString().contains("All")) {
+                            //manually clear other selections when "All" is chosen
                             for (int i = 1; i < types.size(); i++) {
                                 sortCheckBox.getCheckModel().clearCheck(i);
+                                selectedFilters.clear();
                             }
-
                         } else {
                             // check if the "All" option is selected and if so remove it
                             if (sortCheckBox.getCheckModel().isChecked(0)) {
                                 sortCheckBox.getCheckModel().clearCheck(0);
+                                selectedFilters.add(s.toString());
                             }
 
                         }
@@ -114,6 +117,10 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         });
 
         back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
+    }
+
+    public ArrayList<String> getSelctedFilters(){
+        return selectedFilters;
     }
 
     private void updateHistoryTab() {
