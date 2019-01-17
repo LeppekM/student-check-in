@@ -1,14 +1,20 @@
 package InventoryController;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,12 +29,17 @@ public class ControllerMenu implements Initializable {
     @FXML
     private Button inventory;
 
+    @FXML
+    private ImageView msoeBackgroundImage;
+
     public List <String> studentIDArray = new ArrayList<>();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inventory.setOnAction(event -> openInventory());
+        Image image = new Image("images/msoeBackgroundImage.png");
+        this.msoeBackgroundImage.setImage(image);
     }
 
     public void openInventory(){
