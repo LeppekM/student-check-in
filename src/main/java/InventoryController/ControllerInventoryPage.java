@@ -3,6 +3,8 @@ package InventoryController;
 import Database.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,6 +39,12 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
 
     @FXML
     private Tab totalTab, historyTab, checkedOutTab, overdueTab, faultsTab;
+
+    @FXML
+    private ObservableList<String> types = FXCollections.observableArrayList();
+
+    @FXML
+    private CheckComboBox<String> sortCheckBox;
 
     @FXML
     private ControllerHistoryTab historyTabPageController;
@@ -69,6 +78,37 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                     updateOverdueTab();
                 } else if (newTab == faultsTab) {
                     updateFaultsTab();
+                }
+            }
+        });
+
+        types.addAll(new String[] { "All", "Item 1", "Item 2", "Item 3", "Item 4" });
+        sortCheckBox = new CheckComboBox<>(types);
+        System.out.println(sortCheckBox.getItems());
+        sortCheckBox.getCheckModel().checkIndices(0);
+
+        sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+            public void onChanged(ListChangeListener.Change<? extends String> c) {
+
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        if (c.toString().contains("All")) {
+
+                            // if we call the getCheckModel().clearChecks() this will
+                            // cause to "remove" the 'All' too at least inside the model.
+                            // So we need to manually clear everything else
+                            for (int i = 1; i < types.size(); i++) {
+                                sortCheckBox.getCheckModel().clearCheck(i);
+                            }
+
+                        } else {
+                            // check if the "All" option is selected and if so remove it
+                            if (sortCheckBox.getCheckModel().isChecked(0)) {
+                                sortCheckBox.getCheckModel().clearCheck(0);
+                            }
+
+                        }
+                    }
                 }
             }
         });

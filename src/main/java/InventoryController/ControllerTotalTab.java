@@ -51,11 +51,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private JFXTextField searchInput;
 
-    private ObservableList<String> types = FXCollections.observableArrayList();
-
-    @FXML
-    private CheckComboBox<String> sortCheckBox = new CheckComboBox<String>(types);
-
     @FXML
     private JFXTreeTableView<TotalTabTableRow> totalTable;
 
@@ -344,40 +339,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().clear();
         this.data.clear();
         this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
-
-
-
-
-
-
-        types.addAll(new String[] { "All", "Item 1", "Item 2", "Item 3", "Item 4" });
-
-        sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-            public void onChanged(ListChangeListener.Change<? extends String> c) {
-
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        if (c.toString().contains("All")) {
-
-                            // if we call the getCheckModel().clearChecks() this will
-                            // cause to "remove" the 'All' too at least inside the model.
-                            // So we need to manually clear everything else
-                            for (int i = 1; i < types.size(); i++) {
-                                sortCheckBox.getCheckModel().clearCheck(i);
-                            }
-
-                        } else {
-                            // check if the "All" option is selected and if so remove it
-                            if (sortCheckBox.getCheckModel().isChecked(0)) {
-                                sortCheckBox.getCheckModel().clearCheck(0);
-                            }
-
-                        }
-                    }
-                }
-            }
-        });
-
 
 
         for (int i = 0; i < data.size(); i++) {
