@@ -19,6 +19,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -90,6 +91,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
             if (thisStudent.getOverdueItems().size() != 0){
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
+                alert.initStyle(StageStyle.UTILITY);
                 alert.showAndWait();
             }
             barcode.requestFocus();
@@ -112,6 +114,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Student has overdue items and cannot check anything" +
                     " else out until they return or pay for these items");
+            alert.initStyle(StageStyle.UTILITY);
             alert.showAndWait();
         }
     }
@@ -247,11 +250,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 main.getScene().setRoot(root);
             }catch (IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student page");
+                alert.initStyle(StageStyle.UTILITY);
                 alert.showAndWait();
                 e.printStackTrace();
             }
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no student found with associated RFID");
+            alert.initStyle(StageStyle.UTILITY);
             alert.showAndWait();
         }
     }
