@@ -57,19 +57,18 @@ public class Database {
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
-            String overdue = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
-                    " parts.serialNumber, checkout_parts.dueAt, parts.price/100, checkouts.checkoutID from checkout_parts " +
-                    "left join parts on checkout_parts.partID = parts.partID " +
-                    "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
-                    "left join students on checkouts.studentID = students.studentID " +
-                    "where checkout_parts.dueAt < date('" + date.toString() + "');";
+            String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
+                    " parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
+                    "left join parts on checkout.partID = parts.partID " +
+                    "left join students on checkout.studentID = students.studentID " +
+                    "where checkout.dueAt < date('" + date.toString() + "');";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(overdue);
             while (resultSet.next()) {
-                data.add(new OverdueItem(resultSet.getInt("checkouts.studentID"), resultSet.getString("students.studentName"),
+                data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
                         resultSet.getString("students.email"), resultSet.getString("parts.partName"),
-                        resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
-                        resultSet.getString("parts.price/100"), resultSet.getString("checkouts.checkoutID")));
+                        resultSet.getString("parts.serialNumber"), resultSet.getString("checkout.dueAt"),
+                        resultSet.getString("parts.price/100"), resultSet.getString("checkout.checkoutID")));
             }
             resultSet.close();
             statement.close();

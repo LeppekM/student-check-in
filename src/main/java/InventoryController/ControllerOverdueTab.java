@@ -165,24 +165,25 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
      */
     public void popUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
-            StageWrapper wrapper = new StageWrapper();
-            wrapper.newStage("/fxml/OverduePopup.fxml", overduePage);
-//            Stage stage = new Stage();
-//            try {
-//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopup.fxml"));
-//                Parent root = loader.load();
-//                Scene scene = new Scene(root, 400, 400);
-//                stage.setTitle("Overdue Item");
-//                stage.initOwner(overduePage.getScene().getWindow());
-//                stage.setScene(scene);
-//                int i = overdueTable.getSelectionModel().getSelectedIndex();
-//                ((OverduePopUp) loader.getController()).populate(
-//                        /*((TreeItem)overdueTable.getSelectionModel().getSelectedItem())*/list.get(i));
-//                stage.getIcons().add(new Image("images/msoe.png"));
-//                stage.show();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+//            StageWrapper wrapper = new StageWrapper();
+//            wrapper.newStage("/fxml/OverduePopup.fxml", overduePage);
+            Stage stage = new Stage();
+            try {
+                URL resource = getClass().getResource("/fxml/OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(resource);
+                Parent root = (Parent)loader.load();
+                Scene scene = new Scene(root, 400, 400);
+                stage.setTitle("Overdue Item");
+                stage.initOwner(overduePage.getScene().getWindow());
+                stage.setScene(scene);
+                int i = overdueTable.getSelectionModel().getSelectedIndex();
+                OverdueItem item = ((OverdueItem) overdueTable.getTreeItem(i).getValue().getGroupedValue());
+                ((OverduePopUp) loader.getController()).populate(item);
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         populateTable();
     }
