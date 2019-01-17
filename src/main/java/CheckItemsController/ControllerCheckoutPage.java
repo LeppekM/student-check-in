@@ -20,7 +20,6 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,10 +45,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXButton studentInfo, submitButton, home, resetButton;
 
     @FXML
-    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt;
+    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader;
 
     @FXML
     private TextArea faultyTextArea;
+
+    @FXML
+    private JFXToggleButton toggleButton;
 
     private CheckoutObject checkoutObject;
 
@@ -65,7 +67,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         home.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
-        setItemStatus();
+        //setItemStatus();
         getStudentName();
         unlockFields();
         unlockExtended();
@@ -121,7 +123,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     }
 
     private boolean itemIsBeingCheckedOut(){
-        return itemStatus.getText().equals("Checking Out");
+        return checkoutHeader.getText().equals("Checkout Item");
     }
 
     /**
@@ -136,25 +138,25 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         stageWrapper.newStage("fxml/Menu.fxml", main);
     }
 
-    /**
-     * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
-     */
-    private void setItemStatus() {
-        barcode.focusedProperty().addListener((ov, oldV, newV)->{
-            if (!newV && !barcode.getText().isEmpty()){
-                if(checkInValidator()){
-                    stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
-                    setCheckinInformation();
-                    faulty.setDisable(false);
-                }
-                else {
-                    stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
-                    setCheckoutInformation();
-                    extended.setDisable(false);
-                }
-            }
-        });
-    }
+//    /**
+//     * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
+//     */
+//    private void setItemStatus() {
+//        barcode.focusedProperty().addListener((ov, oldV, newV)->{
+//            if (!newV && !barcode.getText().isEmpty()){
+//                if(checkInValidator()){
+//                    stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
+//                    setCheckinInformation();
+//                    faulty.setDisable(false);
+//                }
+//                else {
+//                    stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
+//                    setCheckoutInformation();
+//                    extended.setDisable(false);
+//                }
+//            }
+//        });
+//    }
 
     private void getStudentName(){
         studentID.focusedProperty().addListener((ov, oldV, newV)->{
@@ -174,9 +176,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         resetHelper();
         resetExtended();
         faulty.setVisible(false);
-        faulty.setDisable(true);
-        extended.setVisible(true);
-        extended.setDisable(true);
+        extended.setVisible(true);;
     }
 
     /**
@@ -191,17 +191,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         itemStatus.setText("");
         studentNameText.setText("");
         faultyTextArea.setText("");
-        barcode.setDisable(false);
     }
 
 
-    /**
-     * Checks if item is being checked in or out
-     * @return True if item is being checked in
-     */
-    private boolean checkInValidator() {
-        return checkOut.returnBarcodes().contains(barcode.getText());
-    }
+//    /**
+//     * Checks if item is being checked in or out
+//     * @return True if item is being checked in
+//     */
+//    private boolean checkInValidator() {
+//        return checkOut.returnBarcodes().contains(barcode.getText());
+//    }
     /**
      * Checks if fields are filled
      * @return True if fields are not empty
@@ -352,12 +351,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         int translateUp = -190;
         if(extended.isSelected()){
             setExtendedTransition(translateDown, true);
-            barcode.setDisable(true);
         }
         else {
             resetExtended();
             setExtendedTransition(translateUp, false);
-            barcode.setDisable(false);
         }
     }
 
@@ -492,6 +489,22 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             transitions.get(i).setToValue(end);
             transitions.get(i).play();
         }
+    }
+
+
+
+
+    public void toggle(){
+
+        if(toggleButton.isSelected()){
+            checkoutHeader.setText("Checkout Item");
+            setCheckoutInformation();
+        }
+        else {
+            checkoutHeader.setText("Checkin Item");
+            setCheckinInformation();
+        }
+
     }
 
 
