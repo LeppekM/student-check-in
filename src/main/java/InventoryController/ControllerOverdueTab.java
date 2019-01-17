@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.OverdueItem;
+import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
@@ -80,7 +81,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         });
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.setPrefWidth(150);
+        partNameCol.setPrefWidth(200);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
@@ -164,17 +165,20 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
      */
     public void popUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
+//            StageWrapper wrapper = new StageWrapper();
+//            wrapper.newStage("/fxml/OverduePopup.fxml", overduePage);
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopup.fxml"));
-                Parent root = loader.load();
+                URL resource = getClass().getResource("/fxml/OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(resource);
+                Parent root = (Parent)loader.load();
                 Scene scene = new Scene(root, 400, 400);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(overduePage.getScene().getWindow());
                 stage.setScene(scene);
-//                int i = overdueTable.getSelectionModel().getSelectedIndex();
-//                ((OverduePopUp) loader.getController()).populate(
-//                        /*((TreeItem)overdueTable.getSelectionModel().getSelectedItem())*/list.get(i));
+                int i = overdueTable.getSelectionModel().getSelectedIndex();
+                OverdueItem item = ((OverdueItem) overdueTable.getTreeItem(i).getValue().getGroupedValue());
+                ((OverduePopUp) loader.getController()).populate(item);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {

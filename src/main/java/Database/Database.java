@@ -57,19 +57,18 @@ public class Database {
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
         try {
             Date date = gettoday();
-            String overdue = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
-                    " parts.serialNumber, checkout_parts.dueAt, parts.price/100, checkouts.checkoutID from checkout_parts " +
-                    "left join parts on checkout_parts.partID = parts.partID " +
-                    "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
-                    "left join students on checkouts.studentID = students.studentID " +
-                    "where checkout_parts.dueAt < date('" + date.toString() + "');";
+            String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
+                    " parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
+                    "left join parts on checkout.partID = parts.partID " +
+                    "left join students on checkout.studentID = students.studentID " +
+                    "where checkout.dueAt < date('" + date.toString() + "');";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(overdue);
             while (resultSet.next()) {
-                data.add(new OverdueItem(resultSet.getInt("checkouts.studentID"), resultSet.getString("students.studentName"),
+                data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
                         resultSet.getString("students.email"), resultSet.getString("parts.partName"),
-                        resultSet.getString("parts.serialNumber"), resultSet.getString("checkout_parts.dueAt"),
-                        resultSet.getString("parts.price/100"), resultSet.getString("checkouts.checkoutID")));
+                        resultSet.getString("parts.serialNumber"), resultSet.getString("checkout.dueAt"),
+                        resultSet.getString("parts.price/100"), resultSet.getString("checkout.checkoutID")));
             }
             resultSet.close();
             statement.close();
@@ -128,7 +127,6 @@ public class Database {
         ObservableList<HistoryItems> data = FXCollections.observableArrayList();
         try {
             String historyQuery = "SELECT studentName, partName, serialNumber, " +
-                    "checkoutQuantity - checkInQuantity AS 'quantity'," +
                     "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
                     "THEN 'In' ELSE 'Out' END AS 'Status', " +
                     "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
@@ -146,7 +144,7 @@ public class Database {
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 data.add(new HistoryItems(resultSet.getString("studentName"), resultSet.getString("partName"),
-                        resultSet.getString("serialNumber"), resultSet.getInt("quantity"),
+                        resultSet.getString("serialNumber"),
                         resultSet.getString("location"), resultSet.getString("date")));
                 resultSet.close();
                 statement.close();
@@ -236,23 +234,19 @@ public class Database {
     public Student selectStudent(int ID){
         String todaysDate = gettoday().toString();
         String query = "select * from students where studentID = " + ID;
-        String coList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkout_parts.dueAt, checkouts.checkoutID \n" +
-                "from students\n" +
-                "left join checkouts on students.studentID = checkouts.studentID\n" +
-                "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
-                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID  + ";";
-        String pList = "select students.studentName, parts.partName, checkouts.checkoutAt, checkout_parts.checkoutQuantity, checkouts.reservedAt, checkout_parts.dueAt," +
-                " checkouts.checkoutID, checkouts.prof, checkouts.course, checkouts.reason\n" +
-                "from students\n" +
-                "left join checkouts on students.studentID = checkouts.studentID\n" +
-                "left join checkout_parts on checkouts.checkoutID = checkout_parts.checkoutID\n" +
-                "left join parts on checkout_parts.partID = parts.partID where students.studentID = " + ID + " and checkouts.reservedAt != '';";
-        String oList = "select checkout_parts.partID, checkouts.studentID, students.studentName, students.email, parts.partName," +
-                " parts.serialNumber, checkout_parts.dueAt, parts.price/100, checkouts.checkoutID from checkout_parts " +
-                "left join parts on checkout_parts.partID = parts.partID " +
-                "left join checkouts on checkout_parts.checkoutID = checkouts.checkoutID " +
-                "left join students on checkouts.studentID = students.studentID " +
-                "where checkout_parts.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
+        String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode " +
+                "from students " +
+                "left join checkout on students.studentID = checkout.studentID " +
+                "left join parts on checkout.partID = parts.partID where students.studentID = " + ID  + ";";
+        String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.prof, checkout.course, checkout.reason " +
+                "from students " +
+                "left join checkout on students.studentID = checkout.studentID " +
+                "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
+        String oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
+                "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
+                "left join parts on checkout.partID = parts.partID " +
+                "left join students on checkout.studentID = students.studentID " +
+                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";
         String email = "";
@@ -277,9 +271,9 @@ public class Database {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 checkedOutItems.add(new CheckedOutItems(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"), resultSet.getInt("checkout_parts.checkoutQuantity"),
-                        resultSet.getString("checkouts.checkoutAt"), resultSet.getString("checkout_parts.dueAt"),
-                        resultSet.getInt("checkouts.checkoutID")));
+                        resultSet.getString("parts.partName"), resultSet.getInt("parts.barcode"),
+                        resultSet.getString("checkout.checkoutAt"), resultSet.getString("checkout.dueAt"),
+                        resultSet.getInt("checkout.checkoutID")));
             }
             statement.close();
             resultSet.close();
@@ -287,11 +281,11 @@ public class Database {
             resultSet = statement.executeQuery(oList);
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
-                overdueItems.add(new OverdueItem(resultSet.getInt("checkouts.studentID"),
+                overdueItems.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
                         resultSet.getString("students.studentName"), resultSet.getString("students.email"),
                         resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
-                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("parts.price/100"),
-                        resultSet.getString("checkouts.checkoutID")));
+                        resultSet.getString("checkout.dueAt"), resultSet.getString("parts.price/100"),
+                        resultSet.getString("checkout.checkoutID")));
             }
             statement.close();
             resultSet.close();
@@ -300,17 +294,19 @@ public class Database {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"), resultSet.getString("checkouts.checkoutAt"),
-                        resultSet.getInt("checkout_parts.checkoutQuantity"), resultSet.getString("checkouts.reservedAt"),
-                        resultSet.getString("checkout_parts.dueAt"), resultSet.getString("checkouts.checkoutID"),
-                        resultSet.getString("checkouts.prof"), resultSet.getString("checkouts.course"), resultSet.getString("checkouts.reason")));
+                        resultSet.getString("parts.partName"), resultSet.getString("checkout.checkoutAt"),
+                        resultSet.getInt("checkout.checkoutQuantity"), resultSet.getString("checkout.reservedAt"),
+                        resultSet.getString("checkout.dueAt"), resultSet.getString("checkout.checkoutID"),
+                        resultSet.getString("checkout.prof"), resultSet.getString("checkout.course"),
+                        resultSet.getString("checkout.reason")));
             }
             statement.close();
             resultSet.close();
             if (checkedOutItems.size() > 0) {
                 date = checkedOutItems.get(0).getCheckedOutAt().get();
             }
-            for (int i = 0; i < checkedOutItems.size(); i++){
+            // date null if no checkouts
+            for (int i = 0; i < checkedOutItems.size() && date != null; i++){
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     Date d = sdf.parse(date);

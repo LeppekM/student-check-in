@@ -1,8 +1,6 @@
 package CheckItemsController;
 
-import Database.StudentInfo;
-import Database.CheckingOutPart;
-import Database.Database;
+import Database.*;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import com.jfoenix.controls.*;
@@ -53,8 +51,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     @FXML
     private TextArea faultyTextArea;
 
+    private CheckoutObject checkoutObject;
 
     private StageWrapper stageWrapper = new StageWrapper();
+    private Database database = new Database();
+    //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
 
@@ -70,12 +71,31 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         unlockExtended();
     }
 
+    public void initCheckoutObject(CheckoutObject checkoutObject) {
+        this.checkoutObject = checkoutObject;
+        studentID.setText(checkoutObject.getStudentID());
+        barcode.setText(checkoutObject.getBarcode());
+        quantity.setText(checkoutObject.getQuantity());
+        if (checkoutObject.isExtended()) {
+            extended.setSelected(true);
+
+        } else if (checkoutObject.isFaulty()) {
+            faulty.setSelected(true);
+            faultyTextArea.setText(checkoutObject.getFaultyDescription());
+        }
+    }
+
     /**
      * Sets cursor to next field
      */
     public void moveToBarcodeField() {
         studentInfo.setDisable(true);
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+            Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
+            if (thisStudent.getOverdueItems().size() != 0){
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
+                alert.showAndWait();
+            }
             barcode.requestFocus();
             studentInfo.setDisable(false);
         }
@@ -85,13 +105,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
      */
     public void submit() {
-        if(itemIsBeingCheckedOut()) {
-            checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
+        Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
+        if (thisStudent.getOverdueItems().size() == 0) {
+            if (itemIsBeingCheckedOut()) {
+                checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
+            } else {
+                checkOut.setItemtoCheckedin(getBarcode());
+            }
+            reset();
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Student has overdue items and cannot check anything" +
+                    " else out until they return or pay for these items");
+            alert.showAndWait();
         }
-        else {
-            checkOut.setItemtoCheckedin(getBarcode());
-        }
-        reset();
     }
 
     private boolean itemIsBeingCheckedOut(){
@@ -235,13 +261,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @author Bailey Terry
      */
     public void goToStudent() {
-        Database database = new Database();
         if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
             try{
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Student.fxml"));
                 Parent root = (Parent) loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
+                checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), quantity.getText(), extended.isSelected(), faulty.isSelected());
+                sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
             }catch (IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student page");

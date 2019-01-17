@@ -17,23 +17,19 @@
             <children>
                 <Pane layoutX="0.0" layoutY="0.0" prefHeight="374.0" prefWidth="410.0">
                     <children>
-                        <Label layoutX="75.0" layoutY="14.0" text="Part Name:">
-                            <font>
-                                <Font size="18.0" fx:id="x1" />
-                            </font>
-                        </Label>
+                        <Label styleClass="prompt" layoutX="75.0" layoutY="14.0" text="Part Name:"/>
                         <JFXTextField id="nameField" fx:id="nameField" alignment="CENTER" layoutX="175.0" layoutY="14.0" prefHeight="24" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="45.0" layoutY="54.0" text="Serial Number:" />
+                        <Label id="nameLabel" styleClass="prompt" layoutX="45.0" layoutY="54.0" text="Serial Number:" />
                         <JFXTextField id="serialField" fx:id="serialField" alignment="CENTER" layoutX="175.0" layoutY="54.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="92.0" layoutY="94.0" text="Barcode:" />
+                        <Label id="nameLabel" styleClass="prompt" layoutX="92.0" layoutY="94.0" text="Barcode:" />
                         <JFXTextField id="barcodeField" fx:id="barcodeField" alignment="CENTER" layoutX="175.0" layoutY="94.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="52.0" layoutY="134.0" text="Manufacturer:" />
+                        <Label id="nameLabel" styleClass="prompt" layoutX="52.0" layoutY="134.0" text="Manufacturer:" />
                         <JFXTextField id="manufacturerField" fx:id="manufacturerField" alignment="CENTER" layoutX="175.0" layoutY="134.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="174.0" text="Price:" />
+                        <Label id="nameLabel" styleClass="prompt" layoutX="119.0" layoutY="174.0" text="Price:" />
                         <JFXTextField id="priceField" fx:id="priceField" alignment="CENTER" layoutX="175.0" layoutY="174.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                        <Label id="nameLabel" font="$x1" layoutX="100.0" layoutY="214.0" text="Vendor:" />
+                        <Label id="nameLabel" styleClass="prompt" layoutX="100.0" layoutY="214.0" text="Vendor:" />
                         <JFXTextField id="vendorList" fx:id="vendorField" layoutX="175.0" layoutY="214.0" prefHeight="24.0" prefWidth="153.5" />
-                        <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="254.0" text="Location:" />
+                        <Label id="nameLabel" styleClass="prompt" layoutX="93.0" layoutY="254.0" text="Location:" />
                         <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" layoutX="175.0" layoutY="254.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Hyperlink layoutX="255.0" layoutY="294.0" onAction="#goBack" text="Cancel" />
                         <JFXButton fx:id="saveButton" layoutX="308.0" layoutY="294.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="22.0" prefWidth="59.0" stylesheets="@../css/ButtonStyle.css" text="Save" />

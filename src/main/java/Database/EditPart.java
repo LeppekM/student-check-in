@@ -10,11 +10,11 @@ import java.util.ArrayList;
 public class EditPart {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
     private String editQuery = "UPDATE parts SET partName = ?, serialNumber = ?, manufacturer = ?, " +
-            "price = ?, vendorID = ?, location = ?, barcode = ?, totalQuantity = ?," +
+            "price = ?, vendorID = ?, location = ?, barcode = ?, " +
             "updatedAt = ? WHERE partID = ?;";
 
     private String editAllQuery = "UPDATE parts SET partName = ?, serialNumber = ?, manufacturer = ?, " +
-            "price = ?, vendorID = ?, location = ?, barcode = ?, totalQuantity = ?, " +
+            "price = ?, vendorID = ?, location = ?, barcode = ?, " +
             "updatedAt = ? WHERE partName = ?;";
 
     VendorInformation vendorInformation = new VendorInformation();
@@ -58,9 +58,8 @@ public class EditPart {
             preparedStatement.setInt(5, vendorInformation.getVendorIDFromVendor(part.getVendor()));
             preparedStatement.setString(6, part.getLocation());
             preparedStatement.setString(7, part.getBarcode());
-            preparedStatement.setInt(8, part.getQuantity());
-            preparedStatement.setString(9, getCurrentDate());
-            preparedStatement.setString(10, "" + part.getPartID());
+            preparedStatement.setString(8, getCurrentDate());
+            preparedStatement.setString(9, "" + part.getPartID());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -82,9 +81,8 @@ public class EditPart {
             preparedStatement.setInt(5, vendorInformation.getVendorIDFromVendor(part.getVendor()));
             preparedStatement.setString(6, part.getLocation());
             preparedStatement.setString(7, part.getBarcode());
-            preparedStatement.setInt(8, part.getQuantity());
-            preparedStatement.setString(9, getCurrentDate());
-            preparedStatement.setString(10, originalPartName);
+            preparedStatement.setString(8, getCurrentDate());
+            preparedStatement.setString(9, originalPartName);
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
