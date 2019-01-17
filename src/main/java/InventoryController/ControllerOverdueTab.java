@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -26,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
@@ -67,7 +69,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     public void initialize(URL location, ResourceBundle resources) {
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setFont(new Font(18));
-        overdueTable.setPlaceholder(emptyTableLabel);
+        //overdueTable.setPlaceholder(emptyTableLabel);
 
         studentIDCol = new JFXTreeTableColumn<>("Student ID");
         studentIDCol.setPrefWidth(150);
@@ -116,44 +118,44 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         tableRows = FXCollections.observableArrayList();
 
-        searchInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                overdueTable.setPredicate(new Predicate<TreeItem<OverdueTabTableRow>>() {
-                    @Override
-                    public boolean test(TreeItem<OverdueTabTableRow> tableRow) {
-                        String input = newValue.toLowerCase();
-                        studentID = tableRow.getValue().getStudentID().getValue();
-                        partName = tableRow.getValue().getPartName().getValue();
-                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
-                        dueDate = tableRow.getValue().getDueDate().getValue();
-                        fee = tableRow.getValue().getFee().getValue();
-
-                        return ((studentID != null && studentID.toLowerCase().contains(input))
-                                || (partName != null && partName.toLowerCase().contains(input))
-                                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                                || (dueDate != null && dueDate.toLowerCase().contains(input))
-                                || (fee != null && fee.toLowerCase().contains(input)));
-                    }
-                });
-            }
-        });
+//        searchInput.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                overdueTable.setPredicate(new Predicate<TreeItem<OverdueTabTableRow>>() {
+//                    @Override
+//                    public boolean test(TreeItem<OverdueTabTableRow> tableRow) {
+//                        String input = newValue.toLowerCase();
+//                        studentID = tableRow.getValue().getStudentID().getValue();
+//                        partName = tableRow.getValue().getPartName().getValue();
+//                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
+//                        dueDate = tableRow.getValue().getDueDate().getValue();
+//                        fee = tableRow.getValue().getFee().getValue();
+//
+//                        return ((studentID != null && studentID.toLowerCase().contains(input))
+//                                || (partName != null && partName.toLowerCase().contains(input))
+//                                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
+//                                || (dueDate != null && dueDate.toLowerCase().contains(input))
+//                                || (fee != null && fee.toLowerCase().contains(input)));
+//                    }
+//                });
+//            }
+//        });
 
         // Click to select if unselected and deselect if selected
-        overdueTable.setRowFactory(new Callback<TreeTableView<OverdueTabTableRow>, TreeTableRow<OverdueTabTableRow>>() {
-            @Override
-            public TreeTableRow<OverdueTabTableRow> call(TreeTableView<OverdueTabTableRow> param) {
-                final TreeTableRow<OverdueTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(MouseEvent.MOUSE_PRESSED, (EventHandler<MouseEvent>) event -> {
-                    final int index = row.getIndex();
-                    if (index >= 0 && index < overdueTable.getCurrentItemsCount() && overdueTable.getSelectionModel().isSelected(index)) {
-                        overdueTable.getSelectionModel().clearSelection();
-                        event.consume();
-                    }
-                });
-                return row;
-            }
-        });
+//        overdueTable.setRowFactory(new Callback<TreeTableView<OverdueTabTableRow>, TreeTableRow<OverdueTabTableRow>>() {
+//            @Override
+//            public TreeTableRow<OverdueTabTableRow> call(TreeTableView<OverdueTabTableRow> param) {
+//                final TreeTableRow<OverdueTabTableRow> row = new TreeTableRow<>();
+//                row.addEventFilter(MouseEvent.MOUSE_PRESSED, (EventHandler<MouseEvent>) event -> {
+//                    final int index = row.getIndex();
+//                    if (index >= 0 && index < overdueTable.getCurrentItemsCount() && overdueTable.getSelectionModel().isSelected(index)) {
+//                        overdueTable.getSelectionModel().clearSelection();
+//                        event.consume();
+//                    }
+//                });
+//                return row;
+//            }
+//        });
     }
 
     /**
@@ -161,28 +163,30 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
      *
      * @author Bailey Terry
      */
-    public void popUp(MouseEvent event) {
-        if (event.getClickCount() == 2) {
+    public void popUp() {
+        //if (event.getClickCount() == 2) {
 //            StageWrapper wrapper = new StageWrapper();
 //            wrapper.newStage("/fxml/OverduePopup.fxml", overduePage);
             Stage stage = new Stage();
             try {
 //                URL resource = getClass().getResource("/fxml/OverduePopup.fxml");
-                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("/fxml/OverduePopup.fxml"));
-                Parent root = (Parent) loader.load();
+                //FXMLLoader loader = new FXMLLoader(ControllerOverdueTab.class.getResource("OverduePopup.fxml"));
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                Parent root = loader.load(myFxmlURL);
                 Scene scene = new Scene(root, 400, 400);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(overduePage.getScene().getWindow());
                 stage.setScene(scene);
                 int i = overdueTable.getSelectionModel().getSelectedIndex();
                 OverdueItem item = ((OverdueItem) overdueTable.getTreeItem(i).getValue().getGroupedValue());
-                ((OverduePopUpController) loader.getController()).populate(item);
+                //((OverduePopUpController) loader.getController()).populate(item);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+
         populateTable();
     }
 
