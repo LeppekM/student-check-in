@@ -5,7 +5,7 @@ import Database.SavedPart;
 import Database.Student;
 import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
-import InventoryController.OverduePopUp;
+import InventoryController.OverduePopUpController;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
@@ -27,7 +27,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.stream.IntStream;
 
 public class StudentPage {
@@ -216,7 +215,7 @@ public class StudentPage {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopup.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("/fxml/OverduePopupController.fxml"));
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
@@ -224,7 +223,7 @@ public class StudentPage {
                 stage.setScene(scene);
                 int index = oTable.getSelectionModel().getSelectedIndex();
                 OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
-                ((OverduePopUp) loader.getController()).populate(item);
+                ((OverduePopUpController) loader.getController()).populate(item);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {

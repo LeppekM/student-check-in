@@ -2,7 +2,6 @@ package InventoryController;
 
 import Database.Database;
 import Database.OverdueItem;
-import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
@@ -19,7 +18,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -169,16 +167,16 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 //            wrapper.newStage("/fxml/OverduePopup.fxml", overduePage);
             Stage stage = new Stage();
             try {
-                URL resource = getClass().getResource("/fxml/OverduePopup.fxml");
-                FXMLLoader loader = new FXMLLoader(resource);
-                Parent root = (Parent)loader.load();
+//                URL resource = getClass().getResource("/fxml/OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("/fxml/OverduePopupController.fxml"));
+                Parent root = (Parent) loader.load();
                 Scene scene = new Scene(root, 400, 400);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(overduePage.getScene().getWindow());
                 stage.setScene(scene);
                 int i = overdueTable.getSelectionModel().getSelectedIndex();
                 OverdueItem item = ((OverdueItem) overdueTable.getTreeItem(i).getValue().getGroupedValue());
-                ((OverduePopUp) loader.getController()).populate(item);
+                ((OverduePopUpController) loader.getController()).populate(item);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {

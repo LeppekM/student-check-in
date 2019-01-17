@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 
 import java.text.DecimalFormat;
 
-public class OverduePopUp extends ControllerOverdueTab {
+public class OverduePopUpController extends ControllerOverdueTab {
 
     @FXML
     private JFXTextField nameField, email, serialNumber, partName, dueDate, fee;
