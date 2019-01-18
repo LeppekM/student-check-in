@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.stream.IntStream;
 
 public class StudentPage {
@@ -215,15 +216,16 @@ public class StudentPage {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("/fxml/OverduePopup.fxml"));
-                Parent root = loader.load();
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                Parent root = loader.load(myFxmlURL);
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
                 int index = oTable.getSelectionModel().getSelectedIndex();
                 OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
-                ((OverduePopUpController) loader.getController()).populate(item);
+                ((OverduePopUpController) loader.getController()).populate(item,null);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {

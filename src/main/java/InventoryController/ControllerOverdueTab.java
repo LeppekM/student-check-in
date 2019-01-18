@@ -179,8 +179,10 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
                 stage.initOwner(overduePage.getScene().getWindow());
                 stage.setScene(scene);
                 int i = overdueTable.getSelectionModel().getSelectedIndex();
-                OverdueItem item = ((OverdueItem) overdueTable.getTreeItem(i).getValue().getGroupedValue());
-                //((OverduePopUpController) loader.getController()).populate(item);
+                OverdueTabTableRow item = new OverdueTabTableRow(overdueTable.getTreeItem(i).getValue().getStudentID().get(),
+                        overdueTable.getTreeItem(i).getValue().getPartName().get(), overdueTable.getTreeItem(i).getValue().getSerialNumber().get(),
+                        overdueTable.getTreeItem(i).getValue().getDueDate().get(), overdueTable.getTreeItem(i).getValue().getFee().get());
+                ((OverduePopUpController) loader.getController()).populate(null, item);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {
