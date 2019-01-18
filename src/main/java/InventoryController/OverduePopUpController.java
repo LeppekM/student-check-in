@@ -10,7 +10,17 @@ import java.text.DecimalFormat;
 public class OverduePopUpController extends ControllerOverdueTab {
 
     @FXML
-    private JFXTextField nameField, email, serialNumber, partName, dueDate, fee;
+    private JFXTextField nameField = new JFXTextField();
+    @FXML
+    private JFXTextField email = new JFXTextField();
+    @FXML
+    private JFXTextField serialNumber = new JFXTextField();
+    @FXML
+    private JFXTextField partName = new JFXTextField();
+    @FXML
+    private JFXTextField dueDate = new JFXTextField();
+    @FXML
+    private JFXTextField fee = new JFXTextField();
 
     private Database database = new Database();
 
@@ -29,6 +39,8 @@ public class OverduePopUpController extends ControllerOverdueTab {
             partName.setText(overdueTabTableRow.getPartName().get());
             serialNumber.setText(overdueTabTableRow.getSerialNumber().get());
             dueDate.setText(overdueTabTableRow.getDueDate().get());
+            overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll("\\$", ""));
+            overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll(",", ""));
             fee.setText("$" + df.format(Double.parseDouble(overdueTabTableRow.getFee().get())));
             Student student = database.selectStudent(Integer.parseInt(overdueTabTableRow.getStudentID().get()));
             nameField.setText(student.getName());

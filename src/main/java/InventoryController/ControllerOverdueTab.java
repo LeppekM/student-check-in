@@ -173,6 +173,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
                 //FXMLLoader loader = new FXMLLoader(ControllerOverdueTab.class.getResource("OverduePopup.fxml"));
                 URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                loader.setController(new OverduePopUpController());
                 Parent root = loader.load(myFxmlURL);
                 Scene scene = new Scene(root, 400, 400);
                 stage.setTitle("Overdue Item");

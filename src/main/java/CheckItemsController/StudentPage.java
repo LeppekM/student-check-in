@@ -218,6 +218,7 @@ public class StudentPage {
             try {
                 URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                loader.setController(new OverduePopUpController());
                 Parent root = loader.load(myFxmlURL);
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
