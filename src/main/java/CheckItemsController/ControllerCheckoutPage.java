@@ -11,11 +11,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -42,7 +41,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXCheckBox faulty, extended;
 
     @FXML
-    private JFXButton studentInfo, submitButton, home, resetButton;
+    private JFXButton studentInfo, submitButton, home, resetButton, addNewBarcode, deleteBarcode;
+
+    @FXML
+    private Spinner<Integer> newQuantity;
 
     @FXML
     private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader;
@@ -51,7 +53,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private TextArea faultyTextArea;
 
     @FXML
-    private JFXToggleButton toggleButton;
+    private JFXToggleButton checkingOutToggle;
+
+
+
 
     private CheckoutObject checkoutObject;
 
@@ -60,6 +65,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
+
+
 
 
     @Override
@@ -71,7 +78,27 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         getStudentName();
         unlockFields();
         unlockExtended();
+        spinnerInit();
     }
+
+    private void spinnerInit(){
+        final int initialValue = 1;
+        SpinnerValueFactory<Integer> valueFactory = //
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, initialValue);
+
+        newQuantity.setValueFactory(valueFactory);
+
+    }
+
+
+    public void newBarcode(){
+        extended.setDisable(true);
+        faulty.setDisable(true);
+        newQuantity.setVisible(true);
+        deleteBarcode.setVisible(true);
+    }
+
+
 
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
@@ -123,7 +150,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     }
 
     private boolean itemIsBeingCheckedOut(){
-        return checkoutHeader.getText().equals("Checkout Item");
+        return checkingOutToggle.isSelected();
     }
 
     /**
@@ -175,8 +202,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         resetFromFaulty();
         resetHelper();
         resetExtended();
-        faulty.setVisible(false);
-        extended.setVisible(true);;
     }
 
     /**
@@ -191,6 +216,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         itemStatus.setText("");
         studentNameText.setText("");
         faultyTextArea.setText("");
+        checkingOutToggle.setSelected(true);
+        checkingOutToggle.setDisable(false);
+        faulty.setVisible(false);
+        extended.setVisible(true);
+        extended.setDisable(false);
+        faulty.setDisable(false);
+        itemStatus.setText("Checking Out");
     }
 
 
@@ -335,6 +367,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
+
+
     private void resetFromExtended(){
         int translateUP = -190;
         if(extended.isSelected()){
@@ -351,10 +385,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         int translateUp = -190;
         if(extended.isSelected()){
             setExtendedTransition(translateDown, true);
+            checkingOutToggle.setDisable(true);
         }
         else {
             resetExtended();
             setExtendedTransition(translateUp, false);
+            checkingOutToggle.setDisable(false);
         }
     }
 
@@ -400,12 +436,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         int translateFaultyUp = -125;
         if(faulty.isSelected()) {
             setFaultyTransition(translateFaultyDown, true);
-            barcode.setDisable(true);
+            checkingOutToggle.setDisable(true);
         }
         else {
             setFaultyTransition(translateFaultyUp, false);
             faultyTextArea.setText("");
-            barcode.setDisable(false);
+            checkingOutToggle.setDisable(false);
         }
     }
 
@@ -491,20 +527,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
-
-
-
-    public void toggle(){
-
-        if(toggleButton.isSelected()){
-            checkoutHeader.setText("Checkout Item");
+    public void checkoutToggle(){
+        if(checkingOutToggle.isSelected()){
             setCheckoutInformation();
         }
         else {
-            checkoutHeader.setText("Checkin Item");
             setCheckinInformation();
         }
-
     }
 
 
