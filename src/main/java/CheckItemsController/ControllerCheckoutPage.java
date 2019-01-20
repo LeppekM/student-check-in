@@ -14,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXSpinner loadIndicator;
 
     @FXML
-    private JFXTextField studentID, barcode, quantity, profName, courseName;
+    private JFXTextField studentID, barcode,barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName;
 
     @FXML
     private JFXDatePicker datePicker;
@@ -41,19 +40,23 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXCheckBox faulty, extended;
 
     @FXML
-    private JFXButton studentInfo, submitButton, home, resetButton, addNewBarcode, deleteBarcode;
+    private JFXButton studentInfo, submitButton, home, resetButton, addNewBarcode, addNewBarcode2, addNewBarcode3, addNewBarcode4, addNewBarcode5,
+            deleteBarcode, deleteBarcode2, deleteBarcode3, deleteBarcode4, deleteBarcode5;
 
     @FXML
-    private Spinner<Integer> newQuantity;
+    private Spinner<Integer> newQuantity, newQuantity2, newQuantity3, newQuantity4, newQuantity5;
 
     @FXML
-    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader;
+    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel;
 
     @FXML
     private TextArea faultyTextArea;
 
     @FXML
     private JFXToggleButton checkingOutToggle;
+
+    @FXML
+    private HBox HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
 
 
 
@@ -65,6 +68,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
+    private NewBarcodeHelper barcodeHelper = new NewBarcodeHelper();
 
 
 
@@ -78,27 +82,47 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         getStudentName();
         unlockFields();
         unlockExtended();
-        spinnerInit();
-    }
-
-    private void spinnerInit(){
-        final int initialValue = 1;
-        SpinnerValueFactory<Integer> valueFactory = //
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, initialValue);
-
-        newQuantity.setValueFactory(valueFactory);
-
+        barcodeHelper.spinnerInit(newQuantity);
     }
 
 
     public void newBarcode(){
+        setNewBarcodeFieldsHelper();
+        barcodeHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
+        barcodeHelper.FadeTransition(HBoxBarcode2);
+        barcodeHelper.spinnerInit(newQuantity2);
+    }
+
+    private void setNewBarcodeFieldsHelper(){
         extended.setDisable(true);
         faulty.setDisable(true);
+        quantity.setVisible(false);
+        quantityLabel.setVisible(false);
         newQuantity.setVisible(true);
         deleteBarcode.setVisible(true);
+        barcode2.setVisible(true);
+        HBoxBarcode2.setVisible(true);
     }
 
 
+    public void newBarcode2(){
+        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3);
+    }
+    public void newBarcode3(){
+        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4);
+    }
+    public void newBarcode4(){
+        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5);
+    }
+
+    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
+        barcodeHelper.translateItems(submitButton, resetButton, extended, faulty, 60);
+        barcodeHelper.FadeTransition(hBoxBarcode4);
+        barcodeHelper.FadeTransition(barcode4);
+        barcodeHelper.spinnerInit(newQuantity4);
+        hBoxBarcode4.setVisible(true);
+        barcode4.setVisible(true);
+    }
 
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
@@ -198,10 +222,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Resets all fields
      */
     public void reset() {
-        resetFromExtended();
-        resetFromFaulty();
-        resetHelper();
-        resetExtended();
+//        resetFromExtended();
+//        resetFromFaulty();
+//        resetHelper();
+//        resetExtended();
+        stageWrapper.newStage("fxml/CheckOutItems.fxml", main);
     }
 
     /**
