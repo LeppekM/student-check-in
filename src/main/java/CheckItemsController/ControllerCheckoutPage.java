@@ -3,10 +3,7 @@ package CheckItemsController;
 import Database.*;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXSpinner;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
@@ -14,16 +11,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -35,19 +33,35 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXSpinner loadIndicator;
 
     @FXML
-    private JFXTextField studentID, barcode, quantity;
+    private JFXTextField studentID, barcode,barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName;
+
+    @FXML
+    private JFXDatePicker datePicker;
 
     @FXML
     private JFXCheckBox faulty, extended;
 
     @FXML
-    private JFXButton studentInfo, submitButton, home, resetButton;
+    private JFXButton studentInfo, submitButton, home, resetButton, addNewBarcode, addNewBarcode2, addNewBarcode3, addNewBarcode4, addNewBarcode5,
+            deleteBarcode, deleteBarcode2, deleteBarcode3, deleteBarcode4, deleteBarcode5;
 
     @FXML
-    private Label itemStatus, studentNameText;
+    private Spinner<Integer> newQuantity, newQuantity2, newQuantity3, newQuantity4, newQuantity5;
+
+    @FXML
+    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel;
 
     @FXML
     private TextArea faultyTextArea;
+
+    @FXML
+    private JFXToggleButton checkingOutToggle;
+
+    @FXML
+    private HBox HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
+
+
+
 
     private CheckoutObject checkoutObject;
 
@@ -56,6 +70,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
+    private NewBarcodeHelper barcodeHelper = new NewBarcodeHelper();
+    private ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
+    private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
+
+
 
 
     @Override
@@ -63,10 +82,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         home.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
-        setItemStatus();
+        //setItemStatus();
         getStudentName();
         unlockFields();
+        unlockExtended();
+        barcodeHelper.spinnerInit(newQuantity);
     }
+
 
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
@@ -89,12 +111,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         studentInfo.setDisable(true);
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
             Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
-            if (thisStudent.getOverdueItems().size() != 0){
+            if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()){
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
                 alert.initStyle(StageStyle.UTILITY);
                 alert.showAndWait();
             }
-            barcode.requestFocus();
+            //barcode.requestFocus();
             studentInfo.setDisable(false);
         }
     }
@@ -104,10 +126,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     public void submit() {
         Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
-        if (thisStudent.getOverdueItems().size() == 0) {
-            if (itemIsBeingCheckedOut()) {
+        if (thisStudent.getOverdueItems().size() == 0 || !checkingOutToggle.isSelected()) {
+            if (extendedCheckoutIsSelected()) {
+                extendedCheckoutHelper();
+            } else if(itemIsBeingCheckedOut()){
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
-            } else {
+            } else if(itemBeingCheckedBackInIsFaulty()){
+                faultyCheckinHelper();
+            }
+            else {
                 checkOut.setItemtoCheckedin(getBarcode());
             }
             reset();
@@ -119,9 +146,24 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
-    private boolean itemIsBeingCheckedOut(){
-        return itemStatus.getText().equals("Checking Out");
+
+
+    private void extendedCheckoutHelper(){
+        extendedCheckOut.addExtendedCheckout(getBarcode(), getstudentID(), getProfName(), getCourseName(), getExtendedDueDate());
     }
+
+    private void faultyCheckinHelper(){
+        checkOut.setItemtoCheckedin(getBarcode());
+        faultyCheckIn.setPartToFaultyStatus(getBarcode());
+        faultyCheckIn.addToFaultyTable(getBarcode(), faultyTextArea.getText());
+    }
+
+
+    private boolean itemIsBeingCheckedOut(){
+        return checkingOutToggle.isSelected();
+    }
+    private boolean extendedCheckoutIsSelected(){return checkingOutToggle.isSelected() && extended.isSelected();}
+    private boolean itemBeingCheckedBackInIsFaulty(){return !checkingOutToggle.isSelected() && faulty.isSelected();}
 
     /**
      * Returns to home, contains check if fields are filled out
@@ -133,24 +175,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             }
         }
         stageWrapper.newStage("fxml/Menu.fxml", main);
-    }
-
-    /**
-     * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
-     */
-    private void setItemStatus() {
-        barcode.focusedProperty().addListener((ov, oldV, newV)->{
-            if (!newV && !barcode.getText().isEmpty()){
-                if(checkInValidator()){
-                    stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
-                    setCheckinInformation();
-                }
-                else {
-                    stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
-                    setCheckoutInformation();
-                }
-            }
-        });
     }
 
     private void getStudentName(){
@@ -166,23 +190,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Resets all fields
      */
     public void reset() {
-        studentID.clear();
-        barcode.clear();
-        quantity.setText("1");
-        extended.setSelected(false);
-        faulty.setSelected(false);
-        itemStatus.setText("");
-        studentNameText.setText("");
+        stageWrapper.newStage("fxml/CheckOutItems.fxml", main);
     }
 
-
-    /**
-     * Checks if item is being checked in or out
-     * @return True if item is being checked in
-     */
-    private boolean checkInValidator() {
-        return checkOut.returnBarcodes().contains(barcode.getText());
-    }
     /**
      * Checks if fields are filled
      * @return True if fields are not empty
@@ -195,11 +205,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Only allows user to submit when all fields are filled out
      */
     private void unlockFields(){
-        BooleanBinding booleanBind = quantity.textProperty().isEmpty()
+        BooleanBinding binding;
+        binding= quantity.textProperty().isEmpty()
                 .or(studentID.textProperty().isEmpty())
                 .or(barcode.textProperty().isEmpty());
-        submitButton.disableProperty().bind(booleanBind);
+        submitButton.disableProperty().bind(binding);
     }
+
+
 
     /**
      * Alert if user tries to return home and fields are filled
@@ -297,21 +310,225 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         return Integer.parseInt(studentID.getText());
     }
 
-    public void extended(){
-        TranslateTransition transition = new TranslateTransition(Duration.millis(500), submitButton);
-        TranslateTransition transition2 = new TranslateTransition(Duration.millis(500), resetButton);
+    private String getProfName(){
+        return profName.getText();
+    }
 
-        transition.setByY(125);
-        transition2.setByY(125);
+    private String getCourseName(){
+        return courseName.getText();
+    }
+
+    private String getExtendedDueDate(){
+        return datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    /**
+     * Disables submitting information until all fields are filled out for extended checkbox.
+     */
+    private void unlockExtended() {
+        BooleanBinding binding;
+        if (extended.isSelected()) {
+            binding = courseName.textProperty().isEmpty()
+                    .or(profName.textProperty().isEmpty())
+                    .or(studentID.textProperty().isEmpty())
+                    .or(barcode.textProperty().isEmpty())
+                    .or(quantity.textProperty().isEmpty())
+                    .or(datePicker.valueProperty().isNull());
+            submitButton.disableProperty().bind(binding);
+        }
+        else {
+            unlockFields();
+        }
+    }
+
+    /**
+     * If extended is selected, more items will be displayed
+     */
+    public void isExtended(){
+        unlockExtended();
+        int translateDown = 190;
+        int translateUp = -190;
+        if(extended.isSelected()){
+            setExtendedTransition(translateDown, true);
+            checkingOutToggle.setDisable(true);
+        }
+        else {
+            resetExtended();
+            setExtendedTransition(translateUp, false);
+            checkingOutToggle.setDisable(false);
+        }
+    }
+
+    /**
+     * Resets extended fields.
+     */
+    private void resetExtended(){
+        courseName.setText("");
+        profName.setText("");
+        datePicker.setValue(null);
+    }
+
+    /**
+     * Helper method to show extended fields
+     * @param direction Direction items will be moved in
+     * @param showItems True if items should be shown
+     */
+    private void setExtendedTransition(int direction, boolean showItems){
+        translateButtons(direction);
+        translateExtended(direction);
+        extendedItemsFadeTransition();
+        setExtendedItemsVisible(showItems);
+    }
+
+    /**
+     * Helper method to set extended items to be visible
+     * @param isVisible True if items should be shown
+     */
+    private void setExtendedItemsVisible(boolean isVisible){
+        dueAt.setVisible(isVisible);
+        courseName.setVisible(isVisible);
+        profName.setVisible(isVisible);
+        datePicker.setVisible(isVisible);
+        courseNameLabel.setVisible(isVisible);
+        profNameLabel.setVisible(isVisible);
+    }
+
+    /**
+     * If faulty checkbox is shown, more items will be displayed
+     */
+    public void isFaulty(){
+        int translateFaultyDown = 125;
+        int translateFaultyUp = -125;
+        if(faulty.isSelected()) {
+            setFaultyTransition(translateFaultyDown, true);
+            checkingOutToggle.setDisable(true);
+        }
+        else {
+            setFaultyTransition(translateFaultyUp, false);
+            faultyTextArea.setText("");
+            checkingOutToggle.setDisable(false);
+        }
+    }
+
+
+    /**
+     * Helper method to transition all faulty items
+     * @param direction Direction to be moved in
+     * @param showTextarea True if text area will be shown
+     */
+    private void setFaultyTransition(int direction, boolean showTextarea){
+        translateButtons(direction);
+        faultyBoxFadeTransition();
+        faultyTextArea.setVisible(showTextarea);
+    }
+
+    /**
+     * Translates extended checkbox
+     * @param direction Direction to be translated
+     */
+    private void translateExtended(int direction) {
+        int duration = 500;
+        TranslateTransition t = new TranslateTransition(Duration.millis(duration), extended);
+        t.setByY(direction);
+        t.play();
+    }
+
+    /**
+     * Translates buttons vertically
+     * @param direction Direction to move
+     */
+    private void translateButtons(int direction){
+        int duration = 500;
+        TranslateTransition transition = new TranslateTransition(Duration.millis(duration), submitButton);
+        TranslateTransition transition2 = new TranslateTransition(Duration.millis(duration), resetButton);
+        transition.setByY(direction);
+        transition2.setByY(direction);
         transition.play();
         transition2.play();
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), faultyTextArea);
-        fadeTransition.setFromValue(0.0);
-        fadeTransition.setToValue(1.0);
-        fadeTransition.play();
-        faultyTextArea.setVisible(true);
-
-
     }
+
+    /**
+     * Helper method to fade faulty textbox
+     */
+    private void faultyBoxFadeTransition(){
+        int initial = 0;
+        int end = 1;
+        int duration = 500;
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(duration), faultyTextArea);
+        fadeTransition.setFromValue(initial);
+        fadeTransition.setToValue(end);
+        fadeTransition.play();
+    }
+
+    /**
+     * Helper method that transitions item to be visible
+     */
+    private void extendedItemsFadeTransition(){
+        List<FadeTransition> transitions = new ArrayList<>();
+        int initial = 0;
+        int end = 1;
+        int numItems = 6;
+        int duration = 750;
+
+        transitions.add(new FadeTransition(Duration.millis(duration), dueAt));
+        transitions.add(new FadeTransition(Duration.millis(duration), datePicker));
+        transitions.add(new FadeTransition(Duration.millis(duration), courseName));
+        transitions.add(new FadeTransition(Duration.millis(duration), courseNameLabel));
+        transitions.add(new FadeTransition(Duration.millis(duration), profName));
+        transitions.add(new FadeTransition(Duration.millis(duration), profNameLabel));
+        for (int i =0; i<numItems; i++){
+            transitions.get(i).setFromValue(initial);
+            transitions.get(i).setToValue(end);
+            transitions.get(i).play();
+        }
+    }
+
+    public void checkoutToggle(){
+        if(checkingOutToggle.isSelected()){
+            setCheckoutInformation();
+        }
+        else {
+            setCheckinInformation();
+        }
+    }
+
+    public void newBarcode(){
+        setNewBarcodeFieldsHelper();
+        barcodeHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
+        barcodeHelper.FadeTransition(HBoxBarcode2);
+        barcodeHelper.spinnerInit(newQuantity2);
+    }
+
+    private void setNewBarcodeFieldsHelper(){
+        extended.setDisable(true);
+        faulty.setDisable(true);
+        quantity.setVisible(false);
+        quantityLabel.setVisible(false);
+        newQuantity.setVisible(true);
+        deleteBarcode.setVisible(true);
+        barcode2.setVisible(true);
+        HBoxBarcode2.setVisible(true);
+    }
+
+
+    public void newBarcode2(){
+        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3);
+    }
+    public void newBarcode3(){
+        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4);
+    }
+    public void newBarcode4(){
+        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5);
+    }
+
+    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
+        barcodeHelper.translateItems(submitButton, resetButton, extended, faulty, 60);
+        barcodeHelper.FadeTransition(hBoxBarcode4);
+        barcodeHelper.FadeTransition(barcode4);
+        barcodeHelper.spinnerInit(newQuantity4);
+        hBoxBarcode4.setVisible(true);
+        barcode4.setVisible(true);
+    }
+
 
 }
