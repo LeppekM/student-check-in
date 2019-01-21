@@ -42,9 +42,6 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private Tab totalTab, historyTab, checkedOutTab, overdueTab, faultsTab;
 
     @FXML
-    private CheckComboBox<String> sortCheckBox;
-
-    @FXML
     private ControllerHistoryTab historyTabPageController;
 
     @FXML
@@ -59,14 +56,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     @FXML
     private Button back;
 
-    private final ObservableList<String> types = FXCollections.observableArrayList(new String[] { "All", "Checked Out", "Overdue", "Faulty"});
-
-    private final int CHECKBOX_X = 450, CHECKBOX_Y = 55, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
-
     protected static Database database = new Database();
-
-    private ArrayList<String> selectedFilters = new ArrayList<>();
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -86,42 +76,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
             }
         });
 
-        sortCheckBox = new CheckComboBox<>(types);
-        sortCheckBox.getCheckModel().checkIndices(0);
-        sortCheckBox.setLayoutX(CHECKBOX_X);
-        sortCheckBox.setLayoutY(CHECKBOX_Y);
-        sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
-        inventoryScene.getChildren().add(sortCheckBox);
-
-        sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-            public void onChanged(ListChangeListener.Change<? extends String> s) {
-                while (s.next()) {
-                    if (s.wasAdded()) {
-                        if (s.toString().contains("All")) {
-                            //manually clear other selections when "All" is chosen
-                            for (int i = 1; i < types.size(); i++) {
-                                sortCheckBox.getCheckModel().clearCheck(i);
-                                selectedFilters.clear();
-                            }
-                        } else {
-                            // check if the "All" option is selected and if so remove it
-                            if (sortCheckBox.getCheckModel().isChecked(0)) {
-                                sortCheckBox.getCheckModel().clearCheck(0);
-                            }
-
-                        }
-                    }
-                }
-                selectedFilters.clear();
-                selectedFilters.addAll(sortCheckBox.getCheckModel().getCheckedItems());
-            }
-        });
-
         back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
-    }
-
-    public ArrayList<String> getSelctedFilters(){
-        return selectedFilters;
     }
 
     private void updateHistoryTab() {
@@ -191,7 +146,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     public void showInfoPage(Part part, String type){
         Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/ShowPart.fxml"));
             Parent root = loader.load();
             ((ControllerShowPart) loader.getController()).initPart(part, type);
             Scene scene = new Scene(root, 400, 400);

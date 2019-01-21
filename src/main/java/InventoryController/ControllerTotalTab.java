@@ -66,6 +66,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private JFXTreeTableColumn<TotalTabTableRow, Boolean> faultCol;
 
+    @FXML
+    private CheckComboBox<String> sortCheckBox;
+
     private String partName, serialNumber, loc, barcode, partID, sortFilter = "";
 
     private static ObservableList<Part> data
@@ -73,6 +76,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     @FXML
     private JFXButton add;
+
+    private final ObservableList<String> types = FXCollections.observableArrayList(new String[] { "All", "Checked Out", "Overdue", "Faulty"});
+
+    private final int CHECKBOX_X = 450, CHECKBOX_Y = 25, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
+
+    private ArrayList<String> selectedFilters = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -278,7 +287,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                             showInfoPage(rowData, "total");
                             totalTable.getSelectionModel().clearSelection();
                             event.consume();
-                            //System.out.println("Hi " + rowData.toString());
+                            System.out.println("Hi " + rowData.toString());
                         } else if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
                             totalTable.getSelectionModel().clearSelection();
                             event.consume();
@@ -286,6 +295,38 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     }
                 });
                 return row;
+            }
+        });
+        sortCheckBox = new CheckComboBox<>(types);
+        sortCheckBox.getCheckModel().checkIndices(0);
+        selectedFilters.add("All");
+        sortCheckBox.setLayoutX(CHECKBOX_X);
+        sortCheckBox.setLayoutY(CHECKBOX_Y);
+        sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
+        totalTabPage.getChildren().add(sortCheckBox);
+
+        sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+            public void onChanged(ListChangeListener.Change<? extends String> s) {
+                while (s.next()) {
+                    if (s.wasAdded()) {
+                        if (s.toString().contains("All")) {
+                            //manually clear other selections when "All" is chosen
+                            for (int i = 1; i < types.size(); i++) {
+                                sortCheckBox.getCheckModel().clearCheck(i);
+                                selectedFilters.clear();
+                            }
+                        } else {
+                            // check if the "All" option is selected and if so remove it
+                            if (sortCheckBox.getCheckModel().isChecked(0)) {
+                                sortCheckBox.getCheckModel().clearCheck(0);
+                            }
+
+                        }
+                    }
+                }
+                selectedFilters.clear();
+                selectedFilters.addAll(sortCheckBox.getCheckModel().getCheckedItems());
+                populateTable();
             }
         });
         populateTable();
@@ -330,6 +371,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 || (partID != null && partID.toLowerCase().contains(input))));
     }
 
+    public ArrayList<String> getSelctedFilters(){
+        return selectedFilters;
+    }
+
     /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
      * @author Matthew Karcz
@@ -340,6 +385,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().clear();
         this.data.clear();
         ArrayList<String> types = getSelctedFilters();
+        System.out.println(types);
         if(!types.isEmpty()) {
             this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 " + getSortTypes(types) + " ORDER BY partID", this.data);
 
