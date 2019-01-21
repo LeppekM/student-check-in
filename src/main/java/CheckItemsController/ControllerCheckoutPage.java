@@ -83,6 +83,18 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         home.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+            studentInfo.setDisable(false);
+        } else {
+            studentInfo.setDisable(true);
+        }
+        studentID.setOnKeyReleased(event -> {
+            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+                studentInfo.setDisable(false);
+            } else {
+                studentInfo.setDisable(true);
+            }
+        });
         //setItemStatus();
         getStudentName();
         unlockFields();
@@ -102,6 +114,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         } else if (checkoutObject.isFaulty()) {
             faulty.setSelected(true);
             faultyTextArea.setText(checkoutObject.getFaultyDescription());
+        }
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+            studentInfo.setDisable(false);
+        } else {
+            studentInfo.setDisable(true);
         }
     }
 
