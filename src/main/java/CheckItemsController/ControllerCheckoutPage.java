@@ -161,10 +161,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         if (thisStudent.getOverdueItems().size() == 0 || !checkingOutToggle.isSelected()) {
             if (extendedCheckoutIsSelected()) {
                 extendedCheckoutHelper();
-            } else if(itemIsBeingCheckedIn()){
-                checkOut.setItemtoCheckedin(getBarcode());
             } else if(itemBeingCheckedBackInIsFaulty()){
                 faultyCheckinHelper();
+            } else if(itemIsBeingCheckedIn()){
+                checkOut.setItemtoCheckedin(getBarcode());
             }
             else {
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
@@ -185,9 +185,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     }
 
     private void faultyCheckinHelper(){
-        checkOut.setItemtoCheckedin(getBarcode());
         faultyCheckIn.setPartToFaultyStatus(getBarcode());
         faultyCheckIn.addToFaultyTable(getBarcode(), faultyTextArea.getText());
+        checkOut.setItemtoCheckedin(getBarcode());
+
     }
 
 
