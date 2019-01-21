@@ -131,11 +131,23 @@ public class ControllerEditPartType extends ControllerEditPart {
         if (validateInput()) {
             loader.setVisible(true);
             String originalPartName = part.getPartName();
+            String originalBarcode = part.getBarcode();
             Part inputPart = updatePartFromInput();
-            editPart.editAllOfType(originalPartName, inputPart);
+            if (database.hasUniqueBarcodes(originalPartName)) {
+                if (!barcodeField.getText().equals(originalBarcode)) {
+                    editPart.editAllOfType(originalPartName, inputPart);
+                } else {
+                    uniqueBarcodeError(originalPartName);
+                }
+            } else {
+                editPart.editAllOfTypeCommonBarcode(originalPartName, inputPart);
+            }
             close();
             partEditedSuccess();
         }
+
+        //TODO: not allow user update barcode if part has unique barcodes (if here has checks for DB queries)
+        // USE if database.hasUniqueBarcodes && barcodeField.getText != OG barcode THEN throw error
     }
 
     /**
@@ -182,18 +194,18 @@ public class ControllerEditPartType extends ControllerEditPart {
      */
     private boolean validateInput() {
         boolean isValid = true;
-//        if (!validateAllFieldsFilledIn(nameField.getText(),
-//                priceField.getText().replaceAll(",", ""),
-//                locationField.getText(),
-//                barcodeField.getText())) {
-//            isValid = false;
-//            fieldErrorAlert();
-//        }
-        ArrayList<String> barcodes = database.getUniqueBarcodes();
-        if (!barcodeField.getText().equals(part.getBarcode()) && barcodes.contains(barcodeField.getText())) {
-            System.out.println(barcodeField.getText().equals(part.getBarcode()));
+        if (!validateAllFieldsFilledIn(nameField.getText(),
+                priceField.getText().replaceAll(",", ""),
+                locationField.getText(),
+                barcodeField.getText())) {
             isValid = false;
-            uniqueBarcodeError();
+            fieldErrorAlert();
+        } else {
+            ArrayList<String> partNames = database.getUniquePartNames();
+            if (!nameField.getText().equals(part.getPartName()) && partNames.contains(nameField.getText())) {
+                isValid = false;
+                uniquePartNameError();
+            }
         }
         return isValid;
     }
@@ -204,10 +216,10 @@ public class ControllerEditPartType extends ControllerEditPart {
      */
     protected boolean validateAllFieldsFilledIn(String partName, String price,
                                                 String location, String barcode) {
-        return partName != null && partName.trim() != ""
-                && price != null && price.trim() != ""
-                && location != null && location.trim() != ""
-                && barcode != null && barcode.trim() != "";
+        return partName != null && !partName.trim().equals("")
+                && price != null && !price.trim().equals("")
+                && location != null && !location.trim().equals("")
+                && barcode != null && !barcode.trim().equals("");
     }
 
     /**
@@ -234,10 +246,17 @@ public class ControllerEditPartType extends ControllerEditPart {
                 && Double.parseDouble(price.replace(",", "").replace("$", "")) < Double.MAX_VALUE;
     }
 
-    private void uniqueBarcodeError() {
+    private void uniquePartNameError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("The barcode must be unique.");
+        alert.setContentText("A part with that name already exists. Choose a different one.");
+        alert.showAndWait();
+    }
+
+    private void uniqueBarcodeError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have unique barcodes, so you cannot change all of them.");
         alert.showAndWait();
     }
 

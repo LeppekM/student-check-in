@@ -182,8 +182,27 @@ public class Database {
         return part;
     }
 
-    public ArrayList<String> getSerialNumbersForBarcode(String barcode, String partID) {
-        String query = "SELECT serialNumber FROM parts WHERE parts.isDeleted = 0 AND barcode = " + barcode + " AND partID != " + partID + ";";
+    public boolean getIsCheckedOut(String partID) {
+        String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND partID = " + partID + ";";
+        ResultSet resultSet;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            resultSet.next();
+//            statement.close();
+            System.out.println("HERE: " + resultSet.getInt(1));
+            if (resultSet.getInt(1) > 0) {
+                resultSet.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public ArrayList<String> getOtherSerialNumbersForPartName(String partName, String partID) {
+        String query = "SELECT serialNumber FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "' AND partID != " + partID + ";";
         ArrayList<String> serialNumbers = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -191,14 +210,16 @@ public class Database {
             while (resultSet.next()) {
                 serialNumbers.add(resultSet.getString("serialNumber"));
             }
+            resultSet.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return serialNumbers;
     }
 
-    public ArrayList<String> getUniqueBarcodes() {
-        String query = "SELECT distinct barcode FROM parts;";
+    public ArrayList<String> getOtherBarcodesForPartName(String partName, String partID) {
+        String query = "SELECT barcode FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "' AND partID != " + partID + ";";
         ArrayList<String> barcodes = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -206,10 +227,103 @@ public class Database {
             while (resultSet.next()) {
                 barcodes.add(resultSet.getString("barcode"));
             }
+            resultSet.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return barcodes;
+    }
+
+    public ArrayList<String> getAllBarcodesForPartName(String partName) {
+        String query = "SELECT barcode FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
+        ArrayList<String> barcodes = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                barcodes.add(resultSet.getString("barcode"));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return barcodes;
+    }
+
+    public ArrayList<String> getAllSerialNumbersForPartName(String partName) {
+        String query = "SELECT serialNumber FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
+        ArrayList<String> serialNumbers = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                serialNumbers.add(resultSet.getString("serialNumber"));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return serialNumbers;
+    }
+
+    public boolean hasUniqueBarcodes(String partName) {
+        ArrayList<String> barcodes = getAllBarcodesForPartName(partName);
+        if (countPartsOfType(partName) > 1) {
+            for (int i = 0; i < barcodes.size(); i++) {
+                for (int j = 0; j < barcodes.size(); j++) {
+                    if (i != j && barcodes.get(i).equals(barcodes.get(j))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean hasUniqueSerialNumbers(String partName) {
+        ArrayList<String> serialNumbers = getAllSerialNumbersForPartName(partName);
+        if (countPartsOfType(partName) > 1) {
+            for (int i = 0; i < serialNumbers.size(); i++) {
+                for (int j = 0; j < serialNumbers.size(); j++) {
+                    if (i != j && serialNumbers.get(i).equals(serialNumbers.get(j))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public int countPartsOfType(String partName) {
+        String query = "SELECT COUNT(*) FROM parts WHERE partName = '" + partName + "';";
+        ResultSet resultSet;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public ArrayList<String> getUniquePartNames() {
+        String query = "SELECT distinct partName FROM parts;";
+        ArrayList<String> partNames = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                partNames.add(resultSet.getString("partName"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return partNames;
     }
 
     public boolean hasPartName(String partName) {

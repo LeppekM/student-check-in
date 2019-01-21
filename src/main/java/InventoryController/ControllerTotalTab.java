@@ -146,7 +146,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setGraphic(deleteOneImageView);
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteOneButton.setOnAction(event -> {
-                                    deletePart(getTreeTableRow().getItem().getPartID().getValue());
+                                    if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
+                                        deletePart(getTreeTableRow().getItem().getPartID().getValue());
+                                    } else {
+                                        deleteCheckedOutPartAlert();
+                                    }
                                 });
                                 Tooltip deleteOneTip = new Tooltip("Delete this part");
                                 deleteOneButton.setTooltip(deleteOneTip);
@@ -160,6 +164,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteAllButton.setOnAction(event -> {
                                     deletePartType(getTreeTableRow().getItem().getPartName().getValue());
+
                                 });
                                 Tooltip deleteAllTip = new Tooltip("Delete all parts named: " + partName.getText());
                                 deleteAllButton.setTooltip(deleteAllTip);
@@ -449,4 +454,25 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             e.printStackTrace();
         }
     }
+
+    /**
+     * Alert that the part is currently checked out, so it cannot be deleted
+     */
+    private void deleteCheckedOutPartAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("This part is currently checked out and cannot be deleted.");
+        alert.showAndWait();
+    }
+
+    /**
+     * Alert that the part is currently checked out, so it cannot be deleted
+     */
+    private void deleteAllCheckedOutPartAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("One part of this type is checked out. You cannot delete all of these parts.");
+        alert.showAndWait();
+    }
+
 }
