@@ -89,44 +89,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     }
 
 
-    public void newBarcode(){
-        setNewBarcodeFieldsHelper();
-        barcodeHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
-        barcodeHelper.FadeTransition(HBoxBarcode2);
-        barcodeHelper.spinnerInit(newQuantity2);
-    }
-
-    private void setNewBarcodeFieldsHelper(){
-        extended.setDisable(true);
-        faulty.setDisable(true);
-        quantity.setVisible(false);
-        quantityLabel.setVisible(false);
-        newQuantity.setVisible(true);
-        deleteBarcode.setVisible(true);
-        barcode2.setVisible(true);
-        HBoxBarcode2.setVisible(true);
-    }
-
-
-    public void newBarcode2(){
-        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3);
-    }
-    public void newBarcode3(){
-        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4);
-    }
-    public void newBarcode4(){
-        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5);
-    }
-
-    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
-        barcodeHelper.translateItems(submitButton, resetButton, extended, faulty, 60);
-        barcodeHelper.FadeTransition(hBoxBarcode4);
-        barcodeHelper.FadeTransition(barcode4);
-        barcodeHelper.spinnerInit(newQuantity4);
-        hBoxBarcode4.setVisible(true);
-        barcode4.setVisible(true);
-    }
-
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
         studentID.setText(checkoutObject.getStudentID());
@@ -197,8 +159,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private boolean itemIsBeingCheckedOut(){
         return checkingOutToggle.isSelected();
     }
-    private boolean extendedCheckoutIsSelected(){return checkingOutToggle.isSelected() && extended.isSelected();
-    }
+    private boolean extendedCheckoutIsSelected(){return checkingOutToggle.isSelected() && extended.isSelected();}
     private boolean itemBeingCheckedBackInIsFaulty(){return !checkingOutToggle.isSelected() && faulty.isSelected();}
 
     /**
@@ -213,26 +174,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         stageWrapper.newStage("fxml/Menu.fxml", main);
     }
 
-//    /**
-//     * If barcode entered is in checked out database, item is being checked back in. Otherwise, item is being checked out.
-//     */
-//    private void setItemStatus() {
-//        barcode.focusedProperty().addListener((ov, oldV, newV)->{
-//            if (!newV && !barcode.getText().isEmpty()){
-//                if(checkInValidator()){
-//                    stageWrapper.slidingAlert("Checkin Item", "Item is being checked back in");
-//                    setCheckinInformation();
-//                    faulty.setDisable(false);
-//                }
-//                else {
-//                    stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
-//                    setCheckoutInformation();
-//                    extended.setDisable(false);
-//                }
-//            }
-//        });
-//    }
-
     private void getStudentName(){
         studentID.focusedProperty().addListener((ov, oldV, newV)->{
             if(!newV){
@@ -246,42 +187,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Resets all fields
      */
     public void reset() {
-//        resetFromExtended();
-//        resetFromFaulty();
-//        resetHelper();
-//        resetExtended();
         stageWrapper.newStage("fxml/CheckOutItems.fxml", main);
     }
 
-    /**
-     * Helper method for reset button
-     */
-    private void resetHelper(){
-        studentID.clear();
-        barcode.clear();
-        quantity.setText("1");
-        extended.setSelected(false);
-        faulty.setSelected(false);
-        itemStatus.setText("");
-        studentNameText.setText("");
-        faultyTextArea.setText("");
-        checkingOutToggle.setSelected(true);
-        checkingOutToggle.setDisable(false);
-        faulty.setVisible(false);
-        extended.setVisible(true);
-        extended.setDisable(false);
-        faulty.setDisable(false);
-        itemStatus.setText("Checking Out");
-    }
-
-
-//    /**
-//     * Checks if item is being checked in or out
-//     * @return True if item is being checked in
-//     */
-//    private boolean checkInValidator() {
-//        return checkOut.returnBarcodes().contains(barcode.getText());
-//    }
     /**
      * Checks if fields are filled
      * @return True if fields are not empty
@@ -428,15 +336,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
-
-
-    private void resetFromExtended(){
-        int translateUP = -190;
-        if(extended.isSelected()){
-            setExtendedTransition(translateUP, false);
-        }
-    }
-
     /**
      * If extended is selected, more items will be displayed
      */
@@ -506,15 +405,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
-    /**
-     * Helper method to reset faulty when it is selected
-     */
-    private void resetFromFaulty(){
-        int translateUp = -125;
-        if(faulty.isSelected()){
-            setFaultyTransition(translateUp, false);
-        }
-    }
 
     /**
      * Helper method to transition all faulty items
@@ -595,6 +485,44 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         else {
             setCheckinInformation();
         }
+    }
+
+    public void newBarcode(){
+        setNewBarcodeFieldsHelper();
+        barcodeHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
+        barcodeHelper.FadeTransition(HBoxBarcode2);
+        barcodeHelper.spinnerInit(newQuantity2);
+    }
+
+    private void setNewBarcodeFieldsHelper(){
+        extended.setDisable(true);
+        faulty.setDisable(true);
+        quantity.setVisible(false);
+        quantityLabel.setVisible(false);
+        newQuantity.setVisible(true);
+        deleteBarcode.setVisible(true);
+        barcode2.setVisible(true);
+        HBoxBarcode2.setVisible(true);
+    }
+
+
+    public void newBarcode2(){
+        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3);
+    }
+    public void newBarcode3(){
+        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4);
+    }
+    public void newBarcode4(){
+        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5);
+    }
+
+    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
+        barcodeHelper.translateItems(submitButton, resetButton, extended, faulty, 60);
+        barcodeHelper.FadeTransition(hBoxBarcode4);
+        barcodeHelper.FadeTransition(barcode4);
+        barcodeHelper.spinnerInit(newQuantity4);
+        hBoxBarcode4.setVisible(true);
+        barcode4.setVisible(true);
     }
 
 
