@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.StageStyle;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 
