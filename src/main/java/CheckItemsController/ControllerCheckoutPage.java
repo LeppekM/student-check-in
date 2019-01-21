@@ -7,6 +7,8 @@ import com.jfoenix.controls.*;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +22,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,16 +86,26 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         home.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
         }
         studentID.setOnKeyReleased(event -> {
-            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                 studentInfo.setDisable(false);
             } else {
                 studentInfo.setDisable(true);
+            }
+        });
+
+        // only allows user to enter 5 digits
+        studentID.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$")) {
+                    studentID.setText(oldValue);
+                }
             }
         });
         //setItemStatus();
@@ -110,12 +123,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         quantity.setText(checkoutObject.getQuantity());
         if (checkoutObject.isExtended()) {
             extended.setSelected(true);
-
+            isExtended();
+            courseName.setText(checkoutObject.getExtendedCourseName());
+            profName.setText(checkoutObject.getExtendedProfessor());
+            datePicker.setValue(checkoutObject.getExtendedReturnDate());
         } else if (checkoutObject.isFaulty()) {
             faulty.setSelected(true);
             faultyTextArea.setText(checkoutObject.getFaultyDescription());
         }
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
@@ -125,18 +141,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     /**
      * Sets cursor to next field
      */
-    public void moveToBarcodeField() {
-        studentInfo.setDisable(true);
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
-            Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
-            if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()){
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
-                alert.initStyle(StageStyle.UTILITY);
-                alert.showAndWait();
-            }
-            //barcode.requestFocus();
-            studentInfo.setDisable(false);
+    public void checkStudentHasOverdue() {
+        Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
+        if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
+            alert.initStyle(StageStyle.UTILITY);
+            alert.showAndWait();
         }
+        //barcode.requestFocus();
     }
 
     /**
@@ -277,6 +289,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 StudentPage sp = loader.getController();
                 sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
                 checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), quantity.getText(), extended.isSelected(), faulty.isSelected());
+                if (extended.isSelected()) {
+                    checkoutObject.initExtendedInfo(courseName.getText(), profName.getText(), datePicker.getValue());
+                } else if (faulty.isSelected()) {
+                    checkoutObject.initFaultyInfo(faultyTextArea.getText());
+                }
                 sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
             }catch (IOException e){
