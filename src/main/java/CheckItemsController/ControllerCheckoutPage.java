@@ -20,6 +20,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +62,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     @FXML
     private HBox HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
 
-
-
-
     private CheckoutObject checkoutObject;
 
     private StageWrapper stageWrapper = new StageWrapper();
@@ -97,8 +95,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         barcode.setText(checkoutObject.getBarcode());
         quantity.setText(checkoutObject.getQuantity());
         if (checkoutObject.isExtended()) {
-            extended.setSelected(true);
-
+            isExtended();
+            courseName.setText(checkoutObject.getExtendedCourseName());
+            profName.setText(checkoutObject.getExtendedProfessor());
+//            datePicker.setValue(LocalDate.parse(checkoutObject.getExtendedReturnDate()));
         } else if (checkoutObject.isFaulty()) {
             faulty.setSelected(true);
             faultyTextArea.setText(checkoutObject.getFaultyDescription());
