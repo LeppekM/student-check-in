@@ -152,7 +152,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
                 alert.showAndWait();
             }
-            barcode.requestFocus();
+            //barcode.requestFocus();
             studentInfo.setDisable(false);
         }
     }
@@ -168,7 +168,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             } else if(itemIsBeingCheckedOut()){
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
             } else if(itemBeingCheckedBackInIsFaulty()){
-                System.out.println("Faulty");
+                faultyCheckinHelper();
             }
             else {
                 checkOut.setItemtoCheckedin(getBarcode());
@@ -188,9 +188,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     }
 
     private void faultyCheckinHelper(){
-        //checkOut.setItemtoCheckedin(getBarcode());
-
+        checkOut.setItemtoCheckedin(getBarcode());
+        faultyCheckIn.setPartToFaultyStatus(getBarcode());
+        faultyCheckIn.addToFaultyTable(getBarcode(), faultyTextArea.getText());
     }
+
 
     private boolean itemIsBeingCheckedOut(){
         return checkingOutToggle.isSelected();

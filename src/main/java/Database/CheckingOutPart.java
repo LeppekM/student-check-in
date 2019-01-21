@@ -138,7 +138,7 @@ public class CheckingOutPart {
      * @param partID PartID to be passed in
      * @return
      */
-    private int getCheckoutIDfromPartID(int partID){
+    int getCheckoutIDfromPartID(int partID){
         int checkoutID = 0;
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(getCheckoutIDFromPartID);
