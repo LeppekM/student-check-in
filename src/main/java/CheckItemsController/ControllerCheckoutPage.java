@@ -113,6 +113,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
             Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
             if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()){
+                //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
                 alert.initStyle(StageStyle.UTILITY);
                 alert.showAndWait();
@@ -139,7 +140,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 checkOut.setItemtoCheckedin(getBarcode());
             }
             reset();
-        }else {
+        }else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
             Alert alert = new Alert(Alert.AlertType.ERROR, "Student has overdue items and cannot check anything" +
                     " else out until they return or pay for these items");
             alert.initStyle(StageStyle.UTILITY);
