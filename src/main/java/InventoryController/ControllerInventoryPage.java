@@ -112,10 +112,10 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                         }
                     }
                 }
+                selectedFilters.clear();
+                selectedFilters.addAll(sortCheckBox.getCheckModel().getCheckedItems());
             }
         });
-        selectedFilters.addAll(sortCheckBox.getCheckModel().getCheckedItems());
-        System.out.println(selectedFilters);
 
         back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
     }

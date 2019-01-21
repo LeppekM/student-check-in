@@ -339,32 +339,47 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         tableRows.clear();
         totalTable.getColumns().clear();
         this.data.clear();
-        getSortTypes();
-        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 " + sortFilter + " ORDER BY partID", this.data);
+        ArrayList<String> types = getSelctedFilters();
+        if(!types.isEmpty()) {
+            this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 " + getSortTypes(types) + " ORDER BY partID", this.data);
 
+            for (int i = 0; i < data.size(); i++) {
+                Button button = new Button("Edit");
+                tableRows.add(new TotalTabTableRow(data.get(i).getPartName(), new HBox(button),
+                        data.get(i).getSerialNumber(), data.get(i).getLocation(),
+                        data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
+            }
 
-        for (int i = 0; i < data.size(); i++) {
-            Button button = new Button("Edit");
-            tableRows.add(new TotalTabTableRow(data.get(i).getPartName(), new HBox(button),
-                    data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                    data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
+            root = new RecursiveTreeItem<TotalTabTableRow>(
+                    tableRows, RecursiveTreeObject::getChildren
+            );
+            totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
+            totalTable.setRoot(root);
+            totalTable.setShowRoot(false);
         }
-
-        root = new RecursiveTreeItem<TotalTabTableRow>(
-                tableRows, RecursiveTreeObject::getChildren
-        );
-        totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
-        totalTable.setRoot(root);
-        totalTable.setShowRoot(false);
     }
 
-    public String getSortTypes(){
-        ArrayList<String> types = super.getSelctedFilters();
-//        for(int i = 0; i<types.size(); i++){
-//
-//        }
-//        switch()
-        return sortFilter;
+    /**
+     * Searches through the sort filter to grab what categories to return
+     * @return String to be input into raw SQL statement
+     * @author Matt Karcz
+     */
+    public String getSortTypes(ArrayList<String> types){
+        System.out.println(types);
+        String result = "";
+        if (types.contains("All")){
+            return result;
+        }
+        if (types.contains("Checked Out")){
+            result.concat(" AND isFaulty = 1");
+        }
+        if (types.contains("Overdue")){
+            result.concat(" AND isFaulty = 1");
+        }
+        if (types.contains("Faulty")){
+            result.concat(" AND isFaulty = 1");
+        }
+        return result;
     }
 
     /**
