@@ -337,11 +337,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         barcode.focusedProperty().addListener((ov, oldv, newV)->{
             if(!newV && !barcode.getText().isEmpty()){
                 if(itemIsBeingCheckedIn()){
-                    stageWrapper.slidingAlert("Checking Item", "Item is being checked back in");
                     setCheckinInformation();
                 }
                 else {
-                    stageWrapper.slidingAlert("Checkout Item", "Item is being checked out");
                     setCheckoutInformation();
                 }
             }
