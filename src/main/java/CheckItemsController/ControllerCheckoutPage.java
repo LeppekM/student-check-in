@@ -18,6 +18,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +70,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
     private NewBarcodeHelper barcodeHelper = new NewBarcodeHelper();
+    private ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
+    private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
 
 
 
@@ -145,7 +148,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         studentInfo.setDisable(true);
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
             Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
-            if (thisStudent.getOverdueItems().size() != 0){
+            if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()){
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
                 alert.showAndWait();
             }
@@ -159,10 +162,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     public void submit() {
         Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
-        if (thisStudent.getOverdueItems().size() == 0) {
-            if (itemIsBeingCheckedOut()) {
+        if (thisStudent.getOverdueItems().size() == 0 || !checkingOutToggle.isSelected()) {
+            if (extendedCheckoutIsSelected()) {
+                extendedCheckoutHelper();
+            } else if(itemIsBeingCheckedOut()){
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
-            } else {
+            } else if(itemBeingCheckedBackInIsFaulty()){
+                System.out.println("Faulty");
+            }
+            else {
                 checkOut.setItemtoCheckedin(getBarcode());
             }
             reset();
@@ -173,9 +181,23 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
+
+
+    private void extendedCheckoutHelper(){
+        extendedCheckOut.addExtendedCheckout(getBarcode(), getstudentID(), getProfName(), getCourseName(), getExtendedDueDate());
+    }
+
+    private void faultyCheckinHelper(){
+        //checkOut.setItemtoCheckedin(getBarcode());
+
+    }
+
     private boolean itemIsBeingCheckedOut(){
         return checkingOutToggle.isSelected();
     }
+    private boolean extendedCheckoutIsSelected(){return checkingOutToggle.isSelected() && extended.isSelected();
+    }
+    private boolean itemBeingCheckedBackInIsFaulty(){return !checkingOutToggle.isSelected() && faulty.isSelected();}
 
     /**
      * Returns to home, contains check if fields are filled out
@@ -371,6 +393,18 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     private int getstudentID(){
         return Integer.parseInt(studentID.getText());
+    }
+
+    private String getProfName(){
+        return profName.getText();
+    }
+
+    private String getCourseName(){
+        return courseName.getText();
+    }
+
+    private String getExtendedDueDate(){
+        return datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     /**

@@ -81,7 +81,7 @@ public class CheckingOutPart {
      * @param barcode barcode of part
      * @return Part ID to return
      */
-    private int getPartIDFromBarcode(int barcode, String status){
+    int getPartIDFromBarcode(int barcode, String status){
         int partID = 0;
 
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
@@ -102,7 +102,7 @@ public class CheckingOutPart {
      * Sets part checkout status to 1 to signify the part is checked out
      * @param partID Part ID of part
      */
-    private void setPartStatus(int partID, String status){
+    void setPartStatus(int partID, String status){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement preparedStatement = connection.prepareStatement(status);
             preparedStatement.setInt(1,partID);
