@@ -5,7 +5,6 @@
 <?import com.jfoenix.controls.JFXDatePicker?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTextField?>
-<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
@@ -58,16 +57,6 @@
       <Label fx:id="courseNameLabel" layoutX="256.0" layoutY="299.0" text="Course Name" visible="false" />
       <Label fx:id="profNameLabel" layoutX="243.0" layoutY="364.0" text="Instructor Name" visible="false" />
       <JFXDatePicker fx:id="datePicker" defaultColor="#4059a9" layoutX="343.0" layoutY="412.0" visible="false" />
-      <JFXToggleButton fx:id="checkingOutToggle" layoutX="352.0" layoutY="34.0" onAction="#checkoutToggle" selected="true" text="Check Out">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </JFXToggleButton>
-      <Label layoutX="310.0" layoutY="55.0" text="Check In">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Label>
       <HBox layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0">
          <children>
             <JFXButton fx:id="addNewBarcode" onAction="#newBarcode" prefHeight="36.0" prefWidth="0.0" visible="false">
