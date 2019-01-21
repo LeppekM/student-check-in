@@ -107,7 +107,6 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                             // check if the "All" option is selected and if so remove it
                             if (sortCheckBox.getCheckModel().isChecked(0)) {
                                 sortCheckBox.getCheckModel().clearCheck(0);
-                                selectedFilters.add(s.toString());
                             }
 
                         }
@@ -115,6 +114,8 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 }
             }
         });
+        selectedFilters.addAll(sortCheckBox.getCheckModel().getCheckedItems());
+        System.out.println(selectedFilters);
 
         back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
     }
