@@ -10,8 +10,8 @@ import java.util.List;
 public class CheckingOutPart {
 
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-    private final String addToCheckouts = "INSERT INTO checkout (partID, studentID, checkoutAt, dueAt)\n" +
-            "VALUE(?,?,?,?);";
+    private final String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt)\n" +
+            "VALUE(?,?,?,?,?);";
     private final String getPartIDtoAdd = "SELECT partID \n" +
             "FROM parts \n" +
             "WHERE barcode = ? \n" +
@@ -24,11 +24,8 @@ public class CheckingOutPart {
             "    LIMIT 1";
 
     private final String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
-    private final String getBarcodesToBeCheckedBackIn = "select parts.barcode\n" +
-            "from checkout\n" +
-            "inner join parts\n" +
-            "on checkout.partID = parts.partID\n" +
-            "where checkinAt is null or checkinAt = ''";
+    private final String getCheckedOutItems = "select barcode, studentID from checkout \n" +
+            "where checkinAt is NULL";
 
     private final String setPartStatusCheckedIn = "UPDATE parts SET isCheckedOut = 0 WHERE partID = ?";
     private final String setDate = "update checkout\n" +
@@ -37,7 +34,7 @@ public class CheckingOutPart {
     private final String getCheckoutIDFromPartID = "select checkoutID from checkout where (partID = ? and checkinAt is null) ";
 
     private DatabaseHelper helper = new DatabaseHelper();
-    private List<String> barcodes = new ArrayList<>();
+    private List<CheckedOutPartsObject> checkedOutItems = new ArrayList<>();
 
 
     /**
@@ -67,8 +64,9 @@ public class CheckingOutPart {
         try {
             preparedStatement.setInt(1, partID);
             preparedStatement.setInt(2, studentID);
-            preparedStatement.setString(3, helper.getCurrentDate());
-            preparedStatement.setString(4, helper.getTomorrowDate());
+            preparedStatement.setInt(3, barcode);
+            preparedStatement.setString(4, helper.getCurrentDate());
+            preparedStatement.setString(5, helper.getTomorrowDate());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -117,20 +115,20 @@ public class CheckingOutPart {
      * Returns barcodes of items that are checked out
      * @return A list of barcodes in the checked out tab
      */
-    public List<String> returnBarcodes(){
-        if(barcodes.size()!=0){
-            barcodes.clear();
+    public List<CheckedOutPartsObject> returnCheckedOutObjects(){
+        if(checkedOutItems.size()!=0){
+            checkedOutItems.clear();
         }
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(getBarcodesToBeCheckedBackIn);
+            ResultSet resultSet = statement.executeQuery(getCheckedOutItems);
             while(resultSet.next()){
-                barcodes.add(resultSet.getString("barcode"));
+                checkedOutItems.add(new CheckedOutPartsObject(resultSet.getInt("barcode"), resultSet.getInt("studentID")));
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database", e);
         }
-        return barcodes;
+        return checkedOutItems;
     }
 
     /**
