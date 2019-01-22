@@ -77,9 +77,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private NewBarcodeHelper barcodeHelper = new NewBarcodeHelper();
     private ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
     private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
-
-
-
+    private String partNameFromBarcode;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -91,6 +89,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         } else {
             studentInfo.setDisable(true);
         }
+
+        quantity.setDisable(true);
+        barcode.setOnKeyReleased(event -> {
+            if (containsNumber(barcode.getText())) {
+                partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
+                if (database.hasUniqueBarcodes(partNameFromBarcode)) {
+                    quantity.setDisable(true);
+                    quantity.setText("1");
+                } else {
+                    quantity.setDisable(false);
+                }
+            }
+        });
         studentID.setOnKeyReleased(event -> {
             if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                 studentInfo.setDisable(false);
@@ -131,10 +142,24 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             faulty.setSelected(true);
             faultyTextArea.setText(checkoutObject.getFaultyDescription());
         }
+
+        // enable the switch to student info button iff the student ID field contains a student ID
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
+        }
+
+        // enable the quantity field iff the barcode field contains a barcode for a part with
+        // unique barcodes
+        if (containsNumber(barcode.getText())) {
+            partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
+            if (database.hasUniqueBarcodes(partNameFromBarcode)) {
+                quantity.setDisable(true);
+                quantity.setText("1");
+            } else {
+                quantity.setDisable(false);
+            }
         }
     }
 
@@ -565,5 +590,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         barcode4.setVisible(true);
     }
 
+    private static boolean containsNumber(String input){
+        boolean parsable = true;
+        try{
+            Integer.parseInt(input);
+        } catch (Exception e) {
+            parsable = false;
+        }
+        return parsable;
+    }
 
 }

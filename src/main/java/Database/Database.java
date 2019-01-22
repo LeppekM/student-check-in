@@ -182,6 +182,23 @@ public class Database {
         return part;
     }
 
+    public String getPartNameFromBarcode(int barcode) {
+        String query = "SELECT partName from parts where barcode = " + barcode + ";";
+        String partName = "";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                partName = resultSet.getString("partName");
+            }
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return partName;
+    }
+
     public boolean getIsCheckedOut(String partID) {
         String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND partID = " + partID + ";";
         ResultSet resultSet;
