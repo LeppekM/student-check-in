@@ -20,7 +20,7 @@ public class HistoryParts {
             "CASE WHEN checkout.checkoutAt < checkout.checkedinAt " +
             "THEN 'In' ELSE 'Out' END AS 'Status', " +
             "CASE WHEN checkout.checkoutAt < checkout.checkedinAt " +
-            "THEN checkout_parts.checkedInAt ELSE checkout.checkoutAt END AS 'date' " +
+            "THEN checkout.checkedinAt ELSE checkout.checkoutAt END AS 'date' " +
             "FROM parts " +
             "INNER JOIN checkout ON parts.partID = checkout.partID " +
             "INNER JOIN checkout ON checkout.checkoutID = checkout.checkoutID " +
