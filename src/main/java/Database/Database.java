@@ -409,7 +409,7 @@ public class Database {
             while (resultSet.next()){
                 savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
                         resultSet.getString("parts.partName"), resultSet.getString("checkout.checkoutAt"),
-                        resultSet.getInt("checkout.checkoutQuantity"), resultSet.getString("checkout.reservedAt"),
+                        1, resultSet.getString("checkout.reservedAt"),
                         resultSet.getString("checkout.dueAt"), resultSet.getString("checkout.checkoutID"),
                         resultSet.getString("checkout.prof"), resultSet.getString("checkout.course"),
                         resultSet.getString("checkout.reason")));

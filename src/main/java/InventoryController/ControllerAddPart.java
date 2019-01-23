@@ -41,6 +41,9 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public TextField quantityField;
 
     @FXML
+    public TextField barcodeField;
+
+    @FXML
     public TextField priceField;
 
     @FXML
@@ -143,7 +146,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         String price = priceField.getText();
         String vendor = getVendorName();
         String location = locationField.getText();
-        String barcode = serialField.getText();
+        String barcode = barcodeField.getText();
         String quantity = quantityField.getText();
         int isDeleted = 0; //Part won't ever be deleted when adding
         //If the price or quantity isn't filled out, the invalid value -1 is passed instead.
@@ -229,7 +232,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private boolean validateFieldsNotEmpty(){
         if(nameField.getText().isEmpty() | serialField.getText().isEmpty() | manufacturerField.getText().isEmpty() |
         priceField.getText().isEmpty() | locationField.getText().isEmpty()|
-        serialField.getText().isEmpty()| quantityField.getText().isEmpty() | getVendorName().contains("-1")){
+        serialField.getText().isEmpty()| barcodeField.getText().isEmpty()| quantityField.getText().isEmpty() | getVendorName().contains("-1")){
             return false;
         }
         return true;

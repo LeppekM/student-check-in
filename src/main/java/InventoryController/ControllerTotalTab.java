@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,10 +30,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import org.controlsfx.control.CheckComboBox;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
@@ -63,13 +67,22 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private JFXTreeTableColumn<TotalTabTableRow, Boolean> faultCol;
 
-    private String partName, serialNumber, loc, barcode, partID;
+    @FXML
+    private CheckComboBox<String> sortCheckBox;
+
+    private String partName, serialNumber, loc, barcode, partID, sortFilter = "";
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
 
     @FXML
     private JFXButton add;
+
+    private final ObservableList<String> types = FXCollections.observableArrayList(new String[] { "All", "Checked Out", "Overdue", "Faulty"});
+
+    private final int CHECKBOX_X = 450, CHECKBOX_Y = 25, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
+
+    private ArrayList<String> selectedFilters = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -280,7 +293,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                             showInfoPage(rowData, "total");
                             totalTable.getSelectionModel().clearSelection();
                             event.consume();
-                            //System.out.println("Hi " + rowData.toString());
+                            System.out.println("Hi " + rowData.toString());
                         } else if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
                             totalTable.getSelectionModel().clearSelection();
                             event.consume();
@@ -288,6 +301,38 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     }
                 });
                 return row;
+            }
+        });
+        sortCheckBox = new CheckComboBox<>(types);
+        sortCheckBox.getCheckModel().checkIndices(0);
+        selectedFilters.add("All");
+        sortCheckBox.setLayoutX(CHECKBOX_X);
+        sortCheckBox.setLayoutY(CHECKBOX_Y);
+        sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
+        totalTabPage.getChildren().add(sortCheckBox);
+
+        sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+            public void onChanged(ListChangeListener.Change<? extends String> s) {
+                while (s.next()) {
+                    if (s.wasAdded()) {
+                        if (s.toString().contains("All")) {
+                            //manually clear other selections when "All" is chosen
+                            for (int i = 1; i < types.size(); i++) {
+                                sortCheckBox.getCheckModel().clearCheck(i);
+                                selectedFilters.clear();
+                            }
+                        } else {
+                            // check if the "All" option is selected and if so remove it
+                            if (sortCheckBox.getCheckModel().isChecked(0)) {
+                                sortCheckBox.getCheckModel().clearCheck(0);
+                            }
+
+                        }
+                    }
+                }
+                selectedFilters.clear();
+                selectedFilters.addAll(sortCheckBox.getCheckModel().getCheckedItems());
+                populateTable();
             }
         });
         populateTable();
@@ -332,6 +377,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 || (partID != null && partID.toLowerCase().contains(input))));
     }
 
+    public ArrayList<String> getSelctedFilters(){
+        return selectedFilters;
+    }
+
     /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
      * @author Matthew Karcz
@@ -341,21 +390,58 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         tableRows.clear();
         totalTable.getColumns().clear();
         this.data.clear();
-        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 ORDER BY partID", this.data);
+        ArrayList<String> types = getSelctedFilters();
+        System.out.println(types);
+        if(!types.isEmpty()) {
+            //this.data = selectParts("SELECT p.partName from parts p, checkout c WHERE p.isDeleted = 0 ORDER BY p.partID", this.data);
+            this.data = selectParts("SELECT * from parts WHERE isDeleted = 0" + getSortTypes(types) + " ORDER BY partID", this.data);
 
-        for (int i = 0; i < data.size(); i++) {
-            Button button = new Button("Edit");
-            tableRows.add(new TotalTabTableRow(data.get(i).getPartName(), new HBox(button),
-                    data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                    data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
+            for (int i = 0; i < data.size(); i++) {
+                Button button = new Button("Edit");
+                tableRows.add(new TotalTabTableRow(data.get(i).getPartName(), new HBox(button),
+                        data.get(i).getSerialNumber(), data.get(i).getLocation(),
+                        data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
+            }
+
+            root = new RecursiveTreeItem<TotalTabTableRow>(
+                    tableRows, RecursiveTreeObject::getChildren
+            );
+            totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
+            totalTable.setRoot(root);
+            totalTable.setShowRoot(false);
         }
+    }
 
-        root = new RecursiveTreeItem<TotalTabTableRow>(
-                tableRows, RecursiveTreeObject::getChildren
-        );
-        totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
-        totalTable.setRoot(root);
-        totalTable.setShowRoot(false);
+    /**
+     * Searches through the sort filter to grab what categories to return
+     * @return String to be input into raw SQL statement
+     * @author Matt Karcz
+     */
+    public String getSortTypes(ArrayList<String> types){
+        String result = "";
+        if (types.contains("All")){
+            return result;
+        } else{
+            result = " AND ";
+        }
+        if (types.contains("Checked Out")){
+            if(!result.equals(" AND "))
+                result = result + " OR ";
+            result = result + "isCheckedOut = 1";
+        }
+        if (types.contains("Overdue")){
+            if(!result.equals(" AND "))
+                result = result + " OR ";
+            long longDate = System.currentTimeMillis();
+            Date date = new java.sql.Date(longDate);
+            result = result + "dueAt < date('" + date.toString() + "')";
+        }
+        if (types.contains("Faulty")){
+            if(!result.equals(" AND "))
+                result = result + " OR ";
+            result = result + "isFaulty = 1";
+        }
+        return result;
     }
 
     /**
@@ -368,7 +454,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             URL myFxmlURL = ClassLoader.getSystemResource("fxml/AddPart.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load(myFxmlURL);
-            Scene scene = new Scene(root, 400, 400);
+            Scene scene = new Scene(root, 400, 450);
             stage.setTitle("Add a Part");
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);

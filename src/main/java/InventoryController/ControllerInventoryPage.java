@@ -3,6 +3,8 @@ package InventoryController;
 import Database.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,6 +27,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerInventoryPage extends ControllerMenu implements Initializable {
@@ -53,7 +57,6 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private Button back;
 
     protected static Database database = new Database();
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -100,6 +103,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
      * @author Matthew Karcz
      */
     public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
+        System.out.println(rawStatement);
         Statement currentStatement = null;
         try {
             Connection connection = database.getConnection();
@@ -143,7 +147,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     public void showInfoPage(Part part, String type){
         Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShowPart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/ShowPart.fxml"));
             Parent root = loader.load();
             ((ControllerShowPart) loader.getController()).initPart(part, type);
             Scene scene = new Scene(root, 400, 400);
