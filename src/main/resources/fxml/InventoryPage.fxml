@@ -6,8 +6,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import org.controlsfx.control.CheckComboBox?>
-
 <AnchorPane fx:id="inventoryScene" prefHeight="620.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
   <children>
     <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="800.0" stylesheets="@../css/TabStyle.css" tabClosingPolicy="UNAVAILABLE">
