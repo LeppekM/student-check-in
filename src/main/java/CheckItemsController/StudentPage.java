@@ -172,24 +172,7 @@ public class StudentPage {
     }
 
     public void goBack() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
-//            Parent root = loader.load();
-//            Scene scene = new Scene(root, 789, 620);
-//            Stage stage = new Stage();
-//            ((ControllerCheckoutPage) loader.getController()).initCheckoutObject(checkoutObject);
-//            stage.setResizable(false);
-//            stage.setTitle("Barcode Scanner");
-//            stage.setScene(scene);
-//            stage.getIcons().add(new Image("images/msoe.png"));
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         try {
-//            String fxml = "/fxml/CheckoutItems.fxml";
-//            URL myFxmlURL = ClassLoader.getSystemResource(fxml);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
             Parent root = loader.load();
             main.getScene().setRoot(root);
