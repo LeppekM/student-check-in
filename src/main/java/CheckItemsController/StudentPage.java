@@ -214,10 +214,12 @@ public class StudentPage {
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
                 int index = coTable.getSelectionModel().getSelectedIndex();
-                CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
-                ((CheckoutPopUp) loader.getController()).populate(item);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                if (index != -1) {
+                    CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
+                    ((CheckoutPopUp) loader.getController()).populate(item);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
                 stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -236,10 +238,12 @@ public class StudentPage {
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
                 int index = oTable.getSelectionModel().getSelectedIndex();
-                OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
-                ((OverduePopUpController) loader.getController()).populate(item,null);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                if (index != -1) {
+                    OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
+                    ((OverduePopUpController) loader.getController()).populate(item, null);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -257,10 +261,12 @@ public class StudentPage {
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
                 int index = sTable.getSelectionModel().getSelectedIndex();
-                SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
-                ((SavedPopUp) loader.getController()).populate(item);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                if (index != -1) {
+                    SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
+                    ((SavedPopUp) loader.getController()).populate(item);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
