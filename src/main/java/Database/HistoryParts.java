@@ -23,7 +23,7 @@ public class HistoryParts {
             "THEN checkout.checkinAt ELSE checkout.checkoutAt END AS 'date' " +
             "FROM parts " +
             "INNER JOIN checkout ON parts.partID = checkout.partID " +
-            "INNER JOIN checkout ON checkout.checkoutID = checkout.checkoutID " +
+//            "INNER JOIN checkout ON checkout.checkoutID = checkout.checkoutID " +
             "INNER JOIN students ON checkout.studentID = students.studentID " +
             "WHERE parts.isDeleted = 0 " +
             "ORDER BY CASE " +
