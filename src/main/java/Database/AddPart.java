@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 public class AddPart {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
     private String addQuery = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
-            " location, barcode, totalQuantity,  availableQuantity, createdAt, createdBy, isDeleted)"+
-            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+            " location, barcode, createdAt, createdBy, isDeleted)"+
+            "VALUES(?,?,?,?,?,?,?,?,?,?)";
     private String getpartIDQuery = "SELECT partID\n" +
             "FROM parts\n" +
             "ORDER BY partID DESC\n" +
@@ -45,12 +45,10 @@ public class AddPart {
             preparedStatement.setInt(5, vendorInformation.getVendorIDFromVendor(part.getVendor()));
             preparedStatement.setString(6, part.getLocation());
             preparedStatement.setString(7, part.getBarcode());
-            preparedStatement.setInt(8, part.getQuantity());
-            preparedStatement.setInt(9, part.getQuantity());
-            preparedStatement.setString(10, getCurrentDate());
+            preparedStatement.setString(8, getCurrentDate());
             //Hardcoded created by because we don't have workers setup yet
-            preparedStatement.setString(11, "Jim");
-            preparedStatement.setInt(12, part.getIsDeleted());
+            preparedStatement.setString(9, "Jim");
+            preparedStatement.setInt(10, part.getIsDeleted());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
