@@ -133,7 +133,7 @@ public class ControllerEditPartType extends ControllerEditPart {
             String originalPartName = part.getPartName();
             String originalBarcode = part.getBarcode();
             Part inputPart = updatePartFromInput();
-            if (database.hasUniqueBarcodes(originalPartName)) {
+            if (!database.hasUniqueBarcodes(originalPartName)) {
                 if (!barcodeField.getText().equals(originalBarcode)) {
                     editPart.editAllOfType(originalPartName, inputPart);
                 } else {
@@ -145,9 +145,6 @@ public class ControllerEditPartType extends ControllerEditPart {
             close();
             partEditedSuccess();
         }
-
-        //TODO: not allow user update barcode if part has unique barcodes (if here has checks for DB queries)
-        // USE if database.hasUniqueBarcodes && barcodeField.getText != OG barcode THEN throw error
     }
 
     /**
@@ -205,6 +202,14 @@ public class ControllerEditPartType extends ControllerEditPart {
             if (!nameField.getText().equals(part.getPartName()) && partNames.contains(nameField.getText())) {
                 isValid = false;
                 uniquePartNameError();
+            } else if (!barcodeField.getText().equals(part.getBarcode())) {
+                if (database.hasUniqueBarcodes(part.getPartName())) {
+                    isValid = false;
+                    uniqueBarcodeError(part.getPartName());
+                } else if (!validateUnusedBarcode(Integer.parseInt(barcodeField.getText()))) {
+                    isValid = false;
+                    unusedBarcodeError(Integer.parseInt(barcodeField.getText()));
+                }
             }
         }
         return isValid;
@@ -236,6 +241,10 @@ public class ControllerEditPartType extends ControllerEditPart {
         return containsNumber;
     }
 
+    private boolean validateUnusedBarcode(int barcode) {
+        return database.getPartNameFromBarcode(barcode).equals("");
+    }
+
     /**
      * This method ensures that the inputs with numbers are non-negative and
      * less than the max value for Doubles.
@@ -249,7 +258,7 @@ public class ControllerEditPartType extends ControllerEditPart {
     private void uniquePartNameError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("A part with that name already exists. Choose a different one.");
+        alert.setContentText("A part with that name already exists.");
         alert.showAndWait();
     }
 
@@ -257,6 +266,13 @@ public class ControllerEditPartType extends ControllerEditPart {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText(partName + " parts have unique barcodes, so you cannot change all of them.");
+        alert.showAndWait();
+    }
+
+    private void unusedBarcodeError(int barcode) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("A part with that barcode already exists.");
         alert.showAndWait();
     }
 

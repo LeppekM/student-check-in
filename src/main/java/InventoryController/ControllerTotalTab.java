@@ -33,6 +33,7 @@ import javafx.util.Callback;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
@@ -163,8 +164,18 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllButton.setGraphic(deleteAllImageView);
                                 deleteAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteAllButton.setOnAction(event -> {
-                                    deletePartType(getTreeTableRow().getItem().getPartName().getValue());
-
+                                    boolean typeHasOneCheckedOut = false;
+                                    ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
+                                    for (String id : partIDs) {
+                                        if (database.getIsCheckedOut(id)) {
+                                            typeHasOneCheckedOut = true;
+                                        }
+                                    }
+                                    if (typeHasOneCheckedOut) {
+                                        deletePartType(getTreeTableRow().getItem().getPartName().getValue());
+                                    } else {
+                                        typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
+                                    }
                                 });
                                 Tooltip deleteAllTip = new Tooltip("Delete all parts named: " + partName.getText());
                                 deleteAllButton.setTooltip(deleteAllTip);
@@ -462,6 +473,17 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("This part is currently checked out and cannot be deleted.");
+        alert.showAndWait();
+    }
+
+    /**
+     * Alert that the part is currently checked out, so it cannot be deleted
+     */
+    private void typeHasOneCheckedOutError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("At least one " + partName + " is currently checked out, so " +
+                partName + " parts cannot be deleted.");
         alert.showAndWait();
     }
 

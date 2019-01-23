@@ -11,7 +11,7 @@ CREATE PROCEDURE load_parts()
       IF i < 104 THEN
         set j = i;
         insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', 123, 0, 0, current_date, 'root', 0);
+        values ('Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 208 THEN
         set j = i - 103;
         insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)

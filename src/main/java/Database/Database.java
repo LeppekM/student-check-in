@@ -207,7 +207,6 @@ public class Database {
             resultSet = statement.executeQuery(query);
             resultSet.next();
 //            statement.close();
-            System.out.println("HERE: " + resultSet.getInt(1));
             if (resultSet.getInt(1) > 0) {
                 resultSet.close();
                 return true;
@@ -267,6 +266,23 @@ public class Database {
             e.printStackTrace();
         }
         return barcodes;
+    }
+
+    public ArrayList<String> getAllPartIDsForPartName(String partName) {
+        String query = "SELECT partID FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
+        ArrayList<String> partIDs = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                partIDs.add(resultSet.getString("partID"));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return partIDs;
     }
 
     public ArrayList<String> getAllSerialNumbersForPartName(String partName) {
