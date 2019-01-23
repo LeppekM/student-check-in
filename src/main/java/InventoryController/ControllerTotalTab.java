@@ -368,7 +368,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             URL myFxmlURL = ClassLoader.getSystemResource("fxml/AddPart.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load(myFxmlURL);
-            Scene scene = new Scene(root, 400, 400);
+            Scene scene = new Scene(root, 400, 450);
             stage.setTitle("Add a Part");
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
