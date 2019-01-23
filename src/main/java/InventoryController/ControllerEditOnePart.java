@@ -8,15 +8,10 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import com.jfoenix.controls.JFXSpinner;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -71,7 +66,6 @@ public class ControllerEditOnePart extends ControllerEditPart {
 
     private void disableFields() {
         nameField.setEditable(false);
-        barcodeField.setEditable(false);
         manufacturerField.setEditable(false);
         vendorField.setEditable(false);
         priceField.setEditable(false);
@@ -80,6 +74,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
     private void setFieldValidator() {
         stageWrapper.requiredInputValidator(serialField);
         stageWrapper.requiredInputValidator(locationField);
+        stageWrapper.acceptIntegerOnly(barcodeField);
     }
 
     /**
@@ -166,42 +161,74 @@ public class ControllerEditOnePart extends ControllerEditPart {
      */
     private boolean validateInput() {
         boolean isValid = true;
-        if (!validateUniqueSerialNumber()) {
-            uniqueSerialNumberError();
+        String originalPartName = part.getPartName();
+        String originalBarcode = part.getBarcode();
+        String originalSerialNumber = part.getSerialNumber();
+
+        // make sure all fields are filled in
+        if (!validateAllFieldsFilledIn(serialField.getText(), barcodeField.getText(), locationField.getText())) {
             isValid = false;
+            fieldErrorAlert();
+        } else {
+
+            // if parts with the given name do not have a unique barcode
+            if (!database.hasUniqueBarcodes(originalPartName)) {
+
+                // if the user tried to edit the parts' barcode
+                if (!barcodeField.getText().equals(originalBarcode)) {
+                    isValid = false;
+                    commonBarcodeError(part.getPartName());
+                }
+
+            // if the input barcode is not still unique
+            } else if (!validateUniqueBarcode()) {
+                isValid = false;
+                uniqueBarcodeError(originalPartName);
+            }
+
+            // if parts with the given name do not have a unique serial number
+            if (!database.hasUniqueSerialNumbers(originalPartName)) {
+
+                // if the user tried to edit the parts' serial number
+                if (!serialField.getText().equals(originalSerialNumber)) {
+                    isValid = false;
+                    commonSerialNumberError(part.getPartName());
+                }
+
+            // if the input serial number is not still unique
+            } else if (!validateUniqueSerialNumber()) {
+                isValid = false;
+                uniqueSerialNumberError(originalPartName);
+            }
         }
-//        if (!validateAllFieldsFilledIn(nameField.getText(), serialField.getText(),
-//                manufacturerField.getText(),
-//                priceField.getText().replaceAll(",", ""),
-//                locationField.getText(),
-//                barcodeField.getText())) {
-//            isValid = false;
-//            fieldErrorAlert();
-//        } else if (vendorList.getValue() == null) {
-//            isValid = false;
-//            nullVendorAlert();
-//        }
         return isValid;
     }
 
     private boolean validateUniqueSerialNumber() {
-        ArrayList<String> serialNumbers = database.getSerialNumbersForBarcode(barcodeField.getText(),"" + part.getPartID());
+        ArrayList<String> serialNumbers = database.getOtherSerialNumbersForPartName(nameField.getText(),"" + part.getPartID());
         return !serialNumbers.contains(serialField.getText());
+    }
+
+    private boolean validateUniqueBarcode() {
+        ArrayList<String> barcodes = database.getOtherBarcodesForPartName(nameField.getText(), "" + part.getPartID());
+        return !barcodes.contains(barcodeField.getText());
+    }
+
+    private void uniquePartNameError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("A part with that name already exists. Choose a different one.");
+        alert.showAndWait();
     }
 
     /**
      * This method ensures that the inputted fields are not empty.
      * @return true if the fields are not empty, false otherwise
      */
-    protected boolean validateAllFieldsFilledIn(String partName, String serialNumber,
-                                                String manufacturer, String price,
-                                                String location, String barcode) {
-        return partName != null && partName.trim() != ""
-                && serialNumber != null && serialNumber.trim() != ""
-                && manufacturer != null && manufacturer.trim() != ""
-                && price != null && price.trim() != ""
-                && location != null && location.trim() != ""
-                && barcode != null && barcode.trim() != "";
+    protected boolean validateAllFieldsFilledIn(String serialNumber, String barcode, String location) {
+        return serialNumber != null && !serialNumber.trim().equals("")
+                && barcode != null && !barcode.trim().equals("")
+                && location != null && !location.trim().equals("");
     }
 
     /**
@@ -239,6 +266,20 @@ public class ControllerEditOnePart extends ControllerEditPart {
         alert.showAndWait();
     }
 
+    private void commonBarcodeError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have the same barcode, so you cannot change one.");
+        alert.showAndWait();
+    }
+
+    private void commonSerialNumberError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have the same serial number, so you cannot change one.");
+        alert.showAndWait();
+    }
+
     private void nullVendorAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -246,21 +287,17 @@ public class ControllerEditOnePart extends ControllerEditPart {
         alert.showAndWait();
     }
 
-    private void uniqueSerialNumberError() {
+    private void uniqueSerialNumberError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("The serial number must be unique.");
+        alert.setContentText(partName + " parts must have unique serial numbers.");
         alert.showAndWait();
     }
 
-    /**
-     * Creates an alert informing user to enter digits
-     */
-    private void invalidNumberAlert(){
+    private void uniqueBarcodeError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("Please make sure you are entering a number into the price field");
-
+        alert.setContentText(partName + " parts must have unique barcodes.");
         alert.showAndWait();
     }
 

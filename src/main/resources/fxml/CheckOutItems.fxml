@@ -2,32 +2,36 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" style="jfx-rippler-fill: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
    <children>
-      <JFXTextField fx:id="studentID" layoutX="346.0" layoutY="160.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" />
-      <JFXTextField fx:id="barcode" layoutX="347.0" layoutY="221.0" prefHeight="24.0" prefWidth="125.0" />
-      <JFXCheckBox fx:id="extended" layoutX="347.0" layoutY="332.0" onAction="#extended" text="Extended?" />
-      <JFXTextField fx:id="quantity" layoutX="347.0" layoutY="282.0" prefHeight="25.0" prefWidth="125.0" text="1" />
-      <Label layoutX="346.0" layoutY="268.0" text="Quantity" />
-      <Label layoutX="320.0" layoutY="77.0" text="Checkout/In Item">
+      <JFXTextField fx:id="studentID" layoutX="342.0" layoutY="101.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" />
+      <JFXTextField fx:id="barcode" layoutX="343.0" layoutY="162.0" prefHeight="24.0" prefWidth="125.0" />
+      <JFXCheckBox fx:id="extended" checkedColor="#043993" layoutX="345.0" layoutY="279.0" onAction="#isExtended" text="Extended?" />
+      <JFXTextField fx:id="quantity" layoutX="343.0" layoutY="223.0" prefHeight="25.0" prefWidth="125.0" text="1" />
+      <Label fx:id="quantityLabel" layoutX="282.0" layoutY="234.0" text="Quantity" />
+      <Label fx:id="checkoutHeader" layoutX="298.0" layoutY="16.0" text="Checkout/In Item">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="345.0" layoutY="143.0" text="Scan Student ID" />
-      <Label layoutX="346.0" layoutY="208.0" text="Scan Barcode" />
-      <JFXSpinner fx:id="loadIndicator" layoutX="515.0" layoutY="386.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
-      <JFXButton fx:id="home" layoutX="730.0" layoutY="21.0" mnemonicParsing="false" onAction="#returnHome">
+      <Label layoutX="245.0" layoutY="111.0" text="Scan Student ID" />
+      <Label layoutX="257.0" layoutY="174.0" text="Scan Barcode" />
+      <JFXSpinner fx:id="loadIndicator" layoutX="511.0" layoutY="354.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
+      <JFXButton fx:id="home" layoutX="17.0" layoutY="15.0" mnemonicParsing="false" onAction="#returnHome">
          <graphic>
             <ImageView fitHeight="35.0" fitWidth="39.0">
                <image>
@@ -36,17 +40,143 @@
             </ImageView>
          </graphic>
       </JFXButton>
-      <JFXCheckBox fx:id="faulty" layoutX="348.0" layoutY="331.0" text="Faulty?" visible="false">
+      <JFXCheckBox fx:id="faulty" checkedColor="#043993" layoutX="345.0" layoutY="278.0" onAction="#isFaulty" text="Faulty?" visible="false">
          <opaqueInsets>
             <Insets top="-3.0" />
          </opaqueInsets></JFXCheckBox>
-      <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" layoutX="426.0" layoutY="377.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Reset" textFill="#043993" />
-      <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="20.0" layoutY="24.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" text="Switch to Student Info" />
-      <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="326.0" layoutY="377.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
+      <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" layoutX="417.0" layoutY="329.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Reset" textFill="#043993" />
+      <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="640.0" layoutY="16.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" text="Switch to Student Info" />
+      <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="317.0" layoutY="329.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
       <Label layoutX="14.0" layoutY="589.0" text="Current Item Status:" />
-      <Label fx:id="itemStatus" layoutX="127.0" layoutY="589.0" />
+      <Label fx:id="itemStatus" layoutX="127.0" layoutY="589.0" text="Checking Out" />
       <Label layoutX="14.0" layoutY="561.0" text="Student Name:" />
       <Label fx:id="studentNameText" layoutX="101.0" layoutY="561.0" />
-      <TextArea fx:id="faultyTextArea" layoutX="286.0" layoutY="372.0" prefHeight="95.0" prefWidth="265.0" promptText="Please enter description of fault" visible="false" />
+      <TextArea fx:id="faultyTextArea" layoutX="282.0" layoutY="327.0" prefHeight="95.0" prefWidth="265.0" promptText="Please enter description of fault" visible="false" />
+      <JFXTextField fx:id="courseName" layoutX="342.0" layoutY="289.0" onKeyReleased="#moveToBarcodeField" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <JFXTextField fx:id="profName" layoutX="343.0" layoutY="350.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <Label fx:id="dueAt" layoutX="291.0" layoutY="424.0" text="Due At" visible="false" />
+      <Label fx:id="courseNameLabel" layoutX="256.0" layoutY="299.0" text="Course Name" visible="false" />
+      <Label fx:id="profNameLabel" layoutX="243.0" layoutY="364.0" text="Instructor Name" visible="false" />
+      <JFXDatePicker fx:id="datePicker" defaultColor="#4059a9" layoutX="343.0" layoutY="412.0" visible="false" />
+      <JFXToggleButton fx:id="checkingOutToggle" layoutX="352.0" layoutY="34.0" onAction="#checkoutToggle" selected="true" text="Check Out">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </JFXToggleButton>
+      <Label layoutX="310.0" layoutY="55.0" text="Check In">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <HBox layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0">
+         <children>
+            <JFXButton fx:id="addNewBarcode" onAction="#newBarcode" prefHeight="36.0" prefWidth="0.0" visible="false">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="31.0">
+                     <image>
+                        <Image url="@../images/AddNewBarcode.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" visible="false" />
+            <JFXButton fx:id="deleteBarcode" prefHeight="35.0" prefWidth="42.0" visible="false">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="14.0">
+                     <image>
+                        <Image url="@../images/xButton.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </HBox>
+      <JFXTextField fx:id="barcode2" layoutX="343.0" layoutY="224.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <HBox fx:id="HBoxBarcode2" layoutX="480.0" layoutY="227.0" prefHeight="43.0" prefWidth="155.0" visible="false">
+         <children>
+            <JFXButton fx:id="addNewBarcode2" onAction="#newBarcode2" prefHeight="36.0" prefWidth="0.0">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="31.0">
+                     <image>
+                        <Image url="@../images/AddNewBarcode.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <Spinner fx:id="newQuantity2" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+            <JFXButton fx:id="deleteBarcode2" prefHeight="35.0" prefWidth="42.0">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="14.0">
+                     <image>
+                        <Image url="@../images/xButton.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </HBox>
+      <JFXTextField fx:id="barcode3" layoutX="343.0" layoutY="284.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <HBox fx:id="HBoxBarcode3" layoutX="480.0" layoutY="287.0" prefHeight="43.0" prefWidth="155.0" visible="false">
+         <children>
+            <JFXButton fx:id="addNewBarcode3" onAction="#newBarcode3" prefHeight="36.0" prefWidth="0.0">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="31.0">
+                     <image>
+                        <Image url="@../images/AddNewBarcode.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <Spinner fx:id="newQuantity3" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+            <JFXButton fx:id="deleteBarcode3" prefHeight="35.0" prefWidth="42.0">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="14.0">
+                     <image>
+                        <Image url="@../images/xButton.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </HBox>
+      <JFXTextField fx:id="barcode4" layoutX="343.0" layoutY="345.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <HBox fx:id="HBoxBarcode4" layoutX="480.0" layoutY="348.0" prefHeight="43.0" prefWidth="155.0" visible="false">
+         <children>
+            <JFXButton fx:id="addNewBarcode4" onAction="#newBarcode4" prefHeight="36.0" prefWidth="0.0">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="31.0">
+                     <image>
+                        <Image url="@../images/AddNewBarcode.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <Spinner fx:id="newQuantity4" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+            <JFXButton fx:id="deleteBarcode4" prefHeight="35.0" prefWidth="42.0">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="14.0">
+                     <image>
+                        <Image url="@../images/xButton.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </HBox>
+      <JFXTextField fx:id="barcode5" layoutX="343.0" layoutY="406.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <HBox fx:id="HBoxBarcode5" layoutX="480.0" layoutY="409.0" prefHeight="43.0" prefWidth="155.0" visible="false">
+         <children>
+            <Spinner fx:id="newQuantity5" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+            <JFXButton fx:id="deleteBarcode5" prefHeight="35.0" prefWidth="42.0">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="14.0">
+                     <image>
+                        <Image url="@../images/xButton.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

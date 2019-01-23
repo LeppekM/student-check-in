@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="root" fx:id="sceneAddPart" prefHeight="373.0000999999975" prefWidth="410.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerAddPart">
+<VBox id="root" fx:id="sceneAddPart" prefHeight="450.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerAddPart">
   <children>
     <AnchorPane prefHeight="468.0" prefWidth="410.0">
       <children>
-        <Pane prefHeight="374.0" prefWidth="410.0">
+        <Pane prefHeight="450.0" prefWidth="410.0">
           <children>
             <Label layoutX="75.0" layoutY="14.0" text="Part Name:">
               <font>
@@ -23,25 +23,31 @@
               </font>
             </Label>
             <Label id="nameLabel" font="$x1" layoutX="45.0" layoutY="55.0" text="Serial Number:" />
-            <Label id="nameLabel" font="$x1" layoutX="52.0" layoutY="94.0" text="Manufacturer:" />
-            <Label id="nameLabel" font="$x1" layoutX="90.0" layoutY="138.0" text="Quantity:" />
-            <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="181.0" text="Price:" />
-            <Label id="nameLabel" font="$x1" layoutX="100.0" layoutY="226.0" text="Vendor:" />
-            <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="269.0" text="Location:" />
+            <Label id="nameLabel" font="$x1" layoutX="52.0" layoutY="148.0" text="Manufacturer:" />
+            <Label id="nameLabel" font="$x1" layoutX="90.0" layoutY="192.0" text="Quantity:" />
+            <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="235.0" text="Price:" />
+            <Label id="nameLabel" font="$x1" layoutX="100.0" layoutY="280.0" text="Vendor:" />
+            <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="323.0" text="Location:" />
                   <JFXTextField fx:id="nameField" layoutX="193.0" layoutY="15.0" />
                   <JFXTextField fx:id="serialField" layoutX="193.0" layoutY="56.0" />
-                  <JFXTextField fx:id="manufacturerField" layoutX="193.0" layoutY="95.0" />
-                  <JFXTextField fx:id="quantityField" layoutX="193.0" layoutY="139.0" />
-                  <JFXTextField fx:id="priceField" layoutX="193.0" layoutY="181.0" />
-                  <JFXTextField fx:id="locationField" layoutX="193.0" layoutY="270.0" />
-                  <JFXButton buttonType="RAISED" layoutX="260.0" layoutY="322.0" onAction="#submitItem" ripplerFill="BLACK" style="-fx-border-color: #DC143C;" text="Submit" textOverrun="CLIP">
+                  <JFXTextField fx:id="barcodeField" layoutX="192.0" layoutY="104.0" />
+                  <JFXTextField fx:id="manufacturerField" layoutX="193.0" layoutY="149.0" />
+                  <JFXTextField fx:id="quantityField" layoutX="193.0" layoutY="193.0" />
+                  <JFXTextField fx:id="priceField" layoutX="193.0" layoutY="235.0" />
+                  <JFXTextField fx:id="locationField" layoutX="193.0" layoutY="324.0" />
+                  <JFXButton buttonType="RAISED" layoutX="256.0" layoutY="378.0" onAction="#submitItem" ripplerFill="BLACK" style="-fx-border-color: #DC143C;" text="Submit" textOverrun="CLIP">
                      <effect>
                         <Blend mode="RED" />
                      </effect>
                   </JFXButton>
-                  <JFXButton layoutX="328.0" layoutY="322.0" onAction="#goBack" style="-fx-border-color: #DC143C;" text="Cancel" />
-                  <JFXComboBox fx:id="vendorField" editable="true" layoutX="193.0" layoutY="228.0" prefHeight="25.0" prefWidth="135.0" />
+                  <JFXButton layoutX="324.0" layoutY="378.0" onAction="#goBack" style="-fx-border-color: #DC143C;" text="Cancel" />
+                  <JFXComboBox fx:id="vendorField" editable="true" layoutX="193.0" layoutY="282.0" prefHeight="25.0" prefWidth="135.0" />
                   <JFXSpinner fx:id="loadNotification" layoutX="217.0" layoutY="322.0" prefHeight="27.0" prefWidth="25.0" visible="false" />
+                  <Label id="nameLabel" layoutX="93.0" layoutY="103.0" text="Barcode:">
+                     <font>
+                        <Font size="18.0" fx:id="x11" />
+                     </font>
+                  </Label>
           </children>
         </Pane>
       </children>

@@ -106,7 +106,7 @@ CREATE PROCEDURE load_students()
 drop table if exists parts;
 create table parts (
   partID       int NOT NULL AUTO_INCREMENT,
-  partName     varchar(50),
+  partName     varchar(50) NOT NULL,
   serialNumber varchar(20),
   manufacturer varchar(50),
   price        int,
@@ -169,6 +169,9 @@ create table checkout (
   studentID  int NOT NULL,
   checkoutAt date,
   reservedAt date,
+  prof       varchar(25),
+  course     varchar(25),
+  reason     varchar(200),
   checkinAt  date,
   dueAt      date,
   createdAt  date,

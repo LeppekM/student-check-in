@@ -5,12 +5,14 @@ import Database.SavedPart;
 import Database.Student;
 import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
-import InventoryController.OverduePopUp;
+import InventoryController.OverduePopUpController;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -69,7 +71,7 @@ public class StudentPage {
 
     public void setStudent(Student s) {
         student = s;
-        double overdueFees = 0.00;
+        double overdueFees = overdueFee(student);
         studentName = new Label("");
         studentName.setText(student.getName());
         studentName.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
@@ -80,21 +82,14 @@ public class StudentPage {
         RFID.setText(student.getID() + "");
         RFID.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         fees = new Label("");
-        int[] sID = new int[student.getSavedItems().size()];
-        for (int i = 0; i < student.getSavedItems().size(); i++) {
-            sID[i] = Integer.parseInt(student.getSavedItems().get(i).getCheckID());
-        }
-        for (int j = 0; j < student.getOverdueItems().size(); j++) {
-            int oID = Integer.parseInt(student.getOverdueItems().get(j).getCheckID());
-            boolean result = IntStream.of(sID).anyMatch(x -> x == oID);
-            if (!result) {
-                overdueFees += Double.parseDouble(student.getOverdueItems().get(j).getPrice().get());
-            }
-        }
         fees.setText("Outstanding fees: $" + overdueFees);
         fees.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         date = new Label("");
-        date.setText("Date of last rental: " + student.getDate());
+        if(student.getDate() == null){
+            date.setText("Date of last rental: Never");
+        }else {
+            date.setText("Date of last rental: " + student.getDate());
+        }
         date.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         vbox.getChildren().add(studentName);
         vbox.getChildren().add(email);
@@ -104,6 +99,27 @@ public class StudentPage {
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(5);
         setTables();
+    }
+
+    private double overdueFee(Student s){
+        double overdueFees = 0.0;
+        int[] sID = new int[s.getSavedItems().size()];
+        for (int i = 0; i < s.getSavedItems().size(); i++) {
+            String st = s.getSavedItems().get(i).getCheckID();
+            if (s.getSavedItems().get(i).getCheckID().matches("^[0-9]*")){
+                sID[i] = Integer.parseInt(s.getSavedItems().get(i).getCheckID());
+            }else {
+                sID[i] = Integer.parseInt(s.getSavedItems().get(i).getCheckID().substring(13));
+            }
+        }
+        for (int j = 0; j < s.getOverdueItems().size(); j++) {
+            int oID = Integer.parseInt(s.getOverdueItems().get(j).getCheckID());
+            boolean result = IntStream.of(sID).anyMatch(x -> x == oID);
+            if (!result) {
+                overdueFees += Double.parseDouble(s.getOverdueItems().get(j).getPrice().get());
+            }
+        }
+        return overdueFees;
     }
 
     private void setTables() {
@@ -156,17 +172,28 @@ public class StudentPage {
     }
 
     public void goBack() {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
+//            Parent root = loader.load();
+//            Scene scene = new Scene(root, 789, 620);
+//            Stage stage = new Stage();
+//            ((ControllerCheckoutPage) loader.getController()).initCheckoutObject(checkoutObject);
+//            stage.setResizable(false);
+//            stage.setTitle("Barcode Scanner");
+//            stage.setScene(scene);
+//            stage.getIcons().add(new Image("images/msoe.png"));
+//            stage.show();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/CheckoutItems.fxml"));
+//            String fxml = "/fxml/CheckoutItems.fxml";
+//            URL myFxmlURL = ClassLoader.getSystemResource(fxml);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 789, 620);
-            Stage stage = new Stage();
+            main.getScene().setRoot(root);
             ((ControllerCheckoutPage) loader.getController()).initCheckoutObject(checkoutObject);
-            stage.setResizable(false);
-            stage.setTitle("Barcode Scanner");
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -191,6 +218,7 @@ public class StudentPage {
                 ((CheckoutPopUp) loader.getController()).populate(item);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
+                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -201,7 +229,7 @@ public class StudentPage {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopup.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopUp.fxml"));
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
@@ -209,7 +237,7 @@ public class StudentPage {
                 stage.setScene(scene);
                 int index = oTable.getSelectionModel().getSelectedIndex();
                 OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
-                ((OverduePopUp) loader.getController()).populate(item);
+                ((OverduePopUpController) loader.getController()).populate(item,null);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.show();
             } catch (IOException e) {

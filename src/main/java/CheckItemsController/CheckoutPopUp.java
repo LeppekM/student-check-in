@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CheckoutPopUp extends StudentPage {
@@ -42,6 +43,7 @@ public class CheckoutPopUp extends StudentPage {
     public void savePart(ActionEvent actionEvent) {
         database = new Database();
         Student s = StudentPage.getStudent();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         boolean result = false;
         for (int j = 0; j < s.getSavedItems().size(); j++) {
             int sID = Integer.parseInt(s.getSavedItems().get(j).getCheckID());
@@ -55,13 +57,14 @@ public class CheckoutPopUp extends StudentPage {
             String course = JOptionPane.showInputDialog(null, "Please enter a course code (i.e. CS3840)");
             String reason = JOptionPane.showInputDialog(null, "Please enter a short description why they need it saved");
             s.getSavedItems().add(new SavedPart(student.getText(), part.getText(), coDate.getText(), Integer.parseInt(barcode.getText()),
-                    new Date(System.currentTimeMillis()).toString(), dueDate.getText(), cID.getText(), prof, course, reason));
+                    sdf.format(new Date(System.currentTimeMillis())), dueDate.getText(), cID.getText(), prof, course, reason));
             try {
                 Connection connection = database.getConnection();
                 Statement statement = connection.createStatement();
                 long date = System.currentTimeMillis();
                 java.sql.Date d = new java.sql.Date(date);
-                statement.executeUpdate("UPDATE checkouts SET  reservedAt = date('" + d.toString() + "') WHERE studentID = " + s.getID() + " and checkoutID = " + cID.getText().substring(13) + ";");
+                statement.executeUpdate("UPDATE checkout SET  reservedAt = date('" + d.toString() + "'), prof = '" + prof + "', course = '" + course + "'" +
+                        ", reason = '" + reason + "' WHERE studentID = " + s.getID() + " and checkoutID = " + cID.getText().substring(13) + ";");
             }catch (SQLException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update database");
                 alert.showAndWait();

@@ -41,4 +41,8 @@ public class OverdueTabTableRow extends RecursiveTreeObject<OverdueTabTableRow> 
         return fee;
     }
 
+    public void setFee(String price) {
+        this.fee.set(price);
+    }
+
 }

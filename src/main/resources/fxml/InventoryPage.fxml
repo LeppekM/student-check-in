@@ -39,7 +39,7 @@
         </Tab>
       </tabs>
     </JFXTabPane>
-    <JFXButton fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack">
+    <Button fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack">
       <graphic>
         <ImageView fitHeight="35.0" fitWidth="39.0">
           <image>
@@ -47,6 +47,6 @@
           </image>
         </ImageView>
       </graphic>
-    </JFXButton>
+    </Button>
   </children>
 </AnchorPane>

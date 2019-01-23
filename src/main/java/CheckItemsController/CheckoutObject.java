@@ -2,8 +2,8 @@ package CheckItemsController;
 
 public class CheckoutObject {
 
-    String studentID, barcode, quantity, extendedCourseName, extendedProfessor, extendedReturnDate, faultyDescription;
-    boolean isExtended, isFaulty;
+    private static String studentID, barcode, quantity, extendedCourseName, extendedProfessor, extendedReturnDate, faultyDescription;
+    private static boolean isExtended, isFaulty;
 
     public CheckoutObject(String studentID, String barcode, String quantity, boolean isExtended, boolean isFaulty) {
         this.studentID = studentID;
