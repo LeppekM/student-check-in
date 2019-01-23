@@ -36,6 +36,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
@@ -387,7 +388,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         ArrayList<String> types = getSelctedFilters();
         System.out.println(types);
         if(!types.isEmpty()) {
-            this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 " + getSortTypes(types) + " ORDER BY partID", this.data);
+            this.data = selectParts("SELECT * from parts WHERE isDeleted = 0" + getSortTypes(types) + " ORDER BY partID", this.data);
 
             for (int i = 0; i < data.size(); i++) {
                 Button button = new Button("Edit");
@@ -411,19 +412,28 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * @author Matt Karcz
      */
     public String getSortTypes(ArrayList<String> types){
-        System.out.println(types);
         String result = "";
         if (types.contains("All")){
             return result;
+        } else{
+            result = " AND ";
         }
         if (types.contains("Checked Out")){
-            result.concat(" AND isFaulty = 1");
+            if(!result.equals(" AND "))
+                result = result + " OR ";
+            result = result + " isCheckedOut = 1";
         }
         if (types.contains("Overdue")){
-            result.concat(" AND isFaulty = 1");
+            if(!result.equals(" AND "))
+                result = result + " OR ";
+            long longDate = System.currentTimeMillis();
+            Date date = new java.sql.Date(longDate);
+            result = result + " checkout_parts.dueAt < date('" + date.toString() + "')";
         }
         if (types.contains("Faulty")){
-            result.concat(" AND isFaulty = 1");
+            if(!result.equals(" AND "))
+                result = result + " OR ";
+            result = result + "isFaulty = 1";
         }
         return result;
     }

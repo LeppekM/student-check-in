@@ -103,6 +103,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
      * @author Matthew Karcz
      */
     public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
+        System.out.println(rawStatement);
         Statement currentStatement = null;
         try {
             Connection connection = database.getConnection();
