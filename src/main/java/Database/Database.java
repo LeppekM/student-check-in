@@ -16,7 +16,7 @@ public class Database {
     //DB root pass: Userpassword123
     public static final String username = "root";
     public static final String password = "Userpassword123";
-    static String host = "jdbc:mysql://192.168.2.4:3306";
+    static String host = "jdbc:mysql://localhost:3306";
     static final String dbdriver = "com.mysql.jdbc.Driver";
     static final String dbname = "student_check_in";
     static Connection connection;
