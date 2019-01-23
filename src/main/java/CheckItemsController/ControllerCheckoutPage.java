@@ -7,6 +7,8 @@ import com.jfoenix.controls.*;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -72,16 +74,51 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private NewBarcodeHelper barcodeHelper = new NewBarcodeHelper();
     private ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
     private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
-
-
-
+    private String partNameFromBarcode;
+    private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         home.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
-        //setItemStatus();
+        setItemStatus();
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+            studentInfo.setDisable(false);
+        } else {
+            studentInfo.setDisable(true);
+        }
+
+        quantity.setDisable(true);
+        barcode.setOnKeyReleased(event -> {
+            if (containsNumber(barcode.getText())) {
+                partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
+                if (database.hasUniqueBarcodes(partNameFromBarcode)) {
+                    quantity.setDisable(true);
+                    quantity.setText("1");
+                } else {
+                    quantity.setDisable(false);
+                }
+            }
+        });
+        studentID.setOnKeyReleased(event -> {
+            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+                studentInfo.setDisable(false);
+            } else {
+                studentInfo.setDisable(true);
+            }
+        });
+
+        // only allows user to enter 5 digits
+        studentID.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$")) {
+                    studentID.setText(oldValue);
+                }
+            }
+        });
+        setItemStatus();
         getStudentName();
         unlockFields();
         unlockExtended();
@@ -95,32 +132,47 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         barcode.setText(checkoutObject.getBarcode());
         quantity.setText(checkoutObject.getQuantity());
         if (checkoutObject.isExtended()) {
+            extended.setSelected(true);
             isExtended();
             courseName.setText(checkoutObject.getExtendedCourseName());
             profName.setText(checkoutObject.getExtendedProfessor());
-//            datePicker.setValue(LocalDate.parse(checkoutObject.getExtendedReturnDate()));
+            datePicker.setValue(checkoutObject.getExtendedReturnDate());
         } else if (checkoutObject.isFaulty()) {
             faulty.setSelected(true);
             faultyTextArea.setText(checkoutObject.getFaultyDescription());
+        }
+
+        // enable the switch to student info button iff the student ID field contains a student ID
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+            studentInfo.setDisable(false);
+        } else {
+            studentInfo.setDisable(true);
+        }
+
+        // enable the quantity field iff the barcode field contains a barcode for a part with
+        // unique barcodes
+        if (containsNumber(barcode.getText())) {
+            partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
+            if (database.hasUniqueBarcodes(partNameFromBarcode)) {
+                quantity.setDisable(true);
+                quantity.setText("1");
+            } else {
+                quantity.setDisable(false);
+            }
         }
     }
 
     /**
      * Sets cursor to next field
      */
-    public void moveToBarcodeField() {
-        studentInfo.setDisable(true);
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5,}$")) {
-            Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
-            if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()){
-                //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
-                alert.initStyle(StageStyle.UTILITY);
-                alert.showAndWait();
-            }
-            //barcode.requestFocus();
-            studentInfo.setDisable(false);
+    public void checkStudentHasOverdue() {
+        Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
+        if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
+            alert.initStyle(StageStyle.UTILITY);
+            alert.showAndWait();
         }
+        //barcode.requestFocus();
     }
 
     /**
@@ -131,13 +183,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         if (thisStudent.getOverdueItems().size() == 0 || !checkingOutToggle.isSelected()) {
             if (extendedCheckoutIsSelected()) {
                 extendedCheckoutHelper();
-            } else if(itemIsBeingCheckedOut()){
-                checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
             } else if(itemBeingCheckedBackInIsFaulty()){
                 faultyCheckinHelper();
+            } else if(itemIsBeingCheckedIn()){
+                checkOut.setItemtoCheckedin(getBarcode());
             }
             else {
-                checkOut.setItemtoCheckedin(getBarcode());
+                checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
             }
             reset();
         }else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
@@ -155,17 +207,33 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     }
 
     private void faultyCheckinHelper(){
-        checkOut.setItemtoCheckedin(getBarcode());
         faultyCheckIn.setPartToFaultyStatus(getBarcode());
         faultyCheckIn.addToFaultyTable(getBarcode(), faultyTextArea.getText());
+        checkOut.setItemtoCheckedin(getBarcode());
+
     }
 
 
-    private boolean itemIsBeingCheckedOut(){
-        return checkingOutToggle.isSelected();
+    private boolean itemIsBeingCheckedIn(){
+        checkoutParts = checkOut.returnCheckedOutObjects();
+        int studentID = getstudentID();
+
+        // getStudentID returns -1 if the field does not contain a number
+        if (studentID != -1) {
+            CheckedOutPartsObject currentInfo = new CheckedOutPartsObject(getBarcode(), getstudentID());
+            for (int i = 0; i < checkoutParts.size(); i++) {
+                if (checkoutParts.get(i).equals(currentInfo)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    private boolean extendedCheckoutIsSelected(){return checkingOutToggle.isSelected() && extended.isSelected();}
-    private boolean itemBeingCheckedBackInIsFaulty(){return !checkingOutToggle.isSelected() && faulty.isSelected();}
+
+    private boolean extendedCheckoutIsSelected(){return !itemIsBeingCheckedIn() && extended.isSelected();}
+    private boolean itemBeingCheckedBackInIsFaulty(){return itemIsBeingCheckedIn() && faulty.isSelected();}
+
+
 
     /**
      * Returns to home, contains check if fields are filled out
@@ -261,6 +329,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 StudentPage sp = loader.getController();
                 sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
                 checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), quantity.getText(), extended.isSelected(), faulty.isSelected());
+                if (extended.isSelected()) {
+                    checkoutObject.initExtendedInfo(courseName.getText(), profName.getText(), datePicker.getValue());
+                } else if (faulty.isSelected()) {
+                    checkoutObject.initFaultyInfo(faultyTextArea.getText());
+                }
                 sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
             }catch (IOException e){
@@ -288,6 +361,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         stageWrapper.acceptIntegerOnly(barcode);
     }
 
+    private void setItemStatus(){
+        barcode.focusedProperty().addListener((ov, oldv, newV)->{
+            if(!newV && !barcode.getText().isEmpty()){
+                if(itemIsBeingCheckedIn()){
+                    setCheckinInformation();
+                }
+                else {
+                    setCheckoutInformation();
+                }
+            }
+        });
+    }
+
     /**
      * Gets barcode as text, returns as int
      * @return barcode as integer
@@ -309,7 +395,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @return StudentID as integer
      */
     private int getstudentID(){
-        return Integer.parseInt(studentID.getText());
+        if (containsNumber(studentID.getText())) {
+            return Integer.parseInt(studentID.getText());
+        } else {
+            return -1;
+        }
     }
 
     private String getProfName(){
@@ -352,12 +442,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         int translateUp = -190;
         if(extended.isSelected()){
             setExtendedTransition(translateDown, true);
-            checkingOutToggle.setDisable(true);
+            setCheckoutItemsDisable(true);
         }
         else {
             resetExtended();
             setExtendedTransition(translateUp, false);
-            checkingOutToggle.setDisable(false);
+            setCheckoutItemsDisable(false);
         }
     }
 
@@ -403,13 +493,18 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         int translateFaultyUp = -125;
         if(faulty.isSelected()) {
             setFaultyTransition(translateFaultyDown, true);
-            checkingOutToggle.setDisable(true);
+            setCheckoutItemsDisable(true);
         }
         else {
             setFaultyTransition(translateFaultyUp, false);
             faultyTextArea.setText("");
-            checkingOutToggle.setDisable(false);
+            setCheckoutItemsDisable(false);
         }
+    }
+
+    private void setCheckoutItemsDisable(boolean value){
+        barcode.setDisable(value);
+        studentID.setDisable(value);
     }
 
 
@@ -485,14 +580,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
-    public void checkoutToggle(){
-        if(checkingOutToggle.isSelected()){
-            setCheckoutInformation();
-        }
-        else {
-            setCheckinInformation();
-        }
-    }
 
     public void newBarcode(){
         setNewBarcodeFieldsHelper();
@@ -532,5 +619,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         barcode4.setVisible(true);
     }
 
+    private static boolean containsNumber(String input){
+        boolean parsable = true;
+        try{
+            Integer.parseInt(input);
+        } catch (Exception e) {
+            parsable = false;
+        }
+        return parsable;
+    }
 
 }

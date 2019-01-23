@@ -167,6 +167,7 @@ create table checkout (
   checkoutID int NOT NULL AUTO_INCREMENT,
   partID     int NOT NULL,
   studentID  int NOT NULL,
+  barcode int NOT NULL,
   checkoutAt date,
   reservedAt date,
   prof       varchar(25),

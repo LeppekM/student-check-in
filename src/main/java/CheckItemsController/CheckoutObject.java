@@ -1,9 +1,12 @@
 package CheckItemsController;
 
+import java.time.LocalDate;
+
 public class CheckoutObject {
 
-    private static String studentID, barcode, quantity, extendedCourseName, extendedProfessor, extendedReturnDate, faultyDescription;
+    private static String studentID, barcode, quantity, extendedCourseName, extendedProfessor, faultyDescription;
     private static boolean isExtended, isFaulty;
+    private LocalDate extendedReturnDate;
 
     public CheckoutObject(String studentID, String barcode, String quantity, boolean isExtended, boolean isFaulty) {
         this.studentID = studentID;
@@ -13,7 +16,7 @@ public class CheckoutObject {
         this.isFaulty = isFaulty;
     }
 
-    public void initExtendedInfo(String extendedCourseName, String extendedProfessor, String extendedReturnDate) {
+    public void initExtendedInfo(String extendedCourseName, String extendedProfessor, LocalDate extendedReturnDate) {
         this.extendedCourseName = extendedCourseName;
         this.extendedProfessor = extendedProfessor;
         this.extendedReturnDate = extendedReturnDate;
@@ -35,7 +38,7 @@ public class CheckoutObject {
         return extendedProfessor;
     }
 
-    public String getExtendedReturnDate() {
+    public LocalDate getExtendedReturnDate() {
         return extendedReturnDate;
     }
 

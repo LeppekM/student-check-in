@@ -73,6 +73,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
 
     private void setFieldValidator() {
         stageWrapper.requiredInputValidator(serialField);
+        stageWrapper.requiredInputValidator(barcodeField);
         stageWrapper.requiredInputValidator(locationField);
         stageWrapper.acceptIntegerOnly(barcodeField);
     }

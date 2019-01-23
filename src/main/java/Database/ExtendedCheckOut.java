@@ -10,8 +10,8 @@ import java.sql.SQLException;
 public class ExtendedCheckOut {
 
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-    private final String extendedCheckout = "INSERT INTO checkout (partID, studentID, checkoutAt, prof, course, dueAt)\n" +
-            "VALUE(?,?,?,?,?,?);";
+    private final String extendedCheckout = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, prof, course, dueAt)\n" +
+            "VALUE(?,?,?,?,?,?,?);";
     private final String getPartIDtoAdd = "SELECT partID \n" +
             "FROM parts \n" +
             "WHERE barcode = ? \n" +
@@ -50,10 +50,11 @@ public class ExtendedCheckOut {
         try {
             preparedStatement.setInt(1, partID);
             preparedStatement.setInt(2, studentID);
-            preparedStatement.setString(3, helper.getCurrentDate());
-            preparedStatement.setString(4, profName);
-            preparedStatement.setString(5, courseName);
-            preparedStatement.setString(6, dueDate);
+            preparedStatement.setInt(3, barcode);
+            preparedStatement.setString(4, helper.getCurrentDate());
+            preparedStatement.setString(5, profName);
+            preparedStatement.setString(6, courseName);
+            preparedStatement.setString(7, dueDate);
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
