@@ -17,18 +17,18 @@ public class HistoryParts {
     private static Connection connection;
 
     private static final String HISTORY_QUERY = "SELECT studentName, partName, serialNumber, " +
-            "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
+            "CASE WHEN checkout.checkoutAt < checkout.checkedinAt " +
             "THEN 'In' ELSE 'Out' END AS 'Status', " +
-            "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
-            "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END AS 'date' " +
+            "CASE WHEN checkout.checkoutAt < checkout.checkedinAt " +
+            "THEN checkout_parts.checkedInAt ELSE checkout.checkoutAt END AS 'date' " +
             "FROM parts " +
-            "INNER JOIN checkout_parts ON parts.partID = checkout_parts.partID " +
-            "INNER JOIN checkouts ON checkout_parts.checkoutID = checkouts.checkoutID " +
-            "INNER JOIN students ON checkouts.studentID = students.studentID " +
+            "INNER JOIN checkout ON parts.partID = checkout.partID " +
+            "INNER JOIN checkout ON checkout.checkoutID = checkout.checkoutID " +
+            "INNER JOIN students ON checkout.studentID = students.studentID " +
             "WHERE parts.isDeleted = 0 " +
             "ORDER BY CASE " +
-            "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
-            "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END DESC;";
+            "WHEN checkout.checkoutAt < checkout.checkedinAt " +
+            "THEN checkout.checkedinAt ELSE checkout.checkoutAt END DESC;";
 
     private Statement statement;
     private String studentName, partName, serialNumber, status, date;
