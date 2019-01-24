@@ -113,7 +113,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                     close();
                 }
             } else {
-                if (!barcodeField.getText().equals(existing.getBarcode()) || !serialField.getText().equals(existing.getSerialNumber())) {
+                if (!database.hasUniqueBarcodes(partName) && (!barcodeField.getText().equals(existing.getBarcode()) || !serialField.getText().equals(existing.getSerialNumber()))) {
                     barcodeAndSerialNumberMustBothBeUniqueOrCommonError();
                 } else {
                     addPart.addUniqueItems(setPartFields(), database, quantity);
