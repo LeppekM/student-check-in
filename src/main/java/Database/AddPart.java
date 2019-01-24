@@ -15,9 +15,7 @@ public class AddPart {
 
     VendorInformation vendorInformation = new VendorInformation();
 
-    Database database = new Database();
-
-    public int[] addCommonItems(Part part, int quantity) {
+    public int[] addCommonItems(Part part, Database database, int quantity) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             Part existing = database.selectPartByPartName(part.getPartName());
             if (existing == null || (part.getBarcode().equals(existing.getBarcode())
@@ -43,16 +41,16 @@ public class AddPart {
      * This method adds an item to the database
      * @param part The part to be added
      */
-    public int[] addUniqueItems(Part part, int quantity){
+    public int[] addUniqueItems(Part part, Database database, int quantity){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             int inputBarcode = Integer.parseInt(part.getBarcode());
             int inputSerialNumber = Integer.parseInt(part.getSerialNumber());
             for (int i = 0; i < quantity; i++) {
-                while (duplicateBarcode(part.getPartName(), inputBarcode)) {
+                while (duplicateBarcode(part.getPartName(), database, inputBarcode)) {
                     inputBarcode++;
                 }
 
-                while (duplicateSerialNumber(part.getSerialNumber(), inputSerialNumber)) {
+                while (duplicateSerialNumber(part.getSerialNumber(), database, inputSerialNumber)) {
                     inputSerialNumber++;
                 }
 
@@ -67,12 +65,12 @@ public class AddPart {
         }
     }
 
-    public boolean duplicateBarcode(String partName, int barcode) {
+    public boolean duplicateBarcode(String partName, Database database, int barcode) {
         return database.getAllBarcodesForPartName(partName).contains("" + barcode)
                 || database.getUniqueBarcodesBesidesPart(partName).contains("" + barcode);
     }
 
-    public boolean duplicateSerialNumber(String partName, int serialNumber) {
+    public boolean duplicateSerialNumber(String partName, Database database, int serialNumber) {
         return database.getAllSerialNumbersForPartName(partName).contains("" + serialNumber);
     }
 
