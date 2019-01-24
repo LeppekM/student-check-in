@@ -20,7 +20,7 @@
             <JFXTreeTableView fx:id="coTable" layoutX="31.5" layoutY="337.0" onMouseClicked="#coPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@../css/TableStyle.css" />
             <JFXTreeTableView fx:id="oTable" layoutX="294.5" layoutY="337.0" onMouseClicked="#oPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@../css/TableStyle.css" />
             <JFXTreeTableView fx:id="sTable" layoutX="557.5" layoutY="337.0" onMouseClicked="#sPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@../css/TableStyle.css" />
-            <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#goHome" stylesheets="@../css/ButtonStyle.css">
+            <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#goHome" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -29,7 +29,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button layoutX="10.0" layoutY="16.0" mnemonicParsing="false" onAction="#goBack" stylesheets="@../css/ButtonStyle.css">
+            <Button layoutX="10.0" layoutY="16.0" mnemonicParsing="false" onAction="#goBack" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                      <image>

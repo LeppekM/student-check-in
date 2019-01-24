@@ -1,8 +1,10 @@
 package InventoryController;
 
 import Database.*;
+import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSpinner;
+import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -41,7 +43,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public TextField quantityField;
 
     @FXML
-    public TextField barcodeField;
+    public JFXTextField barcodeField;
 
     @FXML
     public TextField priceField;
@@ -63,6 +65,8 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showVendors();
+        StageWrapper stageWrapper = new StageWrapper();
+        stageWrapper.acceptIntegerOnly(barcodeField);
     }
 
     /**
@@ -86,10 +90,62 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * Helper method that runs when adding a new part
      */
     private void submitTasks(){
-        setPartFields();
-        addPart.addItem(setPartFields());
-        partAddedSuccess();
-        close();
+        String partName = nameField.getText();
+        int quantity = Integer.parseInt(quantityField.getText());
+        if (database.hasPartName(partName)) {
+            Part existing = database.selectPartByPartName(setPartFields().getPartName());
+            if (quantity > 1) {
+                if (!barcodeField.getText().equals(existing.getBarcode())) {
+                    mustBeCommonBarcodeError(partName);
+                } else if (duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
+                    barcodeAlreadyExistsError();
+                } else if (!serialField.getText().equals(existing.getSerialNumber())) {
+                    mustBeCommonSerialNumberError(partName);
+                } else if (!manufacturerField.getText().equals(existing.getManufacturer())
+                            || !priceField.getText().equals(existing.getPrice())
+                            || !vendorField.getValue().toString().equals(existing.getVendor())) {
+                    commonFieldsError(partName);
+                } else if (!barcodeField.getText().equals(existing.getBarcode()) || !serialField.getText().equals(existing.getSerialNumber())) {
+                    mustBeCommonBarcodeAndSerialNumberError(partName);
+                } else {
+                    addPart.addCommonItems(setPartFields(), quantity);
+                    partAddedSuccess();
+                    close();
+                }
+            } else {
+                if (!barcodeField.getText().equals(existing.getBarcode()) || !serialField.getText().equals(existing.getSerialNumber())) {
+                    barcodeAndSerialNumberMustBothBeUniqueOrCommonError();
+                } else {
+                    addPart.addUniqueItems(setPartFields(), quantity);
+                    partAddedSuccess();
+                    close();
+                }
+            }
+        } else {
+            //db does not have a part with this name, add it unless duplicate part
+            if (quantity > 1) {
+                if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
+                    addPart.addCommonItems(setPartFields(), quantity);
+                    partAddedSuccess();
+                    close();
+                } else {
+                    barcodeAlreadyExistsError();
+                }
+            } else {
+                if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
+                    addPart.addUniqueItems(setPartFields(), quantity);
+                    partAddedSuccess();
+                    close();
+                } else {
+                    barcodeAlreadyExistsError();
+                }
+            }
+
+        }
+    }
+
+    public boolean duplicateBarcode(String partName, int barcode) {
+        return database.getUniqueBarcodesBesidesPart(partName).contains("" + barcode);
     }
 
     /**
@@ -262,6 +318,22 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         alert.showAndWait();
     }
 
+    private void barcodeAlreadyExistsError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("A part with that barcode already exists.");
+
+        alert.showAndWait();
+    }
+
+    private void barcodeAndSerialNumberMustBothBeUniqueOrCommonError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("Barcodes and serial numbers for parts must be all the same or all different.");
+
+        alert.showAndWait();
+    }
+
     /**
      * Creates alert that informs user invalid input was entered into price or quantity field
      */
@@ -269,6 +341,38 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("Please make sure you are entering numbers into price and quantity fields, and that they are not negative");
+
+        alert.showAndWait();
+    }
+
+    private void mustBeCommonBarcodeError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("All " + partName + " parts must have the same barcode.");
+
+        alert.showAndWait();
+    }
+
+    private void mustBeCommonSerialNumberError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("All " + partName + " parts must have the same serial number.");
+
+        alert.showAndWait();
+    }
+
+    private void mustBeCommonBarcodeAndSerialNumberError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("All " + partName + " parts must have the same barcode and serial number.");
+
+        alert.showAndWait();
+    }
+
+    private void commonFieldsError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have the same barcode and serial number, so their other fields must also be the same.");
 
         alert.showAndWait();
     }
