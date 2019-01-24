@@ -402,8 +402,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         ArrayList<String> types = getSelctedFilters();
         System.out.println(types);
         if(!types.isEmpty()) {
-            //this.data = selectParts("SELECT p.partName from parts p, checkout c WHERE p.isDeleted = 0 ORDER BY p.partID", this.data);
-            this.data = selectParts("SELECT * from parts WHERE isDeleted = 0" + getSortTypes(types) + " ORDER BY partID", this.data);
+            this.data = selectParts("SELECT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
 
             for (int i = 0; i < data.size(); i++) {
                 Button button = new Button("Edit");
@@ -429,26 +428,26 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public String getSortTypes(ArrayList<String> types){
         String result = "";
         if (types.contains("All")){
+            result = "WHERE p.isDeleted = 0";
             return result;
-        } else{
-            result = " AND ";
-        }
-        if (types.contains("Checked Out")){
-            if(!result.equals(" AND "))
-                result = result + " OR ";
-            result = result + "isCheckedOut = 1";
         }
         if (types.contains("Overdue")){
-            if(!result.equals(" AND "))
-                result = result + " OR ";
             long longDate = System.currentTimeMillis();
             Date date = new java.sql.Date(longDate);
-            result = result + "dueAt < date('" + date.toString() + "')";
+            if(result.isEmpty())
+                result = result + "JOIN checkout AS c ON p.partID=c.partID WHERE p.isDeleted = 0 AND c.dueAt < date('" + date.toString() + "')";
+        }
+        if (types.contains("Checked Out")){
+            if(result.isEmpty())
+                result = result + "WHERE p.isDeleted = 0 AND isCheckedOut = 1";
+            else
+                result = result + " OR isCheckedOut = 1";
         }
         if (types.contains("Faulty")){
-            if(!result.equals(" AND "))
-                result = result + " OR ";
-            result = result + "isFaulty = 1";
+            if(result.isEmpty())
+                result = result + "WHERE p.isDeleted = 0 AND isFaulty = 1";
+            else
+                result = result + " OR isFaulty = 1";
         }
         return result;
     }
