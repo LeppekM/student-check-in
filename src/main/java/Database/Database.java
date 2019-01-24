@@ -176,7 +176,6 @@ public class Database {
             }
             resultSet.close();
             statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -197,7 +196,6 @@ public class Database {
             }
             resultSet.close();
             statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -215,7 +213,6 @@ public class Database {
             }
             statement.close();
             resultSet.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
