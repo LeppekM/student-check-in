@@ -180,7 +180,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     public void submit() {
         Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
-        if (thisStudent.getOverdueItems().size() == 0 || !checkingOutToggle.isSelected()) {
+        if (thisStudent.getOverdueItems().size() == 0 ) {
             if (extendedCheckoutIsSelected()) {
                 extendedCheckoutHelper();
             } else if(itemBeingCheckedBackInIsFaulty()){

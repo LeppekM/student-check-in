@@ -15,19 +15,65 @@ public class AddPart {
 
     VendorInformation vendorInformation = new VendorInformation();
 
+    Database database = new Database();
+
+    public int[] addCommonItems(Part part, int quantity) {
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            Part existing = database.selectPartByPartName(part.getPartName());
+            if (existing == null || (part.getBarcode().equals(existing.getBarcode())
+                    && part.getSerialNumber().equals(existing.getSerialNumber())
+                    && part.getManufacturer().equals(existing.getManufacturer())
+                    && part.getPrice() == existing.getPrice()
+                    && part.getVendor().equals(existing.getVendor()))) {
+                for (int i = 0; i < quantity; i++) {
+                    PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
+                    insertQuery(part, preparedStatement).execute();
+                    vendorInformation.getVendorList();
+                    preparedStatement.close();
+                }
+                return new int[]{Integer.parseInt(part.getBarcode()), Integer.parseInt(part.getSerialNumber())};
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new int[]{-1, -1};
+    }
+
     /**
      * This method adds an item to the database
      * @param part The part to be added
      */
-    public void addItem(Part part){
+    public int[] addUniqueItems(Part part, int quantity){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
-            insertQuery(part, preparedStatement).execute();
-            vendorInformation.getVendorList();
-            preparedStatement.close();
+            int inputBarcode = Integer.parseInt(part.getBarcode());
+            int inputSerialNumber = Integer.parseInt(part.getSerialNumber());
+            for (int i = 0; i < quantity; i++) {
+                while (duplicateBarcode(part.getPartName(), inputBarcode)) {
+                    inputBarcode++;
+                }
+
+                while (duplicateSerialNumber(part.getSerialNumber(), inputSerialNumber)) {
+                    inputSerialNumber++;
+                }
+
+                PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
+                insertQuery(part, preparedStatement).execute();
+                vendorInformation.getVendorList();
+                preparedStatement.close();
+            }
+            return new int[]{inputBarcode, inputSerialNumber};
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
+    }
+
+    public boolean duplicateBarcode(String partName, int barcode) {
+        return database.getAllBarcodesForPartName(partName).contains("" + barcode)
+                || database.getUniqueBarcodesBesidesPart(partName).contains("" + barcode);
+    }
+
+    public boolean duplicateSerialNumber(String partName, int serialNumber) {
+        return database.getAllSerialNumbersForPartName(partName).contains("" + serialNumber);
     }
 
     /**

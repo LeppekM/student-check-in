@@ -182,6 +182,26 @@ public class Database {
         return part;
     }
 
+    public Part selectPartByPartName(String partName) {
+        String query = "select * from parts where partName = '" + partName + "';";
+        Part part = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
+                        resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
+                        resultSet.getString("location"), resultSet.getString("barcode"), false,
+                        resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return part;
+    }
+
     public String getPartNameFromBarcode(int barcode) {
         String query = "SELECT partName from parts where barcode = " + barcode + ";";
         String partName = "";
@@ -357,6 +377,36 @@ public class Database {
             e.printStackTrace();
         }
         return partNames;
+    }
+
+    public ArrayList<String> getUniqueBarcodes() {
+        String query = "SELECT DISTINCT barcode FROM parts";
+        ArrayList<String> barcodes = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                barcodes.add(resultSet.getString("barcode"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return barcodes;
+    }
+
+    public ArrayList<String> getUniqueBarcodesBesidesPart(String partName) {
+        String query = "SELECT DISTINCT barcode FROM parts WHERE partName != '" + partName + "';";
+        ArrayList<String> barcodes = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                barcodes.add(resultSet.getString("barcode"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return barcodes;
     }
 
     public boolean hasPartName(String partName) {

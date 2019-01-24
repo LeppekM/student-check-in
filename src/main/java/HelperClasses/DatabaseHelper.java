@@ -1,7 +1,9 @@
 package HelperClasses;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DatabaseHelper {
@@ -10,7 +12,7 @@ public class DatabaseHelper {
      * @return Current date
      */
     public String getCurrentDate(){
-        return LocalDateTime.now().toString();
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
     }
 
     /**

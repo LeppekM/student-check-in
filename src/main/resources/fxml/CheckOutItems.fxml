@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.Button?>
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" style="jfx-rippler-fill: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
    <children>
       <JFXTextField fx:id="studentID" layoutX="342.0" layoutY="101.0" onKeyReleased="#checkStudentHasOverdue" prefHeight="24.0" prefWidth="125.0" />
@@ -44,7 +45,7 @@
             <Insets top="-3.0" />
          </opaqueInsets></JFXCheckBox>
       <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" layoutX="417.0" layoutY="329.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Reset" textFill="#043993" />
-      <JFXButton fx:id="studentInfo" buttonType="RAISED" disable="true" layoutX="640.0" layoutY="16.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="135.0" ripplerFill="WHITE" text="Switch to Student Info" />
+      <JFXButton fx:id="studentInfo" disable="true" layoutX="625.0" layoutY="16.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="150.0" text="Switch to Student Info" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;"/>
       <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="317.0" layoutY="329.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
       <Label layoutX="14.0" layoutY="589.0" text="Current Item Status:" />
       <Label fx:id="itemStatus" layoutX="127.0" layoutY="589.0" text="Checking Out" />

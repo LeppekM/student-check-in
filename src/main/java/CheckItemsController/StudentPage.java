@@ -172,24 +172,7 @@ public class StudentPage {
     }
 
     public void goBack() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
-//            Parent root = loader.load();
-//            Scene scene = new Scene(root, 789, 620);
-//            Stage stage = new Stage();
-//            ((ControllerCheckoutPage) loader.getController()).initCheckoutObject(checkoutObject);
-//            stage.setResizable(false);
-//            stage.setTitle("Barcode Scanner");
-//            stage.setScene(scene);
-//            stage.getIcons().add(new Image("images/msoe.png"));
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         try {
-//            String fxml = "/fxml/CheckoutItems.fxml";
-//            URL myFxmlURL = ClassLoader.getSystemResource(fxml);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
             Parent root = loader.load();
             main.getScene().setRoot(root);
@@ -214,10 +197,12 @@ public class StudentPage {
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
                 int index = coTable.getSelectionModel().getSelectedIndex();
-                CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
-                ((CheckoutPopUp) loader.getController()).populate(item);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                if (index != -1) {
+                    CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
+                    ((CheckoutPopUp) loader.getController()).populate(item);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
                 stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -236,10 +221,12 @@ public class StudentPage {
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
                 int index = oTable.getSelectionModel().getSelectedIndex();
-                OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
-                ((OverduePopUpController) loader.getController()).populate(item,null);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                if (index != -1) {
+                    OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
+                    ((OverduePopUpController) loader.getController()).populate(item, null);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -257,10 +244,12 @@ public class StudentPage {
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
                 int index = sTable.getSelectionModel().getSelectedIndex();
-                SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
-                ((SavedPopUp) loader.getController()).populate(item);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                if (index != -1) {
+                    SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
+                    ((SavedPopUp) loader.getController()).populate(item);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
