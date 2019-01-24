@@ -108,7 +108,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                 } else if (!barcodeField.getText().equals(existing.getBarcode()) || !serialField.getText().equals(existing.getSerialNumber())) {
                     mustBeCommonBarcodeAndSerialNumberError(partName);
                 } else {
-                    addPart.addCommonItems(setPartFields(), quantity);
+                    addPart.addCommonItems(setPartFields(), database, quantity);
                     partAddedSuccess();
                     close();
                 }
@@ -116,7 +116,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                 if (!barcodeField.getText().equals(existing.getBarcode()) || !serialField.getText().equals(existing.getSerialNumber())) {
                     barcodeAndSerialNumberMustBothBeUniqueOrCommonError();
                 } else {
-                    addPart.addUniqueItems(setPartFields(), quantity);
+                    addPart.addUniqueItems(setPartFields(), database, quantity);
                     partAddedSuccess();
                     close();
                 }
@@ -125,7 +125,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
             //db does not have a part with this name, add it unless duplicate part
             if (quantity > 1) {
                 if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
-                    addPart.addCommonItems(setPartFields(), quantity);
+                    addPart.addCommonItems(setPartFields(), database, quantity);
                     partAddedSuccess();
                     close();
                 } else {
@@ -133,7 +133,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                 }
             } else {
                 if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
-                    addPart.addUniqueItems(setPartFields(), quantity);
+                    addPart.addUniqueItems(setPartFields(), database, quantity);
                     partAddedSuccess();
                     close();
                 } else {
