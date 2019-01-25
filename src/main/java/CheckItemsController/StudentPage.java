@@ -238,7 +238,7 @@ public class StudentPage {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SavedPopUp.fxml"));
                 Parent root = loader.load();
-                Scene scene = new Scene(root, 600, 400);
+                Scene scene = new Scene(root, 350, 400);
                 stage.setTitle("Saved Item");
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);

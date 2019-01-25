@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" prefHeight="341.0" prefWidth="340.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.SavedPopUp">
+<AnchorPane fx:id="main" prefHeight="370.0" prefWidth="330.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.SavedPopUp">
     <children>
-        <Pane layoutY="6.0" prefHeight="370.0" prefWidth="334.0">
+        <Pane layoutY="6.0" prefHeight="370.0" prefWidth="330.0">
             <children>
                 <Label layoutX="25.0" layoutY="13.0" text="Student Name:">
                     <font>
