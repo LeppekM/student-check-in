@@ -435,7 +435,7 @@ public class Database {
                 "from students " +
                 "left join checkout on students.studentID = checkout.studentID " +
                 "left join parts on checkout.partID = parts.partID where students.studentID = " + ID  + ";";
-        String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.prof, checkout.course, checkout.reason " +
+        String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
                 "from students " +
                 "left join checkout on students.studentID = checkout.studentID " +
                 "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
@@ -494,8 +494,7 @@ public class Database {
                         resultSet.getString("parts.partName"), resultSet.getString("checkout.checkoutAt"),
                         1, resultSet.getString("checkout.reservedAt"),
                         resultSet.getString("checkout.dueAt"), resultSet.getString("checkout.checkoutID"),
-                        resultSet.getString("checkout.prof"), resultSet.getString("checkout.course"),
-                        resultSet.getString("checkout.reason")));
+                        resultSet.getString("checkout.returnDate"), resultSet.getString("checkout.course")));
             }
             statement.close();
             resultSet.close();

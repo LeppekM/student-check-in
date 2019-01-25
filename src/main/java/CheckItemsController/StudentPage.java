@@ -250,6 +250,7 @@ public class StudentPage {
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.show();
                 }
+                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {
                 e.printStackTrace();
             }

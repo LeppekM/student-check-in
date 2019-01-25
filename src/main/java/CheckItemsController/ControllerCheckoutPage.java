@@ -322,12 +322,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @author Bailey Terry
      */
     public void goToStudent() {
-        if (database.selectStudent(Integer.parseInt(studentID.getText())) != null) {
+        Student s = database.selectStudent(Integer.parseInt(studentID.getText()));
+        if (!s.getName().equals("")) {
             try{
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Student.fxml"));
                 Parent root = (Parent) loader.load();
                 StudentPage sp = loader.getController();
-                sp.setStudent(database.selectStudent(Integer.parseInt(studentID.getText())));
+                sp.setStudent(s);
                 checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), quantity.getText(), extended.isSelected(), faulty.isSelected());
                 if (extended.isSelected()) {
                     checkoutObject.initExtendedInfo(courseName.getText(), profName.getText(), datePicker.getValue());
