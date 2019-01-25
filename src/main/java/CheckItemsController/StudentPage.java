@@ -105,7 +105,6 @@ public class StudentPage {
         double overdueFees = 0.0;
         int[] sID = new int[s.getSavedItems().size()];
         for (int i = 0; i < s.getSavedItems().size(); i++) {
-            String st = s.getSavedItems().get(i).getCheckID();
             if (s.getSavedItems().get(i).getCheckID().matches("^[0-9]*")){
                 sID[i] = Integer.parseInt(s.getSavedItems().get(i).getCheckID());
             }else {
