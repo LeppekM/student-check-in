@@ -35,6 +35,10 @@ import org.controlsfx.control.CheckComboBox;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -312,6 +316,29 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 return row;
             }
         });
+        //TODO Separate this into its own method. Duplicate code for database selection is a no no.
+        String rawStatement = "SELECT DISTINCT partName from parts;";
+        Statement currentStatement = null;
+        try {
+            Connection connection = database.getConnection();
+            currentStatement = connection.createStatement();
+            ResultSet rs = currentStatement.executeQuery(rawStatement);
+            while (rs.next()) {
+                String partName = rs.getString("partName");
+                types.add(partName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (currentStatement != null) {
+                try {
+                    currentStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         sortCheckBox = new CheckComboBox<>(types);
         sortCheckBox.getCheckModel().checkIndices(0);
         selectedFilters.add("All");
@@ -402,7 +429,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         ArrayList<String> types = getSelctedFilters();
         System.out.println(types);
         if(!types.isEmpty()) {
-            this.data = selectParts("SELECT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
+            this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
 
             for (int i = 0; i < data.size(); i++) {
                 Button button = new Button("Edit");
@@ -427,27 +454,38 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      */
     public String getSortTypes(ArrayList<String> types){
         String result = "";
-        if (types.contains("All")){
-            result = "WHERE p.isDeleted = 0";
-            return result;
-        }
-        if (types.contains("Overdue")){
-            long longDate = System.currentTimeMillis();
-            Date date = new java.sql.Date(longDate);
-            if(result.isEmpty())
-                result = result + ", checkout AS c WHERE p.isDeleted = 0 AND (p.partID=c.partID AND c.dueAt < date('" + date.toString() + "'))";
-        }
-        if (types.contains("Checked Out")){
-            if(result.isEmpty())
-                result = result + "WHERE p.isDeleted = 0 AND isCheckedOut = 1";
-            else
-                result = result + " OR p.isCheckedOut = 1";
-        }
-        if (types.contains("Faulty")){
-            if(result.isEmpty())
-                result = result + "WHERE p.isDeleted = 0 AND isFaulty = 1";
-            else
-                result = result + " OR p.isFaulty = 1";
+        if(!selectedFilters.isEmpty()) {
+            if (types.contains("All")) {
+                result = "WHERE p.isDeleted = 0";
+                return result;
+            }
+            if (types.contains("Overdue") && !types.contains("Checked Out")) {
+                long longDate = System.currentTimeMillis();
+                Date date = new java.sql.Date(longDate);
+                if (result.isEmpty())
+                    result = result + ", checkout AS c WHERE p.isDeleted = 0 AND (p.partID=c.partID AND c.dueAt < date('" + date.toString() + "'))";
+            }
+            if (types.contains("Checked Out")) {
+                if (result.isEmpty())
+                    result = result + "WHERE p.isDeleted = 0 AND isCheckedOut = 1";
+                else
+                    result = result + " OR p.isCheckedOut = 1";
+            }
+            if (types.contains("Faulty")) {
+                if (result.isEmpty())
+                    result = result + "WHERE p.isDeleted = 0 AND isFaulty = 1";
+                else
+                    result = result + " OR p.isFaulty = 1";
+            }
+            for (int i = 0; i < selectedFilters.size(); i++) {
+                String currentFilter = selectedFilters.get(i);
+                if (!currentFilter.equals("Overdue") && !currentFilter.equals("Checked Out") && !currentFilter.equals("Faulty")) {
+                    if (result.isEmpty())
+                        result = result + "WHERE p.isDeleted = 0 AND partName = '" + currentFilter + "'";
+                    else
+                        result = result + " OR p.partName = '" + currentFilter + "'";
+                }
+            }
         }
         return result;
     }
