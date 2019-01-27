@@ -105,7 +105,6 @@ public class StudentPage {
         double overdueFees = 0.0;
         int[] sID = new int[s.getSavedItems().size()];
         for (int i = 0; i < s.getSavedItems().size(); i++) {
-            String st = s.getSavedItems().get(i).getCheckID();
             if (s.getSavedItems().get(i).getCheckID().matches("^[0-9]*")){
                 sID[i] = Integer.parseInt(s.getSavedItems().get(i).getCheckID());
             }else {
@@ -239,7 +238,7 @@ public class StudentPage {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SavedPopUp.fxml"));
                 Parent root = loader.load();
-                Scene scene = new Scene(root, 600, 400);
+                Scene scene = new Scene(root, 350, 400);
                 stage.setTitle("Saved Item");
                 stage.initOwner(main.getScene().getWindow());
                 stage.setScene(scene);
@@ -250,6 +249,7 @@ public class StudentPage {
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.show();
                 }
+                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {
                 e.printStackTrace();
             }

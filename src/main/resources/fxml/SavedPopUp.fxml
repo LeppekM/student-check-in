@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.SavedPopUp">
+<AnchorPane fx:id="main" prefHeight="370.0" prefWidth="330.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.SavedPopUp">
     <children>
-        <Pane layoutY="6.0" prefHeight="400.0" prefWidth="600.0">
+        <Pane layoutY="6.0" prefHeight="370.0" prefWidth="330.0">
             <children>
                 <Label layoutX="25.0" layoutY="13.0" text="Student Name:">
                     <font>
@@ -36,19 +36,18 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <JFXTextField fx:id="prof" alignment="CENTER" editable="false" layoutX="151.0" layoutY="247.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+            <JFXTextField fx:id="returnDate" alignment="CENTER" editable="false" layoutX="151.0" layoutY="247.0" prefHeight="23.94140625" prefWidth="153.5078125" />
             <Label layoutX="79.0" layoutY="279.0" text="Course:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <JFXTextArea fx:id="reason" editable="false" layoutX="366.0" layoutY="66.0" prefHeight="315.0" prefWidth="220.0" style="-fx-font-size: 15;" />
             <JFXTextField fx:id="course" alignment="CENTER" editable="false" layoutX="151.0" layoutY="280.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-            <Label layoutX="338.0" layoutY="31.0" text="Reason:">
-                <font>
-                    <Font size="18.0" />
-                </font>
-            </Label>
+            <JFXCheckBox fx:id="unsave" checkedColor="#b91111" layoutX="105.0" layoutY="328.0" mnemonicParsing="false" onAction="#undoSave" text="Unsave Item?">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXCheckBox>
                 
             </children>
         </Pane>

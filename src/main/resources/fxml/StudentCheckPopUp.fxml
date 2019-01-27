@@ -25,7 +25,7 @@
                 <JFXTextField fx:id="coDate" alignment="CENTER" editable="false" layoutX="175.0" layoutY="134.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                 <Label font="$x1" layoutX="93.0" layoutY="174.0" text="Due Date:" />
                 <JFXTextField fx:id="dueDate" alignment="CENTER" editable="false" layoutX="175.0" layoutY="174.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-            <JFXCheckBox layoutX="140.0" layoutY="220.0" mnemonicParsing="false" onAction="#savePart" text="Save Part?">
+            <JFXCheckBox checkedColor="#9b1111" layoutX="140.0" layoutY="220.0" mnemonicParsing="false" onAction="#savePart" text="Save Part?">
                <font>
                   <Font size="18.0" />
                </font>

@@ -23,7 +23,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 379 THEN
         set j = i - 297;
         insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', j, 3, 'S350 D1', 123456, 0, 0, current_date, 'root', 0);
+        values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9843, 3, 'S350 D1', 123456, 0, 0, current_date, 'root', 0);
       ELSEIF i < 440 THEN
         set j = i - 378;
         insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
@@ -167,12 +167,11 @@ create table checkout (
   checkoutID int NOT NULL AUTO_INCREMENT,
   partID     int NOT NULL,
   studentID  int NOT NULL,
-  barcode int NOT NULL,
+  barcode    int NOT NULL,
   checkoutAt date,
   reservedAt date,
-  prof       varchar(25),
+  returnDate varchar(25),
   course     varchar(25),
-  reason     varchar(200),
   checkinAt  date,
   dueAt      date,
   createdAt  date,

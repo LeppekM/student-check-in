@@ -13,11 +13,10 @@ public class SavedPart extends RecursiveTreeObject{
     private SimpleStringProperty savedAt;
     private SimpleStringProperty dueAt;
     private SimpleStringProperty checkID;
-    private SimpleStringProperty prof;
+    private SimpleStringProperty returnDate;
     private SimpleStringProperty course;
-    private SimpleStringProperty reason;
 
-    public SavedPart(String sName, String pName, String coAt, int quantity, String sAt, String dAt, String cID, String prof, String course, String reason){
+    public SavedPart(String sName, String pName, String coAt, int quantity, String sAt, String dAt, String cID, String returnDate, String course){
         studentName = new SimpleStringProperty(sName);
         partName = new SimpleStringProperty(pName);
         checkedOutAt = new SimpleStringProperty(coAt);
@@ -25,9 +24,8 @@ public class SavedPart extends RecursiveTreeObject{
         savedAt = new SimpleStringProperty(sAt);
         dueAt = new SimpleStringProperty(dAt);
         checkID = new SimpleStringProperty(cID);
-        this.prof = new SimpleStringProperty(prof);
+        this.returnDate = new SimpleStringProperty(returnDate);
         this.course = new SimpleStringProperty(course);
-        this.reason = new SimpleStringProperty(reason);
     }
 
     public SimpleStringProperty getStudentName() {
@@ -114,16 +112,16 @@ public class SavedPart extends RecursiveTreeObject{
         this.checkID.set(checkID);
     }
 
-    public String getProf() {
-        return prof.get();
+    public String getReturnDate() {
+        return returnDate.get();
     }
 
-    public SimpleStringProperty profProperty() {
-        return prof;
+    public SimpleStringProperty returnDateProperty() {
+        return returnDate;
     }
 
-    public void setProf(String prof) {
-        this.prof.set(prof);
+    public void setReturnDate(String returnDate) {
+        this.returnDate.set(returnDate);
     }
 
     public String getCourse() {
@@ -136,17 +134,5 @@ public class SavedPart extends RecursiveTreeObject{
 
     public void setCourse(String course) {
         this.course.set(course);
-    }
-
-    public String getReason() {
-        return reason.get();
-    }
-
-    public SimpleStringProperty reasonProperty() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason.set(reason);
     }
 }

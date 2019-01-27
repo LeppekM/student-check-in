@@ -53,18 +53,17 @@ public class CheckoutPopUp extends StudentPage {
             }
         }
         if (!result){
-            String prof = JOptionPane.showInputDialog(null, "Please enter a Professors name");
+            String returnDate = JOptionPane.showInputDialog(null, "Please enter a date on which the item will be taken back out");
             String course = JOptionPane.showInputDialog(null, "Please enter a course code (i.e. CS3840)");
-            String reason = JOptionPane.showInputDialog(null, "Please enter a short description why they need it saved");
             s.getSavedItems().add(new SavedPart(student.getText(), part.getText(), coDate.getText(), Integer.parseInt(barcode.getText()),
-                    sdf.format(new Date(System.currentTimeMillis())), dueDate.getText(), cID.getText(), prof, course, reason));
+                    sdf.format(new Date(System.currentTimeMillis())), dueDate.getText(), cID.getText(), returnDate, course));
             try {
                 Connection connection = database.getConnection();
                 Statement statement = connection.createStatement();
                 long date = System.currentTimeMillis();
                 java.sql.Date d = new java.sql.Date(date);
-                statement.executeUpdate("UPDATE checkout SET  reservedAt = date('" + d.toString() + "'), prof = '" + prof + "', course = '" + course + "'" +
-                        ", reason = '" + reason + "' WHERE studentID = " + s.getID() + " and checkoutID = " + cID.getText().substring(13) + ";");
+                statement.executeUpdate("UPDATE checkout SET  reservedAt = date('" + d.toString() + "'), returnDate = '" + returnDate + "', course = '" + course + "'" +
+                        " WHERE studentID = " + s.getID() + " and checkoutID = " + cID.getText().substring(13) + ";");
             }catch (SQLException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update database");
                 alert.showAndWait();
