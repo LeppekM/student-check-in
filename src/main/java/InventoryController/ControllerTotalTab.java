@@ -435,19 +435,19 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             long longDate = System.currentTimeMillis();
             Date date = new java.sql.Date(longDate);
             if(result.isEmpty())
-                result = result + "JOIN checkout AS c ON p.partID=c.partID WHERE p.isDeleted = 0 AND c.dueAt < date('" + date.toString() + "')";
+                result = result + ", checkout AS c WHERE p.isDeleted = 0 AND (p.partID=c.partID AND c.dueAt < date('" + date.toString() + "'))";
         }
         if (types.contains("Checked Out")){
             if(result.isEmpty())
                 result = result + "WHERE p.isDeleted = 0 AND isCheckedOut = 1";
             else
-                result = result + " OR isCheckedOut = 1";
+                result = result + " OR p.isCheckedOut = 1";
         }
         if (types.contains("Faulty")){
             if(result.isEmpty())
                 result = result + "WHERE p.isDeleted = 0 AND isFaulty = 1";
             else
-                result = result + " OR isFaulty = 1";
+                result = result + " OR p.isFaulty = 1";
         }
         return result;
     }

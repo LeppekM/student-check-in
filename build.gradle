@@ -27,6 +27,8 @@ dependencies {
     compile 'com.jfoenix:jfoenix:8.0.8'
 }
 
+apply plugin: 'javafx-gradle-plugin'
+
 jfx {
     // minimal requirement for jfxJar-task
     mainClass = 'InventoryController.StudentCheckIn'
