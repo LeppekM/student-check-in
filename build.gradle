@@ -29,18 +29,11 @@ dependencies {
 
 apply plugin: 'javafx-gradle-plugin'
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 jfx {
     // minimal requirement for jfxJar-task
     mainClass = 'InventoryController.StudentCheckIn'
 
     // minimal requirement for jfxNative-task
-<<<<<<< Updated upstream
     vendor = 'MSOE'
-=======
-    vendor = 'YourName'
->>>>>>> Stashed changes
+
 }
