@@ -286,12 +286,9 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * @return False if any field is empty
      */
     private boolean validateFieldsNotEmpty(){
-        if(nameField.getText().isEmpty() | serialField.getText().isEmpty() | manufacturerField.getText().isEmpty() |
-        priceField.getText().isEmpty() | locationField.getText().isEmpty()|
-        serialField.getText().isEmpty()| barcodeField.getText().isEmpty()| quantityField.getText().isEmpty() | getVendorName().contains("-1")){
-            return false;
-        }
-        return true;
+        return !(nameField.getText().isEmpty() | serialField.getText().isEmpty() | manufacturerField.getText().isEmpty() |
+                priceField.getText().isEmpty() | locationField.getText().isEmpty() |
+                serialField.getText().isEmpty() | barcodeField.getText().isEmpty() | quantityField.getText().isEmpty() | getVendorName().contains("-1"));
     }
 
     /**
