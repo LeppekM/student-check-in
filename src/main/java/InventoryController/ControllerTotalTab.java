@@ -304,7 +304,14 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                         final int index = row.getIndex();
                         if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                             Part rowData = database.selectPart(Integer.parseInt(totalTable.getSelectionModel().getModelItem(index).getValue().getPartID().get()));
-                            showInfoPage(rowData, "total");
+                            if(!rowData.equals(null)) {
+                                if(rowData.getFault())
+                                    showInfoPage(rowData, "fault");
+                                else if(rowData.getCheckedOut())
+                                    showInfoPage(rowData, "checkedOut");
+                                else
+                                    showInfoPage(rowData, "total");
+                            }
                             totalTable.getSelectionModel().clearSelection();
                             event.consume();
                         } else if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
@@ -317,27 +324,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             }
         });
         //TODO Separate this into its own method. Duplicate code for database selection is a no no.
-        String rawStatement = "SELECT DISTINCT partName from parts;";
-        Statement currentStatement = null;
-        try {
-            Connection connection = database.getConnection();
-            currentStatement = connection.createStatement();
-            ResultSet rs = currentStatement.executeQuery(rawStatement);
-            while (rs.next()) {
-                String partName = rs.getString("partName");
-                types.add(partName);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (currentStatement != null) {
-                try {
-                    currentStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        getNames();
 
         sortCheckBox = new CheckComboBox<>(types);
         sortCheckBox.getCheckModel().checkIndices(0);
@@ -491,6 +478,34 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     }
 
     /**
+     * Called to populate an array with all unique names in the parts table from the database, to add as
+     * filter options in the dropdown
+     */
+    public void getNames(){
+        String rawStatement = "SELECT DISTINCT partName from parts;";
+        Statement currentStatement = null;
+        try {
+            Connection connection = database.getConnection();
+            currentStatement = connection.createStatement();
+            ResultSet rs = currentStatement.executeQuery(rawStatement);
+            while (rs.next()) {
+                String partName = rs.getString("partName");
+                types.add(partName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (currentStatement != null) {
+                try {
+                    currentStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
      * Called to bring up the "AddPart" FXML scene.
      */
     @FXML
@@ -549,6 +564,32 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             });
             stage.show();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method brings up the FXML page for showing the info about the selected part
+     *
+     * @author Matthew Karcz
+     */
+    public void showInfoPage(Part part, String type){
+        Stage stage = new Stage();
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/ShowPart.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            ((ControllerShowPart) loader.getController()).initPart(part, type);
+            Scene scene = new Scene(root, 400, 400);
+            stage.setTitle("Part Information");
+            stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
