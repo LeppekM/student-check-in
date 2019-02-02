@@ -1,5 +1,7 @@
 package InventoryController;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 
 import javax.imageio.ImageIO;
@@ -27,7 +30,7 @@ public class ControllerMenu implements Initializable {
     private VBox mainMenuScene;
 
     @FXML
-    private Button inventory;
+    private Button inventory, manageStudents, manageWorkers;
 
     @FXML
     private ImageView msoeBackgroundImage;
@@ -37,13 +40,19 @@ public class ControllerMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        manageStudents.setText("Manage\nStudents");
         inventory.setOnAction(event -> openInventory());
+        manageStudents.setOnAction(event -> openMangeStudents());
         Image image = new Image("images/msoeBackgroundImage.png");
         this.msoeBackgroundImage.setImage(image);
     }
 
     public void openInventory(){
         newStage("fxml/InventoryPage.fxml");
+    }
+
+    public void openMangeStudents() {
+        newStage("fxml/manageStudents.fxml");
     }
 
     public void openCheckItemsPage(){ newStage("fxml/CheckOutItems.fxml"); }
