@@ -22,7 +22,6 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXSpinner loadIndicator;
 
     @FXML
-    private JFXTextField studentID, barcode, barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName;
+    private JFXTextField studentID, barcode, barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName, studentNameField, studentEmail;
 
     @FXML
     private JFXDatePicker datePicker;
@@ -53,7 +52,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private Spinner<Integer> newQuantity, newQuantity2, newQuantity3, newQuantity4, newQuantity5;
 
     @FXML
-    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel;
+    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel, studentEmailLabel, scanBarcode;
 
     @FXML
     private TextArea faultyTextArea;
@@ -71,7 +70,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
-    private NewBarcodeHelper barcodeHelper = new NewBarcodeHelper();
+    private TransitionHelper transitionHelper = new TransitionHelper();
     private ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
     private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
     private String partNameFromBarcode;
@@ -122,7 +121,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         getStudentName();
         unlockFields();
         unlockExtended();
-        barcodeHelper.spinnerInit(newQuantity);
+        transitionHelper.spinnerInit(newQuantity);
     }
 
 
@@ -188,7 +187,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             } else if (itemIsBeingCheckedIn()) {
                 checkOut.setItemtoCheckedin(getBarcode());
             } else {
+                if(newStudentIsCheckingOutItem()){
+                    createNewStudent();
+                }
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
+
             }
             reset();
         } else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
@@ -252,11 +255,35 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private void getStudentName() {
         studentID.focusedProperty().addListener((ov, oldV, newV) -> {
             if (!newV) {
-                studentNameText.setText(student.getStudentNameFromID(studentID.getText()));
+                String studentName = student.getStudentNameFromID(studentID.getText());
+                if(studentName.isEmpty()){ //If no student is found in database create new one
+                    setNewStudentDropdown();
+                }
+                studentNameField.setText(student.getStudentNameFromID(studentID.getText()));
             }
-
         });
     }
+
+    private void createNewStudent(){
+        student.createNewStudent(getstudentID(), getStudentEmail(), getNewStudentName());
+    }
+
+    private boolean newStudentIsCheckingOutItem(){
+        return !studentEmail.getText().isEmpty();
+    }
+    private void setNewStudentDropdown(){
+        transitionHelper.translateNewStudentItems(scanBarcode, quantityLabel, barcode, quantity, extended, submitButton, resetButton);
+        transitionHelper.fadeTransitionNewStudentObjects(studentEmailLabel, studentEmail);
+        setItemStatusNewStudent();
+    }
+
+    private void setItemStatusNewStudent(){
+        studentEmail.setVisible(true);
+        studentEmailLabel.setVisible(true);
+        studentNameField.setDisable(false);
+        studentNameField.requestFocus();
+    }
+
 
     /**
      * Resets all fields
@@ -406,6 +433,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         } else {
             return -1;
         }
+    }
+
+    private String getStudentEmail(){
+        return studentEmail.getText();
+    }
+
+    private String getNewStudentName(){
+        return studentNameField.getText();
     }
 
     private String getProfName() {
@@ -622,9 +657,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
 
     public void newBarcode() {
         setNewBarcodeFieldsHelper();
-        barcodeHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
-        barcodeHelper.FadeTransition(HBoxBarcode2);
-        barcodeHelper.spinnerInit(newQuantity2);
+        transitionHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
+        transitionHelper.fadeTransition(HBoxBarcode2);
+        transitionHelper.spinnerInit(newQuantity2);
     }
 
     private void setNewBarcodeFieldsHelper() {
@@ -652,10 +687,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     }
 
     private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
-        barcodeHelper.translateItems(submitButton, resetButton, extended, faulty, 60);
-        barcodeHelper.FadeTransition(hBoxBarcode4);
-        barcodeHelper.FadeTransition(barcode4);
-        barcodeHelper.spinnerInit(newQuantity4);
+        transitionHelper.translateBarcodeItems(submitButton, resetButton, extended, faulty, 60);
+        transitionHelper.fadeTransition(hBoxBarcode4);
+        transitionHelper.fadeTransition(barcode4);
+        transitionHelper.spinnerInit(newQuantity4);
         hBoxBarcode4.setVisible(true);
         barcode4.setVisible(true);
     }
