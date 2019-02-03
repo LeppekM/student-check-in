@@ -5,6 +5,7 @@ import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import com.jfoenix.controls.*;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
@@ -14,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.InputEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.StageStyle;
@@ -122,6 +124,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         unlockFields();
         unlockExtended();
         transitionHelper.spinnerInit(newQuantity);
+        submitTimer();
+    }
+
+    private void submitTimer(){
+        int duration =15;
+        PauseTransition delay = new PauseTransition(Duration.minutes(duration));
+        delay.setOnFinished(event -> submit());
+        main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
+        delay.play();
     }
 
 
