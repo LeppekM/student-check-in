@@ -181,6 +181,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         Student thisStudent = database.selectStudent(getstudentID());
         if (thisStudent.getOverdueItems().size() == 0) {
             if (extendedCheckoutIsSelected()) {
+                if(newStudentIsCheckingOutItem()){
+                    createNewStudent();
+                }
                 extendedCheckoutHelper();
             } else if (itemBeingCheckedBackInIsFaulty()) {
                 faultyCheckinHelper();
@@ -255,6 +258,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private void getStudentName() {
         studentID.focusedProperty().addListener((ov, oldV, newV) -> {
             if (!newV) {
+                extended.setDisable(false);
                 String studentName = student.getStudentNameFromID(studentID.getText());
                 if(studentName.isEmpty()){ //If no student is found in database create new one
                     setNewStudentDropdown();
@@ -272,6 +276,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         return !studentEmail.getText().isEmpty();
     }
     private void setNewStudentDropdown(){
+        //stageWrapper.slidingAlert("Student Not In System", "Please fill out student name and email so they can be added to system");
+        transitionHelper.translateExtendedStudentItems(courseNameLabel, profNameLabel, dueAt, courseName, profName, datePicker, extended, submitButton, resetButton);
         transitionHelper.translateNewStudentItems(scanBarcode, quantityLabel, barcode, quantity, extended, submitButton, resetButton);
         transitionHelper.fadeTransitionNewStudentObjects(studentEmailLabel, studentEmail);
         setItemStatusNewStudent();

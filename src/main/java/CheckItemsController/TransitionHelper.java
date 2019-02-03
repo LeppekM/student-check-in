@@ -2,6 +2,7 @@ package CheckItemsController;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
@@ -55,6 +56,17 @@ public class TransitionHelper {
     void fadeTransitionNewStudentObjects(Label email, JFXTextField emailField){
         fadeTransition(email);
         fadeTransition(emailField);
+    }
+
+    void translateExtendedStudentItems(Label course, Label prof, Label due, JFXTextField courseT, JFXTextField profT, JFXDatePicker dueT, JFXCheckBox box, JFXButton butt, JFXButton butt2){
+        int direction = 35;
+        int direction2 = 10;
+        course.setTranslateY(direction);
+        prof.setTranslateY(direction);
+        due.setTranslateY(direction);
+        courseT.setTranslateY(direction);
+        profT.setTranslateY(direction);
+        dueT.setTranslateY(direction);
     }
 
     void translateNewStudentItems(Label barcode, Label quantity, JFXTextField barcodeField, JFXTextField quantityField, JFXCheckBox box, JFXButton submit, JFXButton reset){
