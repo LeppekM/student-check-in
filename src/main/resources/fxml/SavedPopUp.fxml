@@ -11,17 +11,17 @@
     <children>
         <Pane layoutY="6.0" prefHeight="370.0" prefWidth="330.0">
             <children>
-                <Label layoutX="25.0" layoutY="13.0" text="Student Name:">
+                <Label layoutX="30.0" layoutY="13.0" text="Student Name:">
                     <font>
                         <Font size="18.0" fx:id="x1" />
                     </font>
                 </Label>
                 <JFXTextField fx:id="student" alignment="CENTER" editable="false" layoutX="151.0" layoutY="14.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                <Label font="$x1" layoutX="56.0" layoutY="53.0" text="Part Name:" />
+                <Label font="$x1" layoutX="60.0" layoutY="53.0" text="Part Name:" />
                 <JFXTextField fx:id="part" alignment="CENTER" editable="false" layoutX="151.0" layoutY="54.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                <Label font="$x1" layoutX="72.0" layoutY="93.0" text="Quantity:" />
+                <Label font="$x1" layoutX="77.0" layoutY="93.0" text="Quantity:" />
                 <JFXTextField fx:id="quantity" alignment="CENTER" editable="false" layoutX="151.0" layoutY="94.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-                <Label font="$x1" layoutX="5.0" layoutY="133.0" text="Checked Out On:" />
+                <Label font="$x1" layoutX="15.0" layoutY="133.0" text="Checked Out On:" />
                 <JFXTextField fx:id="coDate" alignment="CENTER" editable="false" layoutX="151.0" layoutY="134.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                 <Label font="$x1" layoutX="69.0" layoutY="173.0" text="Saved On:" />
                 <JFXTextField fx:id="saved" alignment="CENTER" editable="false" layoutX="151.0" layoutY="174.0" prefHeight="23.94140625" prefWidth="153.5078125" />
@@ -31,13 +31,13 @@
                </font>
             </Label>
             <JFXTextField fx:id="dueDate" alignment="CENTER" editable="false" layoutX="151.0" layoutY="213.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-            <Label layoutX="66.0" layoutY="247.0" text="Professor:">
+            <Label layoutX="50.0" layoutY="247.0" text="Pickup Date:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
             <JFXTextField fx:id="returnDate" alignment="CENTER" editable="false" layoutX="151.0" layoutY="247.0" prefHeight="23.94140625" prefWidth="153.5078125" />
-            <Label layoutX="79.0" layoutY="279.0" text="Course:">
+            <Label layoutX="90.0" layoutY="282.0" text="Course:">
                <font>
                   <Font size="18.0" />
                </font>

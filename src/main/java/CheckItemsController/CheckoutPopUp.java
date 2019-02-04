@@ -53,8 +53,26 @@ public class CheckoutPopUp extends StudentPage {
             }
         }
         if (!result){
-            String returnDate = JOptionPane.showInputDialog(null, "Please enter a date on which the item will be taken back out");
-            String course = JOptionPane.showInputDialog(null, "Please enter a course code (i.e. CS3840)");
+            boolean dataCheck = true;
+            String returnDate = "";
+            String course = "";
+            while (dataCheck) {
+                returnDate = JOptionPane.showInputDialog(null, "Please enter a date on which the item will be taken back out");
+                if (returnDate.matches("^\\d{4}-\\d{2}-\\d{2}$")){
+                    dataCheck = false;
+                }else {
+                    JOptionPane.showMessageDialog(null, "Date must be of the form: yyyy-mm-dd");
+                }
+            }
+            dataCheck = true;
+            while (dataCheck) {
+                course = JOptionPane.showInputDialog(null, "Please enter a course code (i.e. CS3840)");
+                if (course.matches("^[A-Za-z]{2}\\d{3,4}$")){
+                    dataCheck = false;
+                }else {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid course code.");
+                }
+            }
             s.getSavedItems().add(new SavedPart(student.getText(), part.getText(), coDate.getText(), Integer.parseInt(barcode.getText()),
                     sdf.format(new Date(System.currentTimeMillis())), dueDate.getText(), cID.getText(), returnDate, course));
             try {
