@@ -30,7 +30,7 @@ public class ControllerMenu implements Initializable {
     private VBox mainMenuScene;
 
     @FXML
-    private Button inventory, manageStudents;
+    private Button inventory, manageStudents, manageWorkers;
 
     @FXML
     private ImageView msoeBackgroundImage;
@@ -41,21 +41,27 @@ public class ControllerMenu implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         manageStudents.setText("Manage\nStudents");
+        manageWorkers.setText("Manage\nWorkers");
         inventory.setOnAction(event -> openInventory());
         manageStudents.setOnAction(event -> openMangeStudents());
+        manageWorkers.setOnAction(event -> openManageWorkers());
         Image image = new Image("images/msoeBackgroundImage.png");
         this.msoeBackgroundImage.setImage(image);
     }
 
-    public void openInventory(){
+    private void openInventory(){
         newStage("fxml/InventoryPage.fxml");
     }
 
-    public void openMangeStudents() {
+    private void openMangeStudents() {
         newStage("fxml/manageStudents.fxml");
     }
 
     public void openCheckItemsPage(){ newStage("fxml/CheckOutItems.fxml"); }
+
+    private void openManageWorkers() {
+        newStage("fxml/manageWorkers.fxml");
+    }
 
     public void newStage(String fxml){
         try {

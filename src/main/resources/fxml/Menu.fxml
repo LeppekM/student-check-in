@@ -35,11 +35,15 @@
                 <VBox>
                   <children>
                     <Button fx:id="manageStudents" mnemonicParsing="false" prefHeight="75.0" prefWidth="155.0" textAlignment="CENTER">
+                    <VBox.margin>
+                      <Insets bottom="25.0" />
+                    </VBox.margin>
+                  </Button>
+                    <Button fx:id="manageWorkers" mnemonicParsing="false" prefHeight="75.0" prefWidth="155.0" textAlignment="CENTER">
                       <VBox.margin>
-                        <Insets bottom="25.0" />
+                        <Insets top="25.0" />
                       </VBox.margin>
                     </Button>
-
                   </children>
                   <padding>
                     <Insets right="50.0" />

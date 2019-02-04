@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="fxml.ManageWorkers"
-            prefHeight="400.0" prefWidth="600.0">
-
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<AnchorPane fx:id="manageWorkersScene" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerManageWorkers">
+    <Label layoutX="20.0" layoutY="14.0" text="Manage Workers">
+        <stylesheets>
+            <URL value="@../css/HeaderStyle.css" />
+        </stylesheets>
+    </Label>
+    <JFXTreeTableView fx:id="manageWorkersTable" layoutX="0.0" layoutY="66.0" prefHeight="480.0" stylesheets="@../css/TableStyle.css" />
+    <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
+    <Button fx:id="back" layoutX="10.0" layoutY="554.0" mnemonicParsing="false" onAction="#goBack">
+        <graphic>
+            <ImageView fitHeight="35.0" fitWidth="39.0">
+                <image>
+                    <Image url="@../images/home.png" />
+                </image>
+            </ImageView>
+        </graphic>
+        <stylesheets>
+            <URL value="@../css/ButtonStyle.css" />
+        </stylesheets>
+    </Button>
+    <Button fx:id="addWorker" layoutX="600.0" layoutY="554.0" mnemonicParsing="false" onAction="#addWorker" prefHeight="35.0" prefWidth="160.0" text="Add Worker" textAlignment="CENTER">
+        <stylesheets>
+            <URL value="@../css/ButtonStyle.css" />
+        </stylesheets>
+    </Button>
 </AnchorPane>
