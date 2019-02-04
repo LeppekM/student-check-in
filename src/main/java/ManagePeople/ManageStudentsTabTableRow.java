@@ -1,4 +1,4 @@
-package InventoryController;
+package ManagePeople;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;

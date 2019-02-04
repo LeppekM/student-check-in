@@ -7,9 +7,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<<<<<<< HEAD
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <AnchorPane fx:id="manageStudentsScene" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerManageStudents">
+=======
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerManageStudents">
+>>>>>>> 5c21ec0318650465ec48be4c39ce4d21a8b1e5c6
     <Label layoutX="20.0" layoutY="14.0" text="Manage Students">
         <stylesheets>
             <URL value="@../css/HeaderStyle.css" />
