@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class StageWrapper {
@@ -44,6 +45,14 @@ public class StageWrapper {
             alert.showAndWait();
             invoke.printStackTrace();
         }
+    }
+
+    public String getStudentID(List<String> list){
+        StringBuilder studentID = new StringBuilder();
+        for (int i =0; i<list.size(); i++){
+            studentID.append(list.get(i));
+        }
+        return studentID.toString();
     }
 
     public void slidingAlert(String title, String content) {

@@ -10,12 +10,13 @@ import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.InputEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.StageStyle;
@@ -77,6 +78,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
     private String partNameFromBarcode;
     private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
+    private List<String> studentIDVerifier = new ArrayList<>();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -125,7 +128,31 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         unlockExtended();
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
+        barcodeListener();
+        //scanStudentIDSubmit();
     }
+    public void test3(KeyEvent keyEvent){
+
+        studentIDVerifier.add(keyEvent.getCharacter());
+
+        if(stageWrapper.getStudentID(studentIDVerifier).contains("rfid")) {
+            submit();
+        }
+    }
+
+    private void scanStudentIDSubmit(){
+        final KeyCombination keyCombo = new KeyCodeCombination(KeyCode.valueOf("rfid"));
+        main.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(keyCombo.match(event)){
+                    System.out.println("hi");
+                }
+            }
+        });
+    }
+
+
 
     /**
      * If no movement is recorded on page for 15 minutes, item will submit automatically
@@ -298,6 +325,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                     setNewStudentDropdown();
                 }
                 studentNameField.setText(student.getStudentNameFromID(studentID.getText()));
+            }
+        });
+    }
+
+    private void barcodeListener(){
+        barcode.focusedProperty().addListener((ov, oldV, newV) -> {
+            if (!newV) {
+               main.requestFocus();
             }
         });
     }
