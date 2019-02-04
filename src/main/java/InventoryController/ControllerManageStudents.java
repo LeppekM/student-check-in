@@ -10,12 +10,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -25,6 +28,9 @@ public class ControllerManageStudents implements Initializable {
     private ObservableList<ManageStudentsTabTableRow> tableRows;
 
     Database database;
+
+    @FXML
+    private AnchorPane manageStudentsScene;
 
     @FXML
     private JFXTreeTableView<ManageStudentsTabTableRow> manageStudentsTable;
@@ -49,13 +55,12 @@ public class ControllerManageStudents implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        addStudent.setText("Add\nStudent");
         Label emptyTableLabel = new Label("No students found.");
         emptyTableLabel.setFont(new Font(18));
         manageStudentsTable.setPlaceholder(emptyTableLabel);
 
         nameCol = new JFXTreeTableColumn<>("Name");
-        nameCol.setPrefWidth(200);
+        nameCol.setPrefWidth(800/3);
         nameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
@@ -64,7 +69,7 @@ public class ControllerManageStudents implements Initializable {
         });
 
         idCol = new JFXTreeTableColumn<>("ID");
-        idCol.setPrefWidth(150);
+        idCol.setPrefWidth(800/3);
         idCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
@@ -73,7 +78,7 @@ public class ControllerManageStudents implements Initializable {
         });
 
         emailCol = new JFXTreeTableColumn<>("Email");
-        emailCol.setPrefWidth(200);
+        emailCol.setPrefWidth(800/3);
         emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
@@ -147,6 +152,23 @@ public class ControllerManageStudents implements Initializable {
 
     public void addStudent() {
 
+    }
+
+    /**
+     *Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
+     * @author Matthew Karcz
+     */
+    @FXML
+    public void goBack(){
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            manageStudentsScene.getChildren().clear();
+            manageStudentsScene.getScene().setRoot(loader.load(myFxmlURL));
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+        }
     }
 
 }
