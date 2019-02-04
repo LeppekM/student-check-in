@@ -2,10 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.Student;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,6 +33,9 @@ public class ControllerManageStudents implements Initializable {
     @FXML
     private JFXTextField searchInput;
 
+    @FXML
+    private Button addStudent;
+
     private JFXTreeTableColumn<ManageStudentsTabTableRow, String> nameCol, idCol, emailCol;
 
     private String name, id, email;
@@ -49,6 +49,7 @@ public class ControllerManageStudents implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        addStudent.setText("Add\nStudent");
         Label emptyTableLabel = new Label("No students found.");
         emptyTableLabel.setFont(new Font(18));
         manageStudentsTable.setPlaceholder(emptyTableLabel);
@@ -142,6 +143,10 @@ public class ControllerManageStudents implements Initializable {
         manageStudentsTable.getColumns().setAll(nameCol, idCol, emailCol);
         manageStudentsTable.setRoot(root);
         manageStudentsTable.setShowRoot(false);
+    }
+
+    public void addStudent() {
+
     }
 
 }

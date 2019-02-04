@@ -34,7 +34,7 @@
                 </VBox>
                 <VBox>
                   <children>
-                    <Button fx:id="manageStudents" mnemonicParsing="false" prefHeight="75.0" prefWidth="155.0" >
+                    <Button fx:id="manageStudents" mnemonicParsing="false" prefHeight="75.0" prefWidth="155.0" textAlignment="CENTER">
                       <VBox.margin>
                         <Insets bottom="25.0" />
                       </VBox.margin>

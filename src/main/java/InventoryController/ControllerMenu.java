@@ -30,7 +30,7 @@ public class ControllerMenu implements Initializable {
     private VBox mainMenuScene;
 
     @FXML
-    private Button inventory, manageStudents, manageWorkers;
+    private Button inventory, manageStudents;
 
     @FXML
     private ImageView msoeBackgroundImage;

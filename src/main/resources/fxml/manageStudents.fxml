@@ -3,15 +3,21 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import java.net.URL?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerManageStudents">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerManageStudents">
     <Label layoutX="20.0" layoutY="14.0" text="Manage Students">
         <stylesheets>
             <URL value="@../css/HeaderStyle.css" />
         </stylesheets>
     </Label>
-    <JFXTreeTableView fx:id="manageStudentsTable" layoutX="20.0" layoutY="66.0" prefHeight="480.0" stylesheets="@../css/TableStyle.css"/>
+    <JFXTreeTableView fx:id="manageStudentsTable" layoutX="20.0" layoutY="66.0" prefHeight="480.0" stylesheets="@../css/TableStyle.css" />
     <JFXTextField fx:id="searchInput" layoutX="433.0" layoutY="25.0" promptText="search" />
+    <Button fx:id="addStudent" layoutX="630.0" layoutY="86.0" mnemonicParsing="false" onAction="#addStudent" prefHeight="80.0" prefWidth="115.0" textAlignment="CENTER">
+        <stylesheets>
+            <URL value="@../css/ButtonStyle.css" />
+        </stylesheets>
+    </Button>
 </AnchorPane>
