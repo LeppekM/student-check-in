@@ -1,4 +1,4 @@
-package InventoryController;
+package ManagePeople;
 
 import Database.Database;
 import Database.Student;
