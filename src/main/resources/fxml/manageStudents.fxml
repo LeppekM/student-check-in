@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
-<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import java.net.URL?>
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="InventoryController.ManageStudents" prefHeight="400.0" prefWidth="600.0">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerManageStudents">
     <Label layoutX="20.0" layoutY="14.0" text="Manage Students">
         <stylesheets>
             <URL value="@../css/HeaderStyle.css" />
         </stylesheets>
     </Label>
-    <JFXTreeTableView fx:id="manageStudentsTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0" stylesheets="@../css/TableStyle.css" />
-    <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
+    <JFXTreeTableView fx:id="manageStudentsTable" layoutX="20.0" layoutY="66.0" prefHeight="480.0" stylesheets="@../css/TableStyle.css"/>
+    <JFXTextField fx:id="searchInput" layoutX="433.0" layoutY="25.0" promptText="search" />
 </AnchorPane>

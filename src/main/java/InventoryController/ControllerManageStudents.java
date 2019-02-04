@@ -1,8 +1,12 @@
 package InventoryController;
 
+import Database.Database;
+import Database.Student;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -19,12 +23,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-public class ManageStudents implements Initializable {
+public class ControllerManageStudents implements Initializable {
 
     private ObservableList<ManageStudentsTabTableRow> tableRows;
 
+    Database database;
+
     @FXML
     private JFXTreeTableView<ManageStudentsTabTableRow> manageStudentsTable;
+    private TreeItem<ManageStudentsTabTableRow> root;
 
     @FXML
     private JFXTextField searchInput;
@@ -32,6 +39,8 @@ public class ManageStudents implements Initializable {
     private JFXTreeTableColumn<ManageStudentsTabTableRow, String> nameCol, idCol, emailCol;
 
     private String name, id, email;
+
+    private static ObservableList<Student> data = FXCollections.observableArrayList();
 
     /**
      * This method sets the data in the Manage Students page.
@@ -45,7 +54,7 @@ public class ManageStudents implements Initializable {
         manageStudentsTable.setPlaceholder(emptyTableLabel);
 
         nameCol = new JFXTreeTableColumn<>("Name");
-        nameCol.setPrefWidth(150);
+        nameCol.setPrefWidth(200);
         nameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
@@ -63,7 +72,7 @@ public class ManageStudents implements Initializable {
         });
 
         emailCol = new JFXTreeTableColumn<>("Email");
-        emailCol.setPrefWidth(150);
+        emailCol.setPrefWidth(200);
         emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
@@ -91,6 +100,8 @@ public class ManageStudents implements Initializable {
             }
         });
 
+
+
         manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
             @Override
             public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
@@ -101,12 +112,36 @@ public class ManageStudents implements Initializable {
                         final int index = row.getIndex();
                         if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
                             manageStudentsTable.getSelectionModel().clearSelection();
+                            event.consume();
                         }
                     }
                 });
                 return row;
             }
         });
+
+        populateTable();
+    }
+
+    public void populateTable() {
+        tableRows.clear();
+        manageStudentsTable.getColumns().clear();
+        this.data.clear();
+        database = new Database();
+        this.data = database.getStudents();
+
+        for (int i = 0; i < data.size(); i++) {
+            tableRows.add(new ManageStudentsTabTableRow(data.get(i).getName(),
+                    "" + data.get(i).getID(), data.get(i).getEmail()));
+        }
+
+        root = new RecursiveTreeItem<ManageStudentsTabTableRow>(
+                tableRows, RecursiveTreeObject::getChildren
+        );
+
+        manageStudentsTable.getColumns().setAll(nameCol, idCol, emailCol);
+        manageStudentsTable.setRoot(root);
+        manageStudentsTable.setShowRoot(false);
     }
 
 }

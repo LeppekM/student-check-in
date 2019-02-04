@@ -421,6 +421,28 @@ public class Database {
         return false;
     }
 
+    public ObservableList<Student> getStudents() {
+        ObservableList<Student> studentsList = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM students");
+            String name;
+            int id;
+            String email;
+            while (resultSet.next()) {
+                name = resultSet.getString("studentName");
+                id = resultSet.getInt("studentID");
+                email = resultSet.getString("email");
+                studentsList.add(new Student(name, id, email));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return studentsList;
+    }
+
     /**
      * Gets a student from the database based on their RFID
      *
