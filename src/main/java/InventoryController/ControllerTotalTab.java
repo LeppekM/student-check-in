@@ -323,7 +323,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 return row;
             }
         });
-        //TODO Separate this into its own method. Duplicate code for database selection is a no no.
         getNames();
 
         sortCheckBox = new CheckComboBox<>(types);
@@ -400,7 +399,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 || (partID != null && partID.toLowerCase().contains(input))));
     }
 
-    public ArrayList<String> getSelctedFilters(){
+    public ArrayList<String> getSelectedFilters(){
         return selectedFilters;
     }
 
@@ -413,7 +412,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         tableRows.clear();
         totalTable.getColumns().clear();
         this.data.clear();
-        ArrayList<String> types = getSelctedFilters();
+        ArrayList<String> types = getSelectedFilters();
         System.out.println(types);
         if(!types.isEmpty()) {
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
