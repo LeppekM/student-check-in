@@ -2,10 +2,12 @@ package CheckItemsController;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.HBox;
@@ -14,7 +16,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewBarcodeHelper {
+public class TransitionHelper {
 
     void spinnerInit(Spinner<Integer> spinner){
         final int initialValue = 1;
@@ -41,7 +43,7 @@ public class NewBarcodeHelper {
         fadeTransition2.play();
     }
 
-    void FadeTransition(Object object){
+    void fadeTransition(Object object){
         int initial = 0;
         int end = 1;
         int duration = 500;
@@ -51,21 +53,50 @@ public class NewBarcodeHelper {
         fadeTransition.play();
     }
 
-    void translateItems(JFXButton button1, JFXButton button2, JFXCheckBox box1, JFXCheckBox box2, int direction){
+    void fadeTransitionNewStudentObjects(Label email, JFXTextField emailField){
+        fadeTransition(email);
+        fadeTransition(emailField);
+    }
+
+    void translateExtendedStudentItems(Label course, Label prof, Label due, JFXTextField courseT, JFXTextField profT, JFXDatePicker dueT, JFXCheckBox box, JFXButton butt, JFXButton butt2){
+        int direction = 35;
+        int direction2 = 10;
+        course.setTranslateY(direction);
+        prof.setTranslateY(direction);
+        due.setTranslateY(direction);
+        courseT.setTranslateY(direction);
+        profT.setTranslateY(direction);
+        dueT.setTranslateY(direction);
+    }
+
+    void translateNewStudentItems(Label barcode, Label quantity, JFXTextField barcodeField, JFXTextField quantityField, JFXCheckBox box, JFXButton submit, JFXButton reset){
+        List<TranslateTransition> transitions = new ArrayList<>();
+        int duration = 500;
+        int direction = 50;
+        transitions.add(new TranslateTransition(Duration.millis(duration), barcode));
+        transitions.add(new TranslateTransition(Duration.millis(duration), quantity));
+        transitions.add(new TranslateTransition(Duration.millis(duration), barcodeField));
+        transitions.add(new TranslateTransition(Duration.millis(duration), quantityField));
+        transitions.add(new TranslateTransition(Duration.millis(duration), box));
+        transitions.add(new TranslateTransition(Duration.millis(duration), submit));
+        transitions.add(new TranslateTransition(Duration.millis(duration), reset));
+        translateList(transitions, direction);
+    }
+
+    void translateBarcodeItems(JFXButton button1, JFXButton button2, JFXCheckBox box1, JFXCheckBox box2, int direction){
         List<TranslateTransition> transitions = new ArrayList<>();
         int duration = 500;
         transitions.add(new TranslateTransition(Duration.millis(duration), button1));
         transitions.add(new TranslateTransition(Duration.millis(duration), button2));
         transitions.add(new TranslateTransition(Duration.millis(duration), box1));
         transitions.add(new TranslateTransition(Duration.millis(duration), box2));
+        translateList(transitions, direction);
+    }
 
-        for (TranslateTransition transition : transitions) {
+    private void translateList(List<TranslateTransition> items, int direction){
+        for (TranslateTransition transition : items) {
             transition.setByY(direction);
             transition.play();
         }
-
-
     }
-
-
 }
