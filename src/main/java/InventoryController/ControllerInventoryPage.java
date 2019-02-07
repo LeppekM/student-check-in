@@ -120,8 +120,10 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 boolean fault = (rs.getInt("isFaulty") == 1) ? true : false;
                 int partID = rs.getInt("partID");
                 int isDeleted = rs.getInt("isDeleted");
+                int isCheckedOut = rs.getInt("isCheckedOut");
 //                String faultDesc = rs.getString("faultDesc");
                 Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID, isDeleted);
+                part.setCheckedOut(isCheckedOut);
                 data.add(part);
             }
         } catch (SQLException e) {
@@ -139,30 +141,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         return data;
     }
 
-    /**
-     * This method brings up the FXML page for showing the info about the selected part
-     *
-     * @author Matthew Karcz
-     */
-    public void showInfoPage(Part part, String type){
-        Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/ShowPart.fxml"));
-            Parent root = loader.load();
-            ((ControllerShowPart) loader.getController()).initPart(part, type);
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Part Information");
-            stage.initOwner(tabPane.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("msoe.png"));
-            stage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
     /**
      *Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
