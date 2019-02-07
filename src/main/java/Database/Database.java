@@ -422,6 +422,10 @@ public class Database {
         return false;
     }
 
+    /**
+     * Gets the list of students from the database
+     * @return observable list of students
+     */
     public ObservableList<Student> getStudents() {
         ObservableList<Student> studentsList = FXCollections.observableArrayList();
         try {
@@ -446,6 +450,10 @@ public class Database {
         return studentsList;
     }
 
+    /**
+     * Gets the list of workers from the database
+     * @return observable list of workers
+     */
     public ObservableList<Worker> getWorkers(){
         ObservableList<Worker> workerList = FXCollections.observableArrayList();
         try{
@@ -453,14 +461,16 @@ public class Database {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM workers");
             String name;
             String email;
+            String pass;
             int id;
             boolean admin;
             while (resultSet.next()){
                 id = resultSet.getInt("workerID");
                 name = resultSet.getString("workerName");
+                pass = resultSet.getString("pass");
                 email = resultSet.getString("email");
                 admin = resultSet.getByte("isAdmin") == 1;
-                workerList.add(new Worker(name,email,id,admin));
+                workerList.add(new Worker(name, email, pass, id, admin));
             }
             resultSet.close();
             statement.close();

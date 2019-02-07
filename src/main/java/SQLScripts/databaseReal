@@ -402,6 +402,7 @@ create table workers (
   workerID   int NOT NULL AUTO_INCREMENT,
   email      varchar(50),
   workerName varchar(50),
+  pass       varchar(20),
   isAdmin    bit,
   createdAt  date,
   updatedAt  date,

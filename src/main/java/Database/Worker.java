@@ -4,12 +4,14 @@ public class Worker {
 
     private String name;
     private String email;
+    private String pass;
     private int workerID;
     private boolean isAdmin;
 
-    public Worker(String name, String email, int workerID, boolean isAdmin){
+    public Worker(String name, String email, String pass, int workerID, boolean isAdmin){
         this.name = name;
         this.email = email;
+        this.pass = pass;
         this.workerID = workerID;
         this.isAdmin = isAdmin;
     }
@@ -28,6 +30,14 @@ public class Worker {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPass(){
+        return pass;
+    }
+
+    public void setPass(String pass){
+        this.pass = pass;
     }
 
     public int getWorkerID() {
