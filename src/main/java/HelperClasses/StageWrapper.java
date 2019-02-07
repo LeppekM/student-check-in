@@ -107,8 +107,9 @@ public class StageWrapper {
 
     public void errorAlert(String errorText){
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setHeaderText("Input not valid");
+        errorAlert.setHeaderText("Error");
         errorAlert.setContentText(errorText);
+        errorAlert.initStyle(StageStyle.UTILITY);
         errorAlert.showAndWait();
     }
 

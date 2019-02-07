@@ -130,12 +130,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         submitTimer();
         barcodeListener();
     }
-    public void submitAfter15Mins(KeyEvent keyEvent){
 
+    /**
+     * Method to submit after new student ID is scanned
+     * @param keyEvent Keyevent recording any action
+     */
+    public void submitAfterStudentIDScanned(KeyEvent keyEvent){
         studentIDVerifier.add(keyEvent.getCharacter());
-
         if(stageWrapper.getStudentID(studentIDVerifier).contains("rfid")) {
             submit();
+            studentIDVerifier.clear();
         }
     }
 
@@ -206,6 +210,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     public void submit() {
         Student thisStudent = database.selectStudent(getstudentID());
+        if(!fieldsFilled()){
+            stageWrapper.errorAlert("Please fill out all fields before submitting info!");
+            return;
+        }
         if (thisStudent.getOverdueItems().size() == 0) {
             if (extendedCheckoutIsSelected()) {
                 if(newStudentIsCheckingOutItem()){
@@ -221,14 +229,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                     createNewStudent();
                 }
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
-
             }
             reset();
         } else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Student has overdue items and cannot check anything" +
-                    " else out until they return or pay for these items");
-            alert.initStyle(StageStyle.UTILITY);
-            alert.showAndWait();
+            stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
         }
     }
 
@@ -342,7 +346,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Drops down more fields to create a new student
      */
     private void setNewStudentDropdown(){
-        stageWrapper.slidingAlert("Student Not In System", "Please fill out student name and email so they can be added to system");
         transitionHelper.translateExtendedStudentItems(courseNameLabel, profNameLabel, dueAt, courseName, profName, datePicker, extended, submitButton, resetButton);
         transitionHelper.translateNewStudentItems(scanBarcode, quantityLabel, barcode, quantity, extended, submitButton, resetButton);
         transitionHelper.fadeTransitionNewStudentObjects(studentEmailLabel, studentEmail);

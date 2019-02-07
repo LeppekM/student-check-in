@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#submitAfter15Mins" prefHeight="620.0" prefWidth="789.0" style="jfx-rippler-fill: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#submitAfterStudentIDScanned" prefHeight="620.0" prefWidth="789.0" style="jfx-rippler-fill: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
    <children>
       <JFXTextField fx:id="studentID" layoutX="342.0" layoutY="57.0" onKeyReleased="#checkStudentHasOverdue" prefHeight="24.0" prefWidth="125.0" />
       <JFXTextField fx:id="studentNameField" disable="true" layoutX="342.0" layoutY="110.0" prefHeight="25.0" prefWidth="125.0" />
@@ -59,7 +59,7 @@
       <Label fx:id="courseNameLabel" layoutX="256.0" layoutY="299.0" text="Course Name" visible="false" />
       <Label fx:id="profNameLabel" layoutX="243.0" layoutY="364.0" text="Instructor Name" visible="false" />
       <JFXDatePicker fx:id="datePicker" defaultColor="#4059a9" layoutX="343.0" layoutY="412.0" visible="false" />
-      <HBox fx:id="HBoxBarcode" layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0">
+      <HBox fx:id="HBoxBarcode" layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <JFXButton fx:id="addNewBarcode" disable="true" onAction="#newBarcode" prefHeight="36.0" prefWidth="0.0">
                <graphic>
