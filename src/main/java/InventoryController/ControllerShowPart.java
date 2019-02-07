@@ -104,7 +104,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
             this.priceField.setText("$" + df.format(part.getPrice()/100));
-            this.vendorList.setText(vendorInformation.getVendorFromID(part.getVendor()));
+            //this.vendorList.setText(vendorInformation.getVendorFromID(part.getVendor()));
             this.locationField.setText(part.getLocation());
             this.barcodeField.setText(part.getBarcode());
         }
@@ -139,10 +139,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         System.out.println(type);
         switch(type){
             case "total":
-                if(part.getFault())
-                    setFaultElements();
-                else
-                    setTotalElements();
+                setTotalElements();
                 break;
             case "fault":
                 setFaultElements();
