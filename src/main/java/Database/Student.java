@@ -27,6 +27,12 @@ public class Student {
         this.savedItems = savedItems;
     }
 
+    public Student(String name, int ID, String email) {
+        this.name = name;
+        this.ID = ID;
+        this.email = email;
+    }
+
     public String getName() {
         return name;
     }

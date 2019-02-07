@@ -232,6 +232,22 @@ create table students (
 
 call load_students();
 
+drop table if exists workers;
+create table workers (
+  workerID   int NOT NULL AUTO_INCREMENT,
+  email      varchar(50),
+  workerName varchar(50),
+  pass       varchar(20),
+  isAdmin    bit,
+  createdAt  date,
+  updatedAt  date,
+  deletedAt  date,
+  createdBy  varchar(50),
+  updatedBy  varchar(50),
+  deletedBy  varchar(50),
+  PRIMARY KEY (workerID)
+);
+
 drop table if exists fault;
 create table fault (
   checkoutID  int NOT NULL,
