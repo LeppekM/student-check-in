@@ -8,318 +8,70 @@ CREATE PROCEDURE load_parts()
     TRUNCATE TABLE parts;
     START TRANSACTION;
     WHILE i < 683 DO
-      IF i < 104
-      THEN
+      IF i < 104 THEN
         set j = i;
-        insert into parts (partName,
-                           serialNumber,
-                           manufacturer,
-                           price,
-                           vendorID,
-                           location,
-                           barcode,
-                           isFaulty,
-                           isCheckedOut,
-                           createdAt,
-                           createdBy,
-                           isDeleted)
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
         values ('Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', j, 0, 0, current_date, 'root', 0);
-<<<<<<< .merge_file_a16976
-      ELSEIF i < 208
-        THEN
-          set j = i - 103;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', j, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 298
-        THEN
-          set j = i - 207;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', j, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 379
-        THEN
-          set j = i - 297;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9843, 3, 'S350 D1', 123456, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 440
-        THEN
-          set j = i - 378;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', j, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 467
-        THEN
-          set j = i - 439;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', j, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 480
-        THEN
-          set j = i - 466;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Olimex ECG/EMG', j, 'MSOE', 2453, 1, 'S350 G1', j, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 494
-        THEN
-          set j = i - 479;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('TENS Unit', j, 'TENS', 4999, 4, 'S350 H1', j, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 580
-        THEN
-          set j = i - 493;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Analog Discovery 2', j, 'Digilent', 27900, 5, 'S350 I1', j, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 592
-        THEN
-          set j = i - 579;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Fluke 123 Scopemeter', j, 'Fluke', 189900, 6, 'S350 J1', j, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 611
-        THEN
-          set j = i - 591;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Fluke 43 & 43B Power Quality Analyzer',
-                  j,
-                  'Fluke',
-                  346900,
-                  6,
-                  'S350 K1',
-                  j,
-                  0,
-                  0,
-                  current_date,
-                  'root',
-                  0);
-      ELSEIF i < 632
-        THEN
-          set j = i - 610;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', 7070, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 652
-        THEN
-          set j = i - 631;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Faulty Parts', j, 'MSOE', 100000, 7, 'S350 L2', j, 1, 0, current_date, 'root', 0);
-      ELSEIF i < 672
-        THEN
-          set j = i - 651;
-          insert into parts (partName,
-                             serialNumber,
-                             manufacturer,
-                             price,
-                             vendorID,
-                             location,
-                             barcode,
-                             isFaulty,
-                             isCheckedOut,
-                             createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Checked Out Parts', j, 'MSOE', 150000, 7, 'S350 L2', j, 0, 1, current_date, 'root', 0);
-      ELSE
-        set j = i - 671;
-        insert into parts (partName,
-                           serialNumber,
-                           manufacturer,
-                           price,
-                           vendorID,
-                           location,
-                           barcode,
-                           isFaulty,
-                           isCheckedOut,
-                           createdAt,
-                           createdBy,
-                           isDeleted)
-=======
       ELSEIF i < 208 THEN
-        set j = i - 103;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 103;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 298 THEN
-        set j = i - 207;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 207;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 379 THEN
-        set j = i - 297;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9843, 3, 'S350 D1', 123456, 0, 0, current_date, 'root', 0);
+          set j = i - 297;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9843, 3, 'S350 D1', 123456, 0, 0, current_date, 'root', 0);
       ELSEIF i < 440 THEN
-        set j = i - 378;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 378;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 467 THEN
-        set j = i - 439;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 439;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 480 THEN
-        set j = i - 466;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Olimex ECG/EMG', j, 'MSOE', 2453, 1, 'S350 G1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 466;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Olimex ECG/EMG', j, 'MSOE', 2453, 1, 'S350 G1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 494 THEN
-        set j = i - 479;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('TENS Unit', j, 'TENS', 4999, 4, 'S350 H1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 479;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('TENS Unit', j, 'TENS', 4999, 4, 'S350 H1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 580 THEN
-        set j = i - 493;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Analog Discovery 2', j, 'Digilent', 27900, 5, 'S350 I1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 493;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Analog Discovery 2', j, 'Digilent', 27900, 5, 'S350 I1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 592 THEN
-        set j = i - 579;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Fluke 123 Scopemeter', j, 'Fluke', 189900, 6, 'S350 J1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 579;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Fluke 123 Scopemeter', j, 'Fluke', 189900, 6, 'S350 J1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 611 THEN
-        set j = i - 591;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Fluke 43 & 43B Power Quality Analyzer', j, 'Fluke', 346900, 6, 'S350 K1', j, 0, 0, current_date, 'root', 0);
+          set j = i - 591;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('Fluke 43 & 43B Power Quality Analyzer', j, 'Fluke', 346900, 6, 'S350 K1', j, 0, 0, current_date, 'root', 0);
       ELSEIF i < 632 THEN
-        set j = i - 610;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', 7070, 0, 0, current_date, 'root', 0);
-#      ELSEIF i < 652 THEN
-#        set j = i - 631;
-#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-#        values ('Faulty Parts', j, 'MSOE', 100000, 7, 'S350 L2', j, 1, 0, current_date, 'root', 0);
-#      ELSEIF i < 672 THEN
-#        set j = i - 651;
-#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-#        values ('Checked Out Parts', j, 'MSOE', 150000, 7, 'S350 L2', j, 0, 1, current_date, 'root', 0);
-#      ELSEIF i < 676 THEN
-#        set j = i - 671;
-#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-#        values ('Overdue Parts', j, 'MSOE', 160000, 7, 'S350 L3', j, 0, 1, current_date, 'root', 0);
-      ELSE
-#        set j = i - 675;
+          set j = i - 610;
+          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+          values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', 7070, 0, 0, current_date, 'root', 0);
+ #      ELSEIF i < 652 THEN
+ #        set j = i - 631;
+ #        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+ #        values ('Faulty Parts', j, 'MSOE', 100000, 7, 'S350 L2', j, 1, 0, current_date, 'root', 0);
+ #      ELSEIF i < 672 THEN
+ #        set j = i - 651;
+ #        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+ #        values ('Checked Out Parts', j, 'MSOE', 150000, 7, 'S350 L2', j, 0, 1, current_date, 'root', 0);
+ #      ELSEIF i < 676 THEN
+ #        set j = i - 671;
+ #        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+ #        values ('Overdue Parts', j, 'MSOE', 160000, 7, 'S350 L3', j, 0, 1, current_date, 'root', 0);
+       ELSE
+ #        set j = i - 675;
         set j = i - 631;
         insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
->>>>>>> .merge_file_a18236
         values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', 15900, 8, 'S350 M1', j, 0, 0, current_date, 'root', 0);
       END IF;
       set i = i + 1;
