@@ -56,16 +56,8 @@ CREATE PROCEDURE load_parts()
           set j = i - 610;
           insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
           values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', 7070, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 652 THEN
-          set j = i - 631;
-          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-          values ('Faulty Parts', j, 'MSOE', 100000, 7, 'S350 L2', j, 1, 0, current_date, 'root', 0);
-      ELSEIF i < 672 THEN
-          set j = i - 651;
-          insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-          values ('Checked Out Parts', j, 'MSOE', 150000, 7, 'S350 L2', j, 0, 1, current_date, 'root', 0);
       ELSE
-        set j = i - 671;
+        set j = i - 631;
         insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
         values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', 15900, 8, 'S350 M1', j, 0, 0, current_date, 'root', 0);
       END IF;
