@@ -1,5 +1,6 @@
 package InventoryController;
 
+import HelperClasses.StageWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -35,7 +36,8 @@ public class ControllerMenu implements Initializable {
     @FXML
     private ImageView msoeBackgroundImage;
 
-    public List <String> studentIDArray = new ArrayList<>();
+    private List <String> studentIDArray = new ArrayList<>();
+    private StageWrapper stageWrapper = new StageWrapper();
 
 
     @Override
@@ -80,17 +82,9 @@ public class ControllerMenu implements Initializable {
 
     public void openCheckoutFromScanner(KeyEvent keyEvent){
         studentIDArray.add(keyEvent.getCharacter());
-        if(getStudentID().matches("^(rfid)$")) {
+        if(stageWrapper.getStudentID(studentIDArray).matches("^(rfid)$")) {
                 newStage("fxml/CheckOutItems.fxml");
             }
-    }
-
-    private String getStudentID(){
-        StringBuilder studentID = new StringBuilder();
-        for (int i =0; i<studentIDArray.size(); i++){
-            studentID.append(studentIDArray.get(i));
-        }
-        return studentID.toString();
     }
 
 

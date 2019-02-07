@@ -5,15 +5,18 @@ import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import com.jfoenix.controls.*;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.StageStyle;
@@ -22,7 +25,6 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXSpinner loadIndicator;
 
     @FXML
-    private JFXTextField studentID, barcode, barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName;
+    private JFXTextField studentID, barcode, barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName, studentNameField, studentEmail;
 
     @FXML
     private JFXDatePicker datePicker;
@@ -53,7 +55,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private Spinner<Integer> newQuantity, newQuantity2, newQuantity3, newQuantity4, newQuantity5;
 
     @FXML
-    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel;
+    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel, studentEmailLabel, scanBarcode;
 
     @FXML
     private TextArea faultyTextArea;
@@ -62,7 +64,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private JFXToggleButton checkingOutToggle;
 
     @FXML
-    private HBox HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
+    private HBox HBoxBarcode, HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
 
     private CheckoutObject checkoutObject;
 
@@ -71,11 +73,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
-    private NewBarcodeHelper barcodeHelper = new NewBarcodeHelper();
+    private TransitionHelper transitionHelper = new TransitionHelper();
     private ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
     private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
     private String partNameFromBarcode;
     private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
+    private List<String> studentIDVerifier = new ArrayList<>();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -122,7 +126,33 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         getStudentName();
         unlockFields();
         unlockExtended();
-        barcodeHelper.spinnerInit(newQuantity);
+        transitionHelper.spinnerInit(newQuantity);
+        submitTimer();
+        barcodeListener();
+    }
+
+    /**
+     * Method to submit after new student ID is scanned
+     * @param keyEvent Keyevent recording any action
+     */
+    public void submitAfterStudentIDScanned(KeyEvent keyEvent){
+        studentIDVerifier.add(keyEvent.getCharacter());
+        if(stageWrapper.getStudentID(studentIDVerifier).contains("rfid")) {
+            submit();
+            studentIDVerifier.clear();
+        }
+    }
+
+
+    /**
+     * If no movement is recorded on page for 15 minutes, item will submit automatically
+     */
+    private void submitTimer(){
+        int duration =15;
+        PauseTransition delay = new PauseTransition(Duration.minutes(duration));
+        delay.setOnFinished(event -> submit());
+        main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
+        delay.play();
     }
 
 
@@ -180,38 +210,52 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     public void submit() {
         Student thisStudent = database.selectStudent(getstudentID());
+        if(!fieldsFilled()){
+            stageWrapper.errorAlert("Please fill out all fields before submitting info!");
+            return;
+        }
         if (thisStudent.getOverdueItems().size() == 0) {
             if (extendedCheckoutIsSelected()) {
+                if(newStudentIsCheckingOutItem()){
+                    createNewStudent();
+                }
                 extendedCheckoutHelper();
             } else if (itemBeingCheckedBackInIsFaulty()) {
                 faultyCheckinHelper();
             } else if (itemIsBeingCheckedIn()) {
                 checkOut.setItemtoCheckedin(getBarcode());
             } else {
+                if(newStudentIsCheckingOutItem()){
+                    createNewStudent();
+                }
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
             }
             reset();
         } else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Student has overdue items and cannot check anything" +
-                    " else out until they return or pay for these items");
-            alert.initStyle(StageStyle.UTILITY);
-            alert.showAndWait();
+            stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
         }
     }
 
-
+    /**
+     * Helper method to checkout an item
+     */
     private void extendedCheckoutHelper() {
         extendedCheckOut.addExtendedCheckout(getBarcode(), getstudentID(), getProfName(), getCourseName(), getExtendedDueDate());
     }
 
+    /**
+     * Helper method to checkin an item
+     */
     private void faultyCheckinHelper() {
         faultyCheckIn.setPartToFaultyStatus(getBarcode());
         faultyCheckIn.addToFaultyTable(getBarcode(), faultyTextArea.getText());
         checkOut.setItemtoCheckedin(getBarcode());
-
     }
 
-
+    /**
+     * Checks if item is being checked in
+     * @return True if item is being checked in
+     */
     private boolean itemIsBeingCheckedIn() {
         checkoutParts = checkOut.returnCheckedOutObjects();
         int studentID = getstudentID();
@@ -228,10 +272,18 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         return false;
     }
 
+    /**
+     * Helper method if item is extended checkout
+     * @return True if item is extended
+     */
     private boolean extendedCheckoutIsSelected() {
         return !itemIsBeingCheckedIn() && extended.isSelected();
     }
 
+    /**
+     * Helper method if item being checked back in is faulty
+     * @return True if item is faulty
+     */
     private boolean itemBeingCheckedBackInIsFaulty() {
         return itemIsBeingCheckedIn() && faulty.isSelected();
     }
@@ -249,14 +301,67 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         stageWrapper.newStage("fxml/Menu.fxml", main);
     }
 
+    /**
+     * Gets student name
+     */
     private void getStudentName() {
         studentID.focusedProperty().addListener((ov, oldV, newV) -> {
             if (!newV) {
-                studentNameText.setText(student.getStudentNameFromID(studentID.getText()));
+                extended.setDisable(false);
+                resetButton.setDisable(false);
+                addNewBarcode.setDisable(false);
+                String studentName = student.getStudentNameFromID(studentID.getText());
+                if(studentName.isEmpty()){ //If no student is found in database create new one
+                    setNewStudentDropdown();
+                }
+                studentNameField.setText(student.getStudentNameFromID(studentID.getText()));
             }
-
         });
     }
+
+    private void barcodeListener(){
+        barcode.focusedProperty().addListener((ov, oldV, newV) -> {
+            if (!newV) {
+               main.requestFocus();
+            }
+        });
+    }
+
+    /**
+     * Adds new student to database
+     */
+    private void createNewStudent(){
+        student.createNewStudent(getstudentID(), getStudentEmail(), getNewStudentName());
+    }
+
+    /**
+     * Checks if student is new
+     * @return True if student email has text
+     */
+    private boolean newStudentIsCheckingOutItem(){
+        return !studentEmail.getText().isEmpty();
+    }
+
+    /**
+     * Drops down more fields to create a new student
+     */
+    private void setNewStudentDropdown(){
+        transitionHelper.translateExtendedStudentItems(courseNameLabel, profNameLabel, dueAt, courseName, profName, datePicker, extended, submitButton, resetButton);
+        transitionHelper.translateNewStudentItems(scanBarcode, quantityLabel, barcode, quantity, extended, submitButton, resetButton);
+        transitionHelper.fadeTransitionNewStudentObjects(studentEmailLabel, studentEmail);
+        setItemStatusNewStudent();
+    }
+
+    /**
+     * Helper method to set button access
+     */
+    private void setItemStatusNewStudent(){
+        studentEmail.setVisible(true);
+        studentEmailLabel.setVisible(true);
+        studentNameField.setDisable(false);
+        studentNameField.requestFocus();
+    }
+
 
     /**
      * Resets all fields
@@ -365,6 +470,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         stageWrapper.acceptIntegerOnly(barcode);
     }
 
+    /**
+     * Sets item status to in or out based on database queries
+     */
     private void setItemStatus() {
         barcode.focusedProperty().addListener((ov, oldv, newV) -> {
             if (!newV && !barcode.getText().isEmpty()) {
@@ -408,14 +516,42 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
+    /**
+     * When new student is being created, gets their email address
+     * @return Email address of new student
+     */
+    private String getStudentEmail(){
+        return studentEmail.getText();
+    }
+
+    /**
+     * Gets the name of a new student in database
+     * @return New student name
+     */
+    private String getNewStudentName(){
+        return studentNameField.getText();
+    }
+
+    /**
+     * Gets professor name
+     * @return Professor name
+     */
     private String getProfName() {
         return profName.getText();
     }
 
+    /**
+     * Gets course name
+     * @return Course name
+     */
     private String getCourseName() {
         return courseName.getText();
     }
 
+    /**
+     * Gets extended due date
+     * @return Return extended date
+     */
     private String getExtendedDueDate() {
         return datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
@@ -516,10 +652,18 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
+    /**
+     * Fields to check if user clicks away
+     * @return Returns true if fields are not empty
+     */
     private boolean extendedItemLossInfo() {
         return !(courseName.getText().isEmpty() | profName.getText().isEmpty() | datePicker.getValue() == null);
     }
 
+    /**
+     * Alerts user if they click away and information could be lost
+     * @return User response to alert
+     */
     private boolean loseExtendedInformation() {
         if (extendedItemLossInfo()) {
             if (!fieldsNotFilledDialog()) {
@@ -529,6 +673,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         return false;
     }
 
+    /**
+     * Alerts user if they click away and information could be lost
+     * @return User response to alert
+     */
     private boolean faultyItemLossInfo() {
         if (!faultyTextArea.getText().isEmpty()) {
             if (!fieldsNotFilledDialog()) {
@@ -538,9 +686,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         return false;
     }
 
+    /**
+     * Helper method for checking out items
+     * @param value True or false to disable buttons
+     */
     private void setCheckoutItemsDisable(boolean value) {
         barcode.setDisable(value);
         studentID.setDisable(value);
+        addNewBarcode.setDisable(value);
     }
 
 
@@ -619,14 +772,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
-
+    /**
+     * Creates new barcode field
+     */
     public void newBarcode() {
         setNewBarcodeFieldsHelper();
-        barcodeHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
-        barcodeHelper.FadeTransition(HBoxBarcode2);
-        barcodeHelper.spinnerInit(newQuantity2);
+        transitionHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
+        transitionHelper.fadeTransition(HBoxBarcode2);
+        transitionHelper.spinnerInit(newQuantity2);
     }
 
+    /**
+     * Sets correct field info when new barcode field is added
+     */
     private void setNewBarcodeFieldsHelper() {
         extended.setDisable(true);
         faulty.setDisable(true);
@@ -638,28 +796,57 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         HBoxBarcode2.setVisible(true);
     }
 
-
+    /**
+     * Creates new barcode field
+     */
     public void newBarcode2() {
-        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3);
+        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3, 60, true);
     }
 
+    /**
+     * Creates new barcode field
+     */
     public void newBarcode3() {
-        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4);
+        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4, 60, true);
     }
 
+    /**
+     * Creates new barcode field
+     */
     public void newBarcode4() {
-        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5);
+        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5, 60, true);
     }
 
-    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
-        barcodeHelper.translateItems(submitButton, resetButton, extended, faulty, 60);
-        barcodeHelper.FadeTransition(hBoxBarcode4);
-        barcodeHelper.FadeTransition(barcode4);
-        barcodeHelper.spinnerInit(newQuantity4);
-        hBoxBarcode4.setVisible(true);
-        barcode4.setVisible(true);
+    /**
+     * Removes barcode
+     */
+    public void deleteBarcode1(){
+        //TODO: Not functioning
+        NewBarcodeFieldHelper(HBoxBarcode, barcode, newQuantity, -60, false);
     }
 
+    /**
+     * Helper method to generate new barcode
+     * @param hBoxBarcode4 HBox parent to be used
+     * @param barcode4 Barcode field to be used
+     * @param newQuantity4 Quantity of parts
+     * @param direction Direction of parts to be moved
+     * @param value Set visible true or false
+     */
+    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4, int direction, boolean value) {
+        transitionHelper.translateBarcodeItems(submitButton, resetButton, extended, faulty, direction);
+        transitionHelper.fadeTransition(hBoxBarcode4);
+        transitionHelper.fadeTransition(barcode4);
+        transitionHelper.spinnerInit(newQuantity4);
+        hBoxBarcode4.setVisible(value);
+        barcode4.setVisible(value);
+    }
+
+    /**
+     * Checks if input contains number
+     * @param input Input string entered
+     * @return True if it input contains number
+     */
     private static boolean containsNumber(String input) {
         boolean parsable = true;
         try {
