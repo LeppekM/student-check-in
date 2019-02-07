@@ -1,5 +1,7 @@
 package InventoryController;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import HelperClasses.StageWrapper;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
