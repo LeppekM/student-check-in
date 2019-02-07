@@ -4,6 +4,8 @@ import Database.*;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -129,10 +131,29 @@ public class ControllerManageWorkers implements Initializable {
     }
 
     private void populateTable(){
+        tableRows.clear();
+        manageWorkersTable.getColumns().clear();
+        data.clear();
+        database = new Database();
+        data = database.getWorkers();
+
+        for (int i = 0; i < data.size(); i++){
+            tableRows.add(new ManageWorkersTabTableRow(data.get(i).getName(), data.get(i).getEmail(),
+                    data.get(i).isAdmin()));
+        }
+
+        root = new RecursiveTreeItem<ManageWorkersTabTableRow>(
+                tableRows, RecursiveTreeObject::getChildren
+        );
+
+//        manageWorkersTable.getColumns().setAll(nameCol, emailCol, adminCol);
+//        manageWorkersTable.setRoot(root);
+//        manageWorkersTable.setShowRoot(false);
 
     }
 
     public void addWorker(ActionEvent actionEvent) {
+        //todo
     }
 
     public void goBack(ActionEvent actionEvent) {

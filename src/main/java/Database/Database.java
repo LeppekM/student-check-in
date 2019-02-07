@@ -3,6 +3,7 @@ package Database;
 import InventoryController.CheckedOutItems;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import java.util.Date;
@@ -438,9 +439,37 @@ public class Database {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of students");
+            alert.showAndWait();
             e.printStackTrace();
         }
         return studentsList;
+    }
+
+    public ObservableList<Worker> getWorkers(){
+        ObservableList<Worker> workerList = FXCollections.observableArrayList();
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers");
+            String name;
+            String email;
+            int id;
+            boolean admin;
+            while (resultSet.next()){
+                id = resultSet.getInt("workerID");
+                name = resultSet.getString("workerName");
+                email = resultSet.getString("email");
+                admin = resultSet.getByte("isAdmin") == 1;
+                workerList.add(new Worker(name,email,id,admin));
+            }
+            resultSet.close();
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return workerList;
     }
 
     /**
