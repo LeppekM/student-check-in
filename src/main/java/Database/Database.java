@@ -3,6 +3,7 @@ package Database;
 import InventoryController.CheckedOutItems;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import java.util.Date;
@@ -171,7 +172,7 @@ public class Database {
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getString("barcode"), false,
+                        resultSet.getString("location"), resultSet.getString("barcode"), resultSet.getBoolean("isFaulty"),
                         resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
             }
             resultSet.close();
@@ -419,6 +420,66 @@ public class Database {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Gets the list of students from the database
+     * @return observable list of students
+     */
+    public ObservableList<Student> getStudents() {
+        ObservableList<Student> studentsList = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM students");
+            String name;
+            int id;
+            String email;
+            while (resultSet.next()) {
+                name = resultSet.getString("studentName");
+                id = resultSet.getInt("studentID");
+                email = resultSet.getString("email");
+                studentsList.add(new Student(name, id, email));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of students");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return studentsList;
+    }
+
+    /**
+     * Gets the list of workers from the database
+     * @return observable list of workers
+     */
+    public ObservableList<Worker> getWorkers(){
+        ObservableList<Worker> workerList = FXCollections.observableArrayList();
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers");
+            String name;
+            String email;
+            String pass;
+            int id;
+            boolean admin;
+            while (resultSet.next()){
+                id = resultSet.getInt("workerID");
+                name = resultSet.getString("workerName");
+                pass = resultSet.getString("pass");
+                email = resultSet.getString("email");
+                admin = resultSet.getByte("isAdmin") == 1;
+                workerList.add(new Worker(name, email, pass, id, admin));
+            }
+            resultSet.close();
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return workerList;
     }
 
     /**

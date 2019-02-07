@@ -1,5 +1,8 @@
 package InventoryController;
 
+import HelperClasses.StageWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 
 import javax.imageio.ImageIO;
@@ -27,26 +31,39 @@ public class ControllerMenu implements Initializable {
     private VBox mainMenuScene;
 
     @FXML
-    private Button inventory;
+    private Button inventory, manageStudents, manageWorkers;
 
     @FXML
     private ImageView msoeBackgroundImage;
 
-    public List <String> studentIDArray = new ArrayList<>();
+    private List <String> studentIDArray = new ArrayList<>();
+    private StageWrapper stageWrapper = new StageWrapper();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        manageStudents.setText("Manage\nStudents");
+        manageWorkers.setText("Manage\nWorkers");
         inventory.setOnAction(event -> openInventory());
+        manageStudents.setOnAction(event -> openMangeStudents());
+        manageWorkers.setOnAction(event -> openManageWorkers());
         Image image = new Image("images/msoeBackgroundImage.png");
         this.msoeBackgroundImage.setImage(image);
     }
 
-    public void openInventory(){
+    private void openInventory(){
         newStage("fxml/InventoryPage.fxml");
     }
 
+    private void openMangeStudents() {
+        newStage("fxml/manageStudents.fxml");
+    }
+
     public void openCheckItemsPage(){ newStage("fxml/CheckOutItems.fxml"); }
+
+    private void openManageWorkers() {
+        newStage("fxml/manageWorkers.fxml");
+    }
 
     public void newStage(String fxml){
         try {
@@ -65,17 +82,9 @@ public class ControllerMenu implements Initializable {
 
     public void openCheckoutFromScanner(KeyEvent keyEvent){
         studentIDArray.add(keyEvent.getCharacter());
-        if(getStudentID().matches("^(rfid)$")) {
+        if(stageWrapper.getStudentID(studentIDArray).matches("^(rfid)$")) {
                 newStage("fxml/CheckOutItems.fxml");
             }
-    }
-
-    private String getStudentID(){
-        StringBuilder studentID = new StringBuilder();
-        for (int i =0; i<studentIDArray.size(); i++){
-            studentID.append(studentIDArray.get(i));
-        }
-        return studentID.toString();
     }
 
 

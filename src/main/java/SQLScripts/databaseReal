@@ -56,16 +56,21 @@ CREATE PROCEDURE load_parts()
         set j = i - 610;
         insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
         values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', 7070, 0, 0, current_date, 'root', 0);
-      ELSEIF i < 652 THEN
-        set j = i - 631;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Faulty Parts', j, 'MSOE', 100000, 7, 'S350 L2', j, 1, 0, current_date, 'root', 0);
-      ELSEIF i < 672 THEN
-        set j = i - 651;
-        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
-        values ('Checked Out Parts', j, 'MSOE', 150000, 7, 'S350 L2', j, 0, 1, current_date, 'root', 0);
+#      ELSEIF i < 652 THEN
+#        set j = i - 631;
+#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+#        values ('Faulty Parts', j, 'MSOE', 100000, 7, 'S350 L2', j, 1, 0, current_date, 'root', 0);
+#      ELSEIF i < 672 THEN
+#        set j = i - 651;
+#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+#        values ('Checked Out Parts', j, 'MSOE', 150000, 7, 'S350 L2', j, 0, 1, current_date, 'root', 0);
+#      ELSEIF i < 676 THEN
+#        set j = i - 671;
+#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+#        values ('Overdue Parts', j, 'MSOE', 160000, 7, 'S350 L3', j, 0, 1, current_date, 'root', 0);
       ELSE
-        set j = i - 671;
+#        set j = i - 675;
+        set j = i - 631;
         insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
         values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', 15900, 8, 'S350 M1', j, 0, 0, current_date, 'root', 0);
       END IF;
@@ -87,6 +92,24 @@ CREATE PROCEDURE load_vendors()
     insert into vendors (vendor) values ('Fluke');
     insert into vendors (vendor) values ('Nexus');
     insert into vendors (vendor) values ('Milwaukee Tool');
+    COMMIT;
+  END;
+
+DROP PROCEDURE IF EXISTS load_checkout;
+CREATE PROCEDURE load_checkout()
+  BEGIN
+    TRUNCATE TABLE checkout;
+    START TRANSACTION;
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (671, 551168, 112233, current_date, current_date, current_date);
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (672, 551168, 112234, current_date, current_date, current_date);
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (673, 551168, 112235, current_date, current_date, current_date);
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (674, 551168, 112236, current_date, current_date, current_date);
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (675, 551168, 112236, current_date, current_date, current_date);
     COMMIT;
   END;
 
@@ -169,17 +192,20 @@ create table checkout (
   studentID  int NOT NULL,
   barcode    int NOT NULL,
   checkoutAt date,
+  prof varchar(256),
   reservedAt date,
   returnDate varchar(25),
-  course     varchar(25),
+  course     varchar(256),
   checkinAt  date,
   dueAt      date,
   createdAt  date,
   updatedAt  date,
   createdBy  varchar(50),
-  updateedBy varchar(50),
+  updatedBy varchar(50),
   PRIMARY KEY (checkoutID)
 );
+
+call load_checkout();
 
 drop table if exists vendors;
 create table vendors (
@@ -206,6 +232,22 @@ create table students (
 );
 
 call load_students();
+
+drop table if exists workers;
+create table workers (
+  workerID   int NOT NULL AUTO_INCREMENT,
+  email      varchar(50),
+  workerName varchar(50),
+  pass       varchar(20),
+  isAdmin    bit,
+  createdAt  date,
+  updatedAt  date,
+  deletedAt  date,
+  createdBy  varchar(50),
+  updatedBy  varchar(50),
+  deletedBy  varchar(50),
+  PRIMARY KEY (workerID)
+);
 
 drop table if exists fault;
 create table fault (
