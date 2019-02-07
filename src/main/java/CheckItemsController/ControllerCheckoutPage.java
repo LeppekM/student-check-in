@@ -129,9 +129,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
         barcodeListener();
-        //scanStudentIDSubmit();
     }
-    public void test3(KeyEvent keyEvent){
+    public void submitAfter15Mins(KeyEvent keyEvent){
 
         studentIDVerifier.add(keyEvent.getCharacter());
 
@@ -139,19 +138,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             submit();
         }
     }
-
-    private void scanStudentIDSubmit(){
-        final KeyCombination keyCombo = new KeyCodeCombination(KeyCode.valueOf("rfid"));
-        main.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if(keyCombo.match(event)){
-                    System.out.println("hi");
-                }
-            }
-        });
-    }
-
 
 
     /**
