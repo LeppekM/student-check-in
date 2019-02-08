@@ -12,12 +12,18 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -151,7 +157,47 @@ public class ControllerManageStudents implements Initializable {
     }
 
     public void addStudent() {
-
+        StringBuilder name = new StringBuilder();
+        String id = "";
+        String email = "";
+        boolean invalid = true;
+        while (invalid){
+            name = new StringBuilder(JOptionPane.showInputDialog(null, "Please enter the students first name."));
+            if (!name.toString().matches("[0-9]")){
+                invalid = false;
+            }else {
+                JOptionPane.showMessageDialog(null, "Students name is invalid.");
+            }
+        }
+        invalid = true;
+        while (invalid){
+            name.append(" ");
+            name.append(JOptionPane.showInputDialog(null, "Please enter the students last name."));
+            if (!name.toString().matches("[0-9]")){
+                invalid = false;
+            }else {
+                JOptionPane.showMessageDialog(null, "Students name is invalid.");
+            }
+        }
+        invalid = true;
+        while (invalid){
+            id = JOptionPane.showInputDialog(null, "Please enter the student RFID.");
+            if (!id.matches("[a-zA-Z]")){
+                invalid = false;
+            }else {
+                JOptionPane.showMessageDialog(null, "Students RFID is invalid.");
+            }
+        }
+        invalid = true;
+        while (invalid){
+            email = JOptionPane.showInputDialog(null, "Please enter the students MSOE email.");
+            if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
+                invalid = false;
+            }else {
+                JOptionPane.showMessageDialog(null, "Students email must be their MSOE email.");
+            }
+        }
+        database.addStudent(new Student(name.toString(),Integer.parseInt(id),email));
     }
 
     /**

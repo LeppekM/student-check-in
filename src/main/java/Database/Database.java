@@ -582,4 +582,18 @@ public class Database {
         return student;
     }
 
+    public void addStudent(Student s){
+        String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getID()
+                + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), 'root');";
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
 }
