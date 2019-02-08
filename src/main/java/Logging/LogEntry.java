@@ -2,12 +2,13 @@ package Logging;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class LogEntry {
     private String contents, origin;
-    private Date time;
-    public LogEntry(Date time, String content, String origin){
+    private LocalDateTime time;
+    public LogEntry(LocalDateTime time, String content, String origin){
 
         this.time = time;
         this.contents = content;

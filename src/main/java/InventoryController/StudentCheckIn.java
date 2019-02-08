@@ -16,15 +16,16 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class StudentCheckIn extends Application  {
     private static final BlockingQueue<LogEntry> queue = new LinkedBlockingQueue<LogEntry>();
-    public StudentCheckIn(){
 
-    }
+    public StudentCheckIn(){}
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
@@ -50,8 +51,9 @@ public class StudentCheckIn extends Application  {
      * @param data - LogEntry object to be sent to the Logger and printed to the log
      * @author Matt K
      */
-    public void sendToLogger(LogEntry data){
-        queue.offer(data);
+    public static void sendToLogger(String data, String origin){
+        LogEntry entry = new LogEntry(LocalDateTime.now(), data, origin);
+        queue.offer(entry);
     }
 }
 
