@@ -80,17 +80,18 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             = FXCollections.observableArrayList();
 
     @FXML
-    private JFXButton add;
+    private JFXButton add, searchButton;
 
     private final ObservableList<String> types = FXCollections.observableArrayList(new String[] { "All", "Checked Out", "Overdue", "Faulty"});
 
-    private final int CHECKBOX_X = 450, CHECKBOX_Y = 25, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
+    private final int CHECKBOX_X = 310, CHECKBOX_Y = 25, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
 
     private ArrayList<String> selectedFilters = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         add.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
+        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
 
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
@@ -286,13 +287,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         tableRows = FXCollections.observableArrayList();
 
-        searchInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                filterChanged(newValue);
-            }
-        });
-
         // Click to select if unselected and unselect if selected
         totalTable.setRowFactory(new Callback<TreeTableView<TotalTabTableRow>, TreeTableRow<TotalTabTableRow>>() {
             @Override
@@ -373,7 +367,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
-    private void filterChanged(String filter) {
+    @FXML
+    private void search() {
+        String filter = searchInput.getText();
         if (filter.isEmpty()) {
             totalTable.setRoot(root);
         }
@@ -413,7 +409,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().clear();
         this.data.clear();
         ArrayList<String> types = getSelectedFilters();
-        System.out.println(types);
+//        System.out.println(types);
         if(!types.isEmpty()) {
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
 

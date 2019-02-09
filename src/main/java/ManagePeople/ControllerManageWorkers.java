@@ -77,19 +77,19 @@ public class ControllerManageWorkers implements Initializable {
 
         adminCol = new JFXTreeTableColumn<>("Admin");
         adminCol.setPrefWidth(800/3);
-        adminCol.setCellFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean>, ObservableValue<Boolean>>() {
-            @Override
-            public ObservableValue<Boolean> call(TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean> param) {
-                SimpleBooleanProperty sbp = new SimpleBooleanProperty(param.getValue().getValue().getIsAdmin().get());
-                sbp.addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        //todo
-                    }
-                });
-                return sbp;
-            }
-        });
+//        adminCol.setCellFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean>, ObservableValue<Boolean>>() {
+//            @Override
+//            public ObservableValue<Boolean> call(TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean> param) {
+//                SimpleBooleanProperty sbp = new SimpleBooleanProperty(param.getValue().getValue().getIsAdmin().get());
+//                sbp.addListener(new ChangeListener<Boolean>() {
+//                    @Override
+//                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                        //todo
+//                    }
+//                });
+//                return sbp;
+//            }
+//        });
 
         tableRows = FXCollections.observableArrayList();
         searchInput.textProperty().addListener(new ChangeListener<String>() {
