@@ -596,4 +596,19 @@ public class Database {
         }
     }
 
+    public void addWorker(Worker w){
+        int bit = w.isAdmin()? 1 : 0;
+        String query = "insert into workers (email, workerName, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail() +
+                "', '" + w.getName() + "', '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), 'root');";
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add worker");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
 }
