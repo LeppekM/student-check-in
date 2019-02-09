@@ -190,7 +190,7 @@ public class ControllerManageWorkers implements Initializable {
         invalid = true;
         while (invalid && notIncluded){
             name = new StringBuilder(JOptionPane.showInputDialog(null, "Please enter the workers first name."));
-            if (!name.toString().matches("[0-9]") && !name.toString().equals("")){
+            if (!name.toString().matches("[0-9]*") && !name.toString().equals("")){
                 invalid = false;
             }else {
                 JOptionPane.showMessageDialog(null, "Workers first name is invalid or blank.");
@@ -200,7 +200,7 @@ public class ControllerManageWorkers implements Initializable {
         while (invalid && notIncluded){
             name.append(" ");
             name.append(JOptionPane.showInputDialog(null, "Please enter the workers last name."));
-            if (!name.toString().matches("[0-9]") && !name.toString().equals(" ")){
+            if (!name.toString().matches("[0-9]*") && !name.toString().equals(" ")){
                 invalid = false;
             }else {
                 JOptionPane.showMessageDialog(null, "Workers last name is invalid or blank.");
@@ -209,9 +209,14 @@ public class ControllerManageWorkers implements Initializable {
         invalid = true;
         while (invalid && notIncluded){
             pin = JOptionPane.showInputDialog(null, "Please enter a pin for the admin");
-            invalid = false;
+            if (pin.matches("[0-9]{4}")) {
+                invalid = false;
+            }else {
+                JOptionPane.showMessageDialog(null, "Must be a four digit pin");
+            }
         }
         database.addWorker(new Worker(name.toString(), email, pin, true));
+        populateTable();
     }
 
     public void goBack(ActionEvent actionEvent) {

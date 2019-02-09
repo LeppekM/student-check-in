@@ -164,13 +164,13 @@ public class ControllerManageStudents implements Initializable {
         boolean invalid = true;
         while (invalid && notIncluded){
             id = JOptionPane.showInputDialog(null, "Please enter the student RFID.");
-            if (database.selectStudent(Integer.parseInt(id)).getName().equals("")){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
-                alert.showAndWait();
-                notIncluded = false;
-                break;
-            }
-            if (!id.matches("[a-zA-Z]")){
+            if (!id.matches("[a-zA-Z]*") && id.length() == 5){
+                if (!database.selectStudent(Integer.parseInt(id)).getName().equals("")){
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
+                    alert.showAndWait();
+                    notIncluded = false;
+                    break;
+                }
                 invalid = false;
             }else {
                 JOptionPane.showMessageDialog(null, "Students RFID is invalid.");
@@ -179,20 +179,20 @@ public class ControllerManageStudents implements Initializable {
         invalid = true;
         while (invalid && notIncluded){
             name = new StringBuilder(JOptionPane.showInputDialog(null, "Please enter the students first name."));
-            if (!name.toString().matches("[0-9]")){
+            if (!name.toString().matches("[0-9]*") && !name.toString().equals("")){
                 invalid = false;
             }else {
-                JOptionPane.showMessageDialog(null, "Students first name is invalid.");
+                JOptionPane.showMessageDialog(null, "Students first name is invalid or blank.");
             }
         }
         invalid = true;
         while (invalid && notIncluded){
             name.append(" ");
             name.append(JOptionPane.showInputDialog(null, "Please enter the students last name."));
-            if (!name.toString().matches("[0-9]")){
+            if (!name.toString().matches("[0-9]*") && !name.toString().equals(" ")){
                 invalid = false;
             }else {
-                JOptionPane.showMessageDialog(null, "Students last name is invalid.");
+                JOptionPane.showMessageDialog(null, "Students last name is invalid or blank.");
             }
         }
         invalid = true;
@@ -207,6 +207,7 @@ public class ControllerManageStudents implements Initializable {
         if (notIncluded) {
             database.addStudent(new Student(name.toString(), Integer.parseInt(id), email));
         }
+        populateTable();
     }
 
     /**

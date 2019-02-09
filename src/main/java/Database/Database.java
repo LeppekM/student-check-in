@@ -462,15 +462,13 @@ public class Database {
             String name;
             String email;
             String pass;
-            int id;
             boolean admin;
             while (resultSet.next()){
-                id = resultSet.getInt("workerID");
                 name = resultSet.getString("workerName");
                 pass = resultSet.getString("pass");
                 email = resultSet.getString("email");
                 admin = resultSet.getByte("isAdmin") == 1;
-                workerList.add(new Worker(name, email, pass, id, admin));
+                workerList.add(new Worker(name, email, pass, admin));
             }
             resultSet.close();
             statement.close();
