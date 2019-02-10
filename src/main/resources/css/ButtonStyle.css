@@ -1,15 +1,18 @@
 /**
  Made by Bailey Terry
  */
-
-.JFXButton {
-    -fx-text-fill: white;
-    -fx-font-family: "Arial Narrow";
-    -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#e22828, #842727);
+.button {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15pt;
+    -fx-font-size: 18;
+    -fx-border-radius: 10pt;
+    -fx-border-color: #043993;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-border-width: 2pt;
 }
 
-.JFXButton:hover {
-    -fx-background-color: linear-gradient(#842727, #e22828);
+.button:hover {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-border-width: 3pt;
 }
