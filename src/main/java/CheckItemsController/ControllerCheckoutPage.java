@@ -237,10 +237,17 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
+    /**
+     * Checks if multiple items being checked out
+     * @return True if multiple items being checked out
+     */
     private boolean multipleItemsBeingCheckedOut(){
         return (!barcode2.getText().isEmpty() | !barcode3.getText().isEmpty() | !barcode4.getText().isEmpty() | !barcode5.getText().isEmpty());
     }
 
+    /**
+     * Submits multiple items
+     */
     private void submitMultipleItems(){
         List<Integer> barcodes = new ArrayList<>();
         if(!barcode.getText().isEmpty()){
