@@ -10,7 +10,6 @@ import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -780,6 +779,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         transitionHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
         transitionHelper.fadeTransition(HBoxBarcode2);
         transitionHelper.spinnerInit(newQuantity2);
+        addNewBarcode.setDisable(true);
     }
 
     /**
@@ -800,33 +800,54 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Creates new barcode field
      */
     public void newBarcode2() {
-        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3, 60, true);
+        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3, addNewBarcode2);
     }
 
     /**
      * Creates new barcode field
      */
     public void newBarcode3() {
-        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4, 60, true);
+        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4, addNewBarcode3);
     }
 
     /**
      * Creates new barcode field
      */
     public void newBarcode4() {
-        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5, 60, true);
+        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5, addNewBarcode4);
     }
 
     /**
      * Removes barcode
      */
     public void deleteBarcode1(){
-        //TODO: Not functioning
+        deleteBarcodeHelper(barcode, HBoxBarcode);
+    }
+
+    public void deleteBarcode2(){
+        deleteBarcodeHelper(barcode2, HBoxBarcode2);
+    }
+
+    public void deleteBarcode3(){
+        deleteBarcodeHelper(barcode3, HBoxBarcode3);
+    }
+
+    public void deleteBarcode4(){
+        deleteBarcodeHelper(barcode4, HBoxBarcode4);
+    }
+
+    public void deleteBarcode5(){
+        deleteBarcodeHelper(barcode5, HBoxBarcode5);
+    }
+
+
+    private void deleteBarcodeHelper(JFXTextField barcode, HBox hbox){
+        stageWrapper.slidingAlert("Barcode deleted", "Barcode number " + barcode.getText() + " has been deleted");
         barcode.clear();
         barcode.setDisable(true);
-        barcode.setText("Fin");
-//        NewBarcodeFieldHelper(HBoxBarcode, barcode, newQuantity, -60, false);
-//        transitionHelper.deleteBarcodeTranslate(HBoxBarcode2, barcode2);
+        hbox.setVisible(false);
+        extended.setDisable(true);
+        faulty.setDisable(true);
     }
 
     /**
@@ -834,16 +855,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @param hBoxBarcode4 HBox parent to be used
      * @param barcode4 Barcode field to be used
      * @param newQuantity4 Quantity of parts
-     * @param direction Direction of parts to be moved
-     * @param value Set visible true or false
      */
-    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4, int direction, boolean value) {
-        transitionHelper.translateBarcodeItems(submitButton, resetButton, extended, faulty, direction);
+    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4, JFXButton add) {
+        add.setDisable(true);
+        transitionHelper.translateBarcodeItems(submitButton, resetButton, extended, faulty, 60);
         transitionHelper.fadeTransition(hBoxBarcode4);
         transitionHelper.fadeTransition(barcode4);
         transitionHelper.spinnerInit(newQuantity4);
-        hBoxBarcode4.setVisible(value);
-        barcode4.setVisible(value);
+        hBoxBarcode4.setVisible(true);
+        barcode4.setVisible(true);
     }
 
     /**
