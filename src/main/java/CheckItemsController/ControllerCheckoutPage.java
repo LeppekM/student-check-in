@@ -214,14 +214,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             return;
         }
         if (thisStudent.getOverdueItems().size() == 0) {
-            if (extendedCheckoutIsSelected()) {
+            if(multipleItemsBeingCheckedOut()){
+                submitMultipleItems();
+            } else if (extendedCheckoutIsSelected(getBarcode())) {
                 if(newStudentIsCheckingOutItem()){
                     createNewStudent();
                 }
                 extendedCheckoutHelper();
-            } else if (itemBeingCheckedBackInIsFaulty()) {
+            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
                 faultyCheckinHelper();
-            } else if (itemIsBeingCheckedIn()) {
+            } else if (itemIsBeingCheckedIn(getBarcode())) {
                 checkOut.setItemtoCheckedin(getBarcode());
             } else {
                 if(newStudentIsCheckingOutItem()){
@@ -234,6 +236,39 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
         }
     }
+
+    private boolean multipleItemsBeingCheckedOut(){
+        return (!barcode2.getText().isEmpty() | !barcode3.getText().isEmpty() | !barcode4.getText().isEmpty() | !barcode5.getText().isEmpty());
+    }
+
+    private void submitMultipleItems(){
+        List<Integer> barcodes = new ArrayList<>();
+        if(!barcode.getText().isEmpty()){
+            barcodes.add(getBarcode());
+        }
+        if(!barcode2.getText().isEmpty()){
+            barcodes.add(getBarcode2());
+        }
+        if(!barcode3.getText().isEmpty()){
+            barcodes.add(getBarcode3());
+        }
+        if(!barcode4.getText().isEmpty()){
+            barcodes.add(getBarcode4());
+        }
+        if(!barcode5.getText().isEmpty()){
+            barcodes.add(getBarcode5());
+        }
+
+        for (int i =0; i<barcodes.size(); i++){
+            if(itemIsBeingCheckedIn(barcodes.get(i))){
+                checkOut.setItemtoCheckedin(barcodes.get(i));
+            }
+            else {
+                checkOut.addNewCheckoutItem(barcodes.get(i), getstudentID());
+            }
+        }
+    }
+
 
     /**
      * Helper method to checkout an item
@@ -255,13 +290,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Checks if item is being checked in
      * @return True if item is being checked in
      */
-    private boolean itemIsBeingCheckedIn() {
+    private boolean itemIsBeingCheckedIn(int barcode) {
         checkoutParts = checkOut.returnCheckedOutObjects();
         int studentID = getstudentID();
 
         // getStudentID returns -1 if the field does not contain a number
         if (studentID != -1) {
-            CheckedOutPartsObject currentInfo = new CheckedOutPartsObject(getBarcode(), getstudentID());
+            CheckedOutPartsObject currentInfo = new CheckedOutPartsObject(barcode, getstudentID());
             for (int i = 0; i < checkoutParts.size(); i++) {
                 if (checkoutParts.get(i).equals(currentInfo)) {
                     return true;
@@ -275,16 +310,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Helper method if item is extended checkout
      * @return True if item is extended
      */
-    private boolean extendedCheckoutIsSelected() {
-        return !itemIsBeingCheckedIn() && extended.isSelected();
+    private boolean extendedCheckoutIsSelected(int barcode) {
+        return !itemIsBeingCheckedIn(barcode) && extended.isSelected();
     }
 
     /**
      * Helper method if item being checked back in is faulty
      * @return True if item is faulty
      */
-    private boolean itemBeingCheckedBackInIsFaulty() {
-        return itemIsBeingCheckedIn() && faulty.isSelected();
+    private boolean itemBeingCheckedBackInIsFaulty(int barcode) {
+        return itemIsBeingCheckedIn(barcode) && faulty.isSelected();
     }
 
 
@@ -475,7 +510,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private void setItemStatus() {
         barcode.focusedProperty().addListener((ov, oldv, newV) -> {
             if (!newV && !barcode.getText().isEmpty()) {
-                if (itemIsBeingCheckedIn()) {
+                if (itemIsBeingCheckedIn(getBarcode())) {
                     setCheckinInformation();
                 } else {
                     setCheckoutInformation();
@@ -489,9 +524,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      *
      * @return barcode as integer
      */
-    private int getBarcode() {
-        return Integer.parseInt(barcode.getText());
-    }
+    private int getBarcode() { return Integer.parseInt(barcode.getText());}
+
+
+    private int getBarcode2() {return Integer.parseInt(barcode2.getText());}
+
+    private int getBarcode3() {return Integer.parseInt(barcode3.getText());}
+
+    private int getBarcode4() {return Integer.parseInt(barcode4.getText());}
+
+    private int getBarcode5() {return Integer.parseInt(barcode5.getText());}
 
     /**
      * Gets quantity as text, returns as int
