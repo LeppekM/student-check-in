@@ -822,7 +822,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     public void deleteBarcode1(){
         //TODO: Not functioning
-        NewBarcodeFieldHelper(HBoxBarcode, barcode, newQuantity, -60, false);
+        barcode.clear();
+        barcode.setDisable(true);
+        barcode.setText("Fin");
+//        NewBarcodeFieldHelper(HBoxBarcode, barcode, newQuantity, -60, false);
+//        transitionHelper.deleteBarcodeTranslate(HBoxBarcode2, barcode2);
     }
 
     /**

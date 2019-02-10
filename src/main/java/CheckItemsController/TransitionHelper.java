@@ -43,6 +43,17 @@ public class TransitionHelper {
         fadeTransition2.play();
     }
 
+    void deleteBarcodeTranslate(HBox hbox, JFXTextField field){
+        int direction = -60;
+        int duration = 500;
+        TranslateTransition t = new TranslateTransition(Duration.millis(duration), hbox);
+        TranslateTransition t2 = new TranslateTransition(Duration.millis(duration), field);
+        t.setByY(direction);
+        t2.setByY(direction);
+        t.play();
+        t2.play();
+    }
+
     void fadeTransition(Object object){
         int initial = 0;
         int end = 1;
