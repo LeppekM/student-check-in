@@ -13,6 +13,7 @@
 <?import java.net.URL?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXButton?>
 <AnchorPane fx:id="faultyPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerFaultyTab">
   <children>
     <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
@@ -20,7 +21,8 @@
         <URL value="@../css/HeaderStyle.css" />
       </stylesheets>
     </Label>
-    <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
+    <JFXTextField fx:id="searchInput" layoutX="567.0" layoutY="25.0" promptText="search" />
+    <JFXButton fx:id="searchButton" layoutX="714.0" layoutY="23.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
     <JFXTreeTableView id="tableInv" fx:id="faultyTable" layoutX="0.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0">
       <columnResizePolicy>
         <JFXTreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

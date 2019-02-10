@@ -2,10 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.OverdueItem;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -53,6 +50,9 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     JFXTreeTableColumn<OverdueTabTableRow, String> studentIDCol, partNameCol, serialNumberCol,
             dueDateCol, feeCol;
 
+    @FXML
+    private JFXButton searchButton;
+
     private String studentID, partName, serialNumber, dueDate, fee;
 
     private Database database;
@@ -69,7 +69,8 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     public void initialize(URL location, ResourceBundle resources) {
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setFont(new Font(18));
-        //overdueTable.setPlaceholder(emptyTableLabel);
+        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
+        overdueTable.setPlaceholder(emptyTableLabel);
 
         studentIDCol = new JFXTreeTableColumn<>("Student ID");
         studentIDCol.setPrefWidth(150);
@@ -117,29 +118,6 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         });
 
         tableRows = FXCollections.observableArrayList();
-
-//        searchInput.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                overdueTable.setPredicate(new Predicate<TreeItem<OverdueTabTableRow>>() {
-//                    @Override
-//                    public boolean test(TreeItem<OverdueTabTableRow> tableRow) {
-//                        String input = newValue.toLowerCase();
-//                        studentID = tableRow.getValue().getStudentID().getValue();
-//                        partName = tableRow.getValue().getPartName().getValue();
-//                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
-//                        dueDate = tableRow.getValue().getDueDate().getValue();
-//                        fee = tableRow.getValue().getFee().getValue();
-//
-//                        return ((studentID != null && studentID.toLowerCase().contains(input))
-//                                || (partName != null && partName.toLowerCase().contains(input))
-//                                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-//                                || (dueDate != null && dueDate.toLowerCase().contains(input))
-//                                || (fee != null && fee.toLowerCase().contains(input)));
-//                    }
-//                });
-//            }
-//        });
 
         // Click to select if unselected and deselect if selected
 //        overdueTable.setRowFactory(new Callback<TreeTableView<OverdueTabTableRow>, TreeTableRow<OverdueTabTableRow>>() {
@@ -212,4 +190,26 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         overdueTable.setRoot(root);
         overdueTable.setShowRoot(false);
     }
+
+    @FXML
+    private void search() {
+        overdueTable.setPredicate(new Predicate<TreeItem<OverdueTabTableRow>>() {
+            @Override
+            public boolean test(TreeItem<OverdueTabTableRow> tableRow) {
+                String input = searchInput.getText().toLowerCase();
+                studentID = tableRow.getValue().getStudentID().getValue();
+                partName = tableRow.getValue().getPartName().getValue();
+                serialNumber = tableRow.getValue().getSerialNumber().getValue();
+                dueDate = tableRow.getValue().getDueDate().getValue();
+                fee = tableRow.getValue().getFee().getValue();
+
+                return ((studentID != null && studentID.toLowerCase().contains(input))
+                        || (partName != null && partName.toLowerCase().contains(input))
+                        || (serialNumber != null && serialNumber.toLowerCase().contains(input))
+                        || (dueDate != null && dueDate.toLowerCase().contains(input))
+                        || (fee != null && fee.toLowerCase().contains(input)));
+            }
+        });
+    }
+
 }

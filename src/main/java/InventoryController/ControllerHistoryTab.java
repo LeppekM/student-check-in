@@ -1,10 +1,7 @@
 package InventoryController;
 
 import Database.*;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -48,6 +45,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
     serialNumberCol, statusCol, dateCol;
 
+    @FXML
+    private JFXButton searchButton;
+
     private String student, partName, serialNumber, status, date;
 
     /**
@@ -59,6 +59,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     public void initialize(URL location, ResourceBundle resources) {
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setFont(new Font(18));
+        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         historyTable.setPlaceholder(emptyTableLabel);
 //        populateTable();
 
@@ -110,28 +111,28 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         tableRows = FXCollections.observableArrayList();
 
-        searchInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                historyTable.setPredicate(new Predicate<TreeItem<HistoryTabTableRow>>() {
-                    @Override
-                    public boolean test(TreeItem<HistoryTabTableRow> tableRow) {
-                        String input = newValue.toLowerCase();
-                        student = tableRow.getValue().getStudent().getValue();
-                        partName = tableRow.getValue().getPartName().getValue();
-                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
-                        status = tableRow.getValue().getStatus().getValue();
-                        date = tableRow.getValue().getDate().getValue().toLowerCase();
-
-                        return ((student != null && student.toLowerCase().contains(input))
-                            || (partName != null && partName.toLowerCase().contains(input))
-                            || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                            || (status != null && status.toLowerCase().contains(input))
-                            || (date != null & date.toLowerCase().contains(input)));
-                    }
-                });
-            }
-        });
+//        searchInput.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                historyTable.setPredicate(new Predicate<TreeItem<HistoryTabTableRow>>() {
+//                    @Override
+//                    public boolean test(TreeItem<HistoryTabTableRow> tableRow) {
+//                        String input = newValue.toLowerCase();
+//                        student = tableRow.getValue().getStudent().getValue();
+//                        partName = tableRow.getValue().getPartName().getValue();
+//                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
+//                        status = tableRow.getValue().getStatus().getValue();
+//                        date = tableRow.getValue().getDate().getValue().toLowerCase();
+//
+//                        return ((student != null && student.toLowerCase().contains(input))
+//                            || (partName != null && partName.toLowerCase().contains(input))
+//                            || (serialNumber != null && serialNumber.toLowerCase().contains(input))
+//                            || (status != null && status.toLowerCase().contains(input))
+//                            || (date != null & date.toLowerCase().contains(input)));
+//                    }
+//                });
+//            }
+//        });
 
         // Click to select if unselected and deselect if selected
         historyTable.setRowFactory(new Callback<TreeTableView<HistoryTabTableRow>, TreeTableRow<HistoryTabTableRow>>() {
@@ -172,4 +173,26 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         historyTable.setRoot(root);
         historyTable.setShowRoot(false);
     }
+
+    @FXML
+    private void search() {
+        historyTable.setPredicate(new Predicate<TreeItem<HistoryTabTableRow>>() {
+            @Override
+            public boolean test(TreeItem<HistoryTabTableRow> tableRow) {
+                String input = searchInput.getText().toLowerCase();
+                student = tableRow.getValue().getStudent().getValue();
+                partName = tableRow.getValue().getPartName().getValue();
+                serialNumber = tableRow.getValue().getSerialNumber().getValue();
+                status = tableRow.getValue().getStatus().getValue();
+                date = tableRow.getValue().getDate().getValue().toLowerCase();
+
+                return ((student != null && student.toLowerCase().contains(input))
+                        || (partName != null && partName.toLowerCase().contains(input))
+                        || (serialNumber != null && serialNumber.toLowerCase().contains(input))
+                        || (status != null && status.toLowerCase().contains(input))
+                        || (date != null & date.toLowerCase().contains(input)));
+            }
+        });
+    }
+
 }
