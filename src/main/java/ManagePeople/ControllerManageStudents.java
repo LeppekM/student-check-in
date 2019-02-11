@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ControllerManageStudents implements Initializable {
 
@@ -164,6 +166,11 @@ public class ControllerManageStudents implements Initializable {
         boolean invalid = true;
         while (invalid && notIncluded){
             id = JOptionPane.showInputDialog(null, "Please enter the student RFID.");
+            Pattern p = Pattern.compile("^(rfid:)");
+            Matcher m = p.matcher(id);
+            if (m.find()){
+                id = id.substring(5);
+            }
             if (!id.matches("[a-zA-Z]*") && id.length() == 5){
                 if (!database.selectStudent(Integer.parseInt(id)).getName().equals("")){
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
