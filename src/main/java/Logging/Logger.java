@@ -17,12 +17,12 @@ public class Logger extends Thread{
     private BlockingQueue<LogEntry> queue;
     public Logger(BlockingQueue<LogEntry> queue){
         this.queue = queue;
-        logName = "log-" + getCurrentTimeUsingDate() + ".txt";
+        logName = getCurrentTimeUsingDate() + ".log";
     }
 
     private static String getCurrentTimeUsingDate() {
         Date date = new Date();
-        String strDateFormat = "yyyy,MM,dd";
+        String strDateFormat = "yyyy-MM-dd";
         DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
         return dateFormat.format(date);
     }
