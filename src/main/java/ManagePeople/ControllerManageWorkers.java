@@ -77,24 +77,24 @@ public class ControllerManageWorkers implements Initializable {
 
         adminCol = new JFXTreeTableColumn<>("Admin");
         adminCol.setPrefWidth(800/3);
-+        adminCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean>,
-+                ObservableValue<Boolean>>() {
-+            @Override
-+            public ObservableValue<Boolean> call(TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean> param) {
-+                TreeItem<ManageWorkersTabTableRow> treeItem = param.getValue();
-+                ManageWorkersTabTableRow tRow = treeItem.getValue();
-+                return new SimpleBooleanProperty(tRow.getIsAdmin().get());
-+            }
-+        });
-+
-+        adminCol.setCellFactory(new Callback<TreeTableColumn<ManageWorkersTabTableRow, Boolean>, TreeTableCell<ManageWorkersTabTableRow, Boolean>>() {
-+            @Override
-+            public TreeTableCell<ManageWorkersTabTableRow, Boolean> call( TreeTableColumn<ManageWorkersTabTableRow, Boolean> p ) {
-+                CheckBoxTreeTableCell<ManageWorkersTabTableRow,Boolean> cell = new CheckBoxTreeTableCell<>();
-+                cell.setAlignment(Pos.CENTER);
-+                return cell;
-+            }
-+        });
+        adminCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean>,
+                ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean> param) {
+                TreeItem<ManageWorkersTabTableRow> treeItem = param.getValue();
+                ManageWorkersTabTableRow tRow = treeItem.getValue();
+                return new SimpleBooleanProperty(tRow.getIsAdmin().get());
+            }
+        });
+
+        adminCol.setCellFactory(new Callback<TreeTableColumn<ManageWorkersTabTableRow, Boolean>, TreeTableCell<ManageWorkersTabTableRow, Boolean>>() {
+            @Override
+            public TreeTableCell<ManageWorkersTabTableRow, Boolean> call( TreeTableColumn<ManageWorkersTabTableRow, Boolean> p ) {
+                CheckBoxTreeTableCell<ManageWorkersTabTableRow,Boolean> cell = new CheckBoxTreeTableCell<>();
+                cell.setAlignment(Pos.CENTER);
+                return cell;
+            }
+        });
 
         tableRows = FXCollections.observableArrayList();
         searchInput.textProperty().addListener(new ChangeListener<String>() {
