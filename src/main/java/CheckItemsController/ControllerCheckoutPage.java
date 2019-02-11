@@ -354,6 +354,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 String studentName = student.getStudentNameFromID(studentID.getText());
                 if(studentName.isEmpty()){ //If no student is found in database create new one
                     setNewStudentDropdown();
+                    addNewBarcode.setVisible(false);
                 }
                 studentNameField.setText(student.getStudentNameFromID(studentID.getText()));
             }
