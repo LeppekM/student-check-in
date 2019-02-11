@@ -347,7 +347,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     private void getStudentName() {
         studentID.focusedProperty().addListener((ov, oldV, newV) -> {
-            if (oldV) {
+            if(studentID.getText().isEmpty()){
+                return;
+            }
+            if (!newV) {
                 extended.setDisable(false);
                 resetButton.setDisable(false);
                 addNewBarcode.setDisable(false);
