@@ -106,7 +106,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
      * @author Matthew Karcz
      */
     public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
-        StudentCheckIn.sendToLogger(rawStatement, "ControllerInventoryPage");
+//        StudentCheckIn.sendToLogger(rawStatement, "ControllerInventoryPage");
         Statement currentStatement = null;
         try {
             Connection connection = database.getConnection();
