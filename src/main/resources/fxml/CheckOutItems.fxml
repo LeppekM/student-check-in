@@ -59,7 +59,7 @@
       <Label fx:id="courseNameLabel" layoutX="256.0" layoutY="299.0" text="Course Name" visible="false" />
       <Label fx:id="profNameLabel" layoutX="243.0" layoutY="364.0" text="Instructor Name" visible="false" />
       <JFXDatePicker fx:id="datePicker" defaultColor="#4059a9" layoutX="343.0" layoutY="412.0" visible="false" />
-      <HBox fx:id="HBoxBarcode" layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0" visible="false">
+      <HBox fx:id="HBoxBarcode" layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0">
          <children>
             <JFXButton fx:id="addNewBarcode" disable="true" onAction="#newBarcode" prefHeight="36.0" prefWidth="0.0">
                <graphic>
@@ -95,7 +95,7 @@
                </graphic>
             </JFXButton>
             <Spinner fx:id="newQuantity2" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
-            <JFXButton fx:id="deleteBarcode2" prefHeight="35.0" prefWidth="42.0">
+            <JFXButton fx:id="deleteBarcode2" onAction="#deleteBarcode2" prefHeight="35.0" prefWidth="42.0">
                <graphic>
                   <ImageView fitHeight="15.0" fitWidth="14.0">
                      <image>
@@ -119,7 +119,7 @@
                </graphic>
             </JFXButton>
             <Spinner fx:id="newQuantity3" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
-            <JFXButton fx:id="deleteBarcode3" prefHeight="35.0" prefWidth="42.0">
+            <JFXButton fx:id="deleteBarcode3" onAction="#deleteBarcode3" prefHeight="35.0" prefWidth="42.0">
                <graphic>
                   <ImageView fitHeight="15.0" fitWidth="14.0">
                      <image>
@@ -143,7 +143,7 @@
                </graphic>
             </JFXButton>
             <Spinner fx:id="newQuantity4" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
-            <JFXButton fx:id="deleteBarcode4" prefHeight="35.0" prefWidth="42.0">
+            <JFXButton fx:id="deleteBarcode4" onAction="#deleteBarcode4" prefHeight="35.0" prefWidth="42.0">
                <graphic>
                   <ImageView fitHeight="15.0" fitWidth="14.0">
                      <image>
@@ -158,7 +158,7 @@
       <HBox fx:id="HBoxBarcode5" layoutX="480.0" layoutY="409.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <Spinner fx:id="newQuantity5" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
-            <JFXButton fx:id="deleteBarcode5" prefHeight="35.0" prefWidth="42.0">
+            <JFXButton fx:id="deleteBarcode5" onAction="#deleteBarcode5" prefHeight="35.0" prefWidth="42.0">
                <graphic>
                   <ImageView fitHeight="15.0" fitWidth="14.0">
                      <image>
