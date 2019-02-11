@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
@@ -118,28 +119,11 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         tableRows = FXCollections.observableArrayList();
 
-//        searchInput.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                faultyTable.setPredicate(new Predicate<TreeItem<FaultyTabTableRow>>() {
-//                    @Override
-//                    public boolean test(TreeItem<FaultyTabTableRow> tableRow) {
-//                        String input = newValue.toLowerCase();
-//                        partName = tableRow.getValue().getPartName().getValue();
-//                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
-//                        loc = tableRow.getValue().getLocation().getValue();
-//                        barcode = tableRow.getValue().getBarcode().getValue();
-//                        faultDescription = tableRow.getValue().getFaultDescription().getValue();
-//
-//                        return ((partName != null && partName.toLowerCase().contains(input))
-//                                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-//                                || (loc != null && loc.toLowerCase().contains(input))
-//                                || (barcode != null && barcode.toLowerCase().contains(input))
-//                                || (faultDescription != null && faultDescription.toLowerCase().contains(input)));
-//                    }
-//                });
-//            }
-//        });
+        searchInput.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                search();
+            }
+        });
 
         // Click to select if unselected and deselect if selected
         faultyTable.setRowFactory(new Callback<TreeTableView<FaultyTabTableRow>, TreeTableRow<FaultyTabTableRow>>() {

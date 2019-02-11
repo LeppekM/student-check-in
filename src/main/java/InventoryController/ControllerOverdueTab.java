@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
@@ -185,6 +186,12 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         root = new RecursiveTreeItem<OverdueTabTableRow>(
                 tableRows, RecursiveTreeObject::getChildren
         );
+
+        searchInput.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                search();
+            }
+        });
 
         overdueTable.getColumns().setAll(studentIDCol, partNameCol, serialNumberCol, dueDateCol, feeCol);
         overdueTable.setRoot(root);

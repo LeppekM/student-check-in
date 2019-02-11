@@ -18,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
@@ -111,28 +112,11 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         tableRows = FXCollections.observableArrayList();
 
-//        searchInput.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                historyTable.setPredicate(new Predicate<TreeItem<HistoryTabTableRow>>() {
-//                    @Override
-//                    public boolean test(TreeItem<HistoryTabTableRow> tableRow) {
-//                        String input = newValue.toLowerCase();
-//                        student = tableRow.getValue().getStudent().getValue();
-//                        partName = tableRow.getValue().getPartName().getValue();
-//                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
-//                        status = tableRow.getValue().getStatus().getValue();
-//                        date = tableRow.getValue().getDate().getValue().toLowerCase();
-//
-//                        return ((student != null && student.toLowerCase().contains(input))
-//                            || (partName != null && partName.toLowerCase().contains(input))
-//                            || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-//                            || (status != null && status.toLowerCase().contains(input))
-//                            || (date != null & date.toLowerCase().contains(input)));
-//                    }
-//                });
-//            }
-//        });
+        searchInput.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                search();
+            }
+        });
 
         // Click to select if unselected and deselect if selected
         historyTable.setRowFactory(new Callback<TreeTableView<HistoryTabTableRow>, TreeTableRow<HistoryTabTableRow>>() {

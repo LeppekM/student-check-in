@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -327,6 +328,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
         totalTabPage.getChildren().add(sortCheckBox);
 
+        searchInput.setOnKeyReleased(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    search();
+                }
+        });
+
         sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
             public void onChanged(ListChangeListener.Change<? extends String> s) {
                 while (s.next()) {
@@ -427,6 +434,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             totalTable.setRoot(root);
             totalTable.setShowRoot(false);
         }
+        System.out.println("starting visible index: " + totalTable.getVisibleLeafIndex(totalTable.getVisibleLeafColumns().get(0)));
+        totalTable.scrollTo(tableRows.size() - 1);
+        System.out.println("visible index: " + totalTable.getVisibleLeafIndex(totalTable.getVisibleLeafColumns().get(0)));
+        System.out.println("size: " + data.size());
     }
 
     /**
