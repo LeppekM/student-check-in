@@ -7,6 +7,8 @@ import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -31,28 +33,10 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public VBox sceneAddPart;
 
     @FXML
-    public TextField nameField;
-
-    @FXML
-    public TextField serialField;
-
-    @FXML
-    public TextField manufacturerField;
-
-    @FXML
-    public TextField quantityField;
-
-    @FXML
-    public JFXTextField barcodeField;
-
-    @FXML
-    public TextField priceField;
+    public JFXTextField nameField, serialField, manufacturerField, quantityField, barcodeField, priceField, locationField;
 
     @FXML
     public JFXComboBox vendorField;
-
-    @FXML
-    public TextField locationField;
 
     @FXML
     public JFXSpinner loadNotification;
@@ -62,10 +46,27 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     VendorInformation vendorInformation = new VendorInformation();
     private ArrayList <String> vendors = vendorInformation.getVendorList();
 
+    StageWrapper stageWrapper = new StageWrapper();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showVendors();
         StageWrapper stageWrapper = new StageWrapper();
+        stageWrapper.acceptIntegerOnly(barcodeField);
+        setFieldValidator();
+
+        // make sure that the price field only accepts a valid price
+        priceField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("^\\$?[0-9]*\\.?[0-9]{0,2}$")) {
+                    priceField.setText(oldValue);
+                }
+            }
+        });
+    }
+
+    private void setFieldValidator() {
         stageWrapper.acceptIntegerOnly(barcodeField);
     }
 

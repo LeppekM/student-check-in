@@ -434,10 +434,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             totalTable.setRoot(root);
             totalTable.setShowRoot(false);
         }
-        System.out.println("starting visible index: " + totalTable.getVisibleLeafIndex(totalTable.getVisibleLeafColumns().get(0)));
-        totalTable.scrollTo(tableRows.size() - 1);
-        System.out.println("visible index: " + totalTable.getVisibleLeafIndex(totalTable.getVisibleLeafColumns().get(0)));
-        System.out.println("size: " + data.size());
     }
 
     /**
