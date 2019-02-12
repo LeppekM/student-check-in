@@ -1,10 +1,12 @@
 package Database;
 
 import HelperClasses.DatabaseHelper;
+import HelperClasses.StageWrapper;
 
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CheckingOutPart {
@@ -35,6 +37,7 @@ public class CheckingOutPart {
 
     private DatabaseHelper helper = new DatabaseHelper();
     private List<CheckedOutPartsObject> checkedOutItems = new ArrayList<>();
+    private StageWrapper stageWrapper = new StageWrapper();
 
 
     /**
@@ -43,12 +46,17 @@ public class CheckingOutPart {
      * @param studentID
      */
     public void addNewCheckoutItem(int barcode, int studentID){
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement statement = connection.prepareStatement(addToCheckouts);
-            addNewCheckoutHelper(barcode, studentID, statement).execute();
-            statement.close();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect to the database", e);
+        if(barcodeExists(barcode)) {
+            try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+                PreparedStatement statement = connection.prepareStatement(addToCheckouts);
+                addNewCheckoutHelper(barcode, studentID, statement).execute();
+                statement.close();
+            } catch (SQLException e) {
+                throw new IllegalStateException("Cannot connect to the database", e);
+            }
+        }
+        else {
+            stageWrapper.errorAlert("Barcode was not found in database, part was not checked out");
         }
     }
 
@@ -94,6 +102,22 @@ public class CheckingOutPart {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return partID;
+    }
+
+    private boolean barcodeExists(int barcode){
+        List<Integer> barcodes = new LinkedList<>();
+        final String getAllBarcodes = "select barcode from parts";
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(getAllBarcodes);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                barcodes.add(rs.getInt("barcode"));
+            }
+            statement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return (barcodes.contains(barcode));
     }
 
     /**

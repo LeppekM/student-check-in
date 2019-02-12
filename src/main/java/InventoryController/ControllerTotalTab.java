@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -44,9 +45,6 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
-
-//    @FXML
-//    private TextField searchTotal;
 
     @FXML
     public AnchorPane totalTabPage;
@@ -74,23 +72,24 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private CheckComboBox<String> sortCheckBox;
 
-    private String partName, serialNumber, loc, barcode, partID, sortFilter = "";
+    private String partName, serialNumber, loc, barcode, partID;
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
 
     @FXML
-    private JFXButton add;
+    private JFXButton add, searchButton;
 
     private final ObservableList<String> types = FXCollections.observableArrayList(new String[] { "All", "Checked Out", "Overdue", "Faulty"});
 
-    private final int CHECKBOX_X = 450, CHECKBOX_Y = 25, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
+    private final int CHECKBOX_X = 310, CHECKBOX_Y = 25, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
 
     private ArrayList<String> selectedFilters = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         add.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
+        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
 
         Label emptytableLabel = new Label("No parts found.");
         emptytableLabel.setFont(new Font(18));
@@ -286,13 +285,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         tableRows = FXCollections.observableArrayList();
 
-        searchInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                filterChanged(newValue);
-            }
-        });
-
         // Click to select if unselected and unselect if selected
         totalTable.setRowFactory(new Callback<TreeTableView<TotalTabTableRow>, TreeTableRow<TotalTabTableRow>>() {
             @Override
@@ -332,6 +324,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         sortCheckBox.setLayoutY(CHECKBOX_Y);
         sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
         totalTabPage.getChildren().add(sortCheckBox);
+
+        searchInput.setOnKeyReleased(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    search();
+                }
+        });
 
         sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
             public void onChanged(ListChangeListener.Change<? extends String> s) {
@@ -373,7 +371,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
-    private void filterChanged(String filter) {
+    @FXML
+    private void search() {
+        String filter = searchInput.getText();
         if (filter.isEmpty()) {
             totalTable.setRoot(root);
         }
@@ -413,7 +413,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().clear();
         this.data.clear();
         ArrayList<String> types = getSelectedFilters();
-        System.out.println(types);
+//        System.out.println(types);
         if(!types.isEmpty()) {
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
 
@@ -431,6 +431,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             totalTable.setRoot(root);
             totalTable.setShowRoot(false);
         }
+        System.out.println("starting visible index: " + totalTable.getVisibleLeafIndex(totalTable.getVisibleLeafColumns().get(0)));
+        totalTable.scrollTo(tableRows.size() - 1);
+        System.out.println("visible index: " + totalTable.getVisibleLeafIndex(totalTable.getVisibleLeafColumns().get(0)));
+        System.out.println("size: " + data.size());
     }
 
     /**
@@ -569,7 +573,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     /**
      * This method brings up the FXML page for showing the info about the selected part
-     *
+     * @param part - The part that was selected
+     * @param type - The type of part, determines what information is shown
      * @author Matthew Karcz
      */
     public void showInfoPage(Part part, String type){

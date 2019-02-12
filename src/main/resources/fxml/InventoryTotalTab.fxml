@@ -15,7 +15,8 @@
       </stylesheets>
     </Label>
     <JFXTreeTableView fx:id="totalTable" layoutX="0.0" layoutY="66.0" prefHeight="475.0" prefWidth="800.0" stylesheets="@../css/TableStyle.css" />
-    <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
+    <JFXTextField fx:id="searchInput" layoutX="567.0" layoutY="25.0" promptText="search" />
     <JFXButton fx:id="add" layoutX="730.0" layoutY="554.0" mnemonicParsing="false" onAction="#addPart" prefHeight="35.0" prefWidth="60.0" text="Add" />
+    <JFXButton fx:id="searchButton" layoutX="714.0" layoutY="23.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
   </children>
 </AnchorPane>

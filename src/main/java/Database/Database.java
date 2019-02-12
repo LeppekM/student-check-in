@@ -462,15 +462,13 @@ public class Database {
             String name;
             String email;
             String pass;
-            int id;
             boolean admin;
             while (resultSet.next()){
-                id = resultSet.getInt("workerID");
                 name = resultSet.getString("workerName");
                 pass = resultSet.getString("pass");
                 email = resultSet.getString("email");
                 admin = resultSet.getByte("isAdmin") == 1;
-                workerList.add(new Worker(name, email, pass, id, admin));
+                workerList.add(new Worker(name, email, pass, admin));
             }
             resultSet.close();
             statement.close();
@@ -580,6 +578,35 @@ public class Database {
             e.printStackTrace();
         }
         return student;
+    }
+
+    public void addStudent(Student s){
+        String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getID()
+                + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), 'root');";
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    public void addWorker(Worker w){
+        int bit = w.isAdmin()? 1 : 0;
+        String query = "insert into workers (email, workerName, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail() +
+                "', '" + w.getName() + "', '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), 'root');";
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add worker");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
     }
 
 }
