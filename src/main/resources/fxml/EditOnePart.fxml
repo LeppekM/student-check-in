@@ -30,7 +30,9 @@
                         <Label id="nameLabel" layoutX="93.0" layoutY="254.0" styleClass="prompt" text="Location:" />
                         <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" layoutX="175.0" layoutY="254.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Hyperlink layoutX="255.0" layoutY="294.0" onAction="#goBack" text="Cancel" />
-                        <JFXButton fx:id="saveButton" layoutX="308.0" layoutY="294.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="22.0" prefWidth="59.0" stylesheets="@../css/ButtonStyle.css" text="Save" />
+                        <JFXButton fx:id="saveButton" layoutX="308.0" layoutY="294.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="22.0" prefWidth="59.0"
+                                   style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-font-size: 18; -fx-border-radius: 10pt; -fx-border-color: #043993;
+                                   -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 ); -fx-border-width: 2pt;" text="Save" />
                   <JFXSpinner fx:id="loader" layoutX="367.0" layoutY="332.0" prefHeight="28.0" prefWidth="33.0" visible="false" />
                     </children>
                 </Pane>

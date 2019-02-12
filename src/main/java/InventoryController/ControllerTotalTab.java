@@ -166,7 +166,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                             typeHasOneCheckedOut = true;
                                         }
                                     }
-                                    if (typeHasOneCheckedOut) {
+                                    if (!typeHasOneCheckedOut) {
                                         deletePartType(getTreeTableRow().getItem().getPartName().getValue());
                                     } else {
                                         typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
@@ -216,7 +216,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.setPrefWidth(150);
 
-        barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
+        barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode());
 
         faultCol = new JFXTreeTableColumn<>("Fault?");
         faultCol.setPrefWidth(100);
@@ -573,7 +573,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public void deletePartType(String partName) {
         try {
             if (database.hasPartName(partName)) {
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part " + partName) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete all parts named: " + partName) == JOptionPane.YES_OPTION) {
                     database.deleteParts(partName);
                     populateTable();
                 }

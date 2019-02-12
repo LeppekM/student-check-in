@@ -124,38 +124,6 @@ public class Database {
         return connection;
     }
 
-    public static ObservableList getHistory() {
-        ObservableList<HistoryItems> data = FXCollections.observableArrayList();
-        try {
-            String historyQuery = "SELECT studentName, partName, serialNumber, " +
-                    "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
-                    "THEN 'In' ELSE 'Out' END AS 'Status', " +
-                    "CASE WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
-                    "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END AS 'date' " +
-                    "FROM parts " +
-                    "INNER JOIN checkout_parts ON parts.partID = checkout_parts.partID " +
-                    "INNER JOIN checkouts ON checkout_parts.checkoutID = checkouts.checkoutID " +
-                    "INNER JOIN students ON checkouts.studentID = students.studentID " +
-                    "WHERE parts.isDeleted = 0 " +
-                    "ORDER BY CASE " +
-                    "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
-                    "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END DESC;";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(historyQuery);
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()) {
-                data.add(new HistoryItems(resultSet.getString("studentName"), resultSet.getString("partName"),
-                        resultSet.getString("serialNumber"),
-                        resultSet.getString("location"), resultSet.getString("date")));
-                resultSet.close();
-                statement.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
-
     /**
      * Helper method to get a specific part from the database
      *
@@ -352,7 +320,7 @@ public class Database {
     }
 
     public int countPartsOfType(String partName) {
-        String query = "SELECT COUNT(*) FROM parts WHERE partName = '" + partName + "';";
+        String query = "SELECT COUNT(*) FROM parts WHERE isDeleted = 0 AND partName = '" + partName + "';";
         ResultSet resultSet;
         try {
             Statement statement = connection.createStatement();
