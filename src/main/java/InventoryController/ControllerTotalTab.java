@@ -46,9 +46,6 @@ import java.util.ResourceBundle;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
 
-//    @FXML
-//    private TextField searchTotal;
-
     @FXML
     public AnchorPane totalTabPage;
 
@@ -75,7 +72,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private CheckComboBox<String> sortCheckBox;
 
-    private String partName, serialNumber, loc, barcode, partID, sortFilter = "";
+    private String partName, serialNumber, loc, barcode, partID;
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
@@ -572,7 +569,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     /**
      * This method brings up the FXML page for showing the info about the selected part
-     *
+     * @param part - The part that was selected
+     * @param type - The type of part, determines what information is shown
      * @author Matthew Karcz
      */
     public void showInfoPage(Part part, String type){

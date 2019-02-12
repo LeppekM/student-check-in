@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.*;
+import Logging.LogEntry;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,7 +28,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ControllerInventoryPage extends ControllerMenu implements Initializable {
@@ -103,7 +106,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
      * @author Matthew Karcz
      */
     public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
-        System.out.println(rawStatement);
+//        StudentCheckIn.sendToLogger(rawStatement, "ControllerInventoryPage");
         Statement currentStatement = null;
         try {
             Connection connection = database.getConnection();
