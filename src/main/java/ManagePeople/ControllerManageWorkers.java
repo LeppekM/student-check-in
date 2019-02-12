@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ControllerManageWorkers implements Initializable {
     private ObservableList<ManageWorkersTabTableRow> tableRows;
@@ -180,17 +182,22 @@ public class ControllerManageWorkers implements Initializable {
                     notIncluded = false;
                     break;
                 }
+                break;
             }
             if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
                 invalid = false;
             }else {
-                JOptionPane.showMessageDialog(null, "Students email must be their MSOE email.");
+                JOptionPane.showMessageDialog(null, "Workers email must be their MSOE email.");
             }
         }
         invalid = true;
+        Pattern p = Pattern.compile("[0-9]*");
+        Matcher m = p.matcher(name);
         while (invalid && notIncluded){
             name = new StringBuilder(JOptionPane.showInputDialog(null, "Please enter the workers first name."));
-            if (!name.toString().matches("[0-9]*") && !name.toString().equals("")){
+            if (!m.find() && !name.toString().equals("")){
+                String temp = name.substring(0,1).toUpperCase() + name.substring(1);
+                name = new StringBuilder(temp);
                 invalid = false;
             }else {
                 JOptionPane.showMessageDialog(null, "Workers first name is invalid or blank.");
@@ -200,7 +207,10 @@ public class ControllerManageWorkers implements Initializable {
         while (invalid && notIncluded){
             name.append(" ");
             name.append(JOptionPane.showInputDialog(null, "Please enter the workers last name."));
-            if (!name.toString().matches("[0-9]*") && !name.toString().equals(" ")){
+            if (!m.find() && !name.toString().equals(" ")){
+                int space = name.indexOf(" ");
+                String temp = name.substring(0, space+1) + name.substring(space+1,space+2).toUpperCase() + name.substring(space+2);
+                name = new StringBuilder(temp);
                 invalid = false;
             }else {
                 JOptionPane.showMessageDialog(null, "Workers last name is invalid or blank.");
@@ -215,7 +225,9 @@ public class ControllerManageWorkers implements Initializable {
                 JOptionPane.showMessageDialog(null, "Must be a four digit pin");
             }
         }
-        database.addWorker(new Worker(name.toString(), email, pin, true));
+        if (notIncluded) {
+            database.addWorker(new Worker(name.toString(), email, pin, true));
+        }
         populateTable();
     }
 
