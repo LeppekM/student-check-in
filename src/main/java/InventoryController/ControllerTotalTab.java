@@ -86,6 +86,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     private ArrayList<String> selectedFilters = new ArrayList<>();
 
+    Image editOneImage = new Image("images/edit.png");
+    Image editAllImage = new Image("images/edit_all.png");
+    Image deleteOneImage = new Image("images/delete.png");
+    Image deleteAllImage = new Image("images/delete_all.png");
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         add.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
@@ -129,7 +134,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 setGraphic(null);
                                 setText(null);
                             } else {
-                                Image editOneImage = new Image("images/edit.png");
                                 ImageView editOneImageView = new ImageView(editOneImage);
                                 editOneImageView.setFitHeight(12);
                                 editOneImageView.setFitWidth(12);
@@ -141,7 +145,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 });
                                 editOneButton.setTooltip(new Tooltip("Edit this part"));
 
-                                Image editAllImage = new Image("images/edit_all.png");
                                 ImageView editAllImageView = new ImageView(editAllImage);
                                 editAllImageView.setFitHeight(12);
                                 editAllImageView.setFitWidth(12);
@@ -154,7 +157,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 Tooltip editAllTip = new Tooltip("Edit all parts named: " + partName.getText());
                                 editAllButton.setTooltip(editAllTip);
 
-                                Image deleteOneImage = new Image("images/delete.png");
                                 ImageView deleteOneImageView = new ImageView(deleteOneImage);
                                 deleteOneImageView.setFitHeight(12);
                                 deleteOneImageView.setFitWidth(12);
@@ -171,7 +173,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 Tooltip deleteOneTip = new Tooltip("Delete this part");
                                 deleteOneButton.setTooltip(deleteOneTip);
 
-                                Image deleteAllImage = new Image("images/delete_all.png");
                                 ImageView deleteAllImageView = new ImageView(deleteAllImage);
                                 deleteAllImageView.setFitHeight(12);
                                 deleteAllImageView.setFitWidth(12);
