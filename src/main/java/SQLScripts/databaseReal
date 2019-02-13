@@ -126,6 +126,21 @@ CREATE PROCEDURE load_students()
     VALUE (22222, 'John@msoe.edu','John Johnson', '2018-1-14', 'Jim');
   END;
 
+DROP PROCEDURE IF EXISTS load_workers;
+CREATE PROCEDURE load_workers()
+  BEGIN
+    TRUNCATE TABLE workers;
+    START TRANSACTION;
+    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
+    VALUES ('terrybc@msoe.edu', 'Bailey Terry', 1234, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
+    VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 4123, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
+    VALUES ('langdk@msoe.edu', 'Daniel Lang', 3412, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
+    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 2341, 1, '2019-2-11', 'Jim');
+  end;
+
 drop table if exists parts;
 create table parts (
   partID       int NOT NULL AUTO_INCREMENT,
@@ -248,6 +263,8 @@ create table workers (
   deletedBy  varchar(50),
   PRIMARY KEY (workerID)
 );
+
+call load_workers();
 
 drop table if exists fault;
 create table fault (

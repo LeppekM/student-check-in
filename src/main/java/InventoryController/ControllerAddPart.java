@@ -7,6 +7,8 @@ import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -31,28 +33,10 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public VBox sceneAddPart;
 
     @FXML
-    public TextField nameField;
-
-    @FXML
-    public TextField serialField;
-
-    @FXML
-    public TextField manufacturerField;
-
-    @FXML
-    public TextField quantityField;
-
-    @FXML
-    public JFXTextField barcodeField;
-
-    @FXML
-    public TextField priceField;
+    public JFXTextField nameField, serialField, manufacturerField, quantityField, barcodeField, priceField, locationField;
 
     @FXML
     public JFXComboBox vendorField;
-
-    @FXML
-    public TextField locationField;
 
     @FXML
     public JFXSpinner loadNotification;
@@ -62,11 +46,29 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     VendorInformation vendorInformation = new VendorInformation();
     private ArrayList <String> vendors = vendorInformation.getVendorList();
 
+    StageWrapper stageWrapper = new StageWrapper();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showVendors();
         StageWrapper stageWrapper = new StageWrapper();
         stageWrapper.acceptIntegerOnly(barcodeField);
+        setFieldValidator();
+
+        // make sure that the price field only accepts a valid price
+        priceField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("^\\$?[0-9]*\\.?[0-9]{0,2}$")) {
+                    priceField.setText(oldValue);
+                }
+            }
+        });
+    }
+
+    private void setFieldValidator() {
+        stageWrapper.acceptIntegerOnly(barcodeField);
+        stageWrapper.acceptIntegerOnly(quantityField);
     }
 
     /**
@@ -101,24 +103,32 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                     barcodeAlreadyExistsError();
                 } else if (!serialField.getText().equals(existing.getSerialNumber())) {
                     mustBeCommonSerialNumberError(partName);
-                } else if (!manufacturerField.getText().equals(existing.getManufacturer())
+                }/* else if (!manufacturerField.getText().equals(existing.getManufacturer())
                             || !priceField.getText().equals(existing.getPrice())
                             || !vendorField.getValue().toString().equals(existing.getVendor())) {
                     commonFieldsError(partName);
-                } else if (!barcodeField.getText().equals(existing.getBarcode()) || !serialField.getText().equals(existing.getSerialNumber())) {
-                    mustBeCommonBarcodeAndSerialNumberError(partName);
-                } else {
+                }*/ else {
                     addPart.addCommonItems(setPartFields(), database, quantity);
                     partAddedSuccess();
                     close();
                 }
             } else {
-                if (!database.hasUniqueBarcodes(partName) && (!barcodeField.getText().equals(existing.getBarcode()) || !serialField.getText().equals(existing.getSerialNumber()))) {
+                if (!database.hasUniqueBarcodes(partName) && (barcodeField.getText().equals(existing.getBarcode()) || serialField.getText().equals(existing.getSerialNumber()))) {
                     barcodeAndSerialNumberMustBothBeUniqueOrCommonError();
                 } else {
-                    addPart.addUniqueItems(setPartFields(), database, quantity);
-                    partAddedSuccess();
-                    close();
+                    if (database.countPartsOfType(partName) == 1) {
+                        if (barcodeField.getText().equals(existing.getBarcode()) && (
+                                !serialField.getText().equals(existing.getSerialNumber()))) {
+                            commonBarcodeRequiresCommonSerialNumberError(partName);
+                        } else if (serialField.getText().equals(existing.getSerialNumber()) &&
+                                !barcodeField.getText().equals(existing.getBarcode())) {
+                            commonSerialNumberRequiresCommonBarcodeError(partName);
+                        }
+                    } else {
+                        addPart.addUniqueItems(setPartFields(), database, quantity);
+                        partAddedSuccess();
+                        close();
+                    }
                 }
             }
         } else {
@@ -249,7 +259,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         int failedValue = -1;
         if(quantity.chars().allMatch(Character::isDigit)){ //If quantity is a valid int
              positiveCheck = Integer.parseInt(quantity);
-            if (positiveCheck >0){ //If quantity is greater than 0
+            if (positiveCheck > 0){ //If quantity is greater than 0
                 return positiveCheck;
             }
         }
@@ -298,7 +308,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         if(!validateFieldsNotEmpty()){
             fieldErrorAlert();
         }
-        else if (!validateQuantityField()|| !validatePriceField()){
+        else if (!validateQuantityField()){
             invalidNumberAlert();
         }
     }
@@ -310,7 +320,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private void fieldErrorAlert(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("Please fill out all fields before submitting info");
+        alert.setContentText("Please fill out all fields before submitting info.");
 
         alert.showAndWait();
     }
@@ -331,13 +341,29 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         alert.showAndWait();
     }
 
+    private void commonBarcodeRequiresCommonSerialNumberError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have the same barcode, so the serial number must be the same.");
+
+        alert.showAndWait();
+    }
+
+    private void commonSerialNumberRequiresCommonBarcodeError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have the same serial number, so the barcode must be the same.");
+
+        alert.showAndWait();
+    }
+
     /**
      * Creates alert that informs user invalid input was entered into price or quantity field
      */
     private void invalidNumberAlert(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("Please make sure you are entering numbers into price and quantity fields, and that they are not negative");
+        alert.setContentText("Please make sure the quantity is greater than 0.");
 
         alert.showAndWait();
     }
@@ -354,14 +380,6 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("All " + partName + " parts must have the same serial number.");
-
-        alert.showAndWait();
-    }
-
-    private void mustBeCommonBarcodeAndSerialNumberError(String partName) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("All " + partName + " parts must have the same barcode and serial number.");
 
         alert.showAndWait();
     }

@@ -184,9 +184,13 @@ public class ControllerManageStudents implements Initializable {
             }
         }
         invalid = true;
+        Pattern p = Pattern.compile("[0-9]*");
+        Matcher m = p.matcher(name);
         while (invalid && notIncluded){
             name = new StringBuilder(JOptionPane.showInputDialog(null, "Please enter the students first name."));
-            if (!name.toString().matches("[0-9]*") && !name.toString().equals("")){
+            if (!m.find() && !name.toString().equals("")){
+                String temp = name.substring(0,1).toUpperCase() + name.substring(1);
+                name = new StringBuilder(temp);
                 invalid = false;
             }else {
                 JOptionPane.showMessageDialog(null, "Students first name is invalid or blank.");
@@ -196,7 +200,10 @@ public class ControllerManageStudents implements Initializable {
         while (invalid && notIncluded){
             name.append(" ");
             name.append(JOptionPane.showInputDialog(null, "Please enter the students last name."));
-            if (!name.toString().matches("[0-9]*") && !name.toString().equals(" ")){
+            if (!m.find() && !name.toString().equals(" ")){
+                int space = name.indexOf(" ");
+                String temp = name.substring(0, space+1) + name.substring(space+1,space+2).toUpperCase() + name.substring(space+2);
+                name = new StringBuilder(temp);
                 invalid = false;
             }else {
                 JOptionPane.showMessageDialog(null, "Students last name is invalid or blank.");

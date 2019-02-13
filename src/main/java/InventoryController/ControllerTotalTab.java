@@ -3,9 +3,6 @@ package InventoryController;
 import Database.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -25,7 +22,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -59,8 +55,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private JFXTreeTableView<TotalTabTableRow> totalTable;
 
     private TreeItem<TotalTabTableRow> root;
-
-    @FXML JFXTreeTableColumn<TotalTabTableRow, JFXTreeTableColumn> outerPartNameCol;
 
     @FXML
     private JFXTreeTableColumn<TotalTabTableRow, String> partNameCol, serialNumberCol, locationCol,
@@ -100,22 +94,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         emptytableLabel.setFont(new Font(18));
         totalTable.setPlaceholder(emptytableLabel);
 
-        outerPartNameCol = new JFXTreeTableColumn<>("Outer Part Name Col");
-        outerPartNameCol.setPrefWidth(150);
-        outerPartNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, JFXTreeTableColumn>, ObservableValue<JFXTreeTableColumn>>() {
-            @Override
-            public ObservableValue<JFXTreeTableColumn> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, JFXTreeTableColumn> param) {
-                return null;
-            }
-        });
-
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, String> param) {
-                return param.getValue().getValue().getPartName();
-            }
-        });
+        partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
 
         partNameCol.setPrefWidth(150);
         partNameCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, String>, TreeTableCell<TotalTabTableRow, String>>() {
@@ -187,7 +167,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                             typeHasOneCheckedOut = true;
                                         }
                                     }
-                                    if (typeHasOneCheckedOut) {
+                                    if (!typeHasOneCheckedOut) {
                                         deletePartType(getTreeTableRow().getItem().getPartName().getValue());
                                     } else {
                                         typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
@@ -228,43 +208,19 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.setPrefWidth(150);
-        serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, String> param) {
-                return param.getValue().getValue().getSerialNumber();
-            }
-        });
+        serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
 
         locationCol = new JFXTreeTableColumn<>("Location");
         locationCol.setPrefWidth(150);
-        locationCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, String> param) {
-                return param.getValue().getValue().getLocation();
-            }
-        });
+        locationCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.setPrefWidth(150);
-        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, String> param) {
-                return param.getValue().getValue().getBarcode();
-            }
-        });
+
+        barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode());
 
         faultCol = new JFXTreeTableColumn<>("Fault?");
         faultCol.setPrefWidth(100);
-        faultCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, Boolean>,
-                ObservableValue<Boolean>>() {
-            @Override
-            public ObservableValue<Boolean> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, Boolean> param) {
-                TreeItem<TotalTabTableRow> treeItem = param.getValue();
-                TotalTabTableRow tRow = treeItem.getValue();
-                SimpleBooleanProperty booleanProp= new SimpleBooleanProperty(tRow.getFault());
-                return booleanProp;
-            }
-        });
 
         faultCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, Boolean>, TreeTableCell<TotalTabTableRow, Boolean>>() {
             @Override
@@ -277,12 +233,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         partIDCol = new JFXTreeTableColumn<>("Part ID");
         partIDCol.setPrefWidth(100);
-        partIDCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<TotalTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<TotalTabTableRow, String> param) {
-                return param.getValue().getValue().getPartID();
-            }
-        });
+        partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID());
 
         tableRows = FXCollections.observableArrayList();
 
@@ -361,8 +312,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     }
 
     private void filter(TreeItem<TotalTabTableRow> root, String filter, TreeItem<TotalTabTableRow> filteredRoot) {
+        TreeItem<TotalTabTableRow> filteredChild;
         for (TreeItem<TotalTabTableRow> child : root.getChildren()) {
-            TreeItem<TotalTabTableRow> filteredChild = new TreeItem<>();
+            filteredChild = new TreeItem<>();
             filteredChild.setValue(child.getValue());
             filteredChild.setExpanded(true);
             filter(child, filter, filteredChild);
@@ -419,23 +371,20 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
 
             for (int i = 0; i < data.size(); i++) {
-                Button button = new Button("Edit");
-                tableRows.add(new TotalTabTableRow(data.get(i).getPartName(), new HBox(button),
+                tableRows.add(new TotalTabTableRow(data.get(i).getPartName(),
                         data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                        data.get(i).getBarcode(), data.get(i).getFault(), "" + data.get(i).getPartID()));
+                        data.get(i).getBarcode(), data.get(i).getFault(),
+                        "" + data.get(i).getPartID()));
             }
 
             root = new RecursiveTreeItem<TotalTabTableRow>(
                     tableRows, RecursiveTreeObject::getChildren
             );
-            totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultCol, partIDCol);
+            totalTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol,
+                    faultCol, partIDCol);
             totalTable.setRoot(root);
             totalTable.setShowRoot(false);
         }
-        System.out.println("starting visible index: " + totalTable.getVisibleLeafIndex(totalTable.getVisibleLeafColumns().get(0)));
-        totalTable.scrollTo(tableRows.size() - 1);
-        System.out.println("visible index: " + totalTable.getVisibleLeafIndex(totalTable.getVisibleLeafColumns().get(0)));
-        System.out.println("size: " + data.size());
     }
 
     /**
@@ -468,8 +417,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 else
                     result = result + " OR p.isFaulty = 1";
             }
+            String currentFilter;
             for (int i = 0; i < selectedFilters.size(); i++) {
-                String currentFilter = selectedFilters.get(i);
+                currentFilter = selectedFilters.get(i);
                 if (!currentFilter.equals("Overdue") && !currentFilter.equals("Checked Out") && !currentFilter.equals("Faulty")) {
                     if (result.isEmpty())
                         result = result + "WHERE p.isDeleted = 0 AND partName = '" + currentFilter + "'";
@@ -492,8 +442,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             Connection connection = database.getConnection();
             currentStatement = connection.createStatement();
             ResultSet rs = currentStatement.executeQuery(rawStatement);
+            String partName;
             while (rs.next()) {
-                String partName = rs.getString("partName");
+                partName = rs.getString("partName");
                 types.add(partName);
             }
         } catch (SQLException e) {
@@ -623,7 +574,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     public void deletePartType(String partName) {
         try {
             if (database.hasPartName(partName)) {
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part " + partName) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete all parts named: " + partName) == JOptionPane.YES_OPTION) {
                     database.deleteParts(partName);
                     populateTable();
                 }
