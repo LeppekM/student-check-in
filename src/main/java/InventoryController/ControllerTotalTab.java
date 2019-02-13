@@ -80,10 +80,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     private ArrayList<String> selectedFilters = new ArrayList<>();
 
-    Image editOneImage = new Image("images/edit.png");
-    Image editAllImage = new Image("images/edit_all.png");
-    Image deleteOneImage = new Image("images/delete.png");
-    Image deleteAllImage = new Image("images/delete_all.png");
+    private Image editOneImage = new Image("images/edit.png");
+    private Image editAllImage = new Image("images/edit_all.png");
+    private Image deleteOneImage = new Image("images/delete.png");
+    private Image deleteAllImage = new Image("images/delete_all.png");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
