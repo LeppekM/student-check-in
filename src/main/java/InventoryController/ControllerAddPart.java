@@ -383,8 +383,6 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         StudentCheckIn.logger.error("All " + partName + " parts must have the same serial number.");
         alert.showAndWait();
     }
-
-<<<<<<< HEAD
     private void mustBeCommonBarcodeAndSerialNumberError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -392,9 +390,6 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         StudentCheckIn.logger.error("All " + partName + " parts must have the same barcode and serial number.");
         alert.showAndWait();
     }
-
-=======
->>>>>>> 6eec9387e85ed543d70bd056d9e6fd458793a83c
     private void commonFieldsError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
