@@ -1,19 +1,26 @@
 package InventoryController;
 
 import Database.*;
+import Logging.LogEntry;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,6 +28,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ControllerInventoryPage extends ControllerMenu implements Initializable {
@@ -32,13 +42,60 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private TabPane tabPane;
 
     @FXML
+    private Tab totalTab, historyTab, checkedOutTab, overdueTab, faultsTab;
+
+    @FXML
+    private ControllerHistoryTab historyTabPageController;
+
+    @FXML
+    private ControllerCheckedOutTab checkedOutTabPageController;
+
+    @FXML
+    private ControllerOverdueTab overdueTabPageController;
+
+    @FXML
+    private ControllerFaultyTab faultyTabPageController;
+
+    @FXML
     private Button back;
 
     protected static Database database = new Database();
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
+                // if the user was on the total tab
+                if (newTab == historyTab) {
+                    updateHistoryTab();
+                } else if (newTab == checkedOutTab) {
+                    updateCheckedOutTab();
+                } else if (newTab == overdueTab) {
+                    updateOverdueTab();
+                } else if (newTab == faultsTab) {
+                    updateFaultsTab();
+                }
+            }
+        });
+
+        back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
+    }
+
+    private void updateHistoryTab() {
+        historyTabPageController.populateTable();
+    }
+
+    private void updateCheckedOutTab() {
+        checkedOutTabPageController.populateTable();
+    }
+
+    private void updateOverdueTab() {
+        overdueTabPageController.populateTable();
+    }
+
+    private void updateFaultsTab() {
+        faultyTabPageController.populateTable();
     }
 
     /** Takes a raw statement and a data list as parameters, then returns the data list populated with the appropriate
@@ -48,7 +105,8 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
      * @returns The list of parts filled with the parts based on what was requested in the raw statement.
      * @author Matthew Karcz
      */
-    public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data){
+    public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
+        System.out.println(rawStatement);
         Statement currentStatement = null;
         try {
             Connection connection = database.getConnection();
@@ -62,11 +120,13 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 String manufacturer = rs.getString("manufacturer");
                 String location = rs.getString("location");
                 String barcode = rs.getString("barcode");
-                boolean fault = (rs.getInt("faultQuantity") == 1) ? true : false;
+                boolean fault = (rs.getInt("isFaulty") == 1) ? true : false;
                 int partID = rs.getInt("partID");
                 int isDeleted = rs.getInt("isDeleted");
+                int isCheckedOut = rs.getInt("isCheckedOut");
 //                String faultDesc = rs.getString("faultDesc");
                 Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID, isDeleted);
+                part.setCheckedOut(isCheckedOut);
                 data.add(part);
             }
         } catch (SQLException e) {
@@ -84,6 +144,8 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         return data;
     }
 
+
+
     /**
      *Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
      * @author Matthew Karcz
@@ -91,7 +153,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     @FXML
     public void goBack(){
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource("Menu.fxml");
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             inventoryScene.getChildren().clear();
             inventoryScene.getScene().setRoot(loader.load(myFxmlURL));

@@ -5,25 +5,73 @@ import java.time.LocalDateTime;
 
 public class AddPart {
     private final String url = "jdbc:mysql://localhost:3306/student_check_in";
-    private String addQuery = "INSERT INTO parts(partID, partName, serialnumber, manufacturer, price, vendorID," +
-            " location, barcode, totalQuantity,  availableQuantity, createdAt, createdBy, isDeleted)"+
-            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private String addQuery = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
+            " location, barcode, createdAt, createdBy, isDeleted)"+
+            "VALUES(?,?,?,?,?,?,?,?,?,?)";
     private String getpartIDQuery = "SELECT partID\n" +
             "FROM parts\n" +
             "ORDER BY partID DESC\n" +
             "LIMIT 1";
 
+    VendorInformation vendorInformation = new VendorInformation();
+
+    public int[] addCommonItems(Part part, Database database, int quantity) {
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            Part existing = database.selectPartByPartName(part.getPartName());
+            if (existing == null || (part.getBarcode().equals(existing.getBarcode())
+                    && part.getSerialNumber().equals(existing.getSerialNumber())
+                    && part.getManufacturer().equals(existing.getManufacturer())
+                    && part.getPrice() == existing.getPrice()
+                    && part.getVendor().equals(existing.getVendor()))) {
+                for (int i = 0; i < quantity; i++) {
+                    PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
+                    insertQuery(part, preparedStatement).execute();
+                    vendorInformation.getVendorList();
+                    preparedStatement.close();
+                }
+                return new int[]{Integer.parseInt(part.getBarcode()), Integer.parseInt(part.getSerialNumber())};
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new int[]{-1, -1};
+    }
+
     /**
      * This method adds an item to the database
      * @param part The part to be added
      */
-    public void addItem(Part part){
+    public int[] addUniqueItems(Part part, Database database, int quantity){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
-            insertQuery(part, preparedStatement).execute();
+            int inputBarcode = Integer.parseInt(part.getBarcode());
+            int inputSerialNumber = Integer.parseInt(part.getSerialNumber());
+            for (int i = 0; i < quantity; i++) {
+                while (duplicateBarcode(part.getPartName(), database, inputBarcode)) {
+                    inputBarcode++;
+                }
+
+                while (duplicateSerialNumber(part.getSerialNumber(), database, inputSerialNumber)) {
+                    inputSerialNumber++;
+                }
+
+                PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
+                insertQuery(part, preparedStatement).execute();
+                vendorInformation.getVendorList();
+                preparedStatement.close();
+            }
+            return new int[]{inputBarcode, inputSerialNumber};
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
+    }
+
+    public boolean duplicateBarcode(String partName, Database database, int barcode) {
+        return database.getAllBarcodesForPartName(partName).contains("" + barcode)
+                || database.getUniqueBarcodesBesidesPart(partName).contains("" + barcode);
+    }
+
+    public boolean duplicateSerialNumber(String partName, Database database, int serialNumber) {
+        return database.getAllSerialNumbersForPartName(partName).contains("" + serialNumber);
     }
 
     /**
@@ -34,21 +82,17 @@ public class AddPart {
      */
     private PreparedStatement insertQuery(Part part, PreparedStatement preparedStatement){
         try {
-            preparedStatement.setInt(1, part.getPartID());
-            preparedStatement.setString(2, part.getPartName());
-            preparedStatement.setString(3, part.getSerialNumber());
-            preparedStatement.setString(4, part.getManufacturer());
-            preparedStatement.setDouble(5, part.getPrice());
-            //Hardcoded vendorID for now.
-            preparedStatement.setInt(6, 2);
-            preparedStatement.setString(7, part.getLocation());
-            preparedStatement.setString(8, part.getBarcode());
-            preparedStatement.setInt(9, part.getQuantity());
-            preparedStatement.setInt(10, part.getQuantity());
-            preparedStatement.setString(11, getCurrentDate());
+            preparedStatement.setString(1, part.getPartName());
+            preparedStatement.setString(2, part.getSerialNumber());
+            preparedStatement.setString(3, part.getManufacturer());
+            preparedStatement.setDouble(4, part.getPrice());
+            preparedStatement.setInt(5, vendorInformation.getVendorIDFromVendor(part.getVendor()));
+            preparedStatement.setString(6, part.getLocation());
+            preparedStatement.setString(7, part.getBarcode());
+            preparedStatement.setString(8, getCurrentDate());
             //Hardcoded created by because we don't have workers setup yet
-            preparedStatement.setString(12, "Jim");
-            preparedStatement.setInt(13, part.getIsDeleted());
+            preparedStatement.setString(9, "Jim");
+            preparedStatement.setInt(10, part.getIsDeleted());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -76,10 +120,12 @@ public class AddPart {
             while(rs.next()){
                 partID = rs.getInt("partID");
             }
+            statement.close();
+
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         //Gets max id from table, then increments to create new partID
-        return partID + 1;
+        return partID;
     }
 }

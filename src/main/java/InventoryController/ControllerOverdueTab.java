@@ -1,34 +1,63 @@
 package InventoryController;
 
 import Database.Database;
-import Database.OverdueItems;
+import Database.OverdueItem;
+import com.jfoenix.controls.*;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+
+import java.io.IOException;
 
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 public class ControllerOverdueTab extends ControllerInventoryPage implements Initializable {
 
     @FXML
-    private TableView<OverdueItems> overdueItems;
+    private AnchorPane overduePage;
 
     @FXML
-    TableColumn<OverdueItems, String> partID, serial, date;
+    JFXTreeTableView<OverdueTabTableRow> overdueTable;
 
     @FXML
-    TableColumn<OverdueItems, Integer> studentID, price;
+    ObservableList<OverdueTabTableRow> tableRows;
 
-    private ObservableList<OverdueItems> data;
+    private TreeItem<OverdueTabTableRow> root;
+
+    @FXML
+    private JFXTextField searchInput;
+
+    @FXML
+    JFXTreeTableColumn<OverdueTabTableRow, String> studentIDCol, partNameCol, serialNumberCol,
+            dueDateCol, feeCol;
+
+    @FXML
+    private JFXButton searchButton;
+
+    private String studentID, partName, serialNumber, dueDate, fee;
+
     private Database database;
+    private ObservableList<OverdueItem> list = FXCollections.observableArrayList();
 
     /**
      * This method puts all overdue items into the list for populating the gui table
@@ -39,30 +68,155 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Label emptytableLabel = new Label("No parts found.");
-        emptytableLabel.setFont(new Font(18));
-        DecimalFormat df = new DecimalFormat("#,###,##0.00");
-        overdueItems.setPlaceholder(emptytableLabel);
-        database = new Database();
-        data = database.getOverdue();
-        for (int i = 0; i < data.size(); i++){
-            double p = Double.parseDouble(data.get(i).getPrice());
-            data.get(i).setPrice("$" + df.format(p));
-        }
-        populteTable();
+        Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setFont(new Font(18));
+        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
+        overdueTable.setPlaceholder(emptyTableLabel);
+
+        studentIDCol = new JFXTreeTableColumn<>("Student ID");
+        studentIDCol.setPrefWidth(150);
+        studentIDCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
+                return param.getValue().getValue().getStudentID();
+            }
+        });
+
+        partNameCol = new JFXTreeTableColumn<>("Part Name");
+        partNameCol.setPrefWidth(200);
+        partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
+                return param.getValue().getValue().getPartName();
+            }
+        });
+
+        serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
+        serialNumberCol.setPrefWidth(150);
+        serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
+                return param.getValue().getValue().getSerialNumber();
+            }
+        });
+
+        dueDateCol = new JFXTreeTableColumn<>("Due Date");
+        dueDateCol.setPrefWidth(150);
+        dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
+                return param.getValue().getValue().getDueDate();
+            }
+        });
+
+        feeCol = new JFXTreeTableColumn<>("Fee");
+        feeCol.setPrefWidth(150);
+        feeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
+                return param.getValue().getValue().getFee();
+            }
+        });
+
+        tableRows = FXCollections.observableArrayList();
+
+        // Click to select if unselected and deselect if selected
+//        overdueTable.setRowFactory(new Callback<TreeTableView<OverdueTabTableRow>, TreeTableRow<OverdueTabTableRow>>() {
+//            @Override
+//            public TreeTableRow<OverdueTabTableRow> call(TreeTableView<OverdueTabTableRow> param) {
+//                final TreeTableRow<OverdueTabTableRow> row = new TreeTableRow<>();
+//                row.addEventFilter(MouseEvent.MOUSE_PRESSED, (EventHandler<MouseEvent>) event -> {
+//                    final int index = row.getIndex();
+//                    if (index >= 0 && index < overdueTable.getCurrentItemsCount() && overdueTable.getSelectionModel().isSelected(index)) {
+//                        overdueTable.getSelectionModel().clearSelection();
+//                        event.consume();
+//                    }
+//                });
+//                return row;
+//            }
+//        });
+    }
+
+    /**
+     * Creates an informational pop up on double click
+     *
+     * @author Bailey Terry
+     */
+    public void popUp() {
+            Stage stage = new Stage();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopUp.fxml"));
+                Parent root = loader.load();
+                Scene scene = new Scene(root, 400, 300);
+                stage.setTitle("Overdue Item");
+                stage.initOwner(overduePage.getScene().getWindow());
+                stage.setScene(scene);
+                int i = overdueTable.getSelectionModel().getSelectedIndex();
+                OverdueTabTableRow item = new OverdueTabTableRow(overdueTable.getTreeItem(i).getValue().getStudentID().get(),
+                        overdueTable.getTreeItem(i).getValue().getPartName().get(), overdueTable.getTreeItem(i).getValue().getSerialNumber().get(),
+                        overdueTable.getTreeItem(i).getValue().getDueDate().get(), overdueTable.getTreeItem(i).getValue().getFee().get());
+                ((OverduePopUpController) loader.getController()).populate(null, item);
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        populateTable();
     }
 
     /**
      * This method populates the gui based off of the data in the Observable list
-     *
-     * @author Bailey Terry
      */
-    private void populteTable() {
-        studentID.setCellValueFactory(new PropertyValueFactory<>("ID"));
-        partID.setCellValueFactory(new PropertyValueFactory<>("part"));
-        serial.setCellValueFactory(new PropertyValueFactory<>("serial"));
-        date.setCellValueFactory(new PropertyValueFactory<>("date"));
-        price.setCellValueFactory(new PropertyValueFactory<>("price"));
-        overdueItems.setItems(data);
+    public void populateTable() {
+        tableRows.clear();
+        overdueTable.getColumns().clear();
+        list.clear();
+        database = new Database();
+        list = database.getOverdue();
+        DecimalFormat df = new DecimalFormat("#,###,##0.00");
+
+        for (int i = 0; i < list.size(); i++) {
+            tableRows.add(new OverdueTabTableRow("" + list.get(i).getID().getValue(),
+                    list.get(i).getPart().getValue(), list.get(i).getSerial().getValue(),
+                    list.get(i).getDate().getValue(), "$" +
+                    df.format(Double.parseDouble(list.get(i).getPrice().getValue()))));
+        }
+
+        root = new RecursiveTreeItem<OverdueTabTableRow>(
+                tableRows, RecursiveTreeObject::getChildren
+        );
+
+        searchInput.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                search();
+            }
+        });
+
+        overdueTable.getColumns().setAll(studentIDCol, partNameCol, serialNumberCol, dueDateCol, feeCol);
+        overdueTable.setRoot(root);
+        overdueTable.setShowRoot(false);
     }
+
+    @FXML
+    private void search() {
+        overdueTable.setPredicate(new Predicate<TreeItem<OverdueTabTableRow>>() {
+            @Override
+            public boolean test(TreeItem<OverdueTabTableRow> tableRow) {
+                String input = searchInput.getText().toLowerCase();
+                studentID = tableRow.getValue().getStudentID().getValue();
+                partName = tableRow.getValue().getPartName().getValue();
+                serialNumber = tableRow.getValue().getSerialNumber().getValue();
+                dueDate = tableRow.getValue().getDueDate().getValue();
+                fee = tableRow.getValue().getFee().getValue();
+
+                return ((studentID != null && studentID.toLowerCase().contains(input))
+                        || (partName != null && partName.toLowerCase().contains(input))
+                        || (serialNumber != null && serialNumber.toLowerCase().contains(input))
+                        || (dueDate != null && dueDate.toLowerCase().contains(input))
+                        || (fee != null && fee.toLowerCase().contains(input)));
+            }
+        });
+    }
+
 }

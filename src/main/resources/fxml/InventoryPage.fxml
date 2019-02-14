@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="inventoryScene" prefHeight="620.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
+  <children>
+    <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="800.0" stylesheets="@../css/TabStyle.css" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab fx:id="totalTab" text="Total Inventory">
+          <content>
+            <fx:include fx:id="totalTabPage" source="InventoryTotalTab.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="historyTab" text="Transaction History">
+          <content>
+            <fx:include fx:id="historyTabPage" source="InventoryHistoryTab.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="checkedOutTab" text="Checked Out">
+          <content>
+            <fx:include fx:id="checkedOutTabPage" source="InventoryCheckedOutTab.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="overdueTab" text="Overdue">
+          <content>
+            <fx:include fx:id="overdueTabPage" source="InventoryOverdueTab.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="faultsTab" text="Faulty">
+          <content>
+            <fx:include fx:id="faultyTabPage" source="InventoryFaultyTab.fxml" />
+          </content>
+          
+        </Tab>
+      </tabs>
+    </JFXTabPane>
+    <Button fx:id="back" layoutX="10.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBack">
+      <graphic>
+        <ImageView fitHeight="35.0" fitWidth="39.0">
+          <image>
+            <Image url="@../images/home.png" />
+          </image>
+        </ImageView>
+      </graphic>
+    </Button>
+  </children>
+</AnchorPane>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<?import java.net.URL?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXButton?>
+<AnchorPane fx:id="checkedOutPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerCheckedOutTab">
+    <children>
+        <Label layoutX="14.0" layoutY="14.0" text="Checked Out Items">
+            <stylesheets>
+                <URL value="@../css/HeaderStyle.css" />
+            </stylesheets>
+        </Label>
+        <JFXTextField fx:id="searchInput" layoutX="567.0" layoutY="25.0" promptText="search" />
+        <JFXButton fx:id="searchButton" layoutX="714.0" layoutY="23.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
+        <JFXTreeTableView fx:id="checkedOutTable" layoutX="6.0" layoutY="63.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+            <stylesheets>
+                <URL value="@../css/TableStyle.css" />
+            </stylesheets>
+         <columnResizePolicy>
+            <JFXTreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+        </JFXTreeTableView>
+    </children>
+</AnchorPane>

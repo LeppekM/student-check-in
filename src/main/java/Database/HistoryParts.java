@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.sql.*;
 
 /**
- * This class queries the database for the transaction history, and returns a student name, part name, serial number, location, quantity, date
+ * This class queries the database for the transaction history, and returns a student name, part name, serial number, status, quantity, date
  */
 public class HistoryParts {
 
@@ -16,22 +16,22 @@ public class HistoryParts {
     private static final String dbname = "student_check_in";
     private static Connection connection;
 
-    private static final String HISTORY_QUERY = "SELECT studentName, partName, serialNumber, location, " +
-            "checkoutQuantity - checkInQuantity AS 'quantity', CASE " +
-            "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
-            "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END AS 'date' " +
+    private static final String HISTORY_QUERY = "SELECT studentName, partName, serialNumber, " +
+            "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
+            "THEN 'In' ELSE 'Out' END AS 'Status', " +
+            "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
+            "THEN checkout.checkinAt ELSE checkout.checkoutAt END AS 'date' " +
             "FROM parts " +
-            "INNER JOIN checkout_parts ON parts.partID = checkout_parts.partID " +
-            "INNER JOIN checkouts ON checkout_parts.checkoutID = checkouts.checkoutID " +
-            "INNER JOIN students ON checkouts.studentID = students.studentID " +
+            "INNER JOIN checkout ON parts.partID = checkout.partID " +
+//            "INNER JOIN checkout ON checkout.checkoutID = checkout.checkoutID " +
+            "INNER JOIN students ON checkout.studentID = students.studentID " +
             "WHERE parts.isDeleted = 0 " +
             "ORDER BY CASE " +
-            "WHEN checkouts.checkoutAt < checkout_parts.checkedInAt " +
-            "THEN checkout_parts.checkedInAt ELSE checkouts.checkoutAt END DESC;";
+            "WHEN checkout.checkoutAt < checkout.checkinAt " +
+            "THEN checkout.checkinAt ELSE checkout.checkoutAt END DESC;";
 
     private Statement statement;
-    private int quantity;
-    private String studentName, partName, serialNumber, location, date;
+    private String studentName, partName, serialNumber, status, date;
 
     public ObservableList<HistoryItems> data = FXCollections.observableArrayList();
 
@@ -39,25 +39,6 @@ public class HistoryParts {
      * Queries the database for the transaction history.
      */
     public ObservableList<HistoryItems> getHistoryItems(){
-//        String login = JOptionPane.showInputDialog("Enter login name: ");
-//
-//// Note: password will be echoed to console;
-////        String password = JOptionPane.showInputDialog("Enter password: ");
-//        JPanel panel = new JPanel();
-//        JLabel label = new JLabel("Enter a password: ");
-//        JPasswordField pass = new JPasswordField(20);
-//        panel.add(label);
-//        panel.add(pass);
-//        String[] options = new String[]{"OK", "Cancel"};
-//        int option = JOptionPane.showOptionDialog(null, panel, "Input",
-//                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-//                null, options, options[1]);
-//        String password = new String(pass.getPassword());
-//
-//        JOptionPane.showMessageDialog(null, "Connecting as user '" + login + "' . . .");
-
-        // Load the JDBC driver.
-        // Library (.jar file) must be added to project build path.
         try {
             Class.forName(dbdriver);
         } catch (ClassNotFoundException e) {
@@ -70,7 +51,7 @@ public class HistoryParts {
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                HistoryItems historyItems = new HistoryItems(studentName, partName, serialNumber, location, quantity, date);
+                HistoryItems historyItems = new HistoryItems(studentName, partName, serialNumber, status, date);
                 data.add(historyItems);
             }
         } catch (SQLException e) {
@@ -88,8 +69,7 @@ public class HistoryParts {
             studentName = resultSet.getString("studentName");
             partName = resultSet.getString("partName");
             serialNumber = resultSet.getString("serialNumber");
-            location = resultSet.getString("location");
-            quantity = resultSet.getInt("quantity");
+            status = resultSet.getString("status");
             date = resultSet.getString("date");
 
         } catch (SQLException e){

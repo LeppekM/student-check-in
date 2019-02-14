@@ -1,16 +1,11 @@
 package InventoryControllerTestFX;
 
-import InventoryController.CheckedOutItems;
-import InventoryController.ControllerCheckedOutTab;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
@@ -18,8 +13,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.api.FxToolkit.registerPrimaryStage;
-import static org.testfx.util.NodeQueryUtils.hasText;
 
 public class CheckedOutTabTest extends ApplicationTest {
 
@@ -43,7 +36,7 @@ public class CheckedOutTabTest extends ApplicationTest {
     @Override
     public void start (Stage stage)throws IOException {
 
-        URL myFxmlURL = ClassLoader.getSystemResource("InventoryCheckedOutTab.fxml");
+        URL myFxmlURL = ClassLoader.getSystemResource("fxml/InventoryCheckedOutTab.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);
         Scene scene = new Scene(root, 800, 600);

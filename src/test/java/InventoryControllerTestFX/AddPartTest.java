@@ -7,13 +7,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.api.FxToolkit.registerPrimaryStage;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
 public class AddPartTest extends ApplicationTest {
@@ -38,7 +35,7 @@ public class AddPartTest extends ApplicationTest {
 
     @Override
     public void start (Stage stage)throws IOException{
-        URL myFxmlURL = ClassLoader.getSystemResource("AddPart.fxml");
+        URL myFxmlURL = ClassLoader.getSystemResource("fxml/AddPart.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);
         Scene scene = new Scene(root, 800, 600);

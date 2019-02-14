@@ -3,14 +3,21 @@ package InventoryController;
 import Database.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 
 public class ControllerFaultsTabTest {
     private Database database;
-    ObservableList<Part> data = FXCollections.observableArrayList(new Part("HDMI Cable", "H12312", "Sony", 5.99, "MSOE", "Cabinet", "", true, 0, false));
+    ObservableList<Part> data = FXCollections.observableArrayList(new Part("HDMI Cable", "H12312", "Sony", 5.99, "MSOE", "Cabinet", "", true, 0, 0));
     @Before
     public void before(){
         database =new Database();

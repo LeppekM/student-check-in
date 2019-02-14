@@ -1,13 +1,31 @@
 package InventoryController;
 
 import Database.*;
+import HelperClasses.StageWrapper;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXSpinner;
+import com.jfoenix.controls.JFXTextField;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerAddPart extends ControllerInventoryPage implements Initializable {
@@ -15,32 +33,42 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public VBox sceneAddPart;
 
     @FXML
-    public TextField nameField;
+    public JFXTextField nameField, serialField, manufacturerField, quantityField, barcodeField, priceField, locationField;
 
     @FXML
-    public TextField serialField;
+    public JFXComboBox vendorField;
 
     @FXML
-    public TextField manufacturerField;
-
-    @FXML
-    public TextField quantityField;
-
-    @FXML
-    public TextField priceField;
-
-    @FXML
-    public TextField vendorField;
-
-    @FXML
-    public TextField locationField;
+    public JFXSpinner loadNotification;
 
     AddPart addPart = new AddPart();
 
+    VendorInformation vendorInformation = new VendorInformation();
+    private ArrayList <String> vendors = vendorInformation.getVendorList();
+
+    StageWrapper stageWrapper = new StageWrapper();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        showVendors();
+        StageWrapper stageWrapper = new StageWrapper();
+        stageWrapper.acceptIntegerOnly(barcodeField);
+        setFieldValidator();
 
+        // make sure that the price field only accepts a valid price
+        priceField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("^\\$?[0-9]*\\.?[0-9]{0,2}$")) {
+                    priceField.setText(oldValue);
+                }
+            }
+        });
+    }
 
+    private void setFieldValidator() {
+        stageWrapper.acceptIntegerOnly(barcodeField);
+        stageWrapper.acceptIntegerOnly(quantityField);
     }
 
     /**
@@ -48,18 +76,127 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      */
     public boolean submitItem(){
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
-        setPartFields();
-        addPart.addItem(setPartFields());
-        //partAddedSuccess();
-        close();
+            if(!vendorExists(getVendorName())){
+                vendorInformation.createNewVendor(getVendorName());
+                vendorInformation();
+            }
+        submitTasks();
         return true;
-        }
-        else {
+        } else {
             errorHandler();
             return false;
         }
     }
 
+    /**
+     * Helper method that runs when adding a new part
+     */
+    private void submitTasks(){
+        String partName = nameField.getText();
+        int quantity = Integer.parseInt(quantityField.getText());
+        if (database.hasPartName(partName)) {
+            Part existing = database.selectPartByPartName(setPartFields().getPartName());
+            if (quantity > 1) {
+                if (!barcodeField.getText().equals(existing.getBarcode())) {
+                    mustBeCommonBarcodeError(partName);
+                } else if (duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
+                    barcodeAlreadyExistsError();
+                } else if (!serialField.getText().equals(existing.getSerialNumber())) {
+                    mustBeCommonSerialNumberError(partName);
+                }/* else if (!manufacturerField.getText().equals(existing.getManufacturer())
+                            || !priceField.getText().equals(existing.getPrice())
+                            || !vendorField.getValue().toString().equals(existing.getVendor())) {
+                    commonFieldsError(partName);
+                }*/ else {
+                    addPart.addCommonItems(setPartFields(), database, quantity);
+                    partAddedSuccess();
+                    close();
+                }
+            } else {
+                if (!database.hasUniqueBarcodes(partName) && (barcodeField.getText().equals(existing.getBarcode()) || serialField.getText().equals(existing.getSerialNumber()))) {
+                    barcodeAndSerialNumberMustBothBeUniqueOrCommonError();
+                } else {
+                    if (database.countPartsOfType(partName) == 1) {
+                        if (barcodeField.getText().equals(existing.getBarcode()) && (
+                                !serialField.getText().equals(existing.getSerialNumber()))) {
+                            commonBarcodeRequiresCommonSerialNumberError(partName);
+                        } else if (serialField.getText().equals(existing.getSerialNumber()) &&
+                                !barcodeField.getText().equals(existing.getBarcode())) {
+                            commonSerialNumberRequiresCommonBarcodeError(partName);
+                        }
+                    } else {
+                        addPart.addUniqueItems(setPartFields(), database, quantity);
+                        partAddedSuccess();
+                        close();
+                    }
+                }
+            }
+        } else {
+            //db does not have a part with this name, add it unless duplicate part
+            if (quantity > 1) {
+                if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
+                    addPart.addCommonItems(setPartFields(), database, quantity);
+                    partAddedSuccess();
+                    close();
+                } else {
+                    barcodeAlreadyExistsError();
+                }
+            } else {
+                if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
+                    addPart.addUniqueItems(setPartFields(), database, quantity);
+                    partAddedSuccess();
+                    close();
+                } else {
+                    barcodeAlreadyExistsError();
+                }
+            }
+
+        }
+    }
+
+    public boolean duplicateBarcode(String partName, int barcode) {
+        return database.getUniqueBarcodesBesidesPart(partName).contains("" + barcode);
+    }
+
+    /**
+     * If new vendor is created, this popup asks for vendor information
+     * Currently nothing is done with the result of the text
+     */
+    private void vendorInformation(){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Vendor Information");
+        dialog.setHeaderText("New vendor created, please enter vendor information");
+        dialog.setContentText("Please enter vendor information");
+        dialog.showAndWait();
+    }
+
+    /**
+     * Helper method to get vendor selection
+     * @return Vendor name
+     */
+    private String getVendorName(){
+        String failedCheck = "-1";
+        if(vendorField.getValue() != null) {
+            return vendorField.getValue().toString();
+        }
+        return failedCheck;
+    }
+
+    /**
+     * Helper method to show vendors
+     */
+    private void showVendors(){
+        vendorField.getItems().addAll(vendors);
+    }
+
+    /**
+     * Checks to see if vendor is new
+     * @param vendorName Name to be checked against list of vendors
+     * @return True if vendor name is new
+     */
+    private boolean vendorExists(String vendorName){
+        return vendors.contains(vendorName);
+    }
 
 
     /**
@@ -73,9 +210,9 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         String serialNumber = serialField.getText();
         String manufacturer = manufacturerField.getText();
         String price = priceField.getText();
-        String vendor = vendorField.getText();
+        String vendor = getVendorName();
         String location = locationField.getText();
-        String barcode = serialField.getText();
+        String barcode = barcodeField.getText();
         String quantity = quantityField.getText();
         int isDeleted = 0; //Part won't ever be deleted when adding
         //If the price or quantity isn't filled out, the invalid value -1 is passed instead.
@@ -88,6 +225,8 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
 
         return new Part(partname, serialNumber, manufacturer, priceCheck(price), vendor, location, barcode, quantityCheck(quantity), isDeleted);
     }
+
+
 
 
     /**
@@ -120,7 +259,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         int failedValue = -1;
         if(quantity.chars().allMatch(Character::isDigit)){ //If quantity is a valid int
              positiveCheck = Integer.parseInt(quantity);
-            if (positiveCheck >0){ //If quantity is greater than 0
+            if (positiveCheck > 0){ //If quantity is greater than 0
                 return positiveCheck;
             }
         }
@@ -157,12 +296,9 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * @return False if any field is empty
      */
     private boolean validateFieldsNotEmpty(){
-        if(nameField.getText().isEmpty() | serialField.getText().isEmpty() | manufacturerField.getText().isEmpty() |
-        priceField.getText().isEmpty() | vendorField.getText().isEmpty() | locationField.getText().isEmpty()|
-        serialField.getText().isEmpty()| quantityField.getText().isEmpty()){
-            return false;
-        }
-        return true;
+        return !(nameField.getText().isEmpty() | serialField.getText().isEmpty() | manufacturerField.getText().isEmpty() |
+                priceField.getText().isEmpty() | locationField.getText().isEmpty() |
+                serialField.getText().isEmpty() | barcodeField.getText().isEmpty() | quantityField.getText().isEmpty() | getVendorName().contains("-1"));
     }
 
     /**
@@ -172,7 +308,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         if(!validateFieldsNotEmpty()){
             fieldErrorAlert();
         }
-        else if (!validateQuantityField()|| !validatePriceField()){
+        else if (!validateQuantityField()){
             invalidNumberAlert();
         }
     }
@@ -184,7 +320,39 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private void fieldErrorAlert(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("Please fill out all fields before submitting info");
+        alert.setContentText("Please fill out all fields before submitting info.");
+
+        alert.showAndWait();
+    }
+
+    private void barcodeAlreadyExistsError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("A part with that barcode already exists.");
+
+        alert.showAndWait();
+    }
+
+    private void barcodeAndSerialNumberMustBothBeUniqueOrCommonError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("Barcodes and serial numbers for parts must be all the same or all different.");
+
+        alert.showAndWait();
+    }
+
+    private void commonBarcodeRequiresCommonSerialNumberError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have the same barcode, so the serial number must be the same.");
+
+        alert.showAndWait();
+    }
+
+    private void commonSerialNumberRequiresCommonBarcodeError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have the same serial number, so the barcode must be the same.");
 
         alert.showAndWait();
     }
@@ -195,20 +363,58 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private void invalidNumberAlert(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("Please make sure you are entering numbers into price and quantity fields, and that they are not negative");
+        alert.setContentText("Please make sure the quantity is greater than 0.");
 
         alert.showAndWait();
     }
 
-    /**
+    private void mustBeCommonBarcodeError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("All " + partName + " parts must have the same barcode.");
+
+        alert.showAndWait();
+    }
+
+    private void mustBeCommonSerialNumberError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("All " + partName + " parts must have the same serial number.");
+
+        alert.showAndWait();
+    }
+
+    private void commonFieldsError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(partName + " parts have the same barcode and serial number, so their other fields must also be the same.");
+
+        alert.showAndWait();
+    }
+
+       /**
      * Creates an alert informing user that part was added successfully
      */
     private void partAddedSuccess(){
-//        Notifications.create().title("Successful!").text("Part added successfully.").showWarning();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Confirmation");
-        alert.setContentText("Part added successfully");
-        alert.showAndWait();
+        new Thread(new Runnable() {
+            @Override public void run() {
+                Platform.runLater(() -> {
+                    Stage owner = new Stage(StageStyle.TRANSPARENT);
+                    StackPane root = new StackPane();
+                    root.setStyle("-fx-background-color: TRANSPARENT");
+                    Scene scene = new Scene(root, 1, 1);
+                    owner.setScene(scene);
+                    owner.setWidth(1);
+                    owner.setHeight(1);
+                    owner.toBack();
+                    owner.show();
+                    Notifications.create().title("Successful!").text("Part added successfully.").hideAfter(new Duration(5000)).show();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(5));
+                    delay.setOnFinished( event -> owner.close() );
+                    delay.play();
+                });
+            }
+        }).start();
     }
 
     /**
@@ -219,14 +425,11 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     }
 
     /**
-     * Helper method to close platform
+     * Helper method to send close request to total tab, which receives the request and
+     * repopulates the table.
      */
     private void close(){
-        sceneAddPart.getScene().getWindow().hide();
+        //sceneAddPart.getScene().getWindow().hide();
+        sceneAddPart.fireEvent(new WindowEvent(((Node) sceneAddPart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
-
-
-
-
-
 }

@@ -1,0 +1,11 @@
+/**
+ Made by Bailey Terry
+ */
+
+.label {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial Black";
+    -fx-text-fill: red;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+}

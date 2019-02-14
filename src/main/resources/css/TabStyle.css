@@ -1,0 +1,47 @@
+/**
+ Made by Bailey Terry
+ */
+
+.jfx-tab-pane .tab-header-background {
+    -fx-opacity: .75;
+    -fx-background-color: lightgrey;
+}
+
+.jfx-tab-pane .tab-selected-line {
+    -fx-border-color: #990000;
+}
+
+.jfx-tab-pane .tab-header-area .jfx-rippler {
+    -jfx-rippler-fill: red;
+}
+
+.jfx-tab-pane
+{
+    -fx-tab-min-width: 90px;
+}
+
+.tab{
+    -fx-background-insets: 0 1 0 1,0,0;
+}
+
+.tab-pane .tab
+{
+    -fx-background-color: #e6e6e6;
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: #3c3c3c;
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #828282;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: indianred;
+}

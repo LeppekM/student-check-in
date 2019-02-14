@@ -1,0 +1,47 @@
+/**
+ Made by Bailey Terry
+ */
+
+.root {
+    /*-fx-background-image: url("abstract.jpg");*/
+    -fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 20%, center 50% 50%, radius 50%, reflect, #cbcbcb, #c8c8c8 75%, #c5c5c5);
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+.prompt {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial Narrow";
+    -fx-text-fill: black;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+
+.hyperlink{
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.combo-box .list-view{
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-color: white;
+    -fx-alignment: center;
+    -fx-background-color: #424242;
+}
+
+.text-area {
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+.text-field{
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+.check-box{
+    -fx-text-fill: black;
+}

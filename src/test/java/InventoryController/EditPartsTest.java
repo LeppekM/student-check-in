@@ -24,10 +24,10 @@ public class EditPartsTest {
     public void editParts(){
         EditPart editPart = new EditPart();
         AddPart addPart = new AddPart();
-        Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 1000, false);
+        Part part = new Part("testPart", "serial", "manufacturer",0.00, "2", "location", "barcode", false, 1000, 0);
         addPart.addItem(part);
 
-        Part editedPart = new Part("testPart", "xyz", "MSOE", 17.20, "3", "there", "scan me", false, 1000, false);
+        Part editedPart = new Part("testPart", "xyz", "MSOE", 17.20, "3", "there", "scan me", false, 1000, 0);
         editPart.editItem(editedPart);
         Part test = database.selectPart(1000);
         assertEquals(editedPart.getPartName(), test.getPartName());

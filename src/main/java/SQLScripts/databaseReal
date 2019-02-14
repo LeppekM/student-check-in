@@ -1,0 +1,283 @@
+USE student_check_in;
+
+DROP PROCEDURE IF EXISTS load_parts;
+CREATE PROCEDURE load_parts()
+  BEGIN
+    DECLARE i int DEFAULT 1;
+    DECLARE j int DEFAULT 0;
+    TRUNCATE TABLE parts;
+    START TRANSACTION;
+    WHILE i < 683 DO
+      IF i < 104 THEN
+        set j = i;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 208 THEN
+        set j = i - 103;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 298 THEN
+        set j = i - 207;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 379 THEN
+        set j = i - 297;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9843, 3, 'S350 D1', 123456, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 440 THEN
+        set j = i - 378;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 467 THEN
+        set j = i - 439;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 480 THEN
+        set j = i - 466;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Olimex ECG/EMG', j, 'MSOE', 2453, 1, 'S350 G1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 494 THEN
+        set j = i - 479;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('TENS Unit', j, 'TENS', 4999, 4, 'S350 H1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 580 THEN
+        set j = i - 493;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Analog Discovery 2', j, 'Digilent', 27900, 5, 'S350 I1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 592 THEN
+        set j = i - 579;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Fluke 123 Scopemeter', j, 'Fluke', 189900, 6, 'S350 J1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 611 THEN
+        set j = i - 591;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Fluke 43 & 43B Power Quality Analyzer', j, 'Fluke', 346900, 6, 'S350 K1', j, 0, 0, current_date, 'root', 0);
+      ELSEIF i < 632 THEN
+        set j = i - 610;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', 7070, 0, 0, current_date, 'root', 0);
+#      ELSEIF i < 652 THEN
+#        set j = i - 631;
+#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+#        values ('Faulty Parts', j, 'MSOE', 100000, 7, 'S350 L2', j, 1, 0, current_date, 'root', 0);
+#      ELSEIF i < 672 THEN
+#        set j = i - 651;
+#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+#        values ('Checked Out Parts', j, 'MSOE', 150000, 7, 'S350 L2', j, 0, 1, current_date, 'root', 0);
+#      ELSEIF i < 676 THEN
+#        set j = i - 671;
+#        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+#        values ('Overdue Parts', j, 'MSOE', 160000, 7, 'S350 L3', j, 0, 1, current_date, 'root', 0);
+      ELSE
+#        set j = i - 675;
+        set j = i - 631;
+        insert into parts (partName, serialNumber, manufacturer, price, vendorID, location, barcode, isFaulty, isCheckedOut, createdAt, createdBy, isDeleted)
+        values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', 15900, 8, 'S350 M1', j, 0, 0, current_date, 'root', 0);
+      END IF;
+      set i = i + 1;
+    END WHILE;
+    COMMIT;
+  END;
+
+DROP PROCEDURE IF EXISTS load_vendors;
+CREATE PROCEDURE load_vendors()
+  BEGIN
+    TRUNCATE TABLE vendors;
+    START TRANSACTION;
+    insert into vendors (vendor) values ('MSOE');
+    insert into vendors (vendor) values ('RSR');
+    insert into vendors (vendor) values ('Cypress');
+    insert into vendors (vendor) values ('TENS');
+    insert into vendors (vendor) values ('Digilent');
+    insert into vendors (vendor) values ('Fluke');
+    insert into vendors (vendor) values ('Nexus');
+    insert into vendors (vendor) values ('Milwaukee Tool');
+    COMMIT;
+  END;
+
+DROP PROCEDURE IF EXISTS load_checkout;
+CREATE PROCEDURE load_checkout()
+  BEGIN
+    TRUNCATE TABLE checkout;
+    START TRANSACTION;
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (671, 551168, 112233, current_date, current_date, current_date);
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (672, 551168, 112234, current_date, current_date, current_date);
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (673, 551168, 112235, current_date, current_date, current_date);
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (674, 551168, 112236, current_date, current_date, current_date);
+    insert into checkout (partID, studentID, barcode, dueAt, checkoutAt, returnDate)
+    values (675, 551168, 112236, current_date, current_date, current_date);
+    COMMIT;
+  END;
+
+DROP PROCEDURE IF EXISTS load_students;
+CREATE PROCEDURE load_students()
+  BEGIN
+    TRUNCATE TABLE students;
+    START TRANSACTION;
+    INSERT into students (studentID, email, studentName, createdAt, createdBy)
+    VALUE (11111, 'langdk@msoe.edu','Daniel Lang', '2018-1-14', 'Jim');
+    INSERT into students (studentID, email, studentName, createdAt, createdBy)
+    VALUE (12345, 'bob@msoe.edu','Bob Bobsoni', '2018-1-14', 'Jim');
+    INSERT into students (studentID, email, studentName, createdAt, createdBy)
+    VALUE (22222, 'John@msoe.edu','John Johnson', '2018-1-14', 'Jim');
+  END;
+
+DROP PROCEDURE IF EXISTS load_workers;
+CREATE PROCEDURE load_workers()
+  BEGIN
+    TRUNCATE TABLE workers;
+    START TRANSACTION;
+    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
+    VALUES ('terrybc@msoe.edu', 'Bailey Terry', 1234, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
+    VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 4123, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
+    VALUES ('langdk@msoe.edu', 'Daniel Lang', 3412, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
+    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 2341, 1, '2019-2-11', 'Jim');
+  end;
+
+drop table if exists parts;
+create table parts (
+  partID       int NOT NULL AUTO_INCREMENT,
+  partName     varchar(50) NOT NULL,
+  serialNumber varchar(20),
+  manufacturer varchar(50),
+  price        int,
+  vendorID     int NOT NULL,
+  location     varchar(20),
+  barcode      varchar(20),
+  isFaulty     bit,
+  isCheckedOut bit,
+  createdAt    date,
+  updatedAt    date,
+  deletedAt    date,
+  createdBy    varchar(50),
+  updatedBy    varchar(50),
+  deletedBy    varchar(50),
+  isDeleted    bit,
+  PRIMARY KEY (partID)
+);
+-- #FOREIGN KEY (partID) REFERENCES checkout_parts (partID),
+-- #FOREIGN KEY (vendorID) REFERENCES vendors (vendorID));
+
+CALL load_parts();
+
+# drop table if exists checkouts;
+# create table checkouts (
+# checkoutID int NOT NULL,
+# studentID int NOT NULL,
+# checkoutAt date,
+# reservedAt date,
+# createdAt date,
+# updatedAt date,
+# deletedAt date,
+# createdBy varchar(50),
+# updatedBy varchar(50),
+# deletedBy varchar(50),
+# PRIMARY KEY (checkoutID));
+-- #FOREIGN KEY (checkoutID) REFERENCES checkout_parts (checkoutID),
+-- #FOREIGN KEY (studentID) REFERENCES students (studentID));
+
+# drop table if exists checkout_parts;
+# create table checkout_parts (
+# checkoutID int NOT NULL,
+# partID int NOT NULL,
+# checkoutQuantity int,
+# checkinQuantity int,
+# checkedInAt date,
+# dueAt date,
+# createdAt date,
+# updatedAt date,
+# deletedAt date,
+# createdBy varchar(50),
+# updatedBy varchar(50),
+# deletedBy varchar(50),
+# PRIMARY KEY (checkoutID, partID));
+-- #FOREIGN KEY (partID) REFERENCES parts (partID));
+
+drop table if exists checkout;
+create table checkout (
+  checkoutID int NOT NULL AUTO_INCREMENT,
+  partID     int NOT NULL,
+  studentID  int NOT NULL,
+  barcode    int NOT NULL,
+  checkoutAt date,
+  prof varchar(256),
+  reservedAt date,
+  returnDate varchar(25),
+  course     varchar(256),
+  checkinAt  date,
+  dueAt      date,
+  createdAt  date,
+  updatedAt  date,
+  createdBy  varchar(50),
+  updatedBy varchar(50),
+  PRIMARY KEY (checkoutID)
+);
+
+call load_checkout();
+
+drop table if exists vendors;
+create table vendors (
+  vendorID int NOT NULL AUTO_INCREMENT,
+  vendor   varchar(50),
+  description varchar(500),
+  PRIMARY KEY (vendorID)
+);
+
+call load_vendors();
+
+drop table if exists students;
+create table students (
+  studentID   int NOT NULL,
+  email       varchar(50),
+  studentName varchar(50),
+  createdAt   date,
+  updatedAt   date,
+  deletedAt   date,
+  createdBy   varchar(50),
+  updatedBy   varchar(50),
+  deletedBy   varchar(50),
+  PRIMARY KEY (studentID)
+);
+
+call load_students();
+
+drop table if exists workers;
+create table workers (
+  workerID   int NOT NULL AUTO_INCREMENT,
+  email      varchar(50),
+  workerName varchar(50),
+  pass       varchar(20),
+  isAdmin    bit,
+  createdAt  date,
+  updatedAt  date,
+  deletedAt  date,
+  createdBy  varchar(50),
+  updatedBy  varchar(50),
+  deletedBy  varchar(50),
+  PRIMARY KEY (workerID)
+);
+
+call load_workers();
+
+drop table if exists fault;
+create table fault (
+  checkoutID  int NOT NULL,
+  partID      int NOT NULL,
+  description varchar(500),
+  price       int,
+  createdAt   date,
+  updatedAt   date,
+  deletedAt   date,
+  createdBy   varchar(50),
+  updatedBy   varchar(50),
+  deletedBy   varchar(50),
+  PRIMARY KEY (checkoutID, partID)
+);
+-- #FOREIGN KEY (checkoutID, partID) REFERENCES checkout_parts (checkoutID, partID));
