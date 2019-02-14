@@ -363,8 +363,8 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private void invalidNumberAlert(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("Please make sure the quantity is greater than 0.");
-
+        alert.setContentText("Please make sure you are entering numbers into price and quantity fields, and that they are not negative");
+        StudentCheckIn.logger.error("Please make sure you are entering numbers into price and quantity fields, and that they are not negative.");
         alert.showAndWait();
     }
 
@@ -372,7 +372,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("All " + partName + " parts must have the same barcode.");
-
+        StudentCheckIn.logger.error("All " + partName + " parts must have the same barcode.");
         alert.showAndWait();
     }
 
@@ -380,15 +380,21 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("All " + partName + " parts must have the same serial number.");
-
+        StudentCheckIn.logger.error("All " + partName + " parts must have the same serial number.");
         alert.showAndWait();
     }
-
+    private void mustBeCommonBarcodeAndSerialNumberError(String partName) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("All " + partName + " parts must have the same barcode and serial number.");
+        StudentCheckIn.logger.error("All " + partName + " parts must have the same barcode and serial number.");
+        alert.showAndWait();
+    }
     private void commonFieldsError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText(partName + " parts have the same barcode and serial number, so their other fields must also be the same.");
-
+        StudentCheckIn.logger.error(partName + " parts have the same barcode and serial number, so their other fields must also be the same.");
         alert.showAndWait();
     }
 

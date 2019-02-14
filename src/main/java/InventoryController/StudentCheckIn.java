@@ -23,19 +23,23 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class StudentCheckIn extends Application  {
     private static final String logLocation = System.getProperty("user.dir");
-    final static Logger logger = LogManager.getLogger(StudentCheckIn.class.getName());
+    public final static Logger logger = LogManager.getLogger(StudentCheckIn.class.getName());
 
     static {
         Log4J.enableForClass(StudentCheckIn.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        System.setProperty("current.date", dateFormat.format(new Date()));
     }
 
     public StudentCheckIn(){}
@@ -56,7 +60,6 @@ public class StudentCheckIn extends Application  {
 
     public static void main(String[] args) {
 //        setupLogging();
-        logger.debug("This is a test debug message");
         launch(args);
     }
 
