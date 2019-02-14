@@ -166,59 +166,77 @@ public class ControllerManageStudents implements Initializable {
         boolean invalid = true;
         while (invalid && notIncluded){
             id = JOptionPane.showInputDialog(null, "Please enter the student RFID.");
-            Pattern p = Pattern.compile("^(rfid:)");
-            Matcher m = p.matcher(id);
-            if (m.find()){
-                id = id.substring(5);
-            }
-            if (!id.matches("[a-zA-Z]*") && id.length() == 5){
-                if (!database.selectStudent(Integer.parseInt(id)).getName().equals("")){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
-                    alert.showAndWait();
-                    notIncluded = false;
-                    break;
+            if (id != null) {
+                Pattern p = Pattern.compile("^(rfid:)");
+                Matcher m = p.matcher(id);
+                if (m.find()) {
+                    id = id.substring(5);
                 }
-                invalid = false;
+                if (!id.matches("[a-zA-Z]*") && id.length() == 5) {
+                    if (!database.selectStudent(Integer.parseInt(id)).getName().equals("")) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
+                        alert.showAndWait();
+                        notIncluded = false;
+                        break;
+                    }
+                    invalid = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Students RFID is invalid.");
+                }
             }else {
-                JOptionPane.showMessageDialog(null, "Students RFID is invalid.");
+                break;
             }
         }
         invalid = true;
         Pattern p = Pattern.compile("[0-9]*");
         Matcher m = p.matcher(name);
         while (invalid && notIncluded){
-            name = new StringBuilder(JOptionPane.showInputDialog(null, "Please enter the students first name."));
-            if (!m.find() && !name.toString().equals("")){
-                String temp = name.substring(0,1).toUpperCase() + name.substring(1);
-                name = new StringBuilder(temp);
-                invalid = false;
+            String input = JOptionPane.showInputDialog(null, "Please enter the students first name.");
+            if (input != null) {
+                name = new StringBuilder(input);
+                if (!m.find() && !name.toString().equals("")) {
+                    String temp = name.substring(0, 1).toUpperCase() + name.substring(1);
+                    name = new StringBuilder(temp);
+                    invalid = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Students first name is invalid or blank.");
+                }
             }else {
-                JOptionPane.showMessageDialog(null, "Students first name is invalid or blank.");
+                break;
             }
         }
         invalid = true;
         while (invalid && notIncluded){
-            name.append(" ");
-            name.append(JOptionPane.showInputDialog(null, "Please enter the students last name."));
-            if (!m.find() && !name.toString().equals(" ")){
-                int space = name.indexOf(" ");
-                String temp = name.substring(0, space+1) + name.substring(space+1,space+2).toUpperCase() + name.substring(space+2);
-                name = new StringBuilder(temp);
-                invalid = false;
+            String input = JOptionPane.showInputDialog(null, "Please enter the students last name.");
+            if (input != null) {
+                name.append(" ");
+                name.append(input);
+                if (!m.find() && !name.toString().equals(" ")) {
+                    int space = name.indexOf(" ");
+                    String temp = name.substring(0, space + 1) + name.substring(space + 1, space + 2).toUpperCase() + name.substring(space + 2);
+                    name = new StringBuilder(temp);
+                    invalid = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Students last name is invalid or blank.");
+                }
             }else {
-                JOptionPane.showMessageDialog(null, "Students last name is invalid or blank.");
+                break;
             }
         }
         invalid = true;
         while (invalid && notIncluded){
             email = JOptionPane.showInputDialog(null, "Please enter the students MSOE email.");
-            if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
-                invalid = false;
+            if (email != null) {
+                if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                    invalid = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Students email must be their MSOE email.");
+                }
             }else {
-                JOptionPane.showMessageDialog(null, "Students email must be their MSOE email.");
+                break;
             }
         }
-        if (notIncluded) {
+        if (notIncluded && name != null && id != null && email != null) {
             database.addStudent(new Student(name.toString(), Integer.parseInt(id), email));
         }
         populateTable();
