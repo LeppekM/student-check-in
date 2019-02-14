@@ -38,6 +38,8 @@ public class StudentCheckIn extends Application  {
 
     static {
         Log4J.enableForClass(StudentCheckIn.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        System.setProperty("current.date", dateFormat.format(new Date()));
     }
 
     public StudentCheckIn(){}
@@ -58,8 +60,6 @@ public class StudentCheckIn extends Application  {
 
     public static void main(String[] args) {
 //        setupLogging();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        System.setProperty("current.date", dateFormat.format(new Date()));
         launch(args);
     }
 
