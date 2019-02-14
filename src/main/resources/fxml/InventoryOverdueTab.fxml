@@ -9,6 +9,7 @@
 
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXButton?>
 <AnchorPane fx:id="overduePage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerOverdueTab">
    <children>
        <Label layoutX="15.0" layoutY="11.0" text="Overdue Items">
@@ -18,7 +19,8 @@
        </Label>
       <Pane prefHeight="600.0" prefWidth="800.0">
          <children>
-             <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
+             <JFXTextField fx:id="searchInput" layoutX="567.0" layoutY="25.0" promptText="search" />
+             <JFXButton fx:id="searchButton" layoutX="714.0" layoutY="23.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
              <JFXTreeTableView fx:id="overdueTable" layoutY="65.0" onMouseClicked="#popUp" prefHeight="476.0" prefWidth="800.0">
                  <stylesheets>
                      <URL value="@../css/TableStyle.css" />

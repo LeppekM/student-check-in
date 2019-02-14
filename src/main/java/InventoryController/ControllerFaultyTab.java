@@ -2,10 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.Part;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
@@ -56,6 +54,9 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     @FXML
     private JFXTextField searchInput;
 
+    @FXML
+    private JFXButton searchButton;
+
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
 
@@ -68,6 +69,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     public void initialize(URL location, ResourceBundle resources) {
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setFont(new Font(18));
+        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         faultyTable.setPlaceholder(emptyTableLabel);
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
@@ -117,26 +119,9 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         tableRows = FXCollections.observableArrayList();
 
-        searchInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                faultyTable.setPredicate(new Predicate<TreeItem<FaultyTabTableRow>>() {
-                    @Override
-                    public boolean test(TreeItem<FaultyTabTableRow> tableRow) {
-                        String input = newValue.toLowerCase();
-                        partName = tableRow.getValue().getPartName().getValue();
-                        serialNumber = tableRow.getValue().getSerialNumber().getValue();
-                        loc = tableRow.getValue().getLocation().getValue();
-                        barcode = tableRow.getValue().getBarcode().getValue();
-                        faultDescription = tableRow.getValue().getFaultDescription().getValue();
-
-                        return ((partName != null && partName.toLowerCase().contains(input))
-                                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                                || (loc != null && loc.toLowerCase().contains(input))
-                                || (barcode != null && barcode.toLowerCase().contains(input))
-                                || (faultDescription != null && faultDescription.toLowerCase().contains(input)));
-                    }
-                });
+        searchInput.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                search();
             }
         });
 
@@ -181,5 +166,26 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         faultyTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultDescCol);
         faultyTable.setRoot(root);
         faultyTable.setShowRoot(false);
+    }
+
+    @FXML
+    private void search() {
+        faultyTable.setPredicate(new Predicate<TreeItem<FaultyTabTableRow>>() {
+            @Override
+            public boolean test(TreeItem<FaultyTabTableRow> tableRow) {
+                String input = searchInput.getText().toLowerCase();
+                partName = tableRow.getValue().getPartName().getValue();
+                serialNumber = tableRow.getValue().getSerialNumber().getValue();
+                loc = tableRow.getValue().getLocation().getValue();
+                barcode = tableRow.getValue().getBarcode().getValue();
+                faultDescription = tableRow.getValue().getFaultDescription().getValue();
+
+                return ((partName != null && partName.toLowerCase().contains(input))
+                        || (serialNumber != null && serialNumber.toLowerCase().contains(input))
+                        || (loc != null && loc.toLowerCase().contains(input))
+                        || (barcode != null && barcode.toLowerCase().contains(input))
+                        || (faultDescription != null && faultDescription.toLowerCase().contains(input)));
+            }
+        });
     }
 }

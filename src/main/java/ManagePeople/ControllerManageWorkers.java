@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ControllerManageWorkers implements Initializable {
     private ObservableList<ManageWorkersTabTableRow> tableRows;
@@ -172,50 +174,78 @@ public class ControllerManageWorkers implements Initializable {
         boolean invalid = true;
         while (invalid && notIncluded){
             email = JOptionPane.showInputDialog(null, "Please enter the workers MSOE email.");
-            ObservableList<Worker> workers = database.getWorkers();
-            for (Worker w: workers){
-                if (w.getEmail().equals(email)){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Worker is already in the database!");
-                    alert.showAndWait();
-                    notIncluded = false;
+            if (email != null) {
+                ObservableList<Worker> workers = database.getWorkers();
+                for (Worker w : workers) {
+                    if (w.getEmail().equals(email)) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Worker is already in the database!");
+                        alert.showAndWait();
+                        notIncluded = false;
+                        break;
+                    }
                     break;
                 }
-            }
-            if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
-                invalid = false;
+                if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                    invalid = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Workers email must be their MSOE email.");
+                }
             }else {
-                JOptionPane.showMessageDialog(null, "Students email must be their MSOE email.");
+                break;
+            }
+        }
+        invalid = true;
+        Pattern p = Pattern.compile("[0-9]*");
+        Matcher m = p.matcher(name);
+        while (invalid && notIncluded){
+            String input = JOptionPane.showInputDialog(null, "Please enter the workers first name.");
+            if (input != null) {
+                name = new StringBuilder(input);
+                if (!m.find() && !name.toString().equals("")) {
+                    String temp = name.substring(0, 1).toUpperCase() + name.substring(1);
+                    name = new StringBuilder(temp);
+                    invalid = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Workers first name is invalid or blank.");
+                }
+            }else {
+                break;
             }
         }
         invalid = true;
         while (invalid && notIncluded){
-            name = new StringBuilder(JOptionPane.showInputDialog(null, "Please enter the workers first name."));
-            if (!name.toString().matches("[0-9]*") && !name.toString().equals("")){
-                invalid = false;
+            String input = JOptionPane.showInputDialog(null, "Please enter the workers last name.");
+            if (input != null) {
+                name.append(" ");
+                name.append(input);
+                if (!m.find() && !name.toString().equals(" ")) {
+                    int space = name.indexOf(" ");
+                    String temp = name.substring(0, space + 1) + name.substring(space + 1, space + 2).toUpperCase() + name.substring(space + 2);
+                    name = new StringBuilder(temp);
+                    invalid = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Workers last name is invalid or blank.");
+                }
             }else {
-                JOptionPane.showMessageDialog(null, "Workers first name is invalid or blank.");
-            }
-        }
-        invalid = true;
-        while (invalid && notIncluded){
-            name.append(" ");
-            name.append(JOptionPane.showInputDialog(null, "Please enter the workers last name."));
-            if (!name.toString().matches("[0-9]*") && !name.toString().equals(" ")){
-                invalid = false;
-            }else {
-                JOptionPane.showMessageDialog(null, "Workers last name is invalid or blank.");
+                break;
             }
         }
         invalid = true;
         while (invalid && notIncluded){
             pin = JOptionPane.showInputDialog(null, "Please enter a pin for the admin");
-            if (pin.matches("[0-9]{4}")) {
-                invalid = false;
+            if (pin != null) {
+                if (pin.matches("[0-9]{4}")) {
+                    invalid = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Must be a four digit pin");
+                }
             }else {
-                JOptionPane.showMessageDialog(null, "Must be a four digit pin");
+                break;
             }
         }
-        database.addWorker(new Worker(name.toString(), email, pin, true));
+        if (notIncluded && name != null && email != null && pin != null) {
+            database.addWorker(new Worker(name.toString(), email, pin, true));
+        }
         populateTable();
     }
 
