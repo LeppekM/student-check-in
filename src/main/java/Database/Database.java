@@ -1,6 +1,7 @@
 package Database;
 
 import InventoryController.CheckedOutItems;
+import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -74,6 +75,7 @@ public class Database {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQL Error: " + e.getLocalizedMessage());
             e.printStackTrace();
         }
         return data;
@@ -444,6 +446,7 @@ public class Database {
             statement.close();
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of students");
+            StudentCheckIn.logger.error("Could not retrieve the list of students");
             alert.showAndWait();
             e.printStackTrace();
         }
@@ -474,6 +477,7 @@ public class Database {
             statement.close();
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
+            StudentCheckIn.logger.error("Could not retrieve the list of students");
             alert.showAndWait();
             e.printStackTrace();
         }
@@ -589,6 +593,7 @@ public class Database {
             statement.close();
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
+            StudentCheckIn.logger.error("Could not add student, SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
         }
@@ -604,6 +609,7 @@ public class Database {
             statement.close();
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add worker");
+            StudentCheckIn.logger.error("Could not add worker, SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
         }
