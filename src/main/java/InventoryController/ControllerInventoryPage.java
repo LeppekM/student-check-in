@@ -106,7 +106,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
      * @author Matthew Karcz
      */
     public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
-        System.out.println(rawStatement);
+        StudentCheckIn.logger.info(rawStatement);
         Statement currentStatement = null;
         try {
             Connection connection = database.getConnection();
@@ -130,6 +130,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 data.add(part);
             }
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("Could not retrieve the list of students");
             e.printStackTrace();
         } finally {
             if (currentStatement != null) {
@@ -159,6 +160,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
             inventoryScene.getScene().setRoot(loader.load(myFxmlURL));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            StudentCheckIn.logger.error("IOException: No valid stage was found to load");
             alert.showAndWait();
         }
     }
