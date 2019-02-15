@@ -128,7 +128,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         unlockExtended();
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
-        //barcodeListener();
     }
 
     /**
@@ -205,7 +204,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             StudentCheckIn.logger.warn("Student has overdue items, they cannot checkout more items.");
             alert.showAndWait();
         }
-        //barcode.requestFocus();
     }
 
     /**
@@ -530,7 +528,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     private void setItemStatus() {
         barcode.focusedProperty().addListener((ov, oldv, newV) -> {
-            if (!newV && !barcode.getText().isEmpty()) {
+            if (!newV && !barcode.getText().isEmpty() && !barcode2.isVisible()) {
                 if (itemIsBeingCheckedIn(getBarcode())) {
                     setCheckinInformation();
                 } else {
@@ -543,6 +541,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         });
     }
 
+
     /**
      * Gets barcode as text, returns as int
      *
@@ -552,19 +551,37 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         return Integer.parseInt(barcode.getText());
     }
 
-
+    /**
+     * Gets barcode as text, returns as int
+     * @return barcode as integer
+     */
     private int getBarcode2() {
         return Integer.parseInt(barcode2.getText());
     }
 
+    /**
+     * Gets barcode as text, returns as int
+     *
+     * @return barcode as integer
+     */
     private int getBarcode3() {
         return Integer.parseInt(barcode3.getText());
     }
 
+    /**
+     * Gets barcode as text, returns as int
+     *
+     * @return barcode as integer
+     */
     private int getBarcode4() {
         return Integer.parseInt(barcode4.getText());
     }
 
+    /**
+     * Gets barcode as text, returns as int
+     *
+     * @return barcode as integer
+     */
     private int getBarcode5() {
         return Integer.parseInt(barcode5.getText());
     }
@@ -691,7 +708,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @param showItems True if items should be shown
      */
     private void setExtendedTransition(int direction, boolean showItems) {
-        translateButtons(direction);
+        transitionHelper.translateButtons(submitButton, resetButton, direction);
         translateExtended(direction);
         extendedItemsFadeTransition();
         setExtendedItemsVisible(showItems);
@@ -788,8 +805,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @param showTextarea True if text area will be shown
      */
     private void setFaultyTransition(int direction, boolean showTextarea) {
-        translateButtons(direction);
-        faultyBoxFadeTransition();
+        transitionHelper.translateButtons(submitButton, resetButton, direction);
+        transitionHelper.faultyBoxFadeTransition(faulty);
         faultyTextArea.setVisible(showTextarea);
     }
 
@@ -803,34 +820,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         TranslateTransition t = new TranslateTransition(Duration.millis(duration), extended);
         t.setByY(direction);
         t.play();
-    }
-
-    /**
-     * Translates buttons vertically
-     *
-     * @param direction Direction to move
-     */
-    private void translateButtons(int direction) {
-        int duration = 500;
-        TranslateTransition transition = new TranslateTransition(Duration.millis(duration), submitButton);
-        TranslateTransition transition2 = new TranslateTransition(Duration.millis(duration), resetButton);
-        transition.setByY(direction);
-        transition2.setByY(direction);
-        transition.play();
-        transition2.play();
-    }
-
-    /**
-     * Helper method to fade faulty textbox
-     */
-    private void faultyBoxFadeTransition() {
-        int initial = 0;
-        int end = 1;
-        int duration = 500;
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(duration), faultyTextArea);
-        fadeTransition.setFromValue(initial);
-        fadeTransition.setToValue(end);
-        fadeTransition.play();
     }
 
     /**
