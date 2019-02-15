@@ -110,7 +110,8 @@ public class StageWrapper {
         errorAlert.setHeaderText("Error");
         errorAlert.setContentText(errorText);
         errorAlert.initStyle(StageStyle.UTILITY);
-        errorAlert.showAndWait();
+
+        Platform.runLater(errorAlert :: showAndWait);
     }
 
 

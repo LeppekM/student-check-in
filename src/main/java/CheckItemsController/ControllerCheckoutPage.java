@@ -147,10 +147,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * If no movement is recorded on page for 15 minutes, item will submit automatically
      */
     private void submitTimer(){
-        int duration =15;
+        int duration = 5;
         PauseTransition delay = new PauseTransition(Duration.minutes(duration));
-        delay.setOnFinished(event -> submit());
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
+        delay.setOnFinished(event -> submit());
         delay.play();
     }
 
@@ -210,7 +210,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     public void submit() {
         Student thisStudent = database.selectStudent(getstudentID());
         if(!fieldsFilled()){
-            stageWrapper.errorAlert("Please fill out all fields before submitting info!");
             return;
         }
         if (thisStudent.getOverdueItems().size() == 0) {
@@ -250,19 +249,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     private void submitMultipleItems(){
         List<Integer> barcodes = new ArrayList<>();
-        if(!barcode.getText().isEmpty()){
+        if(barcodeIsNotEmpty(barcode)){
             barcodes.add(getBarcode());
         }
-        if(!barcode2.getText().isEmpty()){
+        if(barcodeIsNotEmpty(barcode2)){
             barcodes.add(getBarcode2());
         }
-        if(!barcode3.getText().isEmpty()){
+        if(barcodeIsNotEmpty(barcode3)){
             barcodes.add(getBarcode3());
         }
-        if(!barcode4.getText().isEmpty()){
+        if(barcodeIsNotEmpty(barcode4)){
             barcodes.add(getBarcode4());
         }
-        if(!barcode5.getText().isEmpty()){
+        if(barcodeIsNotEmpty(barcode5)){
             barcodes.add(getBarcode5());
         }
 
@@ -274,6 +273,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 checkOut.addNewCheckoutItem(barcodes.get(i), getstudentID());
             }
         }
+    }
+
+    private boolean barcodeIsNotEmpty(JFXTextField barcode){
+        return !(barcode.getText().isEmpty() || barcode.getText().equals("Removed"));
     }
 
 
