@@ -366,7 +366,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().clear();
         this.data.clear();
         ArrayList<String> types = getSelectedFilters();
-        StudentCheckIn.logger.info("Showing types: " + types);
+
+        StudentCheckIn.logger.info("Populating table, showing types: " + types);
         if(!types.isEmpty()) {
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
 
@@ -454,6 +455,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 try {
                     currentStatement.close();
                 } catch (SQLException e) {
+                    StudentCheckIn.logger.error("SQL error: with selecting part names from db.");
                     e.printStackTrace();
                 }
             }
@@ -484,6 +486,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             });
             stage.show();
         } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Add Part.");
             e.printStackTrace();
         }
     }
@@ -519,6 +522,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             });
             stage.show();
         } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Edit Part.");
             e.printStackTrace();
         }
     }
@@ -544,8 +548,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+            StudentCheckIn.logger.error("IOException: Loading Show Part.");
             e.printStackTrace();
         }
     }
@@ -568,6 +571,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 //            tableView.getItems().remove(part);
 //            populateTable();
         } catch (Exception e) {
+            StudentCheckIn.logger.error("Exception while deleting part.");
             e.printStackTrace();
         }
     }
@@ -580,6 +584,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 }
             }
         } catch (Exception e) {
+            StudentCheckIn.logger.error("Exception while deleting part type.");
             e.printStackTrace();
         }
     }

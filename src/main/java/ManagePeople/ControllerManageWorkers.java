@@ -1,6 +1,7 @@
 package ManagePeople;
 
 import Database.*;
+import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
@@ -179,6 +180,7 @@ public class ControllerManageWorkers implements Initializable {
                 for (Worker w : workers) {
                     if (w.getEmail().equals(email)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Worker is already in the database!");
+                        StudentCheckIn.logger.warn("Manage Workers: Worker is already in the database.");
                         alert.showAndWait();
                         notIncluded = false;
                         break;
@@ -189,6 +191,7 @@ public class ControllerManageWorkers implements Initializable {
                     invalid = false;
                 } else {
                     JOptionPane.showMessageDialog(null, "Workers email must be their MSOE email.");
+                    StudentCheckIn.logger.warn("Manage Workers: Worker's email must be their MSOE email.");
                 }
             }else {
                 break;
@@ -207,6 +210,7 @@ public class ControllerManageWorkers implements Initializable {
                     invalid = false;
                 } else {
                     JOptionPane.showMessageDialog(null, "Workers first name is invalid or blank.");
+                    StudentCheckIn.logger.warn("Manage Workers: Worker's first name is invalid or blank.");
                 }
             }else {
                 break;
@@ -225,6 +229,7 @@ public class ControllerManageWorkers implements Initializable {
                     invalid = false;
                 } else {
                     JOptionPane.showMessageDialog(null, "Workers last name is invalid or blank.");
+                    StudentCheckIn.logger.warn("Manage Workers: Worker's last name is invalid or blank.");
                 }
             }else {
                 break;
@@ -257,6 +262,7 @@ public class ControllerManageWorkers implements Initializable {
             manageWorkersScene.getScene().setRoot(loader.load(myFxmlURL));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            StudentCheckIn.logger.error("Manage Workers: No valid stage was found to load.");
             alert.showAndWait();
         }
     }

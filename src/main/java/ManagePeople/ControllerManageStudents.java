@@ -2,6 +2,7 @@ package ManagePeople;
 
 import Database.Database;
 import Database.Student;
+import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ChangeListener;
@@ -175,6 +176,7 @@ public class ControllerManageStudents implements Initializable {
                 if (!id.matches("[a-zA-Z]*") && id.length() == 5) {
                     if (!database.selectStudent(Integer.parseInt(id)).getName().equals("")) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
+                        StudentCheckIn.logger.info("Manage Students: Student is already in the database!");
                         alert.showAndWait();
                         notIncluded = false;
                         break;
@@ -182,6 +184,7 @@ public class ControllerManageStudents implements Initializable {
                     invalid = false;
                 } else {
                     JOptionPane.showMessageDialog(null, "Students RFID is invalid.");
+                    StudentCheckIn.logger.error("Manage Students: Student's RFID is invalid.");
                 }
             }else {
                 break;
@@ -200,6 +203,7 @@ public class ControllerManageStudents implements Initializable {
                     invalid = false;
                 } else {
                     JOptionPane.showMessageDialog(null, "Students first name is invalid or blank.");
+                    StudentCheckIn.logger.error("Manage Students: Student's first name is invalid or blank.");
                 }
             }else {
                 break;
@@ -218,6 +222,7 @@ public class ControllerManageStudents implements Initializable {
                     invalid = false;
                 } else {
                     JOptionPane.showMessageDialog(null, "Students last name is invalid or blank.");
+                    StudentCheckIn.logger.error("Manage Students: Student's last name is invalid or blank.");
                 }
             }else {
                 break;
@@ -231,6 +236,7 @@ public class ControllerManageStudents implements Initializable {
                     invalid = false;
                 } else {
                     JOptionPane.showMessageDialog(null, "Students email must be their MSOE email.");
+                    StudentCheckIn.logger.error("Manage Students: Student's email must be their MSOE email.");
                 }
             }else {
                 break;
@@ -255,6 +261,7 @@ public class ControllerManageStudents implements Initializable {
             manageStudentsScene.getScene().setRoot(loader.load(myFxmlURL));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            StudentCheckIn.logger.error("No valid stage was found to load.");
             alert.showAndWait();
         }
     }
