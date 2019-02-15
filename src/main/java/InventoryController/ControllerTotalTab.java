@@ -366,7 +366,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().clear();
         this.data.clear();
         ArrayList<String> types = getSelectedFilters();
-//        System.out.println(types);
+
+        StudentCheckIn.logger.info("Populating table, showing types: " + types);
         if(!types.isEmpty()) {
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
 
@@ -454,6 +455,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 try {
                     currentStatement.close();
                 } catch (SQLException e) {
+                    StudentCheckIn.logger.error("SQL error: with selecting part names from db.");
                     e.printStackTrace();
                 }
             }
@@ -484,6 +486,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             });
             stage.show();
         } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Add Part.");
             e.printStackTrace();
         }
     }
@@ -519,6 +522,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             });
             stage.show();
         } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Edit Part.");
             e.printStackTrace();
         }
     }
@@ -544,8 +548,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+            StudentCheckIn.logger.error("IOException: Loading Show Part.");
             e.printStackTrace();
         }
     }
@@ -568,6 +571,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 //            tableView.getItems().remove(part);
 //            populateTable();
         } catch (Exception e) {
+            StudentCheckIn.logger.error("Exception while deleting part.");
             e.printStackTrace();
         }
     }
@@ -580,6 +584,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 }
             }
         } catch (Exception e) {
+            StudentCheckIn.logger.error("Exception while deleting part type.");
             e.printStackTrace();
         }
     }
@@ -591,6 +596,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("This part is currently checked out and cannot be deleted.");
+        StudentCheckIn.logger.error("This part is currently checked out and cannot be deleted.");
         alert.showAndWait();
     }
 
@@ -602,6 +608,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         alert.setTitle("Error");
         alert.setContentText("At least one " + partName + " is currently checked out, so " +
                 partName + " parts cannot be deleted.");
+        StudentCheckIn.logger.error("At least one " + partName + " is currently checked out, so " +
+                partName + " parts cannot be deleted.");
         alert.showAndWait();
     }
 
@@ -612,6 +620,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("One part of this type is checked out. You cannot delete all of these parts.");
+        StudentCheckIn.logger.error("One part of this type is checked out. You cannot delete all of these parts.");
         alert.showAndWait();
     }
 

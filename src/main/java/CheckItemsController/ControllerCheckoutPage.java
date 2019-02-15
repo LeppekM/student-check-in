@@ -3,6 +3,7 @@ package CheckItemsController;
 import Database.*;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
+import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -140,6 +141,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             submit();
             studentIDVerifier.clear();
         }
+        StudentCheckIn.logger.info("New student ID scanned, submitting...");
     }
 
 
@@ -199,6 +201,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
             alert.initStyle(StageStyle.UTILITY);
+            StudentCheckIn.logger.warn("Student has overdue items, they cannot checkout more items.");
             alert.showAndWait();
         }
         //barcode.requestFocus();
@@ -210,6 +213,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     public void submit() {
         Student thisStudent = database.selectStudent(getstudentID());
         if(!fieldsFilled()){
+<<<<<<< HEAD
+=======
+            stageWrapper.errorAlert("Please fill out all fields before submitting info!");
+            StudentCheckIn.logger.error("Not all fields filled out on checkout page. All fields must be filled before submitting.");
+>>>>>>> a058681e58a7549989929263baee5403d336d054
             return;
         }
         if (thisStudent.getOverdueItems().size() == 0) {
@@ -273,6 +281,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 checkOut.addNewCheckoutItem(barcodes.get(i), getstudentID());
             }
         }
+        StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + barcodes.toString());
     }
 
     private boolean barcodeIsNotEmpty(JFXTextField barcode){
@@ -442,6 +451,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         alert.setTitle("Information may be lost");
         alert.setHeaderText("If you leave, unsubmitted information may be lost");
         alert.setContentText("Are you ok with this?");
+        StudentCheckIn.logger.info("Some fields are not filled. Asking user if losing unsubmitted information is okay...");
 
         Optional<ButtonType> result = alert.showAndWait();
         return result.get() == ButtonType.OK;
@@ -489,12 +499,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student page");
                 alert.initStyle(StageStyle.UTILITY);
+                StudentCheckIn.logger.error("IOException: Couldn't load student page.");
                 alert.showAndWait();
                 e.printStackTrace();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no student found with associated RFID");
             alert.initStyle(StageStyle.UTILITY);
+            StudentCheckIn.logger.error("No student found with associated RFID.");
             alert.showAndWait();
         }
     }

@@ -1,26 +1,17 @@
 package InventoryController;
 
 import Database.*;
-import Logging.LogEntry;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,9 +19,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class ControllerInventoryPage extends ControllerMenu implements Initializable {
@@ -106,7 +94,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
      * @author Matthew Karcz
      */
     public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
-        System.out.println(rawStatement);
+        StudentCheckIn.logger.info(rawStatement);
         Statement currentStatement = null;
         try {
             Connection connection = database.getConnection();
@@ -130,6 +118,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
                 data.add(part);
             }
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("Could not retrieve the list of students");
             e.printStackTrace();
         } finally {
             if (currentStatement != null) {
@@ -159,6 +148,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
             inventoryScene.getScene().setRoot(loader.load(myFxmlURL));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            StudentCheckIn.logger.error("IOException: No valid stage was found to load");
             alert.showAndWait();
         }
     }
