@@ -43,15 +43,24 @@ public class TransitionHelper {
         fadeTransition2.play();
     }
 
-    void deleteBarcodeTranslate(HBox hbox, JFXTextField field){
-        int direction = -60;
+    void faultyBoxFadeTransition(JFXCheckBox faulty){
+        int initial = 0;
+        int end = 1;
         int duration = 500;
-        TranslateTransition t = new TranslateTransition(Duration.millis(duration), hbox);
-        TranslateTransition t2 = new TranslateTransition(Duration.millis(duration), field);
-        t.setByY(direction);
-        t2.setByY(direction);
-        t.play();
-        t2.play();
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(duration),faulty);
+        fadeTransition.setFromValue(initial);
+        fadeTransition.setToValue(end);
+        fadeTransition.play();
+    }
+
+    void translateButtons(JFXButton but1, JFXButton but2, int direction){
+        int duration = 500;
+        TranslateTransition transition = new TranslateTransition(Duration.millis(duration), but1);
+        TranslateTransition transition2 = new TranslateTransition(Duration.millis(duration), but2);
+        transition.setByY(direction);
+        transition2.setByY(direction);
+        transition.play();
+        transition2.play();
     }
 
     void fadeTransition(Object object){
