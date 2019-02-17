@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * This class uses a query to edit a part in the database
  */
 public class EditPart {
-    private final String url = "jdbc:mysql://localhost:3306/student_check_in";
+    private final String url = Database.host + "/student_check_in";
     private String editQuery = "UPDATE parts SET serialNumber = ?, barcode = ?, price = ?, location = ?, " +
             "updatedAt = ? WHERE partID = ?;";
 

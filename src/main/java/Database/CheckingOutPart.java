@@ -2,6 +2,7 @@ package Database;
 
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
+import InventoryController.StudentCheckIn;
 
 
 import java.sql.*;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class CheckingOutPart {
 
-    private final String url = "jdbc:mysql://localhost:3306/student_check_in";
+    private final String url = Database.host + "/student_check_in";
     private final String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt)\n" +
             "VALUE(?,?,?,?,?);";
     private final String getPartIDtoAdd = "SELECT partID \n" +
@@ -52,6 +53,7 @@ public class CheckingOutPart {
                 addNewCheckoutHelper(barcode, studentID, statement).execute();
                 statement.close();
             } catch (SQLException e) {
+                StudentCheckIn.logger.error("SQLException: Can't connect to the database when adding new checkout item.");
                 throw new IllegalStateException("Cannot connect to the database", e);
             }
         }
@@ -76,6 +78,7 @@ public class CheckingOutPart {
             preparedStatement.setString(4, helper.getCurrentDate());
             preparedStatement.setString(5, helper.getTomorrowDate());
         }catch (SQLException e){
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         setPartStatus(partID, setPartStatusCheckedOut); //This will set the partID found above to a checked out status
@@ -99,6 +102,7 @@ public class CheckingOutPart {
             }
             statement.close();
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting part ID from barcode.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return partID;
@@ -115,6 +119,7 @@ public class CheckingOutPart {
             }
             statement.close();
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when checking if barcode exists.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return (barcodes.contains(barcode));
@@ -131,6 +136,7 @@ public class CheckingOutPart {
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
     }
@@ -150,6 +156,7 @@ public class CheckingOutPart {
                 checkedOutItems.add(new CheckedOutPartsObject(resultSet.getInt("barcode"), resultSet.getInt("studentID")));
             }
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
             throw new IllegalStateException("Cannot connect the database", e);
         }
         return checkedOutItems;
@@ -171,6 +178,7 @@ public class CheckingOutPart {
             }
             statement.close();
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return checkoutID;

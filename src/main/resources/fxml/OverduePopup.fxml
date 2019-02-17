@@ -6,9 +6,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="271.0" prefWidth="410.0" fx:id="overduePopUp" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.OverduePopUpController">
+<?import javafx.scene.layout.VBox?>
+<VBox prefHeight="271.0" prefWidth="410.0" fx:id="overduePopUp" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.OverduePopUpController">
     <children>
-        <Pane layoutX="0.0" layoutY="0.0" prefHeight="283.0" prefWidth="410.0">
+        <AnchorPane layoutX="0.0" layoutY="0.0" prefHeight="283.0" prefWidth="410.0">
             <children>
                 <Label layoutX="42.0" layoutY="13.0" text="Student Name:">
                     <font>
@@ -27,7 +28,7 @@
                 <Label font="$x1" layoutX="129.0" layoutY="213.0" text="Fee:" />
                 <JFXTextField id="feeField" fx:id="fee" alignment="CENTER" editable="false" layoutX="175.0" layoutY="214.0" prefHeight="23.94140625" prefWidth="153.5078125" />
             </children>
-        </Pane>
+        </AnchorPane>
     </children>
 
-</AnchorPane>
+</VBox>
