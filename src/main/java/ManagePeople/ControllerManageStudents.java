@@ -235,12 +235,6 @@ public class ControllerManageStudents implements Initializable {
             email = JOptionPane.showInputDialog(null, "Please enter the students MSOE email.");
             if (email != null) {
                 ObservableList<Student> students = database.getStudents();
-//                for (Student s: students){
-//                    if (s.getEmail().equals(email)) {
-//                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student email already in use try another");
-//                        alert.showAndWait();
-//                    }
-//                }
                 if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
                     invalid = false;
                     for (Student s: students){
