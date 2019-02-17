@@ -67,6 +67,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         studentCol = new JFXTreeTableColumn<>("Student");
         studentCol.setPrefWidth(150);
+        studentCol.setResizable(false);
         studentCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
@@ -76,6 +77,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         partNameCol = new JFXTreeTableColumn<>("Part");
         partNameCol.setPrefWidth(200);
+        partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
@@ -85,6 +87,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.setPrefWidth(150);
+        serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
@@ -94,6 +97,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         statusCol = new JFXTreeTableColumn<>("Status");
         statusCol.setPrefWidth(150);
+        statusCol.setResizable(false);
         statusCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
@@ -103,6 +107,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         dateCol = new JFXTreeTableColumn<>("Date");
         dateCol.setPrefWidth(150);
+        dateCol.setResizable(false);
         dateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {

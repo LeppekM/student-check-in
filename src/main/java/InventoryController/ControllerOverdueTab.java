@@ -75,6 +75,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         studentIDCol = new JFXTreeTableColumn<>("Student ID");
         studentIDCol.setPrefWidth(150);
+        studentIDCol.setResizable(false);
         studentIDCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
@@ -84,6 +85,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.setPrefWidth(200);
+        partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
@@ -93,6 +95,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.setPrefWidth(150);
+        serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
@@ -102,6 +105,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         dueDateCol = new JFXTreeTableColumn<>("Due Date");
         dueDateCol.setPrefWidth(150);
+        dueDateCol.setResizable(false);
         dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
@@ -111,6 +115,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         feeCol = new JFXTreeTableColumn<>("Fee");
         feeCol.setPrefWidth(150);
+        feeCol.setResizable(false);
         feeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
@@ -119,22 +124,6 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         });
 
         tableRows = FXCollections.observableArrayList();
-
-        // Click to select if unselected and deselect if selected
-//        overdueTable.setRowFactory(new Callback<TreeTableView<OverdueTabTableRow>, TreeTableRow<OverdueTabTableRow>>() {
-//            @Override
-//            public TreeTableRow<OverdueTabTableRow> call(TreeTableView<OverdueTabTableRow> param) {
-//                final TreeTableRow<OverdueTabTableRow> row = new TreeTableRow<>();
-//                row.addEventFilter(MouseEvent.MOUSE_PRESSED, (EventHandler<MouseEvent>) event -> {
-//                    final int index = row.getIndex();
-//                    if (index >= 0 && index < overdueTable.getCurrentItemsCount() && overdueTable.getSelectionModel().isSelected(index)) {
-//                        overdueTable.getSelectionModel().clearSelection();
-//                        event.consume();
-//                    }
-//                });
-//                return row;
-//            }
-//        });
     }
 
     /**

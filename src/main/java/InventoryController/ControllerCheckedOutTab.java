@@ -68,6 +68,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
         studentNameCol = new JFXTreeTableColumn<>("Student");
         studentNameCol.setPrefWidth(150);
+        studentNameCol.setResizable(false);
         studentNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
@@ -77,6 +78,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.setPrefWidth(200);
+        partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
@@ -86,6 +88,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.setPrefWidth(150);
+        barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
@@ -95,6 +98,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
         checkedOutAtCol = new JFXTreeTableColumn<>("Check Out Date");
         checkedOutAtCol.setPrefWidth(150);
+        checkedOutAtCol.setResizable(false);
         checkedOutAtCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
@@ -104,6 +108,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
         dueDateCol = new JFXTreeTableColumn<>("Due Date");
         dueDateCol.setPrefWidth(150);
+        dueDateCol.setResizable(false);
         dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
