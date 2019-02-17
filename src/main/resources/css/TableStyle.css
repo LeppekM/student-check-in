@@ -76,6 +76,10 @@
     -fx-padding: 0.0em; /* 0 */
 }
 
+.tree-table-view .tree-table-cell{
+    -fx-alignment: center;
+}
+
 .tree-table-row-cell:odd{
     -fx-background-color: -fx-table-cell-border-color, #ececec;
     -fx-background-insets: 0, 0 0 1 0;
