@@ -69,6 +69,7 @@ public class ControllerManageWorkers implements Initializable {
 
         nameCol = new JFXTreeTableColumn<>("Name");
         nameCol.setPrefWidth(800/3);
+        nameCol.setResizable(false);
         nameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, String> param) {
@@ -78,6 +79,7 @@ public class ControllerManageWorkers implements Initializable {
 
         emailCol = new JFXTreeTableColumn<>("Email");
         emailCol.setPrefWidth(800/3);
+        emailCol.setResizable(false);
         emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, String> param) {
@@ -87,6 +89,7 @@ public class ControllerManageWorkers implements Initializable {
 
         adminCol = new JFXTreeTableColumn<>("Admin");
         adminCol.setPrefWidth(800/3);
+        adminCol.setResizable(false);
         adminCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean>,
                 ObservableValue<Boolean>>() {
             @Override
