@@ -178,8 +178,7 @@ public class ControllerManageWorkers implements Initializable {
             if (email != null) {
                 ObservableList<Worker> workers = database.getWorkers();
                 for (Worker w : workers) {
-                    boolean match = w.getEmail().equals(email);
-                    if (match) {
+                    if (w.getEmail().equals(email)) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Worker is already in the database!");
                         StudentCheckIn.logger.warn("Manage Workers: Worker is already in the database.");
                         alert.showAndWait();
