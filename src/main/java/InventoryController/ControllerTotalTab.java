@@ -98,6 +98,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
 
         partNameCol.setPrefWidth(150);
+        partNameCol.setResizable(false);
         partNameCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, String>, TreeTableCell<TotalTabTableRow, String>>() {
             @Override
             public TreeTableCell<TotalTabTableRow, String> call(TreeTableColumn<TotalTabTableRow, String> param) {
@@ -208,20 +209,22 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.setPrefWidth(150);
+        serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
 
         locationCol = new JFXTreeTableColumn<>("Location");
         locationCol.setPrefWidth(150);
+        locationCol.setResizable(false);
         locationCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.setPrefWidth(150);
-
+        barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode());
 
         faultCol = new JFXTreeTableColumn<>("Fault?");
         faultCol.setPrefWidth(100);
-
+        faultCol.setResizable(false);
         faultCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, Boolean>, TreeTableCell<TotalTabTableRow, Boolean>>() {
             @Override
             public TreeTableCell<TotalTabTableRow, Boolean> call( TreeTableColumn<TotalTabTableRow, Boolean> p ) {
@@ -233,6 +236,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         partIDCol = new JFXTreeTableColumn<>("Part ID");
         partIDCol.setPrefWidth(100);
+        partIDCol.setResizable(false);
         partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID());
 
         tableRows = FXCollections.observableArrayList();

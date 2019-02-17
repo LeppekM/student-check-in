@@ -74,6 +74,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.setPrefWidth(150);
+        partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
@@ -83,6 +84,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.setPrefWidth(150);
+        serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
@@ -92,6 +94,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         locationCol = new JFXTreeTableColumn<>("Location");
         locationCol.setPrefWidth(150);
+        locationCol.setResizable(false);
         locationCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
@@ -101,6 +104,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.setPrefWidth(150);
+        barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
@@ -110,6 +114,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         faultDescCol = new JFXTreeTableColumn<>("Fault Description");
         faultDescCol.setPrefWidth(150);
+        faultDescCol.setResizable(false);
         faultDescCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {

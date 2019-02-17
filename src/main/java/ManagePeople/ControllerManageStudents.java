@@ -70,6 +70,7 @@ public class ControllerManageStudents implements Initializable {
 
         nameCol = new JFXTreeTableColumn<>("Name");
         nameCol.setPrefWidth(800/3);
+        nameCol.setResizable(false);
         nameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
@@ -79,6 +80,7 @@ public class ControllerManageStudents implements Initializable {
 
         idCol = new JFXTreeTableColumn<>("ID");
         idCol.setPrefWidth(800/3);
+        idCol.setResizable(false);
         idCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
@@ -88,6 +90,7 @@ public class ControllerManageStudents implements Initializable {
 
         emailCol = new JFXTreeTableColumn<>("Email");
         emailCol.setPrefWidth(800/3);
+        emailCol.setResizable(false);
         emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
