@@ -177,13 +177,13 @@ public class ControllerManageWorkers implements Initializable {
             if (email != null) {
                 ObservableList<Worker> workers = database.getWorkers();
                 for (Worker w : workers) {
-                    if (w.getEmail().equals(email)) {
+                    boolean match = w.getEmail().equals(email);
+                    if (match) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Worker is already in the database!");
                         alert.showAndWait();
                         notIncluded = false;
                         break;
                     }
-                    break;
                 }
                 if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
                     invalid = false;
@@ -196,12 +196,15 @@ public class ControllerManageWorkers implements Initializable {
         }
         invalid = true;
         Pattern p = Pattern.compile("[0-9]*");
-        Matcher m = p.matcher(name);
+        String n = name.toString();
+        StringBuilder n1 = name;
+        Matcher m = null;
         while (invalid && notIncluded){
             String input = JOptionPane.showInputDialog(null, "Please enter the workers first name.");
             if (input != null) {
+                m = p.matcher(input);
                 name = new StringBuilder(input);
-                if (!m.find() && !name.toString().equals("")) {
+                if (!m.matches() && !name.toString().matches("\\s*")) {
                     String temp = name.substring(0, 1).toUpperCase() + name.substring(1);
                     name = new StringBuilder(temp);
                     invalid = false;
@@ -216,9 +219,10 @@ public class ControllerManageWorkers implements Initializable {
         while (invalid && notIncluded){
             String input = JOptionPane.showInputDialog(null, "Please enter the workers last name.");
             if (input != null) {
+                m = p.matcher(input);
                 name.append(" ");
                 name.append(input);
-                if (!m.find() && !name.toString().equals(" ")) {
+                if (!m.matches() && !name.toString().matches("\\s+")) {
                     int space = name.indexOf(" ");
                     String temp = name.substring(0, space + 1) + name.substring(space + 1, space + 2).toUpperCase() + name.substring(space + 2);
                     name = new StringBuilder(temp);
@@ -232,7 +236,7 @@ public class ControllerManageWorkers implements Initializable {
         }
         invalid = true;
         while (invalid && notIncluded){
-            pin = JOptionPane.showInputDialog(null, "Please enter a pin for the admin");
+            pin = JOptionPane.showInputDialog(null, "Please enter a four digit pin for the admin");
             if (pin != null) {
                 if (pin.matches("[0-9]{4}")) {
                     invalid = false;

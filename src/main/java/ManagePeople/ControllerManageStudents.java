@@ -189,12 +189,13 @@ public class ControllerManageStudents implements Initializable {
         }
         invalid = true;
         Pattern p = Pattern.compile("[0-9]*");
-        Matcher m = p.matcher(name);
+        Matcher m;
         while (invalid && notIncluded){
             String input = JOptionPane.showInputDialog(null, "Please enter the students first name.");
             if (input != null) {
+                m = p.matcher(input);
                 name = new StringBuilder(input);
-                if (!m.find() && !name.toString().equals("")) {
+                if (!m.matches() && !name.toString().matches("\\s*")) {
                     String temp = name.substring(0, 1).toUpperCase() + name.substring(1);
                     name = new StringBuilder(temp);
                     invalid = false;
@@ -209,9 +210,10 @@ public class ControllerManageStudents implements Initializable {
         while (invalid && notIncluded){
             String input = JOptionPane.showInputDialog(null, "Please enter the students last name.");
             if (input != null) {
+                m = p.matcher(input);
                 name.append(" ");
                 name.append(input);
-                if (!m.find() && !name.toString().equals(" ")) {
+                if (!m.matches() && !name.toString().matches("\\s+")) {
                     int space = name.indexOf(" ");
                     String temp = name.substring(0, space + 1) + name.substring(space + 1, space + 2).toUpperCase() + name.substring(space + 2);
                     name = new StringBuilder(temp);

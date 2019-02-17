@@ -167,39 +167,6 @@ create table parts (
 
 CALL load_parts();
 
-# drop table if exists checkouts;
-# create table checkouts (
-# checkoutID int NOT NULL,
-# studentID int NOT NULL,
-# checkoutAt date,
-# reservedAt date,
-# createdAt date,
-# updatedAt date,
-# deletedAt date,
-# createdBy varchar(50),
-# updatedBy varchar(50),
-# deletedBy varchar(50),
-# PRIMARY KEY (checkoutID));
--- #FOREIGN KEY (checkoutID) REFERENCES checkout_parts (checkoutID),
--- #FOREIGN KEY (studentID) REFERENCES students (studentID));
-
-# drop table if exists checkout_parts;
-# create table checkout_parts (
-# checkoutID int NOT NULL,
-# partID int NOT NULL,
-# checkoutQuantity int,
-# checkinQuantity int,
-# checkedInAt date,
-# dueAt date,
-# createdAt date,
-# updatedAt date,
-# deletedAt date,
-# createdBy varchar(50),
-# updatedBy varchar(50),
-# deletedBy varchar(50),
-# PRIMARY KEY (checkoutID, partID));
--- #FOREIGN KEY (partID) REFERENCES parts (partID));
-
 drop table if exists checkout;
 create table checkout (
   checkoutID int NOT NULL AUTO_INCREMENT,
