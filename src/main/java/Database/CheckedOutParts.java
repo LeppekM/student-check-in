@@ -19,14 +19,14 @@ import java.util.List;
  */
 public class CheckedOutParts {
     private final String url = Database.host + "/student_check_in";
-    private final String SELECTQUERY = "SELECT students.studentName, parts.partName, parts.barcode, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID\n" +
+    private final String SELECTQUERY = "SELECT students.studentName, parts.partName, parts.barcode, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.partID\n" +
             "FROM checkout\n" +
             "INNER JOIN parts on checkout.partID = parts.partID\n" +
             "INNER JOIN students on checkout.studentID = students.studentID\n" +
             "WHERE checkout.checkinAt IS NULL";
 
     private Statement statement;
-    private int barcode, checkoutID;
+    private int barcode, checkoutID, partID;
     private String checkedOutAt;
     private String dueDate;
     private String partName;
@@ -44,7 +44,7 @@ public class CheckedOutParts {
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                CheckedOutItems checkedOutItems = new CheckedOutItems(studentName, partName, barcode, checkedOutAt, dueDate, checkoutID);
+                CheckedOutItems checkedOutItems = new CheckedOutItems(studentName, partName, barcode, checkedOutAt, dueDate, checkoutID, partID);
                 data.add(checkedOutItems);
             }
         } catch (SQLException e) {
@@ -69,7 +69,9 @@ public class CheckedOutParts {
             checkedOutAt = resultSet.getString("checkoutAt");
             dueDate = resultSet.getString("dueAt");
             checkoutID = resultSet.getInt("checkoutID");
+            partID = resultSet.getInt("partID");
         } catch (SQLException e){
+            StudentCheckIn.logger.error("Cannot connect to the database while populating CheckedOutParts");
             throw new IllegalStateException("Cannot connect to the database");
         }
     }

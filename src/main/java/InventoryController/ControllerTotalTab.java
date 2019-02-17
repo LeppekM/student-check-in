@@ -532,32 +532,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     }
 
     /**
-     * This method brings up the FXML page for showing the info about the selected part
-     * @param part - The part that was selected
-     * @param type - The type of part, determines what information is shown
-     * @author Matthew Karcz
-     */
-    public void showInfoPage(Part part, String type){
-        Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/ShowPart.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load();
-            ((ControllerShowPart) loader.getController()).initPart(part, type);
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Part Information");
-            stage.initOwner(totalTabPage.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.showAndWait();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Show Part.");
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * This method calls the database method to soft delete an item from the inventory list
      * this then updates the gui table
      *
