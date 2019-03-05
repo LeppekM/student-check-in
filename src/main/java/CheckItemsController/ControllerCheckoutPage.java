@@ -147,7 +147,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * If no movement is recorded on page for 15 minutes, item will submit automatically
      */
     private void submitTimer(){
-        int duration =15;
+        int duration =5;
         PauseTransition delay = new PauseTransition(Duration.minutes(duration));
         delay.setOnFinished(event -> submit());
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
