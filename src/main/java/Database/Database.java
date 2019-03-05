@@ -465,7 +465,7 @@ public class Database {
     public Student selectStudent(int ID){
         String todaysDate = gettoday().toString();
         String query = "select * from students where studentID = " + ID;
-        String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode " +
+        String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
                 "from students " +
                 "left join checkout on students.studentID = checkout.studentID " +
                 "left join parts on checkout.partID = parts.partID where students.studentID = " + ID  + ";";
