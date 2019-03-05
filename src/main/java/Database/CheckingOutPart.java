@@ -74,7 +74,7 @@ public class CheckingOutPart {
             preparedStatement.setInt(2, studentID);
             preparedStatement.setInt(3, barcode);
             preparedStatement.setString(4, helper.getCurrentDate());
-            preparedStatement.setString(5, helper.getTomorrowDate());
+            preparedStatement.setString(5, helper.getCurrentDate());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
