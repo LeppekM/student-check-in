@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.CheckedOutParts;
+import Database.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
@@ -123,11 +124,21 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
             @Override
             public TreeTableRow<CheckedOutTabTableRow> call(TreeTableView<CheckedOutTabTableRow> param) {
                 final TreeTableRow<CheckedOutTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(MouseEvent.MOUSE_PRESSED, (EventHandler<MouseEvent>) event -> {
-                    final int index = row.getIndex();
-                    if (index >= 0 && index < checkedOutTable.getCurrentItemsCount() && checkedOutTable.getSelectionModel().isSelected(index)) {
-                        checkedOutTable.getSelectionModel().clearSelection();
-                        event.consume();
+                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        final int index = row.getIndex();
+                        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                            Part rowData = database.selectPart(checkedOutTable.getSelectionModel().getModelItem(index).getValue().getPartID().get());
+                            if(!rowData.equals(null)) {
+                                showInfoPage(rowData, "checkedOut");
+                            }
+                            checkedOutTable.getSelectionModel().clearSelection();
+                            event.consume();
+                        } else if (index >= 0 && index < checkedOutTable.getCurrentItemsCount() && checkedOutTable.getSelectionModel().isSelected(index)) {
+                            checkedOutTable.getSelectionModel().clearSelection();
+                            event.consume();
+                        }
                     }
                 });
                 return row;
@@ -147,7 +158,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new CheckedOutTabTableRow(list.get(i).getStudentName().getValue(),
                     list.get(i).getPartName().getValue(), "" + list.get(i).getBarcode().getValue(),
-                    list.get(i).getCheckedOutAt().getValue(), list.get(i).getDueDate().getValue()));
+                    list.get(i).getCheckedOutAt().getValue(), list.get(i).getDueDate().getValue(), list.get(i).getPartID().getValue()));
         }
 
         root = new RecursiveTreeItem<CheckedOutTabTableRow>(
@@ -158,32 +169,6 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
                 checkedOutAtCol, dueDateCol);
         checkedOutTable.setRoot(root);
         checkedOutTable.setShowRoot(false);
-    }
-
-    /**
-     * This method brings up the FXML page for showing the info about the selected part
-     *
-     * @author Matthew Karcz
-     */
-    public void showInfoPage(CheckedOutItems part){
-        Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ShowPart.fxml"));
-            Parent root = loader.load();
-            ((ControllerShowPart) loader.getController()).initPart(part);
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Part Information");
-            stage.initOwner(checkedOutPage.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.showAndWait();
-            populateTable();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML

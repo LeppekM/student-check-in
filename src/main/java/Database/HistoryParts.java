@@ -11,7 +11,7 @@ import java.sql.*;
  */
 public class HistoryParts {
 
-    private static String host = "jdbc:mysql://localhost:3306";
+    private static String host = Database.host;
     private static final String dbdriver = "com.mysql.jdbc.Driver";
     private static final String dbname = "student_check_in";
     private static Connection connection;

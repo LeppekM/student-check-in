@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class ExtendedCheckOut {
 
-    private final String url = "jdbc:mysql://localhost:3306/student_check_in";
+    private final String url = Database.host + "/student_check_in";
     private final String extendedCheckout = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, prof, course, dueAt)\n" +
             "VALUE(?,?,?,?,?,?,?);";
     private final String getPartIDtoAdd = "SELECT partID \n" +

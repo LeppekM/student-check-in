@@ -21,6 +21,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -134,11 +135,13 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     public void popUp() {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopUp.fxml"));
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
                 Parent root = loader.load();
-                Scene scene = new Scene(root, 400, 300);
-                stage.setTitle("Overdue Item");
+                Scene scene = new Scene(root, 400, 400);
+                stage.setTitle("Part Information");
                 stage.initOwner(overduePage.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 int i = overdueTable.getSelectionModel().getSelectedIndex();
                 OverdueTabTableRow item = new OverdueTabTableRow(overdueTable.getTreeItem(i).getValue().getStudentID().get(),
@@ -146,8 +149,9 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
                         overdueTable.getTreeItem(i).getValue().getDueDate().get(), overdueTable.getTreeItem(i).getValue().getFee().get());
                 ((OverduePopUpController) loader.getController()).populate(null, item);
                 stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                stage.showAndWait();
             } catch (IOException e) {
+                StudentCheckIn.logger.error("IOException while opening Overdue popup");
                 e.printStackTrace();
             }
 

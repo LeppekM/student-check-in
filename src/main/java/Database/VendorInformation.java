@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class VendorInformation {
-    private final String url = "jdbc:mysql://localhost:3306/student_check_in";
+    private final String url = Database.host + "/student_check_in";
     private String getVendorFromIDQuery = "SELECT vendor FROM vendors WHERE vendorID = ?;";
 
     private String getVendorIDFromVendorQuery = "SELECT vendorID FROM vendors WHERE vendor = ?;";

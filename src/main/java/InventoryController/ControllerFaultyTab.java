@@ -135,11 +135,21 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
             @Override
             public TreeTableRow<FaultyTabTableRow> call(TreeTableView<FaultyTabTableRow> param) {
                 final TreeTableRow<FaultyTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(MouseEvent.MOUSE_PRESSED, (EventHandler<MouseEvent>) event -> {
-                    final int index = row.getIndex();
-                    if (index >= 0 && index < faultyTable.getCurrentItemsCount() && faultyTable.getSelectionModel().isSelected(index)) {
-                        faultyTable.getSelectionModel().clearSelection();
-                        event.consume();
+                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        final int index = row.getIndex();
+                        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                            Part rowData = database.selectPart(faultyTable.getSelectionModel().getModelItem(index).getValue().getPartID().get());
+                            if(!rowData.equals(null)) {
+                                showInfoPage(rowData, "fault");
+                            }
+                            faultyTable.getSelectionModel().clearSelection();
+                            event.consume();
+                        } else if (index >= 0 && index < faultyTable.getCurrentItemsCount() && faultyTable.getSelectionModel().isSelected(index)) {
+                            faultyTable.getSelectionModel().clearSelection();
+                            event.consume();
+                        }
                     }
                 });
                 return row;
@@ -161,7 +171,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         for (int i = 0; i < data.size(); i++) {
             tableRows.add(new FaultyTabTableRow(data.get(i).getPartName(),
                     data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                    data.get(i).getBarcode(), data.get(i).getFaultDesc()));
+                    data.get(i).getBarcode(), data.get(i).getFaultDesc(), data.get(i).getPartID()));
         }
 
         root = new RecursiveTreeItem<FaultyTabTableRow>(

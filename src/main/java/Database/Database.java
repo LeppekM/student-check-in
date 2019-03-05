@@ -45,7 +45,10 @@ public class Database {
             connection.setClientInfo("autoReconnect", "true");
         } catch (SQLException e) {
             e.printStackTrace();
-            System.exit(0);
+            StudentCheckIn.logger.error("SQLError: Can't connect to the database! Connection could not be established.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, could not connect to the database.");
+            alert.showAndWait();
+//            System.exit(0);
         }
     }
 
@@ -501,7 +504,7 @@ public class Database {
                 checkedOutItems.add(new CheckedOutItems(resultSet.getString("students.studentName"),
                         resultSet.getString("parts.partName"), resultSet.getInt("parts.barcode"),
                         resultSet.getString("checkout.checkoutAt"), resultSet.getString("checkout.dueAt"),
-                        resultSet.getInt("checkout.checkoutID")));
+                        resultSet.getInt("checkout.checkoutID"), resultSet.getInt("parts.partID")));
             }
             statement.close();
             resultSet.close();

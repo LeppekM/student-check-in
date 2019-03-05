@@ -112,31 +112,10 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
     }
 
     /**
-     * This method is used to pass data into the tab to initialize the text representing the edited part
-     * @param part
-     */
-    public void initPart(CheckedOutItems part) {
-        DecimalFormat df = new DecimalFormat("#,###,##0.00");
-        this.checkedOutPart = part;
-        if (this.part == null && part != null) {
-            this.nameField.setText(part.getPartName().toString());
-            
-            // Note: price divided by 100, because it is stored in the database as an integer 100 times
-            // larger than actual value.
-            ArrayList<String> vendors = vendorInformation.getVendorList();
-            if (vendors != null) {
-//                this.vendorList.getItems().addAll(vendors);
-            }
-            
-        }
-        determineVisibility("checkedOut");
-    }
-
-    /**
      * Helper method that sets the visibility of Nodes in the FXML
      */
     private void determineVisibility(String type){
-        System.out.println(type);
+        StudentCheckIn.logger.info("Showing part information of type: " + type);
         switch(type){
             case "total":
                 setTotalElements();
@@ -159,6 +138,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
                 setElements("barcode", false);
                 this.nameLabel.setVisible(true);
                 this.nameLabel.setText("Error: No info found. Please report \nthis to the developers.");
+                StudentCheckIn.logger.error("No part type found when trying to show part info. Part type unknown or must be specified.");
                 break;
 
         }
@@ -191,7 +171,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         setElements("vendor", false);
         setElements("location", false);
         setElements("faultDesc", false);
-        setElements("barcode", false);
+        setElements("barcode", true);
     }
 
     /**

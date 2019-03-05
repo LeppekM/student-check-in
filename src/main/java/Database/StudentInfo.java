@@ -1,11 +1,12 @@
 package Database;
 
 import HelperClasses.DatabaseHelper;
+import InventoryController.StudentCheckIn;
 
 import java.sql.*;
 
 public class StudentInfo {
-    private final String url = "jdbc:mysql://localhost:3306/student_check_in";
+    private final String url = Database.host + "/student_check_in";
     private final String getStudentNameFromIDQuery = "\n" +
             "select studentName from students\n" +
             "where studentID = ?";
@@ -27,6 +28,7 @@ public class StudentInfo {
                 sName= rs.getString("studentName");
             }
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return sName;
@@ -40,6 +42,7 @@ public class StudentInfo {
             preparedStatement.setString(4, helper.getCurrentDate());
             preparedStatement.setString(5, "Jim");//Hardcoded for now
         }catch (SQLException e){
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return preparedStatement;
@@ -51,6 +54,7 @@ public class StudentInfo {
             createNewStudentHelper(studentID, email, studentName, statement).execute();
             statement.close();
         } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
     }

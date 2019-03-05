@@ -4,7 +4,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 
 public class AddPart {
-    private final String url = "jdbc:mysql://localhost:3306/student_check_in";
+    private final String url = Database.host + "/student_check_in";
     private String addQuery = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
             " location, barcode, createdAt, createdBy, isDeleted)"+
             "VALUES(?,?,?,?,?,?,?,?,?,?)";

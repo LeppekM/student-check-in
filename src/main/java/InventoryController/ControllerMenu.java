@@ -73,10 +73,10 @@ public class ControllerMenu implements Initializable {
 
         }
         catch(IOException invoke){
+            StudentCheckIn.logger.error("No valid stage was found to load, this could likely be because of a database disconnect.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
             invoke.printStackTrace();
-
         }
     }
 
