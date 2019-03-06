@@ -1,5 +1,6 @@
 package Database;
 
+import HelperClasses.DatabaseHelper;
 import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
@@ -7,6 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import java.sql.*;
@@ -22,6 +25,7 @@ public class Database {
     static final String dbdriver = "com.mysql.jdbc.Driver";
     static final String dbname = "student_check_in";
     static Connection connection;
+    private DatabaseHelper databaseHelper = new DatabaseHelper();
 
     /**
      * This creates a connection to the database
@@ -53,36 +57,58 @@ public class Database {
     }
 
     /**
-     * This method uses an SQL query to get all items in the databse with a due date less than todays date
-     *
-     * @return a list of overdue items
-     * @author Bailey Terry
+     * Gets overdue items
+     * @return List of overdue items
      */
-    public ObservableList<OverdueItem> getOverdue() {
+    public ObservableList<OverdueItem> getOverdue(){
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
-        try {
-            Date date = gettoday();
+
+            databaseHelper.getCurrentDate();
             String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
                     " parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
                     "left join parts on checkout.partID = parts.partID " +
-                    "left join students on checkout.studentID = students.studentID " +
-                    "where checkout.dueAt < date('" + date.toString() + "');";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(overdue);
-            while (resultSet.next()) {
-                data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
-                        resultSet.getString("students.email"), resultSet.getString("parts.partName"),
-                        resultSet.getString("parts.serialNumber"), resultSet.getString("checkout.dueAt"),
-                        resultSet.getString("parts.price/100"), resultSet.getString("checkout.checkoutID")));
+                    "left join students on checkout.studentID = students.studentID ";
+            try {
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(overdue);
+                while(resultSet.next()){
+                    String dueAt = resultSet.getString("checkout.dueAt");
+                    if (isOverdue(dueAt)){
+                        data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
+                                resultSet.getString("students.email"), resultSet.getString("parts.partName"),
+                                resultSet.getString("parts.serialNumber"), dueAt,
+                                resultSet.getString("parts.price/100"), resultSet.getString("checkout.checkoutID")));
+                    }
+                }
+                resultSet.close();
+                statement.close();
+            } catch(SQLException e){
+                StudentCheckIn.logger.error("SQL Error: " + e.getLocalizedMessage());
+                e.printStackTrace();
             }
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQL Error: " + e.getLocalizedMessage());
-            e.printStackTrace();
-        }
         return data;
     }
+
+    /**
+     * Helper method to determine if item is overdue
+     * @param date Due date of item
+     * @return True if item is overdue
+     */
+    boolean isOverdue(String date){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
+        Date current = null;
+        Date dueDate = null;
+        try {
+            current = dateFormat.parse(databaseHelper.getCurrentDate());
+            dueDate = dateFormat.parse(date);
+        } catch (ParseException e){
+            StudentCheckIn.logger.error("Parse Error: " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        return current.after(dueDate);
+    }
+
 
     /**
      * Helper method to get the current date
@@ -476,8 +502,8 @@ public class Database {
         String oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
                 "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
                 "left join parts on checkout.partID = parts.partID " +
-                "left join students on checkout.studentID = students.studentID " +
-                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
+                "left join students on checkout.studentID = students.studentID ";
+//                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";
         String email = "";
@@ -512,11 +538,14 @@ public class Database {
             resultSet = statement.executeQuery(oList);
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
-                overdueItems.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
-                        resultSet.getString("students.studentName"), resultSet.getString("students.email"),
-                        resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
-                        resultSet.getString("checkout.dueAt"), resultSet.getString("parts.price/100"),
-                        resultSet.getString("checkout.checkoutID")));
+                String dueAt = resultSet.getString("checkout.dueAt");
+                if (isOverdue(dueAt)) {
+                    overdueItems.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
+                            resultSet.getString("students.studentName"), resultSet.getString("students.email"),
+                            resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
+                            dueAt, resultSet.getString("parts.price/100"),
+                            resultSet.getString("checkout.checkoutID")));
+                }
             }
             statement.close();
             resultSet.close();
@@ -538,7 +567,7 @@ public class Database {
             // date null if no checkouts
             for (int i = 0; i < checkedOutItems.size() && date != null; i++){
                 try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm a");
                     Date d = sdf.parse(date);
                     Date d1 = sdf.parse(checkedOutItems.get(i).getCheckedOutAt().get());
                     if (d1.after(d)){
