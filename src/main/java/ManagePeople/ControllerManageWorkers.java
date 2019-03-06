@@ -96,7 +96,16 @@ public class ControllerManageWorkers implements Initializable {
             public ObservableValue<Boolean> call(TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean> param) {
                 TreeItem<ManageWorkersTabTableRow> treeItem = param.getValue();
                 ManageWorkersTabTableRow tRow = treeItem.getValue();
-                return new SimpleBooleanProperty(tRow.getIsAdmin().get());
+                SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(tRow.getIsAdmin().get());
+//                booleanProp.addListener(new ChangeListener<Boolean>() {
+//
+//                    @Override
+//                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue,
+//                                        Boolean newValue) {
+//                        tRow.setIsAdmin(newValue);
+//                    }
+//                });todo: this should make check box editable
+                return booleanProp;
             }
         });
 

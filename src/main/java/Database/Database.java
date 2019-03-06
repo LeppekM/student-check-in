@@ -84,6 +84,17 @@ public class Database {
         return data;
     }
 
+    public void removeOverdue(int barcode){
+        String query = "update checkout set checkout.dueAt = null where checkout.barcode = " + barcode + ";";
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+        }catch (SQLException e){
+            StudentCheckIn.logger.error("SQL error: " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Helper method to get the current date
      *
@@ -555,6 +566,11 @@ public class Database {
         return student;
     }
 
+    /**
+     * Adds a new student to the database
+     *
+     * @param s student to be added
+     */
     public void addStudent(Student s){
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getID()
                 + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), 'root');";
@@ -570,6 +586,11 @@ public class Database {
         }
     }
 
+    /**
+     * Adds a new worker to the database
+     *
+     * @param w worker to be added
+     */
     public void addWorker(Worker w){
         int bit = w.isAdmin()? 1 : 0;
         String query = "insert into workers (email, workerName, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail() +

@@ -228,6 +228,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 faultyCheckinHelper();
             } else if (itemIsBeingCheckedIn(getBarcode())) {
                 checkOut.setItemtoCheckedin(getBarcode());
+                database.removeOverdue(getBarcode());
             } else {
                 if (newStudentIsCheckingOutItem()) {
                     createNewStudent();
