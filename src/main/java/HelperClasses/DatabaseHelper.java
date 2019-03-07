@@ -26,7 +26,6 @@ public class DatabaseHelper {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
         calendar.setTime(date);
-//        calendar.add(Calendar.DATE, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
@@ -46,7 +45,6 @@ public class DatabaseHelper {
         calendar.set(Calendar.MILLISECOND, 999);
         dateFormat.setCalendar(calendar);
         return dateFormat.format(calendar.getTime());
-
     }
     /**
      * Helper method gets tomorrow's date.
