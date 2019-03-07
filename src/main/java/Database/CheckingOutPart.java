@@ -75,7 +75,7 @@ public class CheckingOutPart {
             preparedStatement.setInt(1, partID);
             preparedStatement.setInt(2, studentID);
             preparedStatement.setInt(3, barcode);
-            preparedStatement.setString(4, helper.getCurrentDate());
+            preparedStatement.setString(4, helper.getCurrentDateTimeStamp());
             preparedStatement.setString(5, helper.setDueDate());
         }catch (SQLException e){
             StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
@@ -192,7 +192,7 @@ public class CheckingOutPart {
         int partID = getPartIDFromBarcode(barcode, getPartIDtoCheckin);
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(setDate);
-            statement.setString(1, helper.getCurrentDate());
+            statement.setString(1, helper.getCurrentDateTimeStamp());
             statement.setInt(2, getCheckoutIDfromPartID(partID));
             statement.execute();
             statement.close();

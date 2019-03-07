@@ -48,7 +48,7 @@ public class FaultyCheckIn {
             preparedStatement.setInt(1, checkoutID);
             preparedStatement.setInt(2, partID);
             preparedStatement.setString(3, description);
-            preparedStatement.setString(4, helper.getCurrentDate());
+            preparedStatement.setString(4, helper.getCurrentDateTimeStamp());
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }

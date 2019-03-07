@@ -9,7 +9,6 @@ import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import java.sql.*;
@@ -63,7 +62,7 @@ public class Database {
     public ObservableList<OverdueItem> getOverdue(){
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
 
-            databaseHelper.getCurrentDate();
+            databaseHelper.getCurrentDateTimeStamp();
             String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
                     " parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
                     "left join parts on checkout.partID = parts.partID " +
@@ -95,18 +94,18 @@ public class Database {
      * @return True if item is overdue
      */
     boolean isOverdue(String date){
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
-        Date current = null;
-        Date dueDate = null;
-        try {
-            current = dateFormat.parse(databaseHelper.getCurrentDate());
-            dueDate = dateFormat.parse(date);
-        } catch (ParseException e){
-            StudentCheckIn.logger.error("Parse Error: " + e.getLocalizedMessage());
-            e.printStackTrace();
+        if(!date.isEmpty()) {
+            try {
+                Date current = dateFormat.parse(databaseHelper.getCurrentDateTimeStamp());
+                Date dueDate = dateFormat.parse(date);
+                return current.after(dueDate);
+            } catch (ParseException e) {
+                StudentCheckIn.logger.error("Parse Error: " + e.getLocalizedMessage());
+                e.printStackTrace();
+            }
         }
-        return current.after(dueDate);
+        return false;
     }
 
 
@@ -500,9 +499,10 @@ public class Database {
                 "left join checkout on students.studentID = checkout.studentID " +
                 "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
         String oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
-                "left join parts on checkout.partID = parts.partID " +
-                "left join students on checkout.studentID = students.studentID ";
+                "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
+                "inner join parts on checkout.partID = parts.partID " +
+                "inner join students on checkout.studentID = students.studentID " +
+                "where checkout.checkinAt is null";;
 //                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";

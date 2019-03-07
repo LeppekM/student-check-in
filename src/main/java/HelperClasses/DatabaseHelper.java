@@ -10,11 +10,15 @@ import java.util.Date;
 
 public class DatabaseHelper {
     /**
-     * This method gets the current date
+     * This method gets the current date and time
      * @return Current date
      */
-    public String getCurrentDate(){
+    public String getCurrentDateTimeStamp(){
         return new SimpleDateFormat("dd MMM yyyy hh:mm a").format(Calendar.getInstance().getTime());
+    }
+
+    public String getCurrentDate(){
+        return LocalDateTime.now().toString();
     }
 
     public String setDueDate(){
@@ -29,6 +33,20 @@ public class DatabaseHelper {
         calendar.set(Calendar.MILLISECOND, 999);
         dateFormat.setCalendar(calendar);
         return dateFormat.format(calendar.getTime());
+    }
+
+    public String setExtendedDuedate(LocalDate localDate){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(localDate.getYear(), localDate.getMonthValue()-1, localDate.getDayOfMonth());
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        dateFormat.setCalendar(calendar);
+        return dateFormat.format(calendar.getTime());
+
     }
     /**
      * Helper method gets tomorrow's date.
