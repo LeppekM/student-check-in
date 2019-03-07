@@ -29,4 +29,8 @@ public class ManageWorkersTabTableRow extends RecursiveTreeObject<ManageWorkersT
     public BooleanProperty getIsAdmin() {
         return isAdmin;
     }
+
+    public void setIsAdmin(boolean value){
+        isAdmin = new SimpleBooleanProperty(value);
+    }
 }

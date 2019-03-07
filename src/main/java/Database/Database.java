@@ -56,10 +56,12 @@ public class Database {
     }
 
     /**
-     * Gets overdue items
-     * @return List of overdue items
+     * This method uses an SQL query to get all items in the databse with a due date less than todays date
+     *
+     * @return a list of overdue items
+     * @author Bailey Terry
      */
-    public ObservableList<OverdueItem> getOverdue(){
+    public ObservableList<OverdueItem> getOverdue() {
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
 
             databaseHelper.getCurrentDateTimeStamp();
@@ -86,6 +88,17 @@ public class Database {
                 e.printStackTrace();
             }
         return data;
+    }
+
+    public void removeOverdue(int barcode){
+        String query = "update checkout set checkout.dueAt = null where checkout.barcode = " + barcode + ";";
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+        }catch (SQLException e){
+            StudentCheckIn.logger.error("SQL error: " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -584,6 +597,11 @@ public class Database {
         return student;
     }
 
+    /**
+     * Adds a new student to the database
+     *
+     * @param s student to be added
+     */
     public void addStudent(Student s){
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getID()
                 + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), 'root');";
@@ -599,6 +617,11 @@ public class Database {
         }
     }
 
+    /**
+     * Adds a new worker to the database
+     *
+     * @param w worker to be added
+     */
     public void addWorker(Worker w){
         int bit = w.isAdmin()? 1 : 0;
         String query = "insert into workers (email, workerName, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail() +
