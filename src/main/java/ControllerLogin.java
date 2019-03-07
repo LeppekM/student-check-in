@@ -1,6 +1,6 @@
+import Database.Database;
 import Database.Objects.Worker;
 import InventoryController.ControllerMenu;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,8 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,23 +30,28 @@ public class ControllerLogin implements Initializable {
     @FXML
     private Label invalidLoginCredentialsError;
 
+    private Database database;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        database = new Database();
         Image image = new Image("images/msoeBackgroundImage.png");
         this.msoeBackgroundImage.setImage(image);
     }
 
     public void login() {
         try {
-            Worker worker = loginWorker(usernameInputLoginPage.getText(), passwordInputLoginPage.getText());
+            Worker worker = findWorker(usernameInputLoginPage.getText());
             if (worker != null) {
-                //Controller controller = new Controller(worker, loginScene);
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
-                Pane mainMenuPane = loader.load();
-                ControllerMenu controller = loader.getController();
-                controller.initWorker(worker);
-
-                loginScene.getScene().setRoot(mainMenuPane);
+                if (worker.getPass().equals(passwordInputLoginPage.getText())) {
+                    FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/Menu.fxml"));
+                    Pane mainMenuPane = loader.load();
+                    ControllerMenu controller = loader.getController();
+                    controller.initWorker(worker);
+                    loginScene.getScene().setRoot(mainMenuPane);
+                } else {
+                    invalidLoginCredentialsError.setVisible(true);
+                }
             } else {
                 invalidLoginCredentialsError.setVisible(true);
             }
@@ -61,9 +64,8 @@ public class ControllerLogin implements Initializable {
         }
     }
 
-    private Worker loginWorker(String email, String password) {
-        Worker worker = null;
-
+    private Worker findWorker(String email) {
+        Worker worker = database.getWorker(email);
         return worker;
     }
 

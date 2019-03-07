@@ -184,9 +184,9 @@ call load_vendors();
 
 drop table if exists students;
 create table students (
-  studentID   int NOT NULL,
-  email       varchar(50),
-  studentName varchar(50),
+  studentID   int UNIQUE NOT NULL,
+  email       varchar(50) UNIQUE NOT NULL,
+  studentName varchar(50) NOT NULL,
   createdAt   varchar(50),
   updatedAt   varchar(50),
   deletedAt   varchar(50),
@@ -201,10 +201,10 @@ call load_students();
 drop table if exists workers;
 create table workers (
   workerID   int NOT NULL AUTO_INCREMENT,
-  email      varchar(50),
-  workerName varchar(50),
-  pass       varchar(20),
-  isAdmin    bit,
+  email      varchar(50) UNIQUE NOT NULL,
+  workerName varchar(50) NOT NULL,
+  pass       varchar(20) NOT NULL,
+  isAdmin    bit NOT NULL,
   createdAt  date,
   updatedAt  date,
   deletedAt  date,

@@ -498,6 +498,28 @@ public class Database {
         return workerList;
     }
 
+    public Worker getWorker(String email) {
+        Worker worker = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + email + "';");
+            String name;
+            String password;
+            boolean isAdmin;
+            if (resultSet.next()) {
+                name = resultSet.getString("workerName");
+                password = resultSet.getString("pass");
+                isAdmin = resultSet.getByte("isAdmin") == 1;
+                worker = new Worker(name, email, password, isAdmin);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+
+        }
+        return worker;
+    }
+
     /**
      * Gets a student from the database based on their RFID
      *
