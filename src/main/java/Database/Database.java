@@ -618,6 +618,25 @@ public class Database {
     }
 
     /**
+     * Deletes a student from the database
+     *
+     * @param name students name
+     */
+    public void deleteStudent(String name){
+        String query = "delete from students where students.studentName = '" + name + "';";
+        try{
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete student.");
+            StudentCheckIn.logger.error("SQL Exception: Could not delete student.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Adds a new worker to the database
      *
      * @param w worker to be added
@@ -638,4 +657,22 @@ public class Database {
         }
     }
 
+    /**
+     * Deletes a worker from the database
+     *
+     * @param name workers name
+     */
+    public void deleteWorker(String name){
+        String query = "delete from workers where workers.workerName = '" + name + "';";
+        try{
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete worker.");
+            StudentCheckIn.logger.error("SQL Exception: Could not delete worker.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
 }

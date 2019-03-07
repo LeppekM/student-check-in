@@ -15,7 +15,7 @@
             <URL value="@../css/HeaderStyle.css" />
         </stylesheets>
     </Label>
-    <JFXTreeTableView fx:id="manageWorkersTable" editable="true" layoutX="0.0" layoutY="66.0" prefHeight="480.0" stylesheets="@../css/TableStyle.css" />
+    <JFXTreeTableView fx:id="manageWorkersTable" layoutX="0.0" layoutY="66.0" prefHeight="480.0" stylesheets="@../css/TableStyle.css" />
     <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search" />
     <Button fx:id="back" layoutX="10.0" layoutY="554.0" mnemonicParsing="false" onAction="#goBack">
         <graphic>
@@ -29,9 +29,19 @@
             <URL value="@../css/ButtonStyle.css" />
         </stylesheets>
     </Button>
-    <Button fx:id="addWorker" layoutX="600.0" layoutY="554.0" mnemonicParsing="false" onAction="#addWorker" prefHeight="35.0" prefWidth="160.0" text="Add Worker" textAlignment="CENTER">
+    <Button fx:id="addWorker" layoutX="448.0" layoutY="554.0" mnemonicParsing="false" onAction="#addWorker" prefHeight="35.0" prefWidth="160.0" text="Add Worker" textAlignment="CENTER">
         <stylesheets>
             <URL value="@../css/ButtonStyle.css" />
         </stylesheets>
     </Button>
+   <Button fx:id="addAdmin" layoutX="267.0" layoutY="554.0" mnemonicParsing="false" onAction="#addAdmin" prefHeight="35.0" prefWidth="160.0" text="Add Admin" textAlignment="CENTER">
+      <stylesheets>
+         <URL value="@../css/ButtonStyle.css" />
+      </stylesheets>
+   </Button>
+   <Button fx:id="deleteWorker" layoutX="627.0" layoutY="554.0" mnemonicParsing="false" onAction="#deleteWorker" prefHeight="35.0" prefWidth="160.0" text="Delete " textAlignment="CENTER">
+      <stylesheets>
+         <URL value="@../css/ButtonStyle.css" />
+      </stylesheets>
+   </Button>
 </AnchorPane>

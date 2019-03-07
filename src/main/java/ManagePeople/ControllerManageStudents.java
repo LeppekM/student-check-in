@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +28,7 @@ import javafx.util.Callback;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -279,4 +281,16 @@ public class ControllerManageStudents implements Initializable {
         }
     }
 
+    public void deleteStudent(ActionEvent actionEvent) {
+        if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0){
+            int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
+            alert.setTitle("Delete This Student?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK){
+                database.deleteStudent(data.get(row).getName());
+                data.remove(row);
+            }
+        }
+    }
 }
