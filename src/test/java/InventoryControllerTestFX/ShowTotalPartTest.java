@@ -1,5 +1,4 @@
 package InventoryControllerTestFX;
-import Database.Part;
 import InventoryController.ControllerShowPart;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,13 +8,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.api.FxToolkit.registerPrimaryStage;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
 public class ShowTotalPartTest extends ApplicationTest {

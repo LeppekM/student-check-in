@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.*;
+import Database.Objects.Student;
 import Database.OverdueItem;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;

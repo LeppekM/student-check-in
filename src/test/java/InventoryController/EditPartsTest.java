@@ -3,7 +3,6 @@ package InventoryController;
 import Database.AddPart;
 import Database.EditPart;
 import Database.Database;
-import Database.Part;
 import org.junit.Before;
 import org.junit.Test;
 

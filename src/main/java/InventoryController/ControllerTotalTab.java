@@ -1,6 +1,6 @@
 package InventoryController;
 
-import Database.Part;
+import Database.Objects.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.collections.FXCollections;

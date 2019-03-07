@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.*;
+import Database.Objects.Part;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;

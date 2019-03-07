@@ -1,5 +1,7 @@
 package Database;
 
+import Database.Objects.Part;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

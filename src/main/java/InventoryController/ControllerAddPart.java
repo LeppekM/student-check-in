@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.*;
+import Database.Objects.Part;
 import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSpinner;

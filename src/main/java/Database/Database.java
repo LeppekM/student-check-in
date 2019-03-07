@@ -1,5 +1,9 @@
 package Database;
 
+import Database.Objects.Part;
+import Database.Objects.SavedPart;
+import Database.Objects.Student;
+import Database.Objects.Worker;
 import HelperClasses.DatabaseHelper;
 import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;

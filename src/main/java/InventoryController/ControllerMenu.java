@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Objects.Worker;
 import HelperClasses.StageWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,12 +37,15 @@ public class ControllerMenu implements Initializable {
     @FXML
     private ImageView msoeBackgroundImage;
 
+    private Worker worker;
+
     private List <String> studentIDArray = new ArrayList<>();
     private StageWrapper stageWrapper = new StageWrapper();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.worker = null;
         manageStudents.setText("Manage\nStudents");
         manageWorkers.setText("Manage\nWorkers");
         inventory.setOnAction(event -> openInventory());
@@ -49,6 +53,12 @@ public class ControllerMenu implements Initializable {
         manageWorkers.setOnAction(event -> openManageWorkers());
         Image image = new Image("images/msoeBackgroundImage.png");
         this.msoeBackgroundImage.setImage(image);
+    }
+
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
+        }
     }
 
     private void openInventory(){

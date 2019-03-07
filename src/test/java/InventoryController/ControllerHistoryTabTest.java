@@ -1,16 +1,5 @@
 package InventoryController;
 
-import Database.AddPart;
-import Database.EditPart;
-import Database.Database;
-import Database.Part;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

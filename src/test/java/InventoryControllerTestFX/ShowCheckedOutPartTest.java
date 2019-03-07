@@ -1,7 +1,4 @@
 package InventoryControllerTestFX;
-import Database.CheckedOutParts;
-import Database.Part;
-import InventoryController.CheckedOutItems;
 import InventoryController.ControllerShowPart;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

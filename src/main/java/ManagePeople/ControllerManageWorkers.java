@@ -1,6 +1,7 @@
 package ManagePeople;
 
 import Database.*;
+import Database.Objects.Worker;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;

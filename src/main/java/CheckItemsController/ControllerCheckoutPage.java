@@ -1,6 +1,8 @@
 package CheckItemsController;
 
 import Database.*;
+import Database.Objects.CheckedOutPartsObject;
+import Database.Objects.Student;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import InventoryController.StudentCheckIn;
