@@ -69,10 +69,18 @@ public class ControllerMenu implements Initializable {
         newStage("fxml/manageStudents.fxml");
     }
 
-    public void openCheckItemsPage(){ newStage("fxml/CheckOutItems.fxml"); }
+    public void openCheckItemsPage(){ newStage(
+            "fxml/CheckOutItems.fxml");
+    }
 
     private void openManageWorkers() {
-        newStage("fxml/manageWorkers.fxml");
+        if (worker != null) {
+            if (worker.isAdmin()) {
+                newStage("fxml/manageWorkers.fxml");
+            } else {
+                adminStatusRequiredForManageWorkersError();
+            }
+        }
     }
 
     public void newStage(String fxml){
@@ -97,5 +105,12 @@ public class ControllerMenu implements Initializable {
             }
     }
 
+    private void adminStatusRequiredForManageWorkersError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("Admin status is required to manage workers.\nPlease sign in with an administrator account to manage workers.");
+        StudentCheckIn.logger.error("Admin status is required to manage workers.\nPlease sign in with an administrator account to manage workers.");
+        alert.showAndWait();
+    }
 
 }
