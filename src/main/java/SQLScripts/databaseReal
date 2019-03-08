@@ -121,7 +121,7 @@ CREATE PROCEDURE load_workers()
     INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
     VALUES ('langdk@msoe.edu', 'Daniel Lang', 3412, 1, '2019-2-11', 'Jim');
     INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
-    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 2341, 1, '2019-2-11', 'Jim');
+    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 2341, 0, '2019-2-11', 'Jim');
   end;
 
 drop table if exists parts;
