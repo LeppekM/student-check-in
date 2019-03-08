@@ -189,6 +189,7 @@ public class ControllerManageWorkers implements Initializable {
             Parent root = (Parent) loader.load();
 //        StudentPage sp = loader.getController();
 //        sp.setStudent(s);
+            manageWorkersScene.getScene().setRoot(root);
         }catch (IOException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add worker page");
             alert.initStyle(StageStyle.UTILITY);
@@ -285,22 +286,14 @@ public class ControllerManageWorkers implements Initializable {
         populateTable();
     }
 
-    public void goBack(ActionEvent actionEvent) {
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            manageWorkersScene.getChildren().clear();
-            manageWorkersScene.getScene().setRoot(loader.load(myFxmlURL));
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            StudentCheckIn.logger.error("Manage Workers: No valid stage was found to load.");
-            alert.showAndWait();
-        }
-    }
-
     public void addAdmin(ActionEvent actionEvent) {
     }
 
+    /**
+     * This will allow a user to delete a worker/admin until there is only one admin left
+     *
+     * @param actionEvent null
+     */
     public void deleteWorker(ActionEvent actionEvent) {
         int admins = 0;
         boolean lastOne = false;
@@ -328,5 +321,18 @@ public class ControllerManageWorkers implements Initializable {
             }
         }
         populateTable();
+    }
+
+    public void goBack(ActionEvent actionEvent) {
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            manageWorkersScene.getChildren().clear();
+            manageWorkersScene.getScene().setRoot(loader.load(myFxmlURL));
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            StudentCheckIn.logger.error("Manage Workers: No valid stage was found to load.");
+            alert.showAndWait();
+        }
     }
 }
