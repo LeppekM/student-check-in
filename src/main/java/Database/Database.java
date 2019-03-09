@@ -1,5 +1,6 @@
 package Database;
 
+import Database.Objects.Worker;
 import HelperClasses.DatabaseHelper;
 import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
@@ -9,7 +10,6 @@ import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import java.sql.*;
@@ -475,13 +475,15 @@ public class Database {
             String name;
             String email;
             String pass;
+            int pin;
             boolean admin;
             while (resultSet.next()){
                 name = resultSet.getString("workerName");
                 pass = resultSet.getString("pass");
                 email = resultSet.getString("email");
+                pin = resultSet.getInt("pin");
                 admin = resultSet.getByte("isAdmin") == 1;
-                workerList.add(new Worker(name, email, pass, admin));
+                workerList.add(new Worker(name, email, pass, pin, admin));
             }
             resultSet.close();
             statement.close();

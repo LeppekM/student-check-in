@@ -114,14 +114,14 @@ CREATE PROCEDURE load_workers()
   BEGIN
     TRUNCATE TABLE workers;
     START TRANSACTION;
-    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
-    VALUES ('terrybc@msoe.edu', 'Bailey Terry', 1234, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
-    VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 4123, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
-    VALUES ('langdk@msoe.edu', 'Daniel Lang', 3412, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
-    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 2341, 0, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, createdAt, createdBy)
+    VALUES ('terrybc@msoe.edu', 'Bailey Terry', 'Sharks12', 1234, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, createdAt, createdBy)
+    VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 'Sharks12', 4123, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, createdAt, createdBy)
+    VALUES ('langdk@msoe.edu', 'Daniel Lang', 'Sharks12', 3412, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, createdAt, createdBy)
+    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 'Sharks12', 0, 0, '2019-2-11', 'Jim');
   end;
 
 drop table if exists parts;
@@ -203,6 +203,7 @@ create table workers (
   workerID   int NOT NULL AUTO_INCREMENT,
   email      varchar(50),
   workerName varchar(50),
+  pin        int,
   pass       varchar(20),
   isAdmin    bit,
   createdAt  date,

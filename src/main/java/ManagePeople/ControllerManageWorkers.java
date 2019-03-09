@@ -1,7 +1,7 @@
 package ManagePeople;
 
-import CheckItemsController.StudentPage;
 import Database.*;
+import Database.Objects.Worker;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -20,22 +20,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ControllerManageWorkers implements Initializable {
     private ObservableList<ManageWorkersTabTableRow> tableRows;
@@ -184,12 +185,18 @@ public class ControllerManageWorkers implements Initializable {
     }
 
     public void addWorker(ActionEvent actionEvent) {
+        Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/addWorker.fxml"));
-            Parent root = (Parent) loader.load();
-//        StudentPage sp = loader.getController();
-//        sp.setStudent(s);
-            manageWorkersScene.getScene().setRoot(root);
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addWorker.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 300, 260);
+            stage.setTitle("Add a New Worker");
+            stage.initOwner(manageWorkersScene.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.showAndWait();
         }catch (IOException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add worker page");
             alert.initStyle(StageStyle.UTILITY);

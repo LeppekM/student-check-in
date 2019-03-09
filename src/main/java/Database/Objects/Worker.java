@@ -7,12 +7,14 @@ public class Worker {
     private String name;
     private String email;
     private String pass;
+    private int pin;
     private boolean isAdmin;
 
-    public Worker(String name, String email, String pass, boolean isAdmin){
+    public Worker(String name, String email, String pass, int pin, boolean isAdmin){
         this.name = name;
         this.email = email;
         this.pass = pass;
+        this.pin = pin;
         this.isAdmin = isAdmin;
     }
 
@@ -38,6 +40,14 @@ public class Worker {
 
     public void setPass(String pass){
         this.pass = pass;
+    }
+
+    public int getPin(){
+        return pin;
+    }
+
+    public void setPin(int pin){
+        this.pin = pin;
     }
 
     public boolean isAdmin() {
