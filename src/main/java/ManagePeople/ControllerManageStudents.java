@@ -1,5 +1,6 @@
 package ManagePeople;
 
+import CheckItemsController.StudentPage;
 import Database.Database;
 import Database.Student;
 import InventoryController.StudentCheckIn;
@@ -17,11 +18,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
@@ -290,6 +293,36 @@ public class ControllerManageStudents implements Initializable {
             if (result.isPresent() && result.get() == ButtonType.OK){
                 database.deleteStudent(data.get(row).getName());
                 data.remove(row);
+            }
+        }
+    }
+
+    public void edit(MouseEvent event) {
+        if (event.getClickCount() == 2){
+            Stage stage = new Stage();
+            int f = manageStudentsTable.getSelectionModel().getFocusedIndex();
+            ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(f).getValue();
+            Student s = database.selectStudent(Integer.parseInt(manageStudentsTable.getSelectionModel().getModelItem(f)
+                    .getValue().getId().get()));
+            try {
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/Student.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                Parent root = loader.load();
+                StudentPage sp = loader.getController();
+                sp.setStudent(s);
+                Scene scene = new Scene(root, 300, 260);
+                stage.setTitle("Add a New Worker");
+                stage.initOwner(manageStudentsScene.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.setScene(scene);
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.showAndWait();
+            }catch (IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student info page");
+                alert.initStyle(StageStyle.UTILITY);
+                StudentCheckIn.logger.error("IOException: Couldn't load student info page.");
+                alert.showAndWait();
+                e.printStackTrace();
             }
         }
     }
