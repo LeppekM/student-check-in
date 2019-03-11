@@ -683,6 +683,10 @@ public class Database {
         }
     }
 
+    public boolean validateAdminPin(String pin) {
+        return false;
+    }
+
     /**
      * Deletes a worker from the database
      *

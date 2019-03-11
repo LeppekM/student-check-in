@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
@@ -25,7 +26,7 @@ public class ControllerLogin implements Initializable {
     private ImageView msoeBackgroundImage;
 
     @FXML
-    private TextField usernameInputLoginPage, passwordInputLoginPage;
+    private TextField emailInputLoginPage, pinInputLoginPage;
 
     @FXML
     private Label invalidLoginCredentialsError;
@@ -37,13 +38,18 @@ public class ControllerLogin implements Initializable {
         database = new Database();
         Image image = new Image("images/msoeBackgroundImage.png");
         this.msoeBackgroundImage.setImage(image);
+        pinInputLoginPage.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                login();
+            }
+        });
     }
 
     public void login() {
         try {
-            Worker worker = findWorker(usernameInputLoginPage.getText());
+            Worker worker = findWorker(emailInputLoginPage.getText());
             if (worker != null) {
-                if (worker.getPass().equals(passwordInputLoginPage.getText())) {
+                if (worker.getPass().equals(pinInputLoginPage.getText())) {
                     FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/Menu.fxml"));
                     Pane mainMenuPane = loader.load();
                     ControllerMenu controller = loader.getController();

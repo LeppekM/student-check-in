@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<VBox id="root" fx:id="sceneAdminPinRequest" prefHeight="250.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HelperClasses.AdminPinRequestController">
+    <children>
+        <Label fx:id="adminPinRequestTitle" alignment="CENTER" textAlignment="CENTER" />
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="RIGHT" text="pin: " textAlignment="RIGHT" />
+            <JFXTextField fx:id="adminPinInputAdminPinRequest" />
+         </children>
+      </HBox>
+      <JFXButton fx:id="adminPinRequestSubmitButton" mnemonicParsing="false" onMouseClicked="#submit" text="Submit" />
+    </children>
+</VBox>

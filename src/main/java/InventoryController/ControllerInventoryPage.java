@@ -2,6 +2,8 @@ package InventoryController;
 
 import Database.*;
 import Database.Objects.Part;
+import Database.Objects.Worker;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -54,6 +56,7 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     private Button back;
 
     protected static Database database = new Database();
+    private Worker worker;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -74,6 +77,14 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         });
 
         back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
+        //});
+    }
+
+    public void addWorker(Worker worker) {
+        System.out.println("HERE");
+        if (this.worker == null) {
+            this.worker = worker;
+        }
     }
 
     private void updateHistoryTab() {

@@ -1,8 +1,11 @@
 package InventoryController;
 
 import Database.Objects.Part;
+import Database.Objects.Worker;
+import HelperClasses.AdminPinRequestController;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -39,6 +42,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
 
@@ -73,6 +77,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     @FXML
     private JFXButton add, searchButton;
+
+    private Worker worker;
 
     private final ObservableList<String> types = FXCollections.observableArrayList(new String[] { "All", "Checked Out", "Overdue", "Faulty"});
 
@@ -122,7 +128,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editOneButton.setGraphic(editOneImageView);
                                 editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOneButton.setOnAction(event -> {
-                                    editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                    if (worker != null && worker.isAdmin()) {
+                                        editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                    } else if (requestAdminPin("edit a part")) {
+                                        editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                    }
                                 });
                                 editOneButton.setTooltip(new Tooltip("Edit this part"));
 
@@ -312,7 +322,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             }
         });
         populateTable();
+    }
 
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
+        }
     }
 
     private void filter(TreeItem<TotalTabTableRow> root, String filter, TreeItem<TotalTabTableRow> filteredRoot) {
@@ -495,6 +510,37 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
+    public boolean requestAdminPin(String action) {
+        AtomicBoolean isValid = new AtomicBoolean(false);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
+            Parent root = loader.load();
+            ((AdminPinRequestController) loader.getController()).setAction(action);
+            Scene scene = new Scene(root, 350, 250);
+            Stage stage = new Stage();
+            stage.setTitle("Admin Pin Required");
+            stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.setOnCloseRequest(e -> {
+                if (((AdminPinRequestController) loader.getController()).isValid()) {
+                    stage.close();
+                    isValid.set(true);
+                } else {
+                    stage.close();
+                    invalidAdminPinAlert();
+                    isValid.set(false);
+                }
+            });
+            stage.showAndWait();
+        } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
+            e.printStackTrace();
+        }
+        return isValid.get();
+    }
+
     /**
      * Called when a row is highlighted in the table and the edit button is clicked.
      */
@@ -509,7 +555,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 loader = new FXMLLoader(getClass().getResource("/fxml/EditOnePart.fxml"));
             }
             Parent root = loader.load();
-            ((ControllerEditPart) loader.getController()).initPart(part );
+            ((ControllerEditPart) loader.getController()).initPart(part);
             Scene scene = new Scene(root, 400, 400);
             Stage stage = new Stage();
             stage.setTitle("Edit a Part");
@@ -570,7 +616,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     /**
      * Alert that the part is currently checked out, so it cannot be deleted
      */
-    private void deleteCheckedOutPartAlert(){
+    private void deleteCheckedOutPartAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("This part is currently checked out and cannot be deleted.");
@@ -594,11 +640,22 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     /**
      * Alert that the part is currently checked out, so it cannot be deleted
      */
-    private void deleteAllCheckedOutPartAlert(){
+    private void deleteAllCheckedOutPartAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("One part of this type is checked out. You cannot delete all of these parts.");
         StudentCheckIn.logger.error("One part of this type is checked out. You cannot delete all of these parts.");
+        alert.showAndWait();
+    }
+
+    /**
+     * Alert that the pin entered does not match one of the admin pins.
+     */
+    private void invalidAdminPinAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("The pin entered is invalid.");
+        StudentCheckIn.logger.error("The pin entered is invalid.");
         alert.showAndWait();
     }
 
