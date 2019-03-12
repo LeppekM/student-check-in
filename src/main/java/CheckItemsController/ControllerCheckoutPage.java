@@ -1,6 +1,7 @@
 package CheckItemsController;
 
 import Database.*;
+import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import InventoryController.StudentCheckIn;
@@ -25,11 +26,10 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ControllerCheckoutPage extends ControllerMenu implements Initializable {
     @FXML
@@ -79,6 +79,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private String partNameFromBarcode;
     private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
     private List<String> studentIDVerifier = new ArrayList<>();
+    private DatabaseHelper dbHelp = new DatabaseHelper();
 
 
     @Override
@@ -651,7 +652,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @return Return extended date
      */
     private String getExtendedDueDate() {
-        return datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
+        LocalDate ld = datePicker.getValue();
+        return dbHelp.setExtendedDuedate(ld);
+        //return datePicker.getValue().format(DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a"));
     }
 
     /**

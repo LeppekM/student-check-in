@@ -16,8 +16,8 @@ public class VendorInformation {
             "ORDER BY vendorID DESC\n" +
             "LIMIT 1";
 
-    private String createNewVendorQuery = "INSERT INTO vendors(vendorID, vendor)\n" +
-             " values (?, ?)";
+    private String createNewVendorQuery = "INSERT INTO vendors(vendorID, vendor, description)\n" +
+             " values (?, ?, ?)";
 
     /**
      * This method queries the database to get the vendor corresponding to a particular vendorID.
@@ -65,11 +65,12 @@ public class VendorInformation {
      * Creates a new vendor
      * @param vendorName Name of vendor
      */
-    public void createNewVendor(String vendorName){
+    public void createNewVendor(String vendorName, String description){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement preparedStatement = connection.prepareStatement(createNewVendorQuery);
             preparedStatement.setInt(1, getNewVendorID());
             preparedStatement.setString(2, vendorName);
+            preparedStatement.setString(3, description);
             preparedStatement.execute();
 
         } catch (SQLException e){

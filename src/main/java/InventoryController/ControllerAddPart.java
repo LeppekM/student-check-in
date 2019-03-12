@@ -77,8 +77,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public boolean submitItem(){
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
             if(!vendorExists(getVendorName())){
-                vendorInformation.createNewVendor(getVendorName());
-                vendorInformation();
+                vendorInformation.createNewVendor(getVendorName(), vendorInformation());
             }
         submitTasks();
         return true;
@@ -162,12 +161,13 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * If new vendor is created, this popup asks for vendor information
      * Currently nothing is done with the result of the text
      */
-    private void vendorInformation(){
+    private String vendorInformation(){
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Vendor Information");
         dialog.setHeaderText("New vendor created, please enter vendor information");
         dialog.setContentText("Please enter vendor information");
         dialog.showAndWait();
+        return dialog.getResult();
     }
 
     /**

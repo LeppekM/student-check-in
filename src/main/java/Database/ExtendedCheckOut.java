@@ -51,7 +51,7 @@ public class ExtendedCheckOut {
             preparedStatement.setInt(1, partID);
             preparedStatement.setInt(2, studentID);
             preparedStatement.setInt(3, barcode);
-            preparedStatement.setString(4, helper.getCurrentDate());
+            preparedStatement.setString(4, helper.getCurrentDateTimeStamp());
             preparedStatement.setString(5, profName);
             preparedStatement.setString(6, courseName);
             preparedStatement.setString(7, dueDate);
