@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<VBox id="root" fx:id="sceneAdminPinRequest" prefHeight="250.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HelperClasses.AdminPinRequestController">
+<VBox id="root" fx:id="sceneAdminPinRequest" alignment="CENTER" prefHeight="250.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HelperClasses.AdminPinRequestController">
     <children>
-        <Label fx:id="adminPinRequestTitle" alignment="CENTER" textAlignment="CENTER" />
-      <HBox prefHeight="100.0" prefWidth="200.0">
+        <Label fx:id="adminPinRequestTitle" alignment="CENTER" style="-fx-font-weight: bold; -fx-font-size: 16;" textAlignment="CENTER">
+         <VBox.margin>
+            <Insets bottom="25.0" />
+         </VBox.margin></Label>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label alignment="CENTER" contentDisplay="RIGHT" text="pin: " textAlignment="RIGHT" />
-            <JFXTextField fx:id="adminPinInputAdminPinRequest" />
+            <Label alignment="CENTER" contentDisplay="RIGHT" style="-fx-font-weight: bold; -fx-font-size: 18;" text="pin: " textAlignment="RIGHT" />
+            <JFXTextField fx:id="adminPinInputAdminPinRequest">
+               <padding>
+                  <Insets right="10.0" />
+               </padding></JFXTextField>
+             <JFXButton fx:id="adminPinRequestSubmitButton" mnemonicParsing="false" onMouseClicked="#submit" prefHeight="30" prefWidth="90" style="-fx-font-weight: bold; -fx-font-size: 16;" text="Submit">
+                 <stylesheets>
+                     <URL value="@../css/ButtonStyle.css" />
+                 </stylesheets>
+             </JFXButton>
          </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
       </HBox>
-      <JFXButton fx:id="adminPinRequestSubmitButton" mnemonicParsing="false" onMouseClicked="#submit" text="Submit" />
     </children>
 </VBox>
