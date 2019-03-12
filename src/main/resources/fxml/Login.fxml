@@ -59,7 +59,7 @@
                                  <Insets bottom="15.0" />
                               </padding>
                                 </Label>
-                                <Label style="-fx-font-weight: bold" text="pin:">
+                                <Label style="-fx-font-weight: bold" text="password:">
                                     <font>
                                         <Font size="12.0" />
                                     </font>
@@ -73,10 +73,10 @@
                               <VBox.margin>
                                  <Insets bottom="15.0" />
                               </VBox.margin></TextField>
-                                <PasswordField fx:id="pinInputLoginPage" />
+                                <PasswordField fx:id="passwordInputLoginPage"/>
                             </VBox>
                             </HBox>
-                            <Label fx:id="invalidLoginCredentialsError" style="-fx-font-weight: bold" text="Invalid email or pin" textFill="RED" visible="false">
+                            <Label fx:id="invalidLoginCredentialsError" style="-fx-font-weight: bold" text="Invalid email or password" textFill="RED" visible="false">
                                 <font>
                                     <Font size="12.0" />
                                 </font>

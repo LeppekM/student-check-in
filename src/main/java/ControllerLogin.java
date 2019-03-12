@@ -26,7 +26,7 @@ public class ControllerLogin implements Initializable {
     private ImageView msoeBackgroundImage;
 
     @FXML
-    private TextField emailInputLoginPage, pinInputLoginPage;
+    private TextField emailInputLoginPage, passwordInputLoginPage;
 
     @FXML
     private Label invalidLoginCredentialsError;
@@ -38,7 +38,7 @@ public class ControllerLogin implements Initializable {
         database = new Database();
         Image image = new Image("images/msoeBackgroundImage.png");
         this.msoeBackgroundImage.setImage(image);
-        pinInputLoginPage.setOnKeyReleased(event -> {
+        passwordInputLoginPage.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 login();
             }
@@ -49,7 +49,7 @@ public class ControllerLogin implements Initializable {
         try {
             Worker worker = findWorker(emailInputLoginPage.getText());
             if (worker != null) {
-                if (worker.getPass().equals(pinInputLoginPage.getText())) {
+                if (worker.getPass().equals(passwordInputLoginPage.getText())) {
                     FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/Menu.fxml"));
                     Pane mainMenuPane = loader.load();
                     ControllerMenu controller = loader.getController();
