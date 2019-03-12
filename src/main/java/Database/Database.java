@@ -620,6 +620,21 @@ public class Database {
         }
     }
 
+    public void updateStudent(Student s){
+        String query = "update students set studentID = " + s.getID() + ", email = " + s.getEmail() + ", studentName = " +
+                s.getName() + " where studentID = ;";
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update student");
+            StudentCheckIn.logger.error("Could not update student, SQL Exception");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Deletes a student from the database
      *

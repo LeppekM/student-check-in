@@ -125,23 +125,23 @@ public class ControllerManageStudents implements Initializable {
 
 
 
-        manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
-            @Override
-            public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
-                final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        final int index = row.getIndex();
-                        if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
-                            manageStudentsTable.getSelectionModel().clearSelection();
-                            event.consume();
-                        }
-                    }
-                });
-                return row;
-            }
-        });
+//        manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
+//            @Override
+//            public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
+//                final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
+//                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent event) {
+//                        final int index = row.getIndex();
+//                        if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
+//                            manageStudentsTable.getSelectionModel().clearSelection();
+//                            event.consume();
+//                        }
+//                    }
+//                });
+//                return row;
+//            }
+//        });
 
         populateTable();
     }
@@ -300,23 +300,23 @@ public class ControllerManageStudents implements Initializable {
     public void edit(MouseEvent event) {
         if (event.getClickCount() == 2){
             Stage stage = new Stage();
-            int f = manageStudentsTable.getSelectionModel().getFocusedIndex();
+            int f = manageStudentsTable.getSelectionModel().getSelectedIndex();
             ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(f).getValue();
-            Student s = database.selectStudent(Integer.parseInt(manageStudentsTable.getSelectionModel().getModelItem(f)
-                    .getValue().getId().get()));
+            Student s = database.selectStudent(Integer.parseInt(r.getId().get()));
             try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/Student.fxml");
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);
                 Parent root = loader.load();
-                StudentPage sp = loader.getController();
+                EditStudent sp = loader.getController();
                 sp.setStudent(s);
-                Scene scene = new Scene(root, 300, 260);
-                stage.setTitle("Add a New Worker");
+                Scene scene = new Scene(root, 790, 620);
+                stage.setTitle("Edit " + s.getName());
                 stage.initOwner(manageStudentsScene.getScene().getWindow());
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.showAndWait();
+//                stage.setOnCloseRequest(event1 -> { });
             }catch (IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student info page");
                 alert.initStyle(StageStyle.UTILITY);
