@@ -192,6 +192,7 @@ create table workers (
   workerID   int NOT NULL AUTO_INCREMENT,
   email      varchar(50) UNIQUE NOT NULL,
   workerName varchar(50) NOT NULL,
+  pin        int,
   pass       varchar(20) NOT NULL,
   isAdmin    bit NOT NULL,
   createdAt  date,
