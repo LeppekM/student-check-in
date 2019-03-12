@@ -1,5 +1,9 @@
 package Database;
 
+import Database.Objects.Part;
+import Database.Objects.SavedPart;
+import Database.Objects.Student;
+import Database.Objects.Worker;
 import HelperClasses.DatabaseHelper;
 import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
@@ -493,6 +497,28 @@ public class Database {
         return workerList;
     }
 
+    public Worker getWorker(String email) {
+        Worker worker = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + email + "';");
+            String name;
+            String password;
+            boolean isAdmin;
+            if (resultSet.next()) {
+                name = resultSet.getString("workerName");
+                password = resultSet.getString("pass");
+                isAdmin = resultSet.getByte("isAdmin") == 1;
+                worker = new Worker(name, email, password, isAdmin);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+
+        }
+        return worker;
+    }
+
     /**
      * Gets a student from the database based on their RFID
      *
@@ -618,6 +644,25 @@ public class Database {
     }
 
     /**
+     * Deletes a student from the database
+     *
+     * @param name students name
+     */
+    public void deleteStudent(String name){
+        String query = "delete from students where students.studentName = '" + name + "';";
+        try{
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete student.");
+            StudentCheckIn.logger.error("SQL Exception: Could not delete student.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Adds a new worker to the database
      *
      * @param w worker to be added
@@ -638,4 +683,26 @@ public class Database {
         }
     }
 
+    public boolean validateAdminPin(String pin) {
+        return false;
+    }
+
+    /**
+     * Deletes a worker from the database
+     *
+     * @param name workers name
+     */
+    public void deleteWorker(String name){
+        String query = "delete from workers where workers.workerName = '" + name + "';";
+        try{
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete worker.");
+            StudentCheckIn.logger.error("SQL Exception: Could not delete worker.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
 }

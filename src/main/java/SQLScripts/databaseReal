@@ -110,7 +110,7 @@ CREATE PROCEDURE load_workers()
     INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
     VALUES ('langdk@msoe.edu', 'Daniel Lang', 3412, 1, '2019-2-11', 'Jim');
     INSERT INTO workers (email, workerName, pass, isAdmin, createdAt, createdBy)
-    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 2341, 1, '2019-2-11', 'Jim');
+    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 2341, 0, '2019-2-11', 'Jim');
   end;
 
 drop table if exists parts;
@@ -190,10 +190,10 @@ call load_students();
 drop table if exists workers;
 create table workers (
   workerID   int NOT NULL AUTO_INCREMENT,
-  email      varchar(50),
-  workerName varchar(50),
-  pass       varchar(20),
-  isAdmin    bit,
+  email      varchar(50) UNIQUE NOT NULL,
+  workerName varchar(50) NOT NULL,
+  pass       varchar(20) NOT NULL,
+  isAdmin    bit NOT NULL,
   createdAt  date,
   updatedAt  date,
   deletedAt  date,

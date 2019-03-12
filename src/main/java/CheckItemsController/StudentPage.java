@@ -1,8 +1,8 @@
 package CheckItemsController;
 
+import Database.Objects.SavedPart;
+import Database.Objects.Student;
 import Database.OverdueItem;
-import Database.SavedPart;
-import Database.Student;
 import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
 import InventoryController.OverduePopUpController;
@@ -10,9 +10,7 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -29,7 +27,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.stream.IntStream;
 
 public class StudentPage {

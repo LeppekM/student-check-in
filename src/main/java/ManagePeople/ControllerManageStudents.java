@@ -1,7 +1,7 @@
 package ManagePeople;
 
 import Database.Database;
-import Database.Student;
+import Database.Objects.Student;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -9,24 +9,21 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -279,4 +276,16 @@ public class ControllerManageStudents implements Initializable {
         }
     }
 
+    public void deleteStudent(ActionEvent actionEvent) {
+        if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0){
+            int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
+            alert.setTitle("Delete This Student?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK){
+                database.deleteStudent(data.get(row).getName());
+                data.remove(row);
+            }
+        }
+    }
 }

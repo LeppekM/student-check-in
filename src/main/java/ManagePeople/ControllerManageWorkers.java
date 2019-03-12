@@ -1,6 +1,8 @@
 package ManagePeople;
 
+import CheckItemsController.StudentPage;
 import Database.*;
+import Database.Objects.Worker;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -18,16 +20,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -49,7 +54,7 @@ public class ControllerManageWorkers implements Initializable {
     private JFXTextField searchInput;
 
     @FXML
-    private Button addWorker;
+    private Button addWorker, addAdmin, deleteWorker;
 
     @FXML
     private JFXTreeTableColumn<ManageWorkersTabTableRow, String> nameCol, emailCol;
@@ -180,92 +185,104 @@ public class ControllerManageWorkers implements Initializable {
     }
 
     public void addWorker(ActionEvent actionEvent) {
-        StringBuilder name = new StringBuilder();
-        String pin = "";
-        String email = "";
-        boolean notIncluded = true;
-        boolean invalid = true;
-        while (invalid && notIncluded){
-            email = JOptionPane.showInputDialog(null, "Please enter the workers MSOE email.");
-            if (email != null) {
-                ObservableList<Worker> workers = database.getWorkers();
-                for (Worker w : workers) {
-                    if (w.getEmail().equals(email)) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Worker is already in the database!");
-                        StudentCheckIn.logger.warn("Manage Workers: Worker is already in the database.");
-                        alert.showAndWait();
-                        notIncluded = false;
-                        break;
-                    }
-                }
-                if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
-                    invalid = false;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Workers email must be their MSOE email.");
-                    StudentCheckIn.logger.warn("Manage Workers: Worker's email must be their MSOE email.");
-                }
-            }else {
-                break;
-            }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/addWorker.fxml"));
+            Parent root = (Parent) loader.load();
+//        StudentPage sp = loader.getController();
+//        sp.setStudent(s);
+        }catch (IOException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add worker page");
+            alert.initStyle(StageStyle.UTILITY);
+            StudentCheckIn.logger.error("IOException: Couldn't load add worker page.");
+            alert.showAndWait();
+            e.printStackTrace();
         }
-        invalid = true;
-        Pattern p = Pattern.compile("[0-9]*");
-        String n = name.toString();
-        StringBuilder n1 = name;
-        Matcher m = null;
-        while (invalid && notIncluded){
-            String input = JOptionPane.showInputDialog(null, "Please enter the workers first name.");
-            if (input != null) {
-                m = p.matcher(input);
-                name = new StringBuilder(input);
-                if (!m.matches() && !name.toString().matches("\\s*")) {
-                    String temp = name.substring(0, 1).toUpperCase() + name.substring(1);
-                    name = new StringBuilder(temp);
-                    invalid = false;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Workers first name is invalid or blank.");
-                    StudentCheckIn.logger.warn("Manage Workers: Worker's first name is invalid or blank.");
-                }
-            }else {
-                break;
-            }
-        }
-        invalid = true;
-        while (invalid && notIncluded){
-            String input = JOptionPane.showInputDialog(null, "Please enter the workers last name.");
-            if (input != null) {
-                m = p.matcher(input);
-                name.append(" ");
-                name.append(input);
-                if (!m.matches() && !name.toString().matches("\\s+")) {
-                    int space = name.indexOf(" ");
-                    String temp = name.substring(0, space + 1) + name.substring(space + 1, space + 2).toUpperCase() + name.substring(space + 2);
-                    name = new StringBuilder(temp);
-                    invalid = false;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Workers last name is invalid or blank.");
-                    StudentCheckIn.logger.warn("Manage Workers: Worker's last name is invalid or blank.");
-                }
-            }else {
-                break;
-            }
-        }
-        invalid = true;
-        while (invalid && notIncluded){
-            pin = JOptionPane.showInputDialog(null, "Please enter a four digit pin for the admin");
-            if (pin != null) {
-                if (pin.matches("[0-9]{4}")) {
-                    invalid = false;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Must be a four digit pin");
-                }
-            }else {
-                break;
-            }
-        }
-        if (notIncluded && name != null && email != null && pin != null) {
-            database.addWorker(new Worker(name.toString(), email, pin, true));
-        }
+//        StringBuilder name = new StringBuilder();
+//        String pin = "";
+//        String email = "";
+//        boolean notIncluded = true;
+//        boolean invalid = true;
+//        while (invalid && notIncluded){
+//            email = JOptionPane.showInputDialog(null, "Please enter the workers MSOE email.");
+//            if (email != null) {
+//                ObservableList<Worker> workers = database.getWorkers();
+//                for (Worker w : workers) {
+//                    if (w.getEmail().equals(email)) {
+//                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Worker is already in the database!");
+//                        StudentCheckIn.logger.warn("Manage Workers: Worker is already in the database.");
+//                        alert.showAndWait();
+//                        notIncluded = false;
+//                        break;
+//                    }
+//                }
+//                if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+//                    invalid = false;
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Workers email must be their MSOE email.");
+//                    StudentCheckIn.logger.warn("Manage Workers: Worker's email must be their MSOE email.");
+//                }
+//            }else {
+//                break;
+//            }
+//        }
+//        invalid = true;
+//        Pattern p = Pattern.compile("[0-9]*");
+//        String n = name.toString();
+//        StringBuilder n1 = name;
+//        Matcher m = null;
+//        while (invalid && notIncluded){
+//            String input = JOptionPane.showInputDialog(null, "Please enter the workers first name.");
+//            if (input != null) {
+//                m = p.matcher(input);
+//                name = new StringBuilder(input);
+//                if (!m.matches() && !name.toString().matches("\\s*")) {
+//                    String temp = name.substring(0, 1).toUpperCase() + name.substring(1);
+//                    name = new StringBuilder(temp);
+//                    invalid = false;
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Workers first name is invalid or blank.");
+//                    StudentCheckIn.logger.warn("Manage Workers: Worker's first name is invalid or blank.");
+//                }
+//            }else {
+//                break;
+//            }
+//        }
+//        invalid = true;
+//        while (invalid && notIncluded){
+//            String input = JOptionPane.showInputDialog(null, "Please enter the workers last name.");
+//            if (input != null) {
+//                m = p.matcher(input);
+//                name.append(" ");
+//                name.append(input);
+//                if (!m.matches() && !name.toString().matches("\\s+")) {
+//                    int space = name.indexOf(" ");
+//                    String temp = name.substring(0, space + 1) + name.substring(space + 1, space + 2).toUpperCase() + name.substring(space + 2);
+//                    name = new StringBuilder(temp);
+//                    invalid = false;
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Workers last name is invalid or blank.");
+//                    StudentCheckIn.logger.warn("Manage Workers: Worker's last name is invalid or blank.");
+//                }
+//            }else {
+//                break;
+//            }
+//        }
+//        invalid = true;
+//        while (invalid && notIncluded){
+//            pin = JOptionPane.showInputDialog(null, "Please enter a four digit pin for the admin");
+//            if (pin != null) {
+//                if (pin.matches("[0-9]{4}")) {
+//                    invalid = false;
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Must be a four digit pin");
+//                }
+//            }else {
+//                break;
+//            }
+//        }
+//        if (notIncluded && name != null && email != null && pin != null) {
+//            database.addWorker(new Worker(name.toString(), email, pin, true));
+//        }
         populateTable();
     }
 
@@ -280,5 +297,37 @@ public class ControllerManageWorkers implements Initializable {
             StudentCheckIn.logger.error("Manage Workers: No valid stage was found to load.");
             alert.showAndWait();
         }
+    }
+
+    public void addAdmin(ActionEvent actionEvent) {
+    }
+
+    public void deleteWorker(ActionEvent actionEvent) {
+        int admins = 0;
+        boolean lastOne = false;
+        for (Worker w : data){
+            if (w.isAdmin()){
+                admins++;
+            }
+        }
+        if (manageWorkersTable.getSelectionModel().getSelectedCells().size() != 0){
+            int row = manageWorkersTable.getSelectionModel().getFocusedIndex();
+            if (admins == 1 && data.get(row).isAdmin()){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot delete the last admin.");
+                StudentCheckIn.logger.error("Manage Workers: Unable to delete last admin.");
+                alert.showAndWait();
+                lastOne = true;
+            }
+            if (!lastOne) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this worker?");
+                alert.setTitle("Delete This Worker?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK){
+                    database.deleteWorker(data.get(row).getName());
+                    data.remove(row);
+                }
+            }
+        }
+        populateTable();
     }
 }

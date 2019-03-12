@@ -1,7 +1,8 @@
 package CheckItemsController;
 
 import Database.*;
-import Database.SavedPart;
+import Database.Objects.SavedPart;
+import Database.Objects.Student;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

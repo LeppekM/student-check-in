@@ -106,7 +106,7 @@ public class Part {
         this.checkedOut.set(checkedOut==1?true:false);
 
     }
-    public boolean getCheckedOut() {System.out.println("Hello There!" + checkedOut.get());
+    public boolean getCheckedOut() {System.out.println(checkedOut.get());
     return checkedOut.get();
         }
 
