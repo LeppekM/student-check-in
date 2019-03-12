@@ -478,13 +478,15 @@ public class Database {
             String name;
             String email;
             String pass;
+            int pin;
             boolean admin;
             while (resultSet.next()){
                 name = resultSet.getString("workerName");
                 pass = resultSet.getString("pass");
                 email = resultSet.getString("email");
+                pin = resultSet.getInt("pin");
                 admin = resultSet.getByte("isAdmin") == 1;
-                workerList.add(new Worker(name, email, pass, admin));
+                workerList.add(new Worker(name, email, pass, pin, admin));
             }
             resultSet.close();
             statement.close();
@@ -504,12 +506,14 @@ public class Database {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + email + "';");
             String name;
             String password;
+            int pin;
             boolean isAdmin;
             if (resultSet.next()) {
                 name = resultSet.getString("workerName");
                 password = resultSet.getString("pass");
                 isAdmin = resultSet.getByte("isAdmin") == 1;
-                worker = new Worker(name, email, password, isAdmin);
+                pin = resultSet.getInt("pin");
+                worker = new Worker(name, email, password, pin, isAdmin);
             }
             resultSet.close();
             statement.close();
@@ -638,6 +642,21 @@ public class Database {
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
             StudentCheckIn.logger.error("Could not add student, SQL Exception");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    public void updateStudent(Student s){
+        String query = "update students set studentID = " + s.getID() + ", studentName = " + s.getName() + " where email =" +
+               s.getEmail() + ";";
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update student");
+            StudentCheckIn.logger.error("Could not update student, SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
         }

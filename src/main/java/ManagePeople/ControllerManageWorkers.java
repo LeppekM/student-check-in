@@ -1,6 +1,5 @@
 package ManagePeople;
 
-import CheckItemsController.StudentPage;
 import Database.*;
 import Database.Objects.Worker;
 import InventoryController.StudentCheckIn;
@@ -21,22 +20,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ControllerManageWorkers implements Initializable {
     private ObservableList<ManageWorkersTabTableRow> tableRows;
@@ -185,11 +185,18 @@ public class ControllerManageWorkers implements Initializable {
     }
 
     public void addWorker(ActionEvent actionEvent) {
+        Stage stage = new Stage();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/addWorker.fxml"));
-            Parent root = (Parent) loader.load();
-//        StudentPage sp = loader.getController();
-//        sp.setStudent(s);
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addWorker.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 300, 260);
+            stage.setTitle("Add a New Worker");
+            stage.initOwner(manageWorkersScene.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.showAndWait();
         }catch (IOException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add worker page");
             alert.initStyle(StageStyle.UTILITY);
@@ -197,111 +204,36 @@ public class ControllerManageWorkers implements Initializable {
             alert.showAndWait();
             e.printStackTrace();
         }
-//        StringBuilder name = new StringBuilder();
-//        String pin = "";
-//        String email = "";
-//        boolean notIncluded = true;
-//        boolean invalid = true;
-//        while (invalid && notIncluded){
-//            email = JOptionPane.showInputDialog(null, "Please enter the workers MSOE email.");
-//            if (email != null) {
-//                ObservableList<Worker> workers = database.getWorkers();
-//                for (Worker w : workers) {
-//                    if (w.getEmail().equals(email)) {
-//                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Worker is already in the database!");
-//                        StudentCheckIn.logger.warn("Manage Workers: Worker is already in the database.");
-//                        alert.showAndWait();
-//                        notIncluded = false;
-//                        break;
-//                    }
-//                }
-//                if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
-//                    invalid = false;
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Workers email must be their MSOE email.");
-//                    StudentCheckIn.logger.warn("Manage Workers: Worker's email must be their MSOE email.");
-//                }
-//            }else {
-//                break;
-//            }
-//        }
-//        invalid = true;
-//        Pattern p = Pattern.compile("[0-9]*");
-//        String n = name.toString();
-//        StringBuilder n1 = name;
-//        Matcher m = null;
-//        while (invalid && notIncluded){
-//            String input = JOptionPane.showInputDialog(null, "Please enter the workers first name.");
-//            if (input != null) {
-//                m = p.matcher(input);
-//                name = new StringBuilder(input);
-//                if (!m.matches() && !name.toString().matches("\\s*")) {
-//                    String temp = name.substring(0, 1).toUpperCase() + name.substring(1);
-//                    name = new StringBuilder(temp);
-//                    invalid = false;
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Workers first name is invalid or blank.");
-//                    StudentCheckIn.logger.warn("Manage Workers: Worker's first name is invalid or blank.");
-//                }
-//            }else {
-//                break;
-//            }
-//        }
-//        invalid = true;
-//        while (invalid && notIncluded){
-//            String input = JOptionPane.showInputDialog(null, "Please enter the workers last name.");
-//            if (input != null) {
-//                m = p.matcher(input);
-//                name.append(" ");
-//                name.append(input);
-//                if (!m.matches() && !name.toString().matches("\\s+")) {
-//                    int space = name.indexOf(" ");
-//                    String temp = name.substring(0, space + 1) + name.substring(space + 1, space + 2).toUpperCase() + name.substring(space + 2);
-//                    name = new StringBuilder(temp);
-//                    invalid = false;
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Workers last name is invalid or blank.");
-//                    StudentCheckIn.logger.warn("Manage Workers: Worker's last name is invalid or blank.");
-//                }
-//            }else {
-//                break;
-//            }
-//        }
-//        invalid = true;
-//        while (invalid && notIncluded){
-//            pin = JOptionPane.showInputDialog(null, "Please enter a four digit pin for the admin");
-//            if (pin != null) {
-//                if (pin.matches("[0-9]{4}")) {
-//                    invalid = false;
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Must be a four digit pin");
-//                }
-//            }else {
-//                break;
-//            }
-//        }
-//        if (notIncluded && name != null && email != null && pin != null) {
-//            database.addWorker(new Worker(name.toString(), email, pin, true));
-//        }
         populateTable();
     }
 
-    public void goBack(ActionEvent actionEvent) {
+    public void addAdmin(ActionEvent actionEvent) {
+        Stage stage = new Stage();
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addAdmin.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            manageWorkersScene.getChildren().clear();
-            manageWorkersScene.getScene().setRoot(loader.load(myFxmlURL));
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            StudentCheckIn.logger.error("Manage Workers: No valid stage was found to load.");
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 300, 260);
+            stage.setTitle("Add a New Worker");
+            stage.initOwner(manageWorkersScene.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.showAndWait();
+        }catch (IOException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add admin page");
+            alert.initStyle(StageStyle.UTILITY);
+            StudentCheckIn.logger.error("IOException: Couldn't load add admin page.");
             alert.showAndWait();
+            e.printStackTrace();
         }
     }
 
-    public void addAdmin(ActionEvent actionEvent) {
-    }
-
+    /**
+     * This will allow a user to delete a worker/admin until there is only one admin left
+     *
+     * @param actionEvent null
+     */
     public void deleteWorker(ActionEvent actionEvent) {
         int admins = 0;
         boolean lastOne = false;
@@ -329,5 +261,18 @@ public class ControllerManageWorkers implements Initializable {
             }
         }
         populateTable();
+    }
+
+    public void goBack(ActionEvent actionEvent) {
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            manageWorkersScene.getChildren().clear();
+            manageWorkersScene.getScene().setRoot(loader.load(myFxmlURL));
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            StudentCheckIn.logger.error("Manage Workers: No valid stage was found to load.");
+            alert.showAndWait();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package ManagePeople;
 
+import CheckItemsController.StudentPage;
 import Database.Database;
 import Database.Objects.Student;
 import InventoryController.StudentCheckIn;
@@ -14,10 +15,17 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
@@ -117,23 +125,23 @@ public class ControllerManageStudents implements Initializable {
 
 
 
-        manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
-            @Override
-            public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
-                final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        final int index = row.getIndex();
-                        if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
-                            manageStudentsTable.getSelectionModel().clearSelection();
-                            event.consume();
-                        }
-                    }
-                });
-                return row;
-            }
-        });
+//        manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
+//            @Override
+//            public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
+//                final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
+//                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent event) {
+//                        final int index = row.getIndex();
+//                        if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
+//                            manageStudentsTable.getSelectionModel().clearSelection();
+//                            event.consume();
+//                        }
+//                    }
+//                });
+//                return row;
+//            }
+//        });
 
         populateTable();
     }
@@ -285,6 +293,36 @@ public class ControllerManageStudents implements Initializable {
             if (result.isPresent() && result.get() == ButtonType.OK){
                 database.deleteStudent(data.get(row).getName());
                 data.remove(row);
+            }
+        }
+    }
+
+    public void edit(MouseEvent event) {
+        if (event.getClickCount() == 2){
+            Stage stage = new Stage();
+            int f = manageStudentsTable.getSelectionModel().getSelectedIndex();
+            ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(f).getValue();
+            Student s = database.selectStudent(Integer.parseInt(r.getId().get()));
+            try {
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                Parent root = loader.load();
+                EditStudent sp = loader.getController();
+                sp.setStudent(s);
+                Scene scene = new Scene(root, 790, 620);
+                stage.setTitle("Edit " + s.getName());
+                stage.initOwner(manageStudentsScene.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.setScene(scene);
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.showAndWait();
+//                stage.setOnCloseRequest(event1 -> { });
+            }catch (IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student info page");
+                alert.initStyle(StageStyle.UTILITY);
+                StudentCheckIn.logger.error("IOException: Couldn't load student info page.");
+                alert.showAndWait();
+                e.printStackTrace();
             }
         }
     }
