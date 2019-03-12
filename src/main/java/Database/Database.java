@@ -1,6 +1,5 @@
 package Database;
 
-import HelperClasses.DatabaseHelper;
 import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
