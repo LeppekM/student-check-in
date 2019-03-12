@@ -648,8 +648,8 @@ public class Database {
     }
 
     public void updateStudent(Student s){
-        String query = "update students set studentID = " + s.getID() + ", studentName = " + s.getName() + " where email =" +
-               s.getEmail() + ";";
+        String query = "update students set students.studentID = " + s.getID() + ", students.studentName = '" +
+                s.getName() + "' where students.email = '" + s.getEmail() + "';";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);

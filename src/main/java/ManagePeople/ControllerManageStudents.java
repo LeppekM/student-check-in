@@ -316,7 +316,7 @@ public class ControllerManageStudents implements Initializable {
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.showAndWait();
-//                stage.setOnCloseRequest(event1 -> { });
+                populateTable();
             }catch (IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student info page");
                 alert.initStyle(StageStyle.UTILITY);

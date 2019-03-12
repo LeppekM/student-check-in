@@ -27,23 +27,9 @@ public class StudentCheckIn extends Application  {
 
     public StudentCheckIn(){}
 
-//    @Override
-//    public void start(Stage primaryStage) throws Exception{
-//        URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
-//        FXMLLoader loader = new FXMLLoader(myFxmlURL);
-//        Parent root = loader.load(myFxmlURL);
-//        Scene scene = new Scene(root, 789, 620);
-//        primaryStage.setResizable(false);
-//        primaryStage.setTitle("Barcode Scanner");
-//        primaryStage.setScene(scene);
-//        primaryStage.getIcons().add(new Image("images/msoe.png"));
-////        scene.getStylesheets().add(ControllerMenu.class.getResource("MenuStyle.css").toExternalForm());
-//        primaryStage.show();
-//    }
-
     @Override
     public void start(Stage primaryStage) throws Exception{
-        URL myFxmlURL = ClassLoader.getSystemResource("fxml/Login.fxml");
+        URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);
         Scene scene = new Scene(root, 789, 620);
@@ -51,8 +37,22 @@ public class StudentCheckIn extends Application  {
         primaryStage.setTitle("Barcode Scanner");
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image("images/msoe.png"));
+//        scene.getStylesheets().add(ControllerMenu.class.getResource("MenuStyle.css").toExternalForm());
         primaryStage.show();
     }
+
+//    @Override
+//    public void start(Stage primaryStage) throws Exception{
+//        URL myFxmlURL = ClassLoader.getSystemResource("fxml/Login.fxml");
+//        FXMLLoader loader = new FXMLLoader(myFxmlURL);
+//        Parent root = loader.load(myFxmlURL);
+//        Scene scene = new Scene(root, 789, 620);
+//        primaryStage.setResizable(false);
+//        primaryStage.setTitle("Barcode Scanner");
+//        primaryStage.setScene(scene);
+//        primaryStage.getIcons().add(new Image("images/msoe.png"));
+//        primaryStage.show();
+//    }
 
     public static void main(String[] args) {
         launch(args);

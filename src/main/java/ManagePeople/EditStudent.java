@@ -15,30 +15,34 @@ import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
 public class EditStudent {
 
     @FXML
-    private Pane main = new Pane();
+    private AnchorPane main = new AnchorPane();
 
     @FXML
     private VBox vbox = new VBox();
@@ -68,65 +72,22 @@ public class EditStudent {
     private JFXTreeTableColumn<SavedPart, String> sTableCol;
 
     private static Student student;
-//    private CheckoutObject checkoutObject;
     private Database database = new Database();
     private StageWrapper stageWrapper = new StageWrapper();
-
-//    public void initCheckoutObject(CheckoutObject checkoutObject) {
-//        this.checkoutObject = checkoutObject;
-//    }
+    private static String name;
+    private static int id;
 
     public void setStudent(Student s) {
         student = s;
-//        double overdueFees = overdueFee(student);
-//        studentName = new JFXTextField();
         studentName.setText(student.getName());
-//        studentName.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
-//        email = new JFXTextField("");
         email.setText(student.getEmail());
-//        email.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
-//        RFID = new JFXTextField("");
         RFID.setText(student.getID() + "");
-//        RFID.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
-//        fees = new Label("");
-//        fees.setText("Outstanding fees: $" + overdueFees);
-//        fees.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
-//        date = new Label("");
-//        if(student.getDate() == null){
-//            date.setText("Date of last rental: Never");
-//        }else {
-//            date.setText("Date of last rental: " + student.getDate());
-//        }
-//        date.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
-//        vbox.getChildren().add(studentName);
-//        vbox.getChildren().add(email);
-//        vbox.getChildren().add(RFID);
-//        vbox.getChildren().add(date);
-//        vbox.getChildren().add(fees);
+        name = studentName.getText();
+        id = Integer.parseInt(RFID.getText());
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(5);
         setTables();
     }
-
-//    private double overdueFee(Student s){
-//        double overdueFees = 0.0;
-//        int[] sID = new int[s.getSavedItems().size()];
-//        for (int i = 0; i < s.getSavedItems().size(); i++) {
-//            if (s.getSavedItems().get(i).getCheckID().matches("^[0-9]*")){
-//                sID[i] = Integer.parseInt(s.getSavedItems().get(i).getCheckID());
-//            }else {
-//                sID[i] = Integer.parseInt(s.getSavedItems().get(i).getCheckID().substring(13));
-//            }
-//        }
-//        for (int j = 0; j < s.getOverdueItems().size(); j++) {
-//            int oID = Integer.parseInt(s.getOverdueItems().get(j).getCheckID());
-//            boolean result = IntStream.of(sID).anyMatch(x -> x == oID);
-//            if (!result) {
-//                overdueFees += Double.parseDouble(s.getOverdueItems().get(j).getPrice().get());
-//            }
-//        }
-//        return overdueFees;
-//    }
 
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
@@ -177,21 +138,6 @@ public class EditStudent {
         sTable.setShowRoot(false);
     }
 
-//    public void goBack() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
-//            Parent root = loader.load();
-//            main.getScene().setRoot(root);
-//            ((ControllerCheckoutPage) loader.getController()).initCheckoutObject(checkoutObject);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    public void goHome() {
-//        stageWrapper.newStage("fxml/Menu.fxml", main);
-//    }
-
     public void coPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
@@ -209,7 +155,6 @@ public class EditStudent {
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.show();
                 }
-//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -256,7 +201,6 @@ public class EditStudent {
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.show();
                 }
-//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -267,17 +211,33 @@ public class EditStudent {
         return student;
     }
 
-    public void saveName(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) {
-            student.setName(studentName.getText());
-            database.updateStudent(student);
-        }
-    }
-
-    public void saveID(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) {
-            student.setID(Integer.parseInt(RFID.getText()));
-            database.updateStudent(student);
+    public void save(ActionEvent actionEvent) {
+        if (name.equals(studentName.getText()) && id == Integer.parseInt(RFID.getText())){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
+            alert.setTitle("Edit Failure");
+            alert.setHeaderText("No changes were made.");
+            alert.showAndWait();
+        }else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to make the following changes?\n");
+            alert.setTitle("Edit Success");
+            alert.setHeaderText("Student info changing...");
+            if (!name.equals(studentName.getText())) {
+                alert.setContentText(alert.getContentText() + "\t" + name + " --> " + studentName.getText() + "\n");
+            }
+            if (id != Integer.parseInt(RFID.getText())) {
+                alert.setContentText(alert.getContentText() + "\t" + id + " --> " + RFID.getText() + "\n");
+            }
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                student.setName(studentName.getText());
+                student.setID(Integer.parseInt(RFID.getText()));
+                database.updateStudent(student);
+                Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
+                alert1.showAndWait();
+            }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
+                studentName.setText(name);
+                RFID.setText(id + "");
+            }
         }
     }
 }
