@@ -1,9 +1,8 @@
 package HelperClasses;
 
 import Database.Database;
-import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXPasswordField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -23,7 +22,7 @@ public class AdminPinRequestController implements Initializable {
     private Label adminPinRequestTitle;
 
     @FXML
-    private JFXTextField adminPinInputAdminPinRequest;
+    private JFXPasswordField adminPinInputAdminPinRequest;
 
     @FXML
     private JFXButton adminPinRequestSubmitButton;

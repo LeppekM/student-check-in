@@ -1,12 +1,13 @@
 import Database.Database;
 import Database.Objects.Worker;
 import InventoryController.ControllerMenu;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -26,7 +27,10 @@ public class ControllerLogin implements Initializable {
     private ImageView msoeBackgroundImage;
 
     @FXML
-    private TextField emailInputLoginPage, passwordInputLoginPage;
+    private JFXTextField emailInputLoginPage;
+
+    @FXML
+    private JFXPasswordField passwordInputLoginPage;
 
     @FXML
     private Label invalidLoginCredentialsError;
