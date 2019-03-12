@@ -277,13 +277,6 @@ public class EditStudent {
         }
     }
 
-    public void saveEmail(KeyEvent event) {
-       if (event.getCode().equals(KeyCode.ENTER)) {
-           student.setEmail(email.getText());
-           database.updateStudent(student);
-       }
-    }
-
     public void saveID(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
             student.setID(Integer.parseInt(RFID.getText()));
