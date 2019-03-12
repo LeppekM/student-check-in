@@ -174,11 +174,11 @@ call load_vendors();
 drop table if exists students;
 create table students (
   studentID   int NOT NULL,
-  email       varchar(50),
-  studentName varchar(50),
-  createdAt   date,
-  updatedAt   date,
-  deletedAt   date,
+  email       varchar(50) UNIQUE NOT NULL,
+  studentName varchar(50) UNIQUE,
+  createdAt   varchar(50),
+  updatedAt   varchar(50),
+  deletedAt   varchar(50),
   createdBy   varchar(50),
   updatedBy   varchar(50),
   deletedBy   varchar(50),
