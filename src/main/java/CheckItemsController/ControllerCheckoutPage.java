@@ -3,6 +3,7 @@ package CheckItemsController;
 import Database.*;
 import Database.Objects.CheckedOutPartsObject;
 import Database.Objects.Student;
+import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import InventoryController.StudentCheckIn;
@@ -726,6 +727,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @param isVisible True if items should be shown
      */
     private void setExtendedItemsVisible(boolean isVisible) {
+        barcode2.setVisible(!isVisible);
+        HBoxBarcode2.setVisible(!isVisible);
+        quantity.setVisible(isVisible);
+        quantityLabel.setVisible(isVisible);
         dueAt.setVisible(isVisible);
         courseName.setVisible(isVisible);
         profName.setVisible(isVisible);
@@ -851,6 +856,18 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         }
     }
 
+
+    public void newBarcode1(){
+        if(studentEmail.isVisible()){
+            return; //New students can only submit 1 item
+        }
+        setNewBarcodeFieldsHelper();
+        transitionHelper.barcodeItemsFadeTransition(newQuantity, deleteBarcode, barcode2);
+        transitionHelper.fadeTransition(HBoxBarcode2);
+        transitionHelper.spinnerInit(newQuantity2);
+        addNewBarcode.setDisable(true);
+        //barcode2.requestFocus();
+    }
     /**
      * Creates new barcode field
      */
@@ -867,8 +884,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Sets correct field info when new barcode field is added
      */
     private void setNewBarcodeFieldsHelper() {
-        extended.setVisible(false);
-        faulty.setVisible(false);
+        //extended.setVisible(false);
+        //faulty.setVisible(false);
         quantity.setVisible(false);
         quantityLabel.setVisible(false);
         newQuantity.setVisible(true);
