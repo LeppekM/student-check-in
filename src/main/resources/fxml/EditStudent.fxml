@@ -33,21 +33,21 @@
             </Button>
             <VBox fx:id="vbox" layoutX="63.0" layoutY="16.0" prefHeight="240.0" prefWidth="668.0">
                <children>
-                  <JFXTextField fx:id="studentName" alignment="CENTER" prefHeight="80.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="studentName" alignment="CENTER" prefHeight="80.0" promptText="Name (First and Last)" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <font>
                         <Font name="Arial Black" size="32.0" />
                      </font></JFXTextField>
-                  <JFXTextField fx:id="email" alignment="CENTER" prefHeight="80.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="email" alignment="CENTER" prefHeight="80.0" promptText="MSOE Email" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <font>
                         <Font name="Arial Black" size="32.0" />
                      </font></JFXTextField>
-                  <JFXTextField fx:id="RFID" alignment="CENTER" prefHeight="80.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="RFID" alignment="CENTER" prefHeight="80.0" promptText="RFID" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>

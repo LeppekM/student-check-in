@@ -41,10 +41,16 @@ public class EditWorker {
     private JFXTextField email, workerName;
 
     @FXML
+    private JFXTextField unmasked;
+
+    @FXML
     private JFXPasswordField pass;
 
     @FXML
     private JFXCheckBox admin, parts, overdue, workers, students;
+
+    @FXML
+    private JFXCheckBox showPass;
 
     private static Worker worker;
     private Database database = new Database();
@@ -70,6 +76,14 @@ public class EditWorker {
         over = overdue.isSelected();
         work = workers.isSelected();
         stu = students.isSelected();
+        unmasked.setManaged(false);
+        unmasked.setVisible(false);
+        unmasked.managedProperty().bind(showPass.selectedProperty());
+        unmasked.visibleProperty().bind(showPass.selectedProperty());
+        pass.managedProperty().bind(showPass.selectedProperty().not());
+        pass.visibleProperty().bind(showPass.selectedProperty().not());
+        unmasked.textProperty().bindBidirectional(pass.textProperty());
+        unmasked.setText(w.getPass());
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(5);
     }
