@@ -141,23 +141,23 @@ public class ControllerManageWorkers implements Initializable {
             }
         });
 
-        manageWorkersTable.setRowFactory(new Callback<TreeTableView<ManageWorkersTabTableRow>, TreeTableRow<ManageWorkersTabTableRow>>() {
-            @Override
-            public TreeTableRow<ManageWorkersTabTableRow> call(TreeTableView<ManageWorkersTabTableRow> param) {
-                final TreeTableRow<ManageWorkersTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        final int index = row.getIndex();
-                        if (index >= 0 && index < manageWorkersTable.getCurrentItemsCount() && manageWorkersTable.getSelectionModel().isSelected(index)) {
-                            manageWorkersTable.getSelectionModel().clearSelection();
-                            event.consume();
-                        }
-                    }
-                });
-                return row;
-            }
-        });
+//        manageWorkersTable.setRowFactory(new Callback<TreeTableView<ManageWorkersTabTableRow>, TreeTableRow<ManageWorkersTabTableRow>>() {
+//            @Override
+//            public TreeTableRow<ManageWorkersTabTableRow> call(TreeTableView<ManageWorkersTabTableRow> param) {
+//                final TreeTableRow<ManageWorkersTabTableRow> row = new TreeTableRow<>();
+//                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent event) {
+//                        final int index = row.getIndex();
+//                        if (index >= 0 && index < manageWorkersTable.getCurrentItemsCount() && manageWorkersTable.getSelectionModel().isSelected(index)) {
+//                            manageWorkersTable.getSelectionModel().clearSelection();
+//                            event.consume();
+//                        }
+//                    }
+//                });
+//                return row;
+//            }
+//        });
 
         populateTable();
     }
@@ -273,6 +273,36 @@ public class ControllerManageWorkers implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             StudentCheckIn.logger.error("Manage Workers: No valid stage was found to load.");
             alert.showAndWait();
+        }
+    }
+
+    public void edit(MouseEvent event) {
+        if (event.getClickCount() == 2){
+            Stage stage = new Stage();
+            int f = manageWorkersTable.getSelectionModel().getSelectedIndex();
+            ManageWorkersTabTableRow r = manageWorkersTable.getSelectionModel().getModelItem(f).getValue();
+            Worker w = database.getWorker(r.getEmail().get());
+            try {
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditWorker.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                Parent root = loader.load();
+                EditWorker ew = loader.getController();
+                ew.setWorker(w);
+                Scene scene = new Scene(root, 790, 620);
+                stage.setTitle("Edit " + w.getName());
+                stage.initOwner(manageWorkersScene.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.setScene(scene);
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.showAndWait();
+                populateTable();
+            }catch (IOException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load worker info page");
+                alert.initStyle(StageStyle.UTILITY);
+                StudentCheckIn.logger.error("IOException: Couldn't load worker info page.");
+                alert.showAndWait();
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -20,6 +20,14 @@ public class Worker {
         this.isAdmin = isAdmin;
     }
 
+    public Worker(String name, String email, String pass){
+        this.name = name;
+        this.email = email;
+        this.pass = pass;
+        this.pin = 0;
+        this.isAdmin = false;
+    }
+
     public String getName() {
         return name;
     }

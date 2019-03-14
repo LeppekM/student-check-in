@@ -104,7 +104,7 @@ public class ControllerAddWorker implements Initializable {
             alert.showAndWait();
         }
         if (emailValid && fValid && lValid && passValid){
-            database.addWorker(new Worker(n.toString(), email.getText(), pass.getText(), 0, false));
+            database.addWorker(new Worker(n.toString(), email.getText(), pass.getText()));
             main.getScene().getWindow().hide();
         }
     }

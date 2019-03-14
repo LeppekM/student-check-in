@@ -112,7 +112,8 @@ public class ControllerAddAdmin implements Initializable {
             alert.showAndWait();
         }
         if (emailValid && fValid && lValid && passValid && pinValid){
-            database.addWorker(new Worker(n.toString(), email.getText(), pass.getText(), Integer.parseInt(pin.getText()), true));
+            ObservableList<Worker> w = database.getWorkers();
+            database.addWorker(new Worker(n.toString(), w.get(w.size() - 1).getID() + 1, email.getText(), pass.getText(), Integer.parseInt(pin.getText()), true));
             main.getScene().getWindow().hide();
         }
     }
