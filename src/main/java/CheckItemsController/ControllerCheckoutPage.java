@@ -125,7 +125,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 }
             }
         });
-        setItemStatus();
+        //setItemStatus();
         getStudentName();
         unlockFields();
         unlockExtended();
@@ -220,24 +220,40 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             return;
         }
         if (thisStudent.getOverdueItems().size() == 0) {
-            if (multipleItemsBeingCheckedOut()) {
-                submitMultipleItems();
-            } else if (extendedCheckoutIsSelected(getBarcode())) {
-                if (newStudentIsCheckingOutItem()) {
+            if(extendedCheckoutIsSelected(getBarcode())){
+                if (newStudentIsCheckingOutItem()){
                     createNewStudent();
                 }
                 extendedCheckoutHelper();
-            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
+            }
+            else if(itemBeingCheckedBackInIsFaulty(getBarcode())){
                 faultyCheckinHelper();
-            } else if (itemIsBeingCheckedIn(getBarcode())) {
-                checkOut.setItemtoCheckedin(getBarcode());
-                database.removeOverdue(getBarcode());
-            } else {
-                if (newStudentIsCheckingOutItem()) {
-                    createNewStudent();
-                }
+            }
+            else if (newStudentIsCheckingOutItem()){
+                createNewStudent();
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
             }
+            else {
+                submitMultipleItems();
+            }
+//            if (multipleItemsBeingCheckedOut()) {
+//                submitMultipleItems();
+//            } else if (extendedCheckoutIsSelected(getBarcode())) {
+//                if (newStudentIsCheckingOutItem()) {
+//                    createNewStudent();
+//                }
+//                extendedCheckoutHelper();
+//            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
+//                faultyCheckinHelper();
+//            } else if (itemIsBeingCheckedIn(getBarcode())) {
+//                checkOut.setItemtoCheckedin(getBarcode());
+//                database.removeOverdue(getBarcode());
+//            } else {
+//                if (newStudentIsCheckingOutItem()) {
+//                    createNewStudent();
+//                }
+//                checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
+//            }
             reset();
         } else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
             stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
@@ -532,7 +548,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      */
     private void setItemStatus() {
         barcode.focusedProperty().addListener((ov, oldv, newV) -> {
-            if (!newV && !barcode.getText().isEmpty() && !barcode2.isVisible()) {
+            if (!newV) {
                 if (itemIsBeingCheckedIn(getBarcode())) {
                     setCheckinInformation();
                 } else {
@@ -544,6 +560,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             }
         });
     }
+
 
 
     /**
@@ -748,6 +765,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         if (faulty.isSelected()) {
             setFaultyTransition(translateFaultyDown, true);
             setCheckoutItemsDisable(true);
+            faultyTransitionItems(true);
         } else {
             if (faultyItemLossInfo()) {
                 faulty.setSelected(true);
@@ -756,6 +774,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             setFaultyTransition(translateFaultyUp, false);
             faultyTextArea.setText("");
             setCheckoutItemsDisable(false);
+            faultyTransitionItems(false);
 
         }
     }
@@ -806,6 +825,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         barcode.setDisable(value);
         studentID.setDisable(value);
         addNewBarcode.setDisable(value);
+    }
+
+    private void faultyTransitionItems(boolean value){
+        barcode2.setVisible(!value);
+        HBoxBarcode2.setVisible(!value);
+        quantity.setVisible(value);
+        quantityLabel.setVisible(value);
     }
 
 
@@ -866,8 +892,40 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         transitionHelper.fadeTransition(HBoxBarcode2);
         transitionHelper.spinnerInit(newQuantity2);
         addNewBarcode.setDisable(true);
-        //barcode2.requestFocus();
     }
+
+    public void dropBarcode2(){
+        if(barcode3.isVisible()){
+            return;
+        }
+        barcodeDropHelper();
+        NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3, addNewBarcode2);
+    }
+
+    public void dropBarcode3(){
+        if(barcode4.isVisible()){
+            return;
+        }
+        barcodeDropHelper();
+        NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4, addNewBarcode3);
+    }
+
+    public void dropBarcode4(){
+        if(barcode5.isVisible()){
+            return;
+        }
+        barcodeDropHelper();
+        NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5, addNewBarcode4);
+    }
+
+
+
+
+    private void barcodeDropHelper(){
+        extended.setVisible(false);
+        faulty.setVisible(false);
+    }
+
     /**
      * Creates new barcode field
      */

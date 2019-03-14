@@ -82,7 +82,7 @@
             </JFXButton>
          </children>
       </HBox>
-      <JFXTextField fx:id="barcode2" layoutX="343.0" layoutY="224.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <JFXTextField fx:id="barcode2" layoutX="343.0" layoutY="224.0" onKeyTyped="#dropBarcode2" prefHeight="24.0" prefWidth="125.0" visible="false" />
       <HBox fx:id="HBoxBarcode2" layoutX="480.0" layoutY="227.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <JFXButton fx:id="addNewBarcode2" onAction="#newBarcode2" prefHeight="36.0" prefWidth="0.0">
@@ -106,7 +106,7 @@
             </JFXButton>
          </children>
       </HBox>
-      <JFXTextField fx:id="barcode3" layoutX="343.0" layoutY="284.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <JFXTextField fx:id="barcode3" layoutX="343.0" layoutY="284.0" onKeyTyped="#dropBarcode3" prefHeight="24.0" prefWidth="125.0" visible="false" />
       <HBox fx:id="HBoxBarcode3" layoutX="480.0" layoutY="287.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <JFXButton fx:id="addNewBarcode3" onAction="#newBarcode3" prefHeight="36.0" prefWidth="0.0">
@@ -130,7 +130,7 @@
             </JFXButton>
          </children>
       </HBox>
-      <JFXTextField fx:id="barcode4" layoutX="343.0" layoutY="345.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <JFXTextField fx:id="barcode4" layoutX="343.0" layoutY="345.0" onKeyTyped="#dropBarcode4" prefHeight="24.0" prefWidth="125.0" visible="false" />
       <HBox fx:id="HBoxBarcode4" layoutX="480.0" layoutY="348.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <JFXButton fx:id="addNewBarcode4" onAction="#newBarcode4" prefHeight="36.0" prefWidth="0.0">
