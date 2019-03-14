@@ -8,17 +8,19 @@ import Database.OverdueItem;
 public class Student {
 
     private String name;
-    private int ID;
+    private int uniqueID;
+    private int RFID;
     private String email;
     private String date;
     private ObservableList<CheckedOutItems> checkedOut;
     private ObservableList<OverdueItem> overdueItems;
     private ObservableList<SavedPart> savedItems;
 
-    public Student(String name, int ID, String email, String date, ObservableList<CheckedOutItems> checkedOut,
+    public Student(String name, int uniqueID, int RFID, String email, String date, ObservableList<CheckedOutItems> checkedOut,
                    ObservableList<OverdueItem> overdueItems, ObservableList<SavedPart> savedItems){
         this.name = name;
-        this.ID = ID;
+        this.uniqueID = uniqueID;
+        this.RFID = RFID;
         this.email = email;
         this.date = date;
         this.checkedOut = checkedOut;
@@ -26,9 +28,9 @@ public class Student {
         this.savedItems = savedItems;
     }
 
-    public Student(String name, int ID, String email) {
+    public Student(String name, int RFID, String email) {
         this.name = name;
-        this.ID = ID;
+        this.RFID = RFID;
         this.email = email;
     }
 
@@ -40,12 +42,16 @@ public class Student {
         this.name = name;
     }
 
-    public int getID() {
-        return ID;
+    public int getUniqueID(){
+        return uniqueID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public int getRFID() {
+        return RFID;
+    }
+
+    public void setRFID(int RFID) {
+        this.RFID = RFID;
     }
 
     public String getEmail() {

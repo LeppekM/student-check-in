@@ -1,6 +1,5 @@
 package ManagePeople;
 
-import CheckItemsController.StudentPage;
 import Database.Database;
 import Database.Objects.Student;
 import InventoryController.StudentCheckIn;
@@ -11,7 +10,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,7 +23,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import javax.swing.*;
@@ -155,7 +152,7 @@ public class ControllerManageStudents implements Initializable {
 
         for (int i = 0; i < data.size(); i++) {
             tableRows.add(new ManageStudentsTabTableRow(data.get(i).getName(),
-                    "" + data.get(i).getID(), data.get(i).getEmail()));
+                    "" + data.get(i).getRFID(), data.get(i).getEmail()));
         }
 
         root = new RecursiveTreeItem<ManageStudentsTabTableRow>(

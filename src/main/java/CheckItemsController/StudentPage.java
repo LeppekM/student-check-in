@@ -27,6 +27,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.stream.IntStream;
 
 public class StudentPage {
@@ -68,6 +70,7 @@ public class StudentPage {
 
     public void setStudent(Student s) {
         student = s;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         double overdueFees = overdueFee(student);
         studentName = new Label("");
         studentName.setText(student.getName());
@@ -76,7 +79,7 @@ public class StudentPage {
         email.setText(student.getEmail());
         email.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         RFID = new Label("");
-        RFID.setText(student.getID() + "");
+        RFID.setText(student.getRFID() + "");
         RFID.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         fees = new Label("");
         fees.setText("Outstanding fees: $" + overdueFees);
@@ -85,7 +88,7 @@ public class StudentPage {
         if(student.getDate() == null){
             date.setText("Date of last rental: Never");
         }else {
-            date.setText("Date of last rental: " + student.getDate());
+            date.setText("Date of last rental: " + sdf.format(new Date(student.getDate())));
         }
         date.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         vbox.getChildren().add(studentName);

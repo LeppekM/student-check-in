@@ -81,7 +81,7 @@ public class CheckoutPopUp extends StudentPage {
                 long date = System.currentTimeMillis();
                 java.sql.Date d = new java.sql.Date(date);
                 statement.executeUpdate("UPDATE checkout SET  reservedAt = date('" + d.toString() + "'), returnDate = '" + returnDate + "', course = '" + course + "'" +
-                        " WHERE studentID = " + s.getID() + " and checkoutID = " + cID.getText().substring(13) + ";");
+                        " WHERE studentID = " + s.getRFID() + " and checkoutID = " + cID.getText().substring(13) + ";");
             }catch (SQLException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update database");
                 alert.showAndWait();

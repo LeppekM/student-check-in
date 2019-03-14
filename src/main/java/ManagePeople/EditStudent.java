@@ -18,26 +18,19 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.stream.IntStream;
 
 public class EditStudent {
 
@@ -73,17 +66,18 @@ public class EditStudent {
 
     private static Student student;
     private Database database = new Database();
-    private StageWrapper stageWrapper = new StageWrapper();
     private static String name;
     private static int id;
+    private static String studentEmail;
 
     public void setStudent(Student s) {
         student = s;
         studentName.setText(student.getName());
         email.setText(student.getEmail());
-        RFID.setText(student.getID() + "");
+        RFID.setText(student.getRFID() + "");
         name = studentName.getText();
         id = Integer.parseInt(RFID.getText());
+        studentEmail = email.getText();
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(5);
         setTables();
@@ -212,7 +206,7 @@ public class EditStudent {
     }
 
     public void save(ActionEvent actionEvent) {
-        if (name.equals(studentName.getText()) && id == Integer.parseInt(RFID.getText())){
+        if (name.equals(studentName.getText()) && id == Integer.parseInt(RFID.getText()) && studentEmail.equals(email.getText())){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
@@ -227,10 +221,13 @@ public class EditStudent {
             if (id != Integer.parseInt(RFID.getText())) {
                 alert.setContentText(alert.getContentText() + "\t" + id + " --> " + RFID.getText() + "\n");
             }
+            if (!studentEmail.equals(email.getText())){
+                alert.setContentText(alert.getContentText() + "\t" + studentEmail + " --> " + email.getText() + "\n");
+            }
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 student.setName(studentName.getText());
-                student.setID(Integer.parseInt(RFID.getText()));
+                student.setRFID(Integer.parseInt(RFID.getText()));
                 database.updateStudent(student);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
                 alert1.showAndWait();

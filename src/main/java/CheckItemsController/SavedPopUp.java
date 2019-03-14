@@ -53,7 +53,7 @@ public class SavedPopUp extends StudentPage {
             Connection connection = database.getConnection();
             Statement statement = connection.createStatement();
             statement.executeUpdate("UPDATE checkout SET reservedAt = NULL, returnDate = NULL, course = NULL WHERE studentID = " +
-                    s.getID() + " and checkoutID = " + id + ";");
+                    s.getRFID() + " and checkoutID = " + id + ";");
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot update database");
             alert.showAndWait();

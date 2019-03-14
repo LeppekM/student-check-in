@@ -30,7 +30,7 @@
                   <Font size="18.0" />
                </font>
             </JFXCheckBox>
-            <Label fx:id="cID" layoutX="7.0" layoutY="261.0" style="-fx-font-size: 14;" text="Checkout ID:" />
+            <Label fx:id="cID" layoutX="7.0" layoutY="261.0" style="-fx-font-size: 14;" text="Checkout RFID:" />
             </children>
         </Pane>
     </children>

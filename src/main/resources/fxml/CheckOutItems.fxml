@@ -29,7 +29,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="240.0" layoutY="67.0" text="Scan Student ID" />
+      <Label layoutX="240.0" layoutY="67.0" text="Scan Student RFID" />
       <Label fx:id="scanBarcode" layoutX="257.0" layoutY="174.0" text="Scan Barcode" />
       <JFXSpinner fx:id="loadIndicator" layoutX="511.0" layoutY="354.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
       <JFXButton fx:id="home" layoutX="17.0" layoutY="15.0" mnemonicParsing="false" onAction="#returnHome">

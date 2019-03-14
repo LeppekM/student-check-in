@@ -5,13 +5,15 @@ import Database.Database;
 public class Worker {
 
     private String name;
+    private int ID;
     private String email;
     private String pass;
     private int pin;
     private boolean isAdmin;
 
-    public Worker(String name, String email, String pass, int pin, boolean isAdmin){
+    public Worker(String name, int ID, String email, String pass, int pin, boolean isAdmin){
         this.name = name;
+        this.ID = ID;
         this.email = email;
         this.pass = pass;
         this.pin = pin;
@@ -24,6 +26,10 @@ public class Worker {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getID(){
+        return ID;
     }
 
     public String getEmail() {

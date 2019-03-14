@@ -478,15 +478,17 @@ public class Database {
             String name;
             String email;
             String pass;
+            int ID;
             int pin;
             boolean admin;
             while (resultSet.next()){
                 name = resultSet.getString("workerName");
+                ID = resultSet.getInt("workerID");
                 pass = resultSet.getString("pass");
                 email = resultSet.getString("email");
                 pin = resultSet.getInt("pin");
                 admin = resultSet.getByte("isAdmin") == 1;
-                workerList.add(new Worker(name, email, pass, pin, admin));
+                workerList.add(new Worker(name, ID, email, pass, pin, admin));
             }
             resultSet.close();
             statement.close();
@@ -506,14 +508,16 @@ public class Database {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + email + "';");
             String name;
             String password;
+            int ID;
             int pin;
             boolean isAdmin;
             if (resultSet.next()) {
                 name = resultSet.getString("workerName");
+                ID = resultSet.getInt("workerID");
                 password = resultSet.getString("pass");
                 isAdmin = resultSet.getByte("isAdmin") == 1;
                 pin = resultSet.getInt("pin");
-                worker = new Worker(name, email, password, pin, isAdmin);
+                worker = new Worker(name, ID, email, password, pin, isAdmin);
             }
             resultSet.close();
             statement.close();
@@ -552,6 +556,7 @@ public class Database {
         String email = "";
         String date = "";
         int id = 0;
+        int uniqueID = 0;
         ObservableList<CheckedOutItems> checkedOutItems = FXCollections.observableArrayList();
         ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
         ObservableList<SavedPart> savedParts = FXCollections.observableArrayList();
@@ -563,6 +568,7 @@ public class Database {
                 name = resultSet.getString("studentName");
                 email = resultSet.getString("email");
                 id = resultSet.getInt("studentID");
+                uniqueID = resultSet.getInt("uniqueID");
             }
             resultSet.close();
             statement.close();
@@ -620,7 +626,7 @@ public class Database {
                     e.printStackTrace();
                 }
             }
-            student = new Student(name,id,email, date, checkedOutItems,overdueItems,savedParts);
+            student = new Student(name, uniqueID, id, email, date, checkedOutItems, overdueItems, savedParts);
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -633,7 +639,7 @@ public class Database {
      * @param s student to be added
      */
     public void addStudent(Student s){
-        String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getID()
+        String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
                 + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), 'root');";
         try {
             Statement statement = connection.createStatement();
@@ -648,8 +654,8 @@ public class Database {
     }
 
     public void updateStudent(Student s){
-        String query = "update students set students.studentID = " + s.getID() + ", students.studentName = '" +
-                s.getName() + "' where students.email = '" + s.getEmail() + "';";
+        String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
+                s.getName() + "', students.email = '" + s.getEmail() + "' where students.uniqueID = " + s.getUniqueID() +";";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
