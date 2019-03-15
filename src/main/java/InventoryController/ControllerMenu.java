@@ -6,12 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -87,6 +87,19 @@ public class ControllerMenu implements Initializable {
             } else {
                 adminStatusRequiredForManageWorkersError();
             }
+        }
+    }
+
+    public void logout() {
+        worker = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/Login.fxml"));
+            Pane loginPane = loader.load();
+            mainMenuScene.getScene().setRoot(loginPane);
+        } catch(IOException invoke){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+            invoke.printStackTrace();
         }
     }
 

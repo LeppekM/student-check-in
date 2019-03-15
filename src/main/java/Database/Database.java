@@ -518,9 +518,32 @@ public class Database {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
+            StudentCheckIn.logger.error("Could not retrieve the list of workers");
+            alert.showAndWait();
+            e.printStackTrace();
         }
         return worker;
+    }
+
+    public boolean isValidPin(int pin) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT pin FROM workers;");
+            int adminPin;
+            while (resultSet.next()) {
+                adminPin = resultSet.getInt("pin");
+                if (adminPin == pin) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of admin pins");
+            StudentCheckIn.logger.error("Could not retrieve the list of admin pins");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**
@@ -700,10 +723,6 @@ public class Database {
             alert.showAndWait();
             e.printStackTrace();
         }
-    }
-
-    public boolean validateAdminPin(String pin) {
-        return false;
     }
 
     /**

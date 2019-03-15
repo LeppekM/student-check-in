@@ -70,7 +70,6 @@ public class ControllerLogin implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
             invoke.printStackTrace();
-
         }
     }
 

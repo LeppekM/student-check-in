@@ -20,7 +20,8 @@
             <JFXPasswordField fx:id="adminPinInputAdminPinRequest">
                <padding>
                   <Insets right="10.0" />
-               </padding></JFXPass>
+               </padding>
+            </JFXPasswordField>
              <JFXButton fx:id="adminPinRequestSubmitButton" mnemonicParsing="false" onMouseClicked="#submit" prefHeight="30" prefWidth="90" style="-fx-font-weight: bold; -fx-font-size: 16;" text="Submit">
                  <stylesheets>
                      <URL value="@../css/ButtonStyle.css" />
