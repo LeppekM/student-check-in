@@ -3,9 +3,11 @@ package CheckItemsController;
 import Database.*;
 import Database.Objects.CheckedOutPartsObject;
 import Database.Objects.Student;
+import Database.Objects.Worker;
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
+import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import javafx.animation.FadeTransition;
@@ -33,7 +35,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class ControllerCheckoutPage extends ControllerMenu implements Initializable {
+public class ControllerCheckoutPage extends ControllerMenu implements IController, Initializable {
     @FXML
     private AnchorPane main;
 
@@ -83,9 +85,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private List<String> studentIDVerifier = new ArrayList<>();
     private DatabaseHelper dbHelp = new DatabaseHelper();
 
+    private Worker worker;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.worker = null;
+
         home.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
@@ -131,6 +136,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
         unlockExtended();
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
+        }
     }
 
     /**
@@ -354,7 +366,22 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 return;
             }
         }
-        stageWrapper.newStage("fxml/Menu.fxml", main);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
+            Parent root = loader.load();
+            IController controller = loader.<IController>getController();
+            controller.initWorker(worker);
+            main.getScene().setRoot(root);
+            ((IController) loader.getController()).initWorker(worker);
+            // NEEDED?
+            //mainMenuScene.getChildren().clear();
+        }
+        catch(IOException invoke){
+            StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+            invoke.printStackTrace();
+        }
     }
 
     /**

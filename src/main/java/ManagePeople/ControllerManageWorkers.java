@@ -2,6 +2,7 @@ package ManagePeople;
 
 import Database.*;
 import Database.Objects.Worker;
+import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -38,10 +39,12 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-public class ControllerManageWorkers implements Initializable {
+public class ControllerManageWorkers implements IController, Initializable {
     private ObservableList<ManageWorkersTabTableRow> tableRows;
 
     private Database database;
+
+    private Worker worker;
 
     @FXML
     private AnchorPane manageWorkersScene;
@@ -68,6 +71,8 @@ public class ControllerManageWorkers implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.worker = null;
+
         Label emptyTableLabel = new Label("No workers found.");
         emptyTableLabel.setFont(new Font(18));
         manageWorkersTable.setPlaceholder(emptyTableLabel);
@@ -263,16 +268,26 @@ public class ControllerManageWorkers implements Initializable {
         populateTable();
     }
 
-    public void goBack(ActionEvent actionEvent) {
+    public void goBack(){
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
+            Parent root = loader.load();
+            IController controller = loader.<IController>getController();
+            controller.initWorker(worker);
+            manageWorkersScene.getScene().setRoot(root);
+            ((IController) loader.getController()).initWorker(worker);
             manageWorkersScene.getChildren().clear();
-            manageWorkersScene.getScene().setRoot(loader.load(myFxmlURL));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            StudentCheckIn.logger.error("Manage Workers: No valid stage was found to load.");
+            StudentCheckIn.logger.error("IOException: No valid stage was found to load");
             alert.showAndWait();
+        }
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
         }
     }
 }

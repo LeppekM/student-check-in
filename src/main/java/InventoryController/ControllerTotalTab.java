@@ -333,6 +333,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         populateTable();
     }
 
+    @Override
     public void initWorker(Worker worker) {
         if (this.worker == null) {
             this.worker = worker;
