@@ -282,26 +282,50 @@ public class ControllerManageWorkers implements Initializable {
             int f = manageWorkersTable.getSelectionModel().getSelectedIndex();
             ManageWorkersTabTableRow r = manageWorkersTable.getSelectionModel().getModelItem(f).getValue();
             Worker w = database.getWorker(r.getEmail().get());
-            try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditWorker.fxml");
-                FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                Parent root = loader.load();
-                EditWorker ew = loader.getController();
-                ew.setWorker(w);
-                Scene scene = new Scene(root, 790, 620);
-                stage.setTitle("Edit " + w.getName());
-                stage.initOwner(manageWorkersScene.getScene().getWindow());
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.setScene(scene);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.showAndWait();
-                populateTable();
-            }catch (IOException e){
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load worker info page");
-                alert.initStyle(StageStyle.UTILITY);
-                StudentCheckIn.logger.error("IOException: Couldn't load worker info page.");
-                alert.showAndWait();
-                e.printStackTrace();
+            if (w.isAdmin()){
+                try {
+                    URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditAdmin.fxml");
+                    FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                    Parent root = loader.load();
+                    EditAdmin ea = loader.getController();
+                    ea.setAdmin(w);
+                    Scene scene = new Scene(root, 790, 500);
+                    stage.setTitle("Edit " + w.getName());
+                    stage.initOwner(manageWorkersScene.getScene().getWindow());
+                    stage.initModality(Modality.WINDOW_MODAL);
+                    stage.setScene(scene);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.showAndWait();
+                    populateTable();
+                }catch (IOException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load admin info page");
+                    alert.initStyle(StageStyle.UTILITY);
+                    StudentCheckIn.logger.error("IOException: Couldn't load admin info page.");
+                    alert.showAndWait();
+                    e.printStackTrace();
+                }
+            }else {
+                try {
+                    URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditWorker.fxml");
+                    FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                    Parent root = loader.load();
+                    EditWorker ew = loader.getController();
+                    ew.setWorker(w);
+                    Scene scene = new Scene(root, 790, 620);
+                    stage.setTitle("Edit " + w.getName());
+                    stage.initOwner(manageWorkersScene.getScene().getWindow());
+                    stage.initModality(Modality.WINDOW_MODAL);
+                    stage.setScene(scene);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.showAndWait();
+                    populateTable();
+                } catch (IOException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load worker info page");
+                    alert.initStyle(StageStyle.UTILITY);
+                    StudentCheckIn.logger.error("IOException: Couldn't load worker info page.");
+                    alert.showAndWait();
+                    e.printStackTrace();
+                }
             }
         }
     }
