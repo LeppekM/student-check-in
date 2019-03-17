@@ -537,7 +537,9 @@ public class Database {
         String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
                 "from students " +
                 "left join checkout on students.studentID = checkout.studentID " +
-                "left join parts on checkout.partID = parts.partID where students.studentID = " + ID  + ";";
+                "left join parts on checkout.partID = parts.partID" +
+                " where students.studentID = " + ID  +
+                " AND checkout.checkinAt is null;";
         String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
                 "from students " +
                 "left join checkout on students.studentID = checkout.studentID " +

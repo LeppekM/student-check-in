@@ -219,7 +219,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             StudentCheckIn.logger.error("Not all fields filled out on checkout page. All fields must be filled before submitting.");
             return;
         }
-        if (thisStudent.getOverdueItems().size() == 0) {
+//        if (thisStudent.getOverdueItems().size() == 0) {
             if(extendedCheckoutIsSelected(getBarcode())){
                 if (newStudentIsCheckingOutItem()){
                     createNewStudent();
@@ -237,9 +237,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
                 submitMultipleItems();
             }
             reset();
-        } else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
-            stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
-        }
+//        } else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
+//            stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
+//        }
     }
 
     /**
@@ -255,6 +255,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * Submits multiple items
      */
     private void submitMultipleItems() {
+        Student thisStudent = database.selectStudent(getstudentID());
         List<Integer> barcodes = new ArrayList<>();
         if (barcodeIsNotEmpty(barcode)) {
             barcodes.add(getBarcode());
@@ -276,7 +277,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             if (itemIsBeingCheckedIn(barcodes.get(i))) {
                 checkOut.setItemtoCheckedin(barcodes.get(i));
             } else {
-                checkOut.addNewCheckoutItem(barcodes.get(i), getstudentID());
+                if(thisStudent.getOverdueItems().size()==0){
+                    checkOut.addNewCheckoutItem(barcodes.get(i), getstudentID());
+                }
+                else {
+                    stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
+                }
+
             }
         }
         StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + barcodes.toString());
