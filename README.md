@@ -4,7 +4,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### What is this repository for? ###
 
-This is for our recreation of the student check in and out system that our IT department uses to handle
+This is for our recreation of the studentName check in and out system that our IT department uses to handle
 students renting equipment
 
 ### How do I get set up? ###

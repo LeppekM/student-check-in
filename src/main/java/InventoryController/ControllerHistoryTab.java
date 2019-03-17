@@ -3,26 +3,25 @@ package InventoryController;
 import Database.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.InputEvent;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -31,6 +30,9 @@ import java.util.function.Predicate;
  * This class acts as the controller for the history tab of the inventory page
  */
 public class ControllerHistoryTab  extends ControllerInventoryPage implements Initializable {
+
+    @FXML
+    private AnchorPane inventoryHistoryPage;
 
     private ObservableList<HistoryTabTableRow> tableRows;
 
@@ -71,7 +73,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         studentCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
-                return param.getValue().getValue().getStudent();
+                return param.getValue().getValue().getStudentName();
             }
         });
 
@@ -123,7 +125,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             }
         });
 
-        // Click to select if unselected and deselect if selected
+        // Click to select if unselected and deselect if selected; view part on double click
         historyTable.setRowFactory(new Callback<TreeTableView<HistoryTabTableRow>, TreeTableRow<HistoryTabTableRow>>() {
             @Override
             public TreeTableRow<HistoryTabTableRow> call(TreeTableView<HistoryTabTableRow> param) {
@@ -131,10 +133,14 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                 row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        final int index = row.getIndex();
-                        if (index >= 0 && index < historyTable.getCurrentItemsCount() && historyTable.getSelectionModel().isSelected(index)) {
-                            historyTable.getSelectionModel().clearSelection();
-                            event.consume();
+                        if (event.getClickCount() == 2) {
+                            viewPart();
+                        } else {
+                            final int index = row.getIndex();
+                            if (index >= 0 && index < historyTable.getCurrentItemsCount() && historyTable.getSelectionModel().isSelected(index)) {
+                                historyTable.getSelectionModel().clearSelection();
+                                event.consume();
+                            }
                         }
                     }
                 });
@@ -152,9 +158,10 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         tableRows = FXCollections.observableArrayList();
 
         for (int i = 0; i < list.size(); i++) {
-            tableRows.add(new HistoryTabTableRow(list.get(i).getStudent(),
-                    list.get(i).getPartName(), list.get(i).getSerialNumber(),
-                    list.get(i).getStatus(), list.get(i).getDate()));
+            tableRows.add(new HistoryTabTableRow(list.get(i).getStudentName(),
+                    list.get(i).getStudentEmail(), list.get(i).getPartName(),
+                    list.get(i).getSerialNumber(), list.get(i).getStatus(),
+                    list.get(i).getDate()));
         }
 
         final TreeItem<HistoryTabTableRow> root = new RecursiveTreeItem<HistoryTabTableRow>(tableRows, RecursiveTreeObject::getChildren);
@@ -169,7 +176,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             @Override
             public boolean test(TreeItem<HistoryTabTableRow> tableRow) {
                 String input = searchInput.getText().toLowerCase();
-                student = tableRow.getValue().getStudent().getValue();
+                student = tableRow.getValue().getStudentName().getValue();
                 partName = tableRow.getValue().getPartName().getValue();
                 serialNumber = tableRow.getValue().getSerialNumber().getValue();
                 status = tableRow.getValue().getStatus().getValue();
@@ -182,6 +189,28 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                         || (date != null & date.toLowerCase().contains(input)));
             }
         });
+    }
+
+    private void viewPart() {
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewHistoryPart.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 400, 300);
+            stage.setTitle("Checked Out Item");
+            stage.initOwner(inventoryHistoryPage.getScene().getWindow());
+            stage.setScene(scene);
+            int index = historyTable.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                HistoryTabTableRow item = ((HistoryTabTableRow) historyTable.getSelectionModel().getModelItem(index).getValue());
+                ((ControllerViewHistoryPart) loader.getController()).populate(item);
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.show();
+            }
+//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

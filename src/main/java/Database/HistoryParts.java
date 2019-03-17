@@ -16,7 +16,7 @@ public class HistoryParts {
     private static final String dbname = "student_check_in";
     private static Connection connection;
 
-    private static final String HISTORY_QUERY = "SELECT studentName, partName, serialNumber, " +
+    private static final String HISTORY_QUERY = "SELECT studentName, email, partName, serialNumber, " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
             "THEN 'In' ELSE 'Out' END AS 'Status', " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
@@ -31,7 +31,7 @@ public class HistoryParts {
             "THEN checkout.checkinAt ELSE checkout.checkoutAt END DESC;";
 
     private Statement statement;
-    private String studentName, partName, serialNumber, status, date;
+    private String studentName, studentEmail, partName, serialNumber, status, date;
 
     public ObservableList<HistoryItems> data = FXCollections.observableArrayList();
 
@@ -51,7 +51,7 @@ public class HistoryParts {
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                HistoryItems historyItems = new HistoryItems(studentName, partName, serialNumber, status, date);
+                HistoryItems historyItems = new HistoryItems(studentName, studentEmail, partName, serialNumber, status, date);
                 data.add(historyItems);
             }
         } catch (SQLException e) {
@@ -67,6 +67,7 @@ public class HistoryParts {
     private void setVariables(ResultSet resultSet){
         try {
             studentName = resultSet.getString("studentName");
+            studentEmail = resultSet.getString("email");
             partName = resultSet.getString("partName");
             serialNumber = resultSet.getString("serialNumber");
             status = resultSet.getString("status");

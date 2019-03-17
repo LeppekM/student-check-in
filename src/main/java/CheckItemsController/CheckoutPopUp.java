@@ -21,7 +21,7 @@ import java.util.Date;
 public class CheckoutPopUp extends StudentPage {
 
     @FXML
-    private JFXTextField student, part, barcode, coDate, dueDate;
+    private JFXTextField studentName, part, barcode, coDate, dueDate;
 
     @FXML
     private Label cID;
@@ -32,7 +32,7 @@ public class CheckoutPopUp extends StudentPage {
     private Database database;
 
     public void populate(CheckedOutItems checked){
-        student.setText(checked.getStudentName().get());
+        studentName.setText(checked.getStudentName().get());
         part.setText(checked.getPartName().get());
         barcode.setText(checked.getBarcode().get() + "");
         coDate.setText(checked.getCheckedOutAt().get());
@@ -73,7 +73,7 @@ public class CheckoutPopUp extends StudentPage {
                     JOptionPane.showMessageDialog(null, "Please enter a valid course code.");
                 }
             }
-            s.getSavedItems().add(new SavedPart(student.getText(), part.getText(), coDate.getText(), Integer.parseInt(barcode.getText()),
+            s.getSavedItems().add(new SavedPart(studentName.getText(), part.getText(), coDate.getText(), Integer.parseInt(barcode.getText()),
                     sdf.format(new Date(System.currentTimeMillis())), dueDate.getText(), cID.getText(), returnDate, course));
             try {
                 Connection connection = database.getConnection();

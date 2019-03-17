@@ -1,26 +1,34 @@
 package Database;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class HistoryItems {
 
-    private final SimpleStringProperty student, partName, serialNumber, status, date;
+    private final SimpleStringProperty studentName, studentEmail, partName, serialNumber, status, date;
 
-    public HistoryItems(String student, String partName, String serialNumber, String status, String date) {
-        this.student = new SimpleStringProperty(student);
+    public HistoryItems(String studentName, String studentEmail, String partName, String serialNumber, String status, String date) {
+        this.studentName = new SimpleStringProperty(studentName);
+        this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.status = new SimpleStringProperty(status);
         this.date = new SimpleStringProperty(date);
     }
 
-    public String getStudent() {
-        return student.get();
+    public String getStudentName() {
+        return studentName.get();
     }
 
-    public void setStudent(String student) {
-        this.student.set(student);
+    public void setStudentName(String studentName) {
+        this.studentName.set(studentName);
+    }
+
+    public String getStudentEmail() {
+        return studentEmail.get();
+    }
+
+    public void setStudentEmail(String studentEmail) {
+        this.studentEmail.set(studentEmail);
     }
 
     public String getPartName() {

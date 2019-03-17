@@ -1,4 +1,5 @@
 package InventoryControllerTestFX;
+import Database.Objects.Part;
 import InventoryController.ControllerShowPart;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
