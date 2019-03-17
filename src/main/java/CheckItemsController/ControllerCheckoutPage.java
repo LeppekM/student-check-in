@@ -57,7 +57,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
     private Spinner<Integer> newQuantity, newQuantity2, newQuantity3, newQuantity4, newQuantity5;
 
     @FXML
-    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel, studentEmailLabel, scanBarcode;
+    private Label itemStatus, studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel, studentEmailLabel, scanBarcode, statusLabel,
+    statusLabel2, statusLabel3, statusLabel4, statusLabel5;
+
 
     @FXML
     private TextArea faultyTextArea;
@@ -98,6 +100,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
 
         quantity.setDisable(true);
         barcode.setOnKeyReleased(event -> {
+            statusLabel.setVisible(true);
+            if(itemIsBeingCheckedIn(getBarcode())){
+                statusLabel.setText("In");
+            }else{
+                statusLabel.setText("Out");
+            }
             if (containsNumber(barcode.getText())) {
                 partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
                 if (database.hasUniqueBarcodes(partNameFromBarcode)) {
@@ -126,11 +134,47 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
             }
         });
         //setItemStatus();
+        setLabelStatuses();
         getStudentName();
         unlockFields();
         unlockExtended();
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
+    }
+
+    private void setLabelStatuses(){
+        barcode2.setOnKeyReleased(event->{
+            if (itemIsBeingCheckedIn(getBarcode2())){
+                statusLabel2.setText("In");
+            }else{
+                statusLabel2.setText("Out");
+            }
+        });
+
+        barcode3.setOnKeyReleased(event->{
+            if (itemIsBeingCheckedIn(getBarcode2())){
+                statusLabel3.setText("In");
+            }else{
+                statusLabel3.setText("Out");
+            }
+        });
+
+        barcode4.setOnKeyReleased(event->{
+            if (itemIsBeingCheckedIn(getBarcode2())){
+                statusLabel4.setText("In");
+            }else{
+                statusLabel4.setText("Out");
+            }
+        });
+
+        barcode5.setOnKeyReleased(event->{
+            if (itemIsBeingCheckedIn(getBarcode2())){
+                statusLabel5.setText("In");
+            }else{
+                statusLabel5.setText("Out");
+            }
+        });
+
     }
 
     /**
@@ -571,7 +615,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @return barcode as integer
      */
     private int getBarcode2() {
-        return Integer.parseInt(barcode2.getText());
+        if(!barcode2.getText().isEmpty()) {
+            return Integer.parseInt(barcode2.getText());
+        }
+        return 0;
     }
 
     /**
@@ -580,7 +627,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @return barcode as integer
      */
     private int getBarcode3() {
-        return Integer.parseInt(barcode3.getText());
+        if(!barcode3.getText().isEmpty()) {
+            return Integer.parseInt(barcode3.getText());
+        }
+        return 0;
     }
 
     /**
@@ -589,7 +639,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @return barcode as integer
      */
     private int getBarcode4() {
-        return Integer.parseInt(barcode4.getText());
+        if(!barcode4.getText().isEmpty()) {
+            return Integer.parseInt(barcode4.getText());
+        }
+        return 0;
     }
 
     /**
@@ -598,7 +651,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements Initializa
      * @return barcode as integer
      */
     private int getBarcode5() {
-        return Integer.parseInt(barcode5.getText());
+        if(!barcode5.getText().isEmpty()) {
+            return Integer.parseInt(barcode5.getText());
+        }
+        return 0;
     }
 
     /**

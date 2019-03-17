@@ -66,26 +66,31 @@
       <HBox fx:id="HBoxBarcode" layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0">
          <children>
             <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" visible="false" />
+            <Label fx:id="statusLabel" text="In" translateX="8.0" translateY="10.0" visible="false" />
          </children>
       </HBox>
       <HBox fx:id="HBoxBarcode2" layoutX="480.0" layoutY="227.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <Spinner fx:id="newQuantity2" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+            <Label fx:id="statusLabel2" text="In" translateX="8.0" translateY="10.0" />
          </children>
       </HBox>
       <HBox fx:id="HBoxBarcode3" layoutX="480.0" layoutY="287.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <Spinner fx:id="newQuantity3" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+            <Label fx:id="statusLabel3" text="In" translateX="8.0" translateY="10.0" />
          </children>
       </HBox>
       <HBox fx:id="HBoxBarcode4" layoutX="480.0" layoutY="348.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <Spinner fx:id="newQuantity4" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+            <Label fx:id="statusLabel4" text="In" translateX="8.0" translateY="10.0" />
          </children>
       </HBox>
       <HBox fx:id="HBoxBarcode5" layoutX="480.0" layoutY="409.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
             <Spinner fx:id="newQuantity5" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+            <Label fx:id="statusLabel5" text="In" translateX="8.0" translateY="10.0" />
          </children>
       </HBox>
       <Label fx:id="studentEmailLabel" layoutX="254.0" layoutY="174.0" text="Student Email" visible="false" />
