@@ -1,12 +1,13 @@
 import Database.Database;
 import Database.Objects.Worker;
 import InventoryController.ControllerMenu;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -26,7 +27,10 @@ public class ControllerLogin implements Initializable {
     private ImageView msoeBackgroundImage;
 
     @FXML
-    private TextField emailInputLoginPage, pinInputLoginPage;
+    private JFXTextField emailInputLoginPage;
+
+    @FXML
+    private JFXPasswordField passwordInputLoginPage;
 
     @FXML
     private Label invalidLoginCredentialsError;
@@ -38,7 +42,7 @@ public class ControllerLogin implements Initializable {
         database = new Database();
         Image image = new Image("images/msoeBackgroundImage.png");
         this.msoeBackgroundImage.setImage(image);
-        pinInputLoginPage.setOnKeyReleased(event -> {
+        passwordInputLoginPage.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 login();
             }
@@ -49,7 +53,7 @@ public class ControllerLogin implements Initializable {
         try {
             Worker worker = findWorker(emailInputLoginPage.getText());
             if (worker != null) {
-                if (worker.getPass().equals(pinInputLoginPage.getText())) {
+                if (worker.getPass().equals(passwordInputLoginPage.getText())) {
                     FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/Menu.fxml"));
                     Pane mainMenuPane = loader.load();
                     ControllerMenu controller = loader.getController();
@@ -66,7 +70,6 @@ public class ControllerLogin implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
             invoke.printStackTrace();
-
         }
     }
 

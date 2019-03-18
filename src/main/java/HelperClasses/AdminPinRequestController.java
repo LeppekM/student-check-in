@@ -1,13 +1,13 @@
 package HelperClasses;
 
 import Database.Database;
-import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXPasswordField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 
@@ -23,10 +23,7 @@ public class AdminPinRequestController implements Initializable {
     private Label adminPinRequestTitle;
 
     @FXML
-    private JFXTextField adminPinInputAdminPinRequest;
-
-    @FXML
-    private JFXButton adminPinRequestSubmitButton;
+    private JFXPasswordField adminPinInputAdminPinRequest;
 
     StageWrapper stageWrapper;
 
@@ -34,6 +31,11 @@ public class AdminPinRequestController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         stageWrapper = new StageWrapper();
         stageWrapper.acceptIntegerOnly(adminPinInputAdminPinRequest);
+        adminPinInputAdminPinRequest.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                submit();
+            }
+        });
     }
 
     public void setAction(String action) {
@@ -48,7 +50,7 @@ public class AdminPinRequestController implements Initializable {
 
     public boolean isValid() {
         Database database = new Database();
-        return database.validateAdminPin(adminPinInputAdminPinRequest.getText());
+        return database.isValidPin(Integer.parseInt(adminPinInputAdminPinRequest.getText()));
     }
 
 }

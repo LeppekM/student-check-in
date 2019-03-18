@@ -2,6 +2,8 @@ package ManagePeople;
 
 import Database.Database;
 import Database.Objects.Student;
+import Database.Objects.Worker;
+import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -34,11 +36,13 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ControllerManageStudents implements Initializable {
+public class ControllerManageStudents implements IController, Initializable {
 
     private ObservableList<ManageStudentsTabTableRow> tableRows;
 
     Database database;
+
+    Worker worker;
 
     @FXML
     private AnchorPane manageStudentsScene;
@@ -66,6 +70,8 @@ public class ControllerManageStudents implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.worker = null;
+
         Label emptyTableLabel = new Label("No students found.");
         emptyTableLabel.setFont(new Font(18));
         manageStudentsTable.setPlaceholder(emptyTableLabel);
@@ -265,18 +271,20 @@ public class ControllerManageStudents implements Initializable {
 
     /**
      *Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
-     * @author Matthew Karcz
      */
     @FXML
     public void goBack(){
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
+            Parent root = loader.load();
+            IController controller = loader.<IController>getController();
+            controller.initWorker(worker);
+            manageStudentsScene.getScene().setRoot(root);
+            ((IController) loader.getController()).initWorker(worker);
             manageStudentsScene.getChildren().clear();
-            manageStudentsScene.getScene().setRoot(loader.load(myFxmlURL));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            StudentCheckIn.logger.error("No valid stage was found to load.");
+            StudentCheckIn.logger.error("IOException: No valid stage was found to load");
             alert.showAndWait();
         }
     }
@@ -321,6 +329,13 @@ public class ControllerManageStudents implements Initializable {
                 alert.showAndWait();
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
         }
     }
 }

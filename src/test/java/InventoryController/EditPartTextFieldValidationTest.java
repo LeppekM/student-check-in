@@ -44,29 +44,21 @@ public class EditPartTextFieldValidationTest {
         boolean correctValue = false;
 
         //Act
-        boolean testPartNameEmpty = controllerEditOnePart.validateAllFieldsFilledIn("", "test", "test",
-                "test", "test", "test", "test");
+        boolean testPartNameEmpty = controllerEditOnePart.validateAllFieldsFilledIn("", "test", "test");
 
-        boolean testSerialNumberEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "", "test",
-                "test", "test", "test", "test");
+        boolean testSerialNumberEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "", "test");
 
-        boolean testManufacturerEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "", "",
-                "test", "test", "test", "test");
+        boolean testManufacturerEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "", "");
 
-        boolean testPriceEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test",
-                "", "test", "test", "test");
+        boolean testPriceEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test");
 
-        boolean testLocationEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test",
-                "test", "", "test", "test");
+        boolean testLocationEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test");
 
-        boolean testBarcodeEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test",
-                "test", "test", "", "test");
+        boolean testBarcodeEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test");
 
-        boolean testQuantityEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test",
-                "test", "test", "test", "");
+        boolean testQuantityEmpty = controllerEditOnePart.validateAllFieldsFilledIn("test", "test", "test");
 
-        boolean testAllEmpty = controllerEditOnePart.validateAllFieldsFilledIn("", "", "", "", "", "",
-                "");
+        boolean testAllEmpty = controllerEditOnePart.validateAllFieldsFilledIn("", "", "");
 
         //Assert
         assertEquals(correctValue, testPartNameEmpty);
@@ -98,15 +90,11 @@ public class EditPartTextFieldValidationTest {
         String invalidQuantityTestInput3 = "-1";
 
         //Act
-        boolean invalidPrice1Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput1,
-                nominalValidQuantityTestInput);
-        boolean invalidPrice2Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput2,
-                nominalValidQuantityTestInput);
-        boolean invalidPrice3Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput2,
-                nominalValidQuantityTestInput);
+        boolean invalidPrice1Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput1);
+        boolean invalidPrice2Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput2);
+        boolean invalidPrice3Test = controllerEditOnePart.validateNumberInputsWithinRange(invalidPriceTestInput2);
 
-        boolean nominalValidInputTest = controllerEditOnePart.validateNumberInputsWithinRange(nominalValidPriceTestInput,
-                nominalValidQuantityTestInput);
+        boolean nominalValidInputTest = controllerEditOnePart.validateNumberInputsWithinRange(nominalValidPriceTestInput);
 
 
         //Assert

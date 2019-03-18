@@ -128,9 +128,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editOneButton.setGraphic(editOneImageView);
                                 editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOneButton.setOnAction(event -> {
-                                    if (worker != null && worker.isAdmin()) {
-                                        editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
-                                    } else if (requestAdminPin("edit a part")) {
+                                    if (worker != null && worker.isAdmin()
+                                        || requestAdminPin("edit a part")) {
                                         editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                     }
                                 });
@@ -143,6 +142,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editAllButton.setGraphic(editAllImageView);
                                 editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editAllButton.setOnAction(event -> {
+                                    if ((worker != null && worker.isAdmin())
+                                        || requestAdminPin("edit parts")) {
+                                        editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                    }
                                     editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
                                 });
                                 Tooltip editAllTip = new Tooltip("Edit all parts named: " + partName.getText());
@@ -155,10 +158,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setGraphic(deleteOneImageView);
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteOneButton.setOnAction(event -> {
-                                    if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
-                                        deletePart(getTreeTableRow().getItem().getPartID().getValue());
-                                    } else {
-                                        deleteCheckedOutPartAlert();
+                                    if ((worker != null && worker.isAdmin())
+                                            || requestAdminPin("Delete a Part")) {
+                                        if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
+                                            deletePart(getTreeTableRow().getItem().getPartID().getValue());
+                                        } else {
+                                            deleteCheckedOutPartAlert();
+                                        }
                                     }
                                 });
                                 Tooltip deleteOneTip = new Tooltip("Delete this part");
@@ -171,17 +177,20 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllButton.setGraphic(deleteAllImageView);
                                 deleteAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteAllButton.setOnAction(event -> {
-                                    boolean typeHasOneCheckedOut = false;
-                                    ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
-                                    for (String id : partIDs) {
-                                        if (database.getIsCheckedOut(id)) {
-                                            typeHasOneCheckedOut = true;
+                                    if ((worker != null && worker.isAdmin())
+                                            || requestAdminPin("edit parts")) {
+                                        boolean typeHasOneCheckedOut = false;
+                                        ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
+                                        for (String id : partIDs) {
+                                            if (database.getIsCheckedOut(id)) {
+                                                typeHasOneCheckedOut = true;
+                                            }
                                         }
-                                    }
-                                    if (!typeHasOneCheckedOut) {
-                                        deletePartType(getTreeTableRow().getItem().getPartName().getValue());
-                                    } else {
-                                        typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
+                                        if (!typeHasOneCheckedOut) {
+                                            deletePartType(getTreeTableRow().getItem().getPartName().getValue());
+                                        } else {
+                                            typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
+                                        }
                                     }
                                 });
                                 Tooltip deleteAllTip = new Tooltip("Delete all parts named: " + partName.getText());
@@ -324,6 +333,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         populateTable();
     }
 
+    @Override
     public void initWorker(Worker worker) {
         if (this.worker == null) {
             this.worker = worker;

@@ -1,9 +1,6 @@
 package HelperClasses;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -103,6 +100,18 @@ public class StageWrapper {
         };
         TextFormatter<String> textFormatter = new TextFormatter<>(filter);
         textField.setTextFormatter(textFormatter);
+    }
+
+    public void acceptIntegerOnly(JFXPasswordField passwordField) {
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if (text.matches("[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+        passwordField.setTextFormatter(textFormatter);
     }
 
     public void errorAlert(String errorText){

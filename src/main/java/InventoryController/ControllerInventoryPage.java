@@ -29,7 +29,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
-public class ControllerInventoryPage extends ControllerMenu implements Initializable {
+public class ControllerInventoryPage extends ControllerMenu implements IController, Initializable {
 
     @FXML
     private AnchorPane inventoryScene;
@@ -176,6 +176,13 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
         }
     }
 
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
+        }
+    }
+
     /**
      *Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
      * @author Matthew Karcz
@@ -183,10 +190,13 @@ public class ControllerInventoryPage extends ControllerMenu implements Initializ
     @FXML
     public void goBack(){
         try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
+            Parent root = loader.load();
+            IController controller = loader.<IController>getController();
+            controller.initWorker(worker);
+            inventoryScene.getScene().setRoot(root);
+            ((IController) loader.getController()).initWorker(worker);
             inventoryScene.getChildren().clear();
-            inventoryScene.getScene().setRoot(loader.load(myFxmlURL));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             StudentCheckIn.logger.error("IOException: No valid stage was found to load");

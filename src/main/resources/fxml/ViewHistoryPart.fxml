@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox id="root" fx:id="sceneViewHistoryPart" prefHeight="450.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerViewHistoryPart">
+    <children>
+        <GridPane prefHeight="450.0" prefWidth="410.0">
+            <children>
+                <Label text="Student Name:">
+                    <font>
+                        <Font size="18.0" fx:id="x1" />
+                    </font>
+                </Label>
+                <Label id="nameLabel" font="$x1" layoutX="45.0" layoutY="55.0" text="Student Email:" GridPane.rowIndex="1" />
+                <Label id="nameLabel" font="$x1" layoutX="52.0" layoutY="148.0" text="Part Name:" GridPane.rowIndex="2" />
+                <Label id="nameLabel" font="$x1" layoutX="90.0" layoutY="192.0" text="Serial Number:" GridPane.rowIndex="3" />
+                <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="235.0" text="Action:" GridPane.rowIndex="4" />
+                <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="323.0" text="Date:" GridPane.rowIndex="5" />
+                <JFXTextField fx:id="studentNameField" editable="false" layoutX="193.0" layoutY="15.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <JFXTextField fx:id="studentEmailField" editable="false" layoutX="193.0" layoutY="56.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <JFXTextField fx:id="partNameField" editable="false" layoutX="193.0" layoutY="104.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <JFXTextField fx:id="serialNumberField" editable="false" layoutX="193.0" layoutY="149.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <JFXTextField fx:id="actionField" editable="false" layoutX="193.0" layoutY="193.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <JFXTextField fx:id="dateField" editable="false" layoutX="193.0" layoutY="235.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            </children>
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" />
+                <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+            </rowConstraints>
+        </GridPane>
+        <JFXButton onAction="#goBack" style="-fx-border-color: #DC143C;" text="Done" />
+    </children>
+</VBox>
