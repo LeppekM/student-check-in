@@ -47,7 +47,7 @@ public class CheckingOutPart {
      * @param barcode
      * @param studentID
      */
-    public void addNewCheckoutItem(int barcode, int studentID){
+    public void addNewCheckoutItem(long barcode, int studentID){
         if(barcodeExists(barcode)) {
             try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
                 PreparedStatement statement = connection.prepareStatement(addToCheckouts);
@@ -70,12 +70,12 @@ public class CheckingOutPart {
      * @param preparedStatement Statement to be executed
      * @return
      */
-    private PreparedStatement addNewCheckoutHelper(int barcode, int studentID, PreparedStatement preparedStatement){
+    private PreparedStatement addNewCheckoutHelper(long barcode, int studentID, PreparedStatement preparedStatement){
         int partID = getPartIDFromBarcode(barcode, getPartIDtoAdd);
         try {
             preparedStatement.setInt(1, partID);
             preparedStatement.setInt(2, studentID);
-            preparedStatement.setInt(3, barcode);
+            preparedStatement.setLong(3, barcode);
             preparedStatement.setString(4, helper.getCurrentDateTimeStamp());
             preparedStatement.setString(5, helper.setDueDate());
         }catch (SQLException e){
@@ -91,12 +91,12 @@ public class CheckingOutPart {
      * @param barcode barcode of part
      * @return Part ID to return
      */
-    int getPartIDFromBarcode(int barcode, String status){
+    int getPartIDFromBarcode(long barcode, String status){
         int partID = 0;
 
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(status);
-            statement.setInt(1, barcode);
+            statement.setLong(1, barcode);
             ResultSet rs = statement.executeQuery();
             if(rs.next()){
                 partID = rs.getInt("partID");
@@ -109,14 +109,14 @@ public class CheckingOutPart {
         return partID;
     }
 
-    private boolean barcodeExists(int barcode){
-        List<Integer> barcodes = new LinkedList<>();
+    private boolean barcodeExists(long barcode){
+        List<Long> barcodes = new LinkedList<>();
         final String getAllBarcodes = "select barcode from parts";
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(getAllBarcodes);
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
-                barcodes.add(rs.getInt("barcode"));
+                barcodes.add(rs.getLong("barcode"));
             }
             statement.close();
         } catch (SQLException e) {
@@ -154,7 +154,7 @@ public class CheckingOutPart {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(getCheckedOutItems);
             while(resultSet.next()){
-                checkedOutItems.add(new CheckedOutPartsObject(resultSet.getInt("barcode"), resultSet.getInt("studentID")));
+                checkedOutItems.add(new CheckedOutPartsObject(resultSet.getLong("barcode"), resultSet.getInt("studentID")));
             }
         } catch (SQLException e) {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
@@ -189,7 +189,7 @@ public class CheckingOutPart {
      * Method to return an item to checked in status
      * @param barcode Barcode of item
      */
-    public void setItemtoCheckedin(int barcode){
+    public void setItemtoCheckedin(long barcode){
         int partID = getPartIDFromBarcode(barcode, getPartIDtoCheckin);
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(setDate);

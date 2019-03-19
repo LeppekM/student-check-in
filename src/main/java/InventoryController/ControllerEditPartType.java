@@ -120,7 +120,7 @@ public class ControllerEditPartType extends ControllerEditPart {
             }
             vendorField.setText(vendorInformation.getVendorFromID(part.getVendor()));
             locationField.setText(part.getLocation());
-            barcodeField.setText(part.getBarcode());
+            barcodeField.setText(part.getBarcode().toString());
         }
     }
 
@@ -132,7 +132,7 @@ public class ControllerEditPartType extends ControllerEditPart {
         if (validateInput()) {
             loader.setVisible(true);
             String originalPartName = part.getPartName();
-            String originalBarcode = part.getBarcode();
+            long originalBarcode = part.getBarcode();
             Part inputPart = updatePartFromInput();
             if (!database.hasUniqueBarcodes(originalPartName)) {
                 if (!barcodeField.getText().equals(originalBarcode)) {
@@ -178,9 +178,9 @@ public class ControllerEditPartType extends ControllerEditPart {
         if (locationField.getText() != null) {
             location = locationField.getText().trim();
         }
-        String barcode = "";
+        long barcode = 0;
         if (barcodeField.getText() != null) {
-            barcode = barcodeField.getText().trim();
+            barcode = Long.parseLong(barcodeField.getText().trim());
         }
         part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode);
         return part;

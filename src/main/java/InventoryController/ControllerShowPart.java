@@ -93,7 +93,7 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             this.priceField.setText("$" + df.format(part.getPrice()/100));
             //this.vendorList.setText(vendorInformation.getVendorFromID(part.getVendor()));
             this.locationField.setText(part.getLocation());
-            this.barcodeField.setText(part.getBarcode());
+            this.barcodeField.setText(part.getBarcode().toString());
         }
         determineVisibility(type);
     }

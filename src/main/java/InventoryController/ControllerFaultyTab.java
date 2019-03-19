@@ -161,7 +161,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         for (int i = 0; i < data.size(); i++) {
             tableRows.add(new FaultyTabTableRow(data.get(i).getPartName(),
                     data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                    data.get(i).getBarcode(), data.get(i).getFaultDesc(), data.get(i).getPartID()));
+                    data.get(i).getBarcode().toString(), data.get(i).getFaultDesc(), data.get(i).getPartID()));
         }
 
         root = new RecursiveTreeItem<FaultyTabTableRow>(

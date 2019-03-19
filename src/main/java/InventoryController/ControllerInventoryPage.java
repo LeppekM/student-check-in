@@ -124,7 +124,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
                 String vendor = rs.getString("vendorID");
                 String manufacturer = rs.getString("manufacturer");
                 String location = rs.getString("location");
-                String barcode = rs.getString("barcode");
+                long barcode = rs.getLong("barcode");
                 boolean fault = (rs.getInt("isFaulty") == 1) ? true : false;
                 int partID = rs.getInt("partID");
                 int isDeleted = rs.getInt("isDeleted");

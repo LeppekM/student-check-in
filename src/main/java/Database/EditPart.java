@@ -55,7 +55,7 @@ public class EditPart {
     private PreparedStatement editQuery(Part part, PreparedStatement preparedStatement){
         try {
             preparedStatement.setString(1, part.getSerialNumber());
-            preparedStatement.setString(2, part.getBarcode());
+            preparedStatement.setLong(2, part.getBarcode());
             preparedStatement.setDouble(3, part.getPrice());
             preparedStatement.setString(4, part.getLocation());
             preparedStatement.setString(5, getCurrentDate());
@@ -96,7 +96,7 @@ public class EditPart {
             preparedStatement.setString(1, part.getPartName());
             preparedStatement.setDouble(2, part.getPrice());
             preparedStatement.setString(3, part.getLocation());
-            preparedStatement.setString(4, part.getBarcode());
+            preparedStatement.setLong(4, part.getBarcode());
             preparedStatement.setString(5, getCurrentDate());
             preparedStatement.setString(6, originalPartName);
         }catch (SQLException e){
