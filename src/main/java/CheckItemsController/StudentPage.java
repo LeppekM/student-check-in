@@ -2,9 +2,11 @@ package CheckItemsController;
 
 import Database.Objects.SavedPart;
 import Database.Objects.Student;
+import Database.Objects.Worker;
 import Database.OverdueItem;
 import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
+import InventoryController.IController;
 import InventoryController.OverduePopUpController;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
@@ -31,7 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.IntStream;
 
-public class StudentPage {
+public class StudentPage implements IController {
 
     @FXML
     private Pane main = new Pane();
@@ -59,6 +61,8 @@ public class StudentPage {
 
     @FXML
     private JFXTreeTableColumn<SavedPart, String> sTableCol;
+
+    private Worker worker;
 
     private static Student student;
     private CheckoutObject checkoutObject;
@@ -176,6 +180,7 @@ public class StudentPage {
             Parent root = loader.load();
             main.getScene().setRoot(root);
             ((ControllerCheckoutPage) loader.getController()).initCheckoutObject(checkoutObject);
+            ((ControllerCheckoutPage) loader.getController()).initWorker(worker);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -253,6 +258,13 @@ public class StudentPage {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
         }
     }
 
