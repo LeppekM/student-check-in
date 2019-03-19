@@ -493,7 +493,7 @@ public class Database {
                 pin = resultSet.getInt("pin");
                 admin = resultSet.getByte("isAdmin") == 1;
                 parts = resultSet.getByte("parts") == 1;
-                over = resultSet.getByte("over") == 1;
+                over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;
                 students = resultSet.getByte("students") == 1;
                 workerList.add(new Worker(name, ID, email, pass, pin, admin, parts, workers, students, over));
@@ -529,7 +529,7 @@ public class Database {
                 password = resultSet.getString("pass");
                 isAdmin = resultSet.getByte("isAdmin") == 1;
                 parts = resultSet.getByte("parts") == 1;
-                over = resultSet.getByte("over") == 1;
+                over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;
                 students = resultSet.getByte("students") == 1;
                 pin = resultSet.getInt("pin");
