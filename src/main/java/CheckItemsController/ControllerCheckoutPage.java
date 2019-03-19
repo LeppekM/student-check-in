@@ -4,6 +4,7 @@ import Database.*;
 import Database.Objects.CheckedOutPartsObject;
 import Database.Objects.Student;
 
+import Database.Objects.Worker;
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
@@ -188,7 +189,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             }
         });
 
->>>>>>> checkoutTest
+
     }
 
     /**
