@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ControllerCheckoutPage extends ControllerMenu implements IController, Initializable {
     @FXML
@@ -315,7 +316,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     private void submitMultipleItems() {
         Student thisStudent = database.selectStudent(getstudentID());
-        List<Integer> barcodes = new ArrayList<>();
+        List<Long> barcodes = new ArrayList<>();
         if (barcodeIsNotEmpty(barcode)) {
             barcodes.add(getBarcode());
         }
@@ -332,12 +333,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             barcodes.add(getBarcode5());
         }
 
-        for (int i = 0; i < barcodes.size(); i++) {
-            if (itemIsBeingCheckedIn(barcodes.get(i))) {
-                checkOut.setItemtoCheckedin(barcodes.get(i));
+        List<Long> stripped = barcodes.stream().distinct().collect(Collectors.toList());
+
+        for (int i = 0; i < stripped.size(); i++) {
+            if (itemIsBeingCheckedIn(stripped.get(i))) {
+                checkOut.setItemtoCheckedin(stripped.get(i));
             } else {
                 if(thisStudent.getOverdueItems().size()==0){
-                    checkOut.addNewCheckoutItem(barcodes.get(i), getstudentID());
+                    checkOut.addNewCheckoutItem(stripped.get(i), getstudentID());
                 }
                 else {
                     stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
@@ -374,7 +377,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      *
      * @return True if item is being checked in
      */
-    private boolean itemIsBeingCheckedIn(int barcode) {
+    private boolean itemIsBeingCheckedIn(long barcode) {
         checkoutParts = checkOut.returnCheckedOutObjects();
         int studentID = getstudentID();
 
@@ -395,7 +398,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      *
      * @return True if item is extended
      */
-    private boolean extendedCheckoutIsSelected(int barcode) {
+    private boolean extendedCheckoutIsSelected(long barcode) {
         return !itemIsBeingCheckedIn(barcode) && extended.isSelected();
     }
 
@@ -404,7 +407,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      *
      * @return True if item is faulty
      */
-    private boolean itemBeingCheckedBackInIsFaulty(int barcode) {
+    private boolean itemBeingCheckedBackInIsFaulty(long barcode) {
         return itemIsBeingCheckedIn(barcode) && faulty.isSelected();
     }
 
@@ -634,9 +637,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      *
      * @return barcode as integer
      */
-    private int getBarcode() {
+    private long getBarcode() {
         if(!barcode.getText().isEmpty()) {
-            return Integer.parseInt(barcode.getText());
+            return Long.parseLong(barcode.getText());
         }
         return 0;
     }
@@ -645,9 +648,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Gets barcode as text, returns as int
      * @return barcode as integer
      */
-    private int getBarcode2() {
+    private long getBarcode2() {
         if(!barcode2.getText().isEmpty()) {
-            return Integer.parseInt(barcode2.getText());
+            return Long.parseLong(barcode2.getText());
         }
         return 0;
     }
@@ -657,9 +660,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      *
      * @return barcode as integer
      */
-    private int getBarcode3() {
+    private long getBarcode3() {
         if(!barcode3.getText().isEmpty()) {
-            return Integer.parseInt(barcode3.getText());
+            return Long.parseLong(barcode3.getText());
         }
         return 0;
     }
@@ -669,9 +672,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      *
      * @return barcode as integer
      */
-    private int getBarcode4() {
+    private long getBarcode4() {
         if(!barcode4.getText().isEmpty()) {
-            return Integer.parseInt(barcode4.getText());
+            return Long.parseLong(barcode4.getText());
         }
         return 0;
     }
@@ -681,9 +684,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      *
      * @return barcode as integer
      */
-    private int getBarcode5() {
+    private long getBarcode5() {
         if(!barcode5.getText().isEmpty()) {
-            return Integer.parseInt(barcode5.getText());
+            return Long.parseLong(barcode5.getText());
         }
         return 0;
     }

@@ -6,7 +6,8 @@ import javafx.beans.property.*;
 
 public class Part {
 
-    private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, barcode, faultDesc;
+    private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, faultDesc;
+    private final SimpleLongProperty barcode;
     private final SimpleDoubleProperty price;
     private final SimpleIntegerProperty partID, quantity, isDeleted;
     private final SimpleBooleanProperty fault, checkedOut = new SimpleBooleanProperty(false);
@@ -14,14 +15,14 @@ public class Part {
 
 
     //TODO Combine all these constructors I mean my god why do we have three that do the same thing
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, boolean fault, int partID, int isDeleted){
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, boolean fault, int partID, int isDeleted){
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
         this.price = new SimpleDoubleProperty(price);
         this.vendor = new SimpleStringProperty(vendor);
         this.location = new SimpleStringProperty(location);
-        this.barcode = new SimpleStringProperty(barcode);
+        this.barcode = new SimpleLongProperty(barcode);
         this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
         this.quantity = new SimpleIntegerProperty(0);
@@ -29,14 +30,14 @@ public class Part {
         this.faultDesc = new SimpleStringProperty("");
     }
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode, int quantity, int isDeleted){
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, int quantity, int isDeleted){
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
         this.price = new SimpleDoubleProperty(price);
         this.vendor = new SimpleStringProperty(vendor);
         this.location = new SimpleStringProperty(location);
-        this.barcode = new SimpleStringProperty(barcode);
+        this.barcode = new SimpleLongProperty(barcode);
         this.quantity = new SimpleIntegerProperty(quantity);
         //Returns the next part id
         this.partID = new SimpleIntegerProperty(addPart.getPartID());
@@ -87,10 +88,10 @@ public class Part {
         this.location.set(location);
     }
 
-    public String getBarcode() {
+    public Long getBarcode() {
         return barcode.get();
     }
-    public void setBarcode(String barcode) {
+    public void setBarcode(long barcode) {
         this.barcode.set(barcode);
     }
 
@@ -141,7 +142,7 @@ public class Part {
         this.faultDesc.set(faultDesc);
     }
 
-    public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, String barcode) {
+    public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode) {
         this.partName.set(partName);
         this.serialNumber.set(serialNumber);
         this.manufacturer.set(manufacturer);

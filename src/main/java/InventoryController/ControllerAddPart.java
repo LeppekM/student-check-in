@@ -142,7 +142,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                     barcodeAlreadyExistsError();
                 }
             } else {
-                if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
+                if (!duplicateBarcode(partName, Long.parseLong(barcodeField.getText()))) {
                     addPart.addUniqueItems(setPartFields(), database, quantity);
                     partAddedSuccess();
                     close();
@@ -154,7 +154,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         }
     }
 
-    public boolean duplicateBarcode(String partName, int barcode) {
+    public boolean duplicateBarcode(String partName, long barcode) {
         return database.getUniqueBarcodesBesidesPart(partName).contains("" + barcode);
     }
 
@@ -213,7 +213,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         String price = priceField.getText();
         String vendor = getVendorName();
         String location = locationField.getText();
-        String barcode = barcodeField.getText();
+        long barcode = Long.parseLong(barcodeField.getText());
         String quantity = quantityField.getText();
         int isDeleted = 0; //Part won't ever be deleted when adding
         //If the price or quantity isn't filled out, the invalid value -1 is passed instead.

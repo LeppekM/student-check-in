@@ -402,7 +402,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             for (int i = 0; i < data.size(); i++) {
                 tableRows.add(new TotalTabTableRow(data.get(i).getPartName(),
                         data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                        data.get(i).getBarcode(), data.get(i).getFault(),
+                        data.get(i).getBarcode().toString(), data.get(i).getFault(),
                         "" + data.get(i).getPartID()));
             }
 

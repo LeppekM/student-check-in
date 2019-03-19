@@ -101,7 +101,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
             }
             vendorField.setText(vendorInformation.getVendorFromID(part.getVendor()));
             locationField.setText(part.getLocation());
-            barcodeField.setText(part.getBarcode());
+            barcodeField.setText(part.getBarcode().toString());
         }
     }
 
@@ -149,9 +149,9 @@ public class ControllerEditOnePart extends ControllerEditPart {
         if (locationField.getText() != null) {
             location = locationField.getText().trim();
         }
-        String barcode = "";
+        long barcode = 0;
         if (barcodeField.getText() != null) {
-            barcode = barcodeField.getText().trim();
+            barcode = Long.parseLong(barcodeField.getText());
         }
         part.update(partName, serialNumber, manufacturer, price, vendor, location, barcode);
         return part;
@@ -164,7 +164,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
     private boolean validateInput() {
         boolean isValid = true;
         String originalPartName = part.getPartName();
-        String originalBarcode = part.getBarcode();
+        long originalBarcode = part.getBarcode();
         String originalSerialNumber = part.getSerialNumber();
 
         // make sure all fields are filled in

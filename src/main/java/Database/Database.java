@@ -188,7 +188,7 @@ public class Database {
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getString("barcode"), resultSet.getBoolean("isFaulty"),
+                        resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getBoolean("isFaulty"),
                         resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
             }
             resultSet.close();
@@ -208,7 +208,7 @@ public class Database {
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getString("barcode"), false,
+                        resultSet.getString("location"), resultSet.getLong("barcode"), false,
                         resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
             }
             resultSet.close();
@@ -619,7 +619,7 @@ public class Database {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 checkedOutItems.add(new CheckedOutItems(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"), resultSet.getInt("parts.barcode"),
+                        resultSet.getString("parts.partName"), resultSet.getLong("parts.barcode"),
                         resultSet.getString("checkout.checkoutAt"), resultSet.getString("checkout.dueAt"),
                         resultSet.getInt("checkout.checkoutID"), resultSet.getInt("parts.partID")));
             }

@@ -28,7 +28,7 @@ public class ExtendedCheckOut {
      * @param barcode
      * @param studentID
      */
-    public void addExtendedCheckout(int barcode, int studentID,  String profName, String courseName, String dueDate){
+    public void addExtendedCheckout(long barcode, int studentID,  String profName, String courseName, String dueDate){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(extendedCheckout);
             addExtendedCheckoutHelper(barcode, studentID, profName, courseName, dueDate, statement).execute();
@@ -45,12 +45,12 @@ public class ExtendedCheckOut {
      * @param preparedStatement Statement to be executed
      * @return
      */
-    private PreparedStatement addExtendedCheckoutHelper(int barcode, int studentID, String profName, String courseName, String dueDate,PreparedStatement preparedStatement){
+    private PreparedStatement addExtendedCheckoutHelper(long barcode, int studentID, String profName, String courseName, String dueDate,PreparedStatement preparedStatement){
         int partID = checkHelper.getPartIDFromBarcode(barcode, getPartIDtoAdd);
         try {
             preparedStatement.setInt(1, partID);
             preparedStatement.setInt(2, studentID);
-            preparedStatement.setInt(3, barcode);
+            preparedStatement.setLong(3, barcode);
             preparedStatement.setString(4, helper.getCurrentDateTimeStamp());
             preparedStatement.setString(5, profName);
             preparedStatement.setString(6, courseName);

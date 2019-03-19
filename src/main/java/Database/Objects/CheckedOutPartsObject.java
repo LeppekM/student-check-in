@@ -4,17 +4,17 @@ public class CheckedOutPartsObject {
 
     private int checkoutID;
     private int partID;
-    private int barcode;
+    private long barcode;
     private int studentID;
 
-    public CheckedOutPartsObject(int checkoutID, int partID, int barcode, int studentID) {
+    public CheckedOutPartsObject(int checkoutID, int partID, long barcode, int studentID) {
         this.checkoutID = checkoutID;
         this.partID = partID;
         this.barcode = barcode;
         this.studentID = studentID;
     }
 
-    public CheckedOutPartsObject(int barcode, int studentID){
+    public CheckedOutPartsObject(long barcode, int studentID){
         this.barcode = barcode;
         this.studentID = studentID;
     }
@@ -35,11 +35,11 @@ public class CheckedOutPartsObject {
         this.partID = partID;
     }
 
-    public int getBarcode() {
+    public long getBarcode() {
         return barcode;
     }
 
-    public void setBarcode(int barcode) {
+    public void setBarcode(long barcode) {
         this.barcode = barcode;
     }
 
@@ -54,7 +54,7 @@ public class CheckedOutPartsObject {
     @Override
     public boolean equals(Object o){
         CheckedOutPartsObject c = (CheckedOutPartsObject) o;
-        return Integer.compare(barcode, c.barcode) == 0 && Integer.compare(studentID, c.studentID) == 0;
+        return Long.compare(barcode, c.barcode) == 0 && Long.compare(studentID, c.studentID) == 0;
 
     }
 }

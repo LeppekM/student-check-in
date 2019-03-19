@@ -26,7 +26,8 @@ public class CheckedOutParts {
             "WHERE checkout.checkinAt IS NULL";
 
     private Statement statement;
-    private int barcode, checkoutID, partID;
+    private int checkoutID, partID;
+    private long barcode;
     private String checkedOutAt;
     private String dueDate;
     private String partName;
@@ -65,7 +66,7 @@ public class CheckedOutParts {
         try {
             studentName = resultSet.getString("studentName");
             partName = resultSet.getString("partName");
-            barcode = resultSet.getInt("barcode");
+            barcode = resultSet.getLong("barcode");
             checkedOutAt = resultSet.getString("checkoutAt");
             dueDate = resultSet.getString("dueAt");
             checkoutID = resultSet.getInt("checkoutID");
