@@ -48,6 +48,7 @@ public class CheckingOutPart {
      * @param studentID
      */
     public void addNewCheckoutItem(long barcode, int studentID){
+        int partID = getPartIDFromBarcode(barcode, getPartIDtoCheckin);
         if(barcodeExists(barcode)) {
             try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
                 PreparedStatement statement = connection.prepareStatement(addToCheckouts);
@@ -56,6 +57,8 @@ public class CheckingOutPart {
             } catch (SQLException e) {
                 StudentCheckIn.logger.error("SQLException: Can't connect to the database when adding new checkout item.");
                 throw new IllegalStateException("Cannot connect to the database", e);
+            } catch (NullPointerException e){
+                stageWrapper.errorAlert("Part with barcode of "+ partID +" is already checked out");
             }
         }
         else {
@@ -72,6 +75,10 @@ public class CheckingOutPart {
      */
     private PreparedStatement addNewCheckoutHelper(long barcode, int studentID, PreparedStatement preparedStatement){
         int partID = getPartIDFromBarcode(barcode, getPartIDtoAdd);
+        System.out.println(partID);
+        if (partID == 0){
+            throw new  NullPointerException();
+        }
         try {
             preparedStatement.setInt(1, partID);
             preparedStatement.setInt(2, studentID);

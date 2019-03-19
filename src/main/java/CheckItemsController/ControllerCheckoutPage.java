@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ControllerCheckoutPage extends ControllerMenu implements IController, Initializable {
     @FXML
@@ -332,12 +333,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             barcodes.add(getBarcode5());
         }
 
-        for (int i = 0; i < barcodes.size(); i++) {
-            if (itemIsBeingCheckedIn(barcodes.get(i))) {
-                checkOut.setItemtoCheckedin(barcodes.get(i));
+        List<Long> stripped = barcodes.stream().distinct().collect(Collectors.toList());
+
+        for (int i = 0; i < stripped.size(); i++) {
+            if (itemIsBeingCheckedIn(stripped.get(i))) {
+                checkOut.setItemtoCheckedin(stripped.get(i));
             } else {
                 if(thisStudent.getOverdueItems().size()==0){
-                    checkOut.addNewCheckoutItem(barcodes.get(i), getstudentID());
+                    checkOut.addNewCheckoutItem(stripped.get(i), getstudentID());
                 }
                 else {
                     stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
