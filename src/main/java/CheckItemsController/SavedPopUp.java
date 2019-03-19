@@ -16,7 +16,7 @@ import java.sql.Statement;
 public class SavedPopUp extends StudentPage {
 
     @FXML
-    private JFXTextField studentName, part, quantity, coDate, dueDate, saved, returnDate, course;
+    private JFXTextField name, part, quantity, coDate, dueDate, saved, returnDate, course;
 
     @FXML
     private AnchorPane main;
@@ -24,7 +24,7 @@ public class SavedPopUp extends StudentPage {
     private Database database;
 
     public void populate(SavedPart part){
-        studentName.setText(part.getStudentName().get());
+        name.setText(part.getStudentName().get());
         this.part.setText(part.getPartName().get());
         quantity.setText(part.getQuantity().get() + "");
         coDate.setText(part.getCheckedOutAt().get());
@@ -40,10 +40,10 @@ public class SavedPopUp extends StudentPage {
         int index = -1;
         int index1 = -1;
         for (int i = 0; i < s.getSavedItems().size(); i++){
-            if (s.getSavedItems().get(i).getStudentName().get().equals(studentName.getText())) {
+            if (s.getSavedItems().get(i).getStudentName().get().equals(name.getText())) {
                 index = i;
             }
-            if (s.getCheckedOut().get(i).getStudentName().get().equals(studentName.getText())){
+            if (s.getCheckedOut().get(i).getStudentName().get().equals(name.getText())){
                 index1 = i;
             }
         }
