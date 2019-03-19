@@ -25,21 +25,17 @@ public class TransitionHelper {
         spinner.setValueFactory(valueFactory);
     }
 
-    void barcodeItemsFadeTransition(Spinner spinner, JFXButton button, JFXTextField textField){
+    void barcodeItemsFadeTransition(Spinner spinner, JFXTextField textField){
         int initial = 0;
         int end = 1;
         int duration = 500;
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(duration), spinner);
-        FadeTransition fadeTransition1 = new FadeTransition(Duration.millis(duration), button);
         FadeTransition fadeTransition2 = new FadeTransition(Duration.millis(duration), textField);
-        fadeTransition1.setFromValue(initial);
         fadeTransition2.setFromValue(initial);
         fadeTransition.setFromValue(initial);
-        fadeTransition1.setToValue(end);
         fadeTransition.setToValue(end);
         fadeTransition2.setToValue(end);
         fadeTransition.play();
-        fadeTransition1.play();
         fadeTransition2.play();
     }
 

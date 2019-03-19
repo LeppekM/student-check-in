@@ -72,7 +72,8 @@ public class Database {
             String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
                     " parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
                     "left join parts on checkout.partID = parts.partID " +
-                    "left join students on checkout.studentID = students.studentID ";
+                    "left join students on checkout.studentID = students.studentID " +
+                    "where checkout.checkinAt is null";
             try {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(overdue);
@@ -579,7 +580,9 @@ public class Database {
         String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
                 "from students " +
                 "left join checkout on students.studentID = checkout.studentID " +
-                "left join parts on checkout.partID = parts.partID where students.studentID = " + ID  + ";";
+                "left join parts on checkout.partID = parts.partID" +
+                " where students.studentID = " + ID  +
+                " AND checkout.checkinAt is null;";
         String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
                 "from students " +
                 "left join checkout on students.studentID = checkout.studentID " +
@@ -588,7 +591,7 @@ public class Database {
                 "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
                 "inner join parts on checkout.partID = parts.partID " +
                 "inner join students on checkout.studentID = students.studentID " +
-                "where checkout.checkinAt is null";;
+                "where checkout.checkinAt is null";
 //                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         Student student = null;
         String name = "";
@@ -627,7 +630,8 @@ public class Database {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 String dueAt = resultSet.getString("checkout.dueAt");
-                if (isOverdue(dueAt)) {
+                int studentID = resultSet.getInt("checkout.studentID");
+                if (isOverdue(dueAt) && studentID==ID) {
                     overdueItems.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
                             resultSet.getString("students.studentName"), resultSet.getString("students.email"),
                             resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
