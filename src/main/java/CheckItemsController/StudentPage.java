@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.IntStream;
@@ -194,7 +195,8 @@ public class StudentPage implements IController {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StudentCheckPopUp.fxml"));
+                URL myFMLURL = ClassLoader.getSystemResource("fxml/StudentCheckPopUp.fxml");
+                FXMLLoader loader = new FXMLLoader(myFMLURL);
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Checked Out Item");
