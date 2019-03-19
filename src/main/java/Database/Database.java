@@ -619,7 +619,7 @@ public class Database {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 checkedOutItems.add(new CheckedOutItems(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"), resultSet.getInt("parts.barcode"),
+                        resultSet.getString("parts.partName"), resultSet.getLong("parts.barcode"),
                         resultSet.getString("checkout.checkoutAt"), resultSet.getString("checkout.dueAt"),
                         resultSet.getInt("checkout.checkoutID"), resultSet.getInt("parts.partID")));
             }

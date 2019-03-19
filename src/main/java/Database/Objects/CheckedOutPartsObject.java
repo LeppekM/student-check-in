@@ -39,7 +39,7 @@ public class CheckedOutPartsObject {
         return barcode;
     }
 
-    public void setBarcode(int barcode) {
+    public void setBarcode(long barcode) {
         this.barcode = barcode;
     }
 
