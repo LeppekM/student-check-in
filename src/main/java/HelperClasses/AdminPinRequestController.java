@@ -1,7 +1,6 @@
 package HelperClasses;
 
 import Database.Database;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,11 +24,14 @@ public class AdminPinRequestController implements Initializable {
     @FXML
     private JFXPasswordField adminPinInputAdminPinRequest;
 
-    StageWrapper stageWrapper;
+    private StageWrapper stageWrapper;
+
+    private boolean submitted;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         stageWrapper = new StageWrapper();
+        submitted = false;
         stageWrapper.acceptIntegerOnly(adminPinInputAdminPinRequest);
         adminPinInputAdminPinRequest.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -45,7 +47,12 @@ public class AdminPinRequestController implements Initializable {
 
     @FXML
     private void submit() {
+        submitted = true;
         sceneAdminPinRequest.fireEvent(new WindowEvent(((Node) sceneAdminPinRequest).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+    }
+
+    public boolean isSubmitted() {
+        return submitted;
     }
 
     public boolean isValid() {

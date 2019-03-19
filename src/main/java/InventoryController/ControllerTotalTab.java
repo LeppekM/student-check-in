@@ -5,7 +5,6 @@ import Database.Objects.Worker;
 import HelperClasses.AdminPinRequestController;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -534,13 +533,17 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.setScene(scene);
             stage.getIcons().add(new Image("images/msoe.png"));
             stage.setOnCloseRequest(e -> {
-                if (((AdminPinRequestController) loader.getController()).isValid()) {
-                    stage.close();
-                    isValid.set(true);
-                } else {
-                    stage.close();
-                    invalidAdminPinAlert();
-                    isValid.set(false);
+                // checks to see whether the pin was submitted or the window was just closed
+                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
+                    // checks to see whether the submitted pin matches one of the admin's pins
+                    if (((AdminPinRequestController) loader.getController()).isValid()) {
+                        stage.close();
+                        isValid.set(true);
+                    } else {
+                        stage.close();
+                        invalidAdminPinAlert();
+                        isValid.set(false);
+                    }
                 }
             });
             stage.showAndWait();

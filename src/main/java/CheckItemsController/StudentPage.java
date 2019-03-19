@@ -198,6 +198,7 @@ public class StudentPage implements IController {
                 URL myFMLURL = ClassLoader.getSystemResource("fxml/StudentCheckPopUp.fxml");
                 FXMLLoader loader = new FXMLLoader(myFMLURL);
                 Parent root = loader.load();
+                ((IController) loader.getController()).initWorker(worker);
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Checked Out Item");
                 stage.initOwner(main.getScene().getWindow());
@@ -207,7 +208,7 @@ public class StudentPage implements IController {
                     CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
                     ((CheckoutPopUp) loader.getController()).populate(item);
                     stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
+                    stage.showAndWait();
                 }
                 stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {
@@ -222,6 +223,7 @@ public class StudentPage implements IController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopUp.fxml"));
                 Parent root = loader.load();
+                ((IController) loader.getController()).initWorker(worker);
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(main.getScene().getWindow());
@@ -231,7 +233,7 @@ public class StudentPage implements IController {
                     OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
                     ((OverduePopUpController) loader.getController()).populate(item, null);
                     stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
+                    stage.showAndWait();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -245,6 +247,7 @@ public class StudentPage implements IController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SavedPopUp.fxml"));
                 Parent root = loader.load();
+                ((IController) loader.getController()).initWorker(worker);
                 Scene scene = new Scene(root, 350, 400);
                 stage.setTitle("Saved Item");
                 stage.initOwner(main.getScene().getWindow());
@@ -254,7 +257,7 @@ public class StudentPage implements IController {
                     SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
                     ((SavedPopUp) loader.getController()).populate(item);
                     stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
+                    stage.showAndWait();
                 }
                 stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
             } catch (IOException e) {

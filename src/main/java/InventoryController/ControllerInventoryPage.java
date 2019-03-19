@@ -41,6 +41,9 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     private Tab totalTab, historyTab, checkedOutTab, overdueTab, faultsTab;
 
     @FXML
+    private ControllerTotalTab totalTabPageController;
+
+    @FXML
     private ControllerHistoryTab historyTabPageController;
 
     @FXML
@@ -78,13 +81,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
 
         back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
         //});
-    }
-
-    public void addWorker(Worker worker) {
-        System.out.println("HERE");
-        if (this.worker == null) {
-            this.worker = worker;
-        }
     }
 
     private void updateHistoryTab() {
@@ -180,6 +176,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     public void initWorker(Worker worker) {
         if (this.worker == null) {
             this.worker = worker;
+            totalTabPageController.initWorker(worker);
         }
     }
 

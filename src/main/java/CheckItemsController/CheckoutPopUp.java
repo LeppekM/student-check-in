@@ -4,6 +4,7 @@ import Database.Database;
 import Database.Objects.SavedPart;
 import Database.Objects.Student;
 import InventoryController.CheckedOutItems;
+import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +19,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CheckoutPopUp extends StudentPage {
+public class CheckoutPopUp extends StudentPage implements IController {
 
     @FXML
     private JFXTextField name, part, barcode, coDate, dueDate;
