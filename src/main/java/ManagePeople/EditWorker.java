@@ -68,14 +68,21 @@ public class EditWorker {
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());
+        parts.managedProperty().setValue(w.isParts());
+        overdue.managedProperty().setValue(w.isOver());
+        students.managedProperty().setValue(w.isStudent());
+        workers.managedProperty().setValue(w.isWorker());
+        if (w.isParts() || w.isStudent() || w.isOver() || w.isWorker()){
+            admin.managedProperty().setValue(true);
+        }
         name = workerName.getText();
         workerEmail = email.getText();
         password = pass.getText();
         priv = admin.isSelected();
-        allParts = parts.isSelected();
-        over = overdue.isSelected();
-        work = workers.isSelected();
-        stu = students.isSelected();
+        allParts = w.isParts();
+        over = w.isOver();
+        work = w.isWorker();
+        stu = w.isStudent();
         unmasked.setManaged(false);
         unmasked.setVisible(false);
         unmasked.managedProperty().bind(showPass.selectedProperty());
