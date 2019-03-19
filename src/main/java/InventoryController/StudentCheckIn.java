@@ -26,7 +26,7 @@ public class StudentCheckIn extends Application  {
     }
 
     public StudentCheckIn(){}
-
+//
 //    @Override
 //    public void start(Stage primaryStage) throws Exception{
 //        URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
