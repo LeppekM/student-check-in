@@ -42,7 +42,7 @@
                      </font></JFXTextField>
                   <Pane prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <JFXPasswordField fx:id="pass" alignment="CENTER" onMouseEntered="#showPass" prefHeight="100.0" prefWidth="670.0" promptText="Password" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                        <JFXPasswordField fx:id="pass" alignment="CENTER" prefHeight="100.0" prefWidth="670.0" promptText="Password" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                            <font>
                               <Font name="Arial Black" size="32.0" />
                            </font>
@@ -90,12 +90,12 @@
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <JFXCheckBox fx:id="worker" checkedColor="#d71818" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Manage Workers">
+                              <JFXCheckBox fx:id="workers" checkedColor="#d71818" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Manage Workers">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
                               </JFXCheckBox>
-                              <JFXCheckBox fx:id="student" checkedColor="#d71818" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Removing Students">
+                              <JFXCheckBox fx:id="students" checkedColor="#d71818" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Removing Students">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>

@@ -520,6 +520,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 Parent root = (Parent) loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(s);
+                sp.initWorker(worker);
                 checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), quantity.getText(), extended.isSelected(), faulty.isSelected());
                 if (extended.isSelected()) {
                     checkoutObject.initExtendedInfo(courseName.getText(), profName.getText(), datePicker.getValue());
