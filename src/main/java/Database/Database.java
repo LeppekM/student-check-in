@@ -481,6 +481,10 @@ public class Database {
             int ID;
             int pin;
             boolean admin;
+            boolean parts;
+            boolean over;
+            boolean workers;
+            boolean students;
             while (resultSet.next()){
                 name = resultSet.getString("workerName");
                 ID = resultSet.getInt("workerID");
@@ -488,7 +492,11 @@ public class Database {
                 email = resultSet.getString("email");
                 pin = resultSet.getInt("pin");
                 admin = resultSet.getByte("isAdmin") == 1;
-                workerList.add(new Worker(name, ID, email, pass, pin, admin));
+                parts = resultSet.getByte("parts") == 1;
+                over = resultSet.getByte("over") == 1;
+                workers = resultSet.getByte("workers") == 1;
+                students = resultSet.getByte("students") == 1;
+                workerList.add(new Worker(name, ID, email, pass, pin, admin, parts, workers, students, over));
             }
             resultSet.close();
             statement.close();
@@ -511,13 +519,21 @@ public class Database {
             int ID;
             int pin;
             boolean isAdmin;
+            boolean parts;
+            boolean over;
+            boolean workers;
+            boolean students;
             if (resultSet.next()) {
                 name = resultSet.getString("workerName");
                 ID = resultSet.getInt("workerID");
                 password = resultSet.getString("pass");
                 isAdmin = resultSet.getByte("isAdmin") == 1;
+                parts = resultSet.getByte("parts") == 1;
+                over = resultSet.getByte("over") == 1;
+                workers = resultSet.getByte("workers") == 1;
+                students = resultSet.getByte("students") == 1;
                 pin = resultSet.getInt("pin");
-                worker = new Worker(name, ID, email, password, pin, isAdmin);
+                worker = new Worker(name, ID, email, password, pin, isAdmin, parts, workers, students, over);
             }
             resultSet.close();
             statement.close();
@@ -745,6 +761,23 @@ public class Database {
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete worker.");
             StudentCheckIn.logger.error("SQL Exception: Could not delete worker.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    public void updateWorker(Worker w){
+        int admin = w.isAdmin() ? 1 : 0;
+        String query = "update workers set workers.workerName = '" + w.getName() + "', workers.pin = " +
+                w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.isAdmin = " + admin + "," +
+                " workers.email = " + w.getEmail() + " where workers.workerID = " + w.getID() +";";
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update worker");
+            StudentCheckIn.logger.error("Could not update worker, SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
         }

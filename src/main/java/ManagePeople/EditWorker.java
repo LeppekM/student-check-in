@@ -131,7 +131,11 @@ public class EditWorker {
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
                 worker.setAdmin(admin.isSelected());
-//                database.updateWorker(worker);
+                worker.setOver(overdue.isSelected());
+                worker.setParts(parts.isSelected());
+                worker.setStudent(students.isSelected());
+                worker.setWorker(workers.isSelected());
+                database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
                 alert1.showAndWait();
             }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
@@ -140,9 +144,6 @@ public class EditWorker {
                 pass.setText(password);
             }
         }
-    }
-
-    public void showPass(MouseEvent event) {
     }
 
     public void unblock(ActionEvent actionEvent) {

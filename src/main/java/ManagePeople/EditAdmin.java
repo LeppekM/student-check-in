@@ -103,7 +103,7 @@ public class EditAdmin {
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
                 worker.setPin(Integer.parseInt(pin.getText()));
-//                database.updateWorker(worker);
+                database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
                 alert1.showAndWait();
             }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
