@@ -161,9 +161,13 @@ public class EditWorker {
             students.setDisable(false);
         }else {
             parts.setDisable(true);
+            parts.managedProperty().setValue(false);
             overdue.setDisable(true);
+            overdue.managedProperty().setValue(false);
             workers.setDisable(true);
+            workers.managedProperty().setValue(false);
             students.setDisable(true);
+            students.managedProperty().setValue(false);
         }
     }
 }

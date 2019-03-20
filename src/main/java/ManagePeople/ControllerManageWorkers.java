@@ -242,6 +242,7 @@ public class ControllerManageWorkers implements IController, Initializable {
     public void deleteWorker(ActionEvent actionEvent) {
         int admins = 0;
         boolean lastOne = false;
+        boolean self = false;
         for (Worker w : data){
             if (w.isAdmin()){
                 admins++;
@@ -255,7 +256,13 @@ public class ControllerManageWorkers implements IController, Initializable {
                 alert.showAndWait();
                 lastOne = true;
             }
-            if (!lastOne) {
+            if (worker.getID() == data.get(row).getID()){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot delete your own account.");
+                StudentCheckIn.logger.error("Manage Workers: Cannot delete own account.");
+                alert.showAndWait();
+                self = true;
+            }
+            if (!lastOne && !self) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this worker?");
                 alert.setTitle("Delete This Worker?");
                 Optional<ButtonType> result = alert.showAndWait();
