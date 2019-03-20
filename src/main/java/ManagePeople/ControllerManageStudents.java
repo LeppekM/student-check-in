@@ -314,7 +314,7 @@ public class ControllerManageStudents implements IController, Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
             Parent root = loader.load();
             ((AdminPinRequestController) loader.getController()).setAction(action);
-            Scene scene = new Scene(root, 350, 250);
+            Scene scene = new Scene(root, 400, 250);
             Stage stage = new Stage();
             stage.setTitle("Admin Pin Required");
             stage.initOwner(manageStudentsScene.getScene().getWindow());

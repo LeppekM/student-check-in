@@ -5,6 +5,7 @@ import Database.Objects.CheckedOutPartsObject;
 import Database.Objects.Student;
 
 import Database.Objects.Worker;
+import HelperClasses.AdminPinRequestController;
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
@@ -21,21 +22,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class ControllerCheckoutPage extends ControllerMenu implements IController, Initializable {
@@ -274,32 +276,77 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     public void submit() {
         Student thisStudent = database.selectStudent(getstudentID());
-        if (!fieldsFilled()) {
-            stageWrapper.errorAlert("Please fill out all fields before submitting info!");
-            StudentCheckIn.logger.error("Not all fields filled out on checkout page. All fields must be filled before submitting.");
-            return;
-        }
+        if (ensureNotOverdue(thisStudent)) {
+            if (!fieldsFilled()) {
+                stageWrapper.errorAlert("Please fill out all fields before submitting info!");
+                StudentCheckIn.logger.error("Not all fields filled out on checkout page. All fields must be filled before submitting.");
+                return;
+            }
 //        if (thisStudent.getOverdueItems().size() == 0) {
-            if(extendedCheckoutIsSelected(getBarcode())){
-                if (newStudentIsCheckingOutItem()){
+            if (extendedCheckoutIsSelected(getBarcode())) {
+                if (newStudentIsCheckingOutItem()) {
                     createNewStudent();
                 }
                 extendedCheckoutHelper();
-            }
-            else if(itemBeingCheckedBackInIsFaulty(getBarcode())){
+            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
                 faultyCheckinHelper();
-            }
-            else if (newStudentIsCheckingOutItem()){
+            } else if (newStudentIsCheckingOutItem()) {
                 createNewStudent();
                 checkOut.addNewCheckoutItem(getBarcode(), getstudentID());
-            }
-            else {
+            } else {
                 submitMultipleItems();
             }
             reset();
 //        } else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
 //            stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
 //        }
+        }
+    }
+
+    private boolean ensureNotOverdue(Student student) {
+        if (student.getOverdueItems().size() > 0) {
+            if ((worker != null && worker.isAdmin())) {
+                return ensureOverride();
+            } else {
+                return requestAdminPin("override overdue");
+            }
+        }
+        return true;
+    }
+
+    public boolean requestAdminPin(String action) {
+        AtomicBoolean isValid = new AtomicBoolean(false);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
+            Parent root = loader.load();
+            ((AdminPinRequestController) loader.getController()).setAction(action);
+            Scene scene = new Scene(root, 400, 250);
+            Stage stage = new Stage();
+            stage.setTitle("Admin Pin Required");
+            stage.initOwner(main.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.setOnCloseRequest(e -> {
+                // checks to see whether the pin was submitted or the window was just closed
+                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
+                    // checks to see whether the submitted pin matches one of the admin's pins
+                    if (((AdminPinRequestController) loader.getController()).isValid()) {
+                        stage.close();
+                        isValid.set(true);
+                    } else {
+                        stage.close();
+                        invalidAdminPinAlert();
+                        isValid.set(false);
+                    }
+                }
+            });
+            stage.showAndWait();
+        } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
+            e.printStackTrace();
+        }
+        return isValid.get();
     }
 
     /**
@@ -342,9 +389,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 if(thisStudent.getOverdueItems().size()==0){
                     checkOut.addNewCheckoutItem(stripped.get(i), getstudentID());
                 }
-                else {
-                    stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
-                }
+//                else {
+//                    stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
+//                }
 
             }
         }
@@ -537,6 +584,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         alert.setContentText("Are you ok with this?");
         StudentCheckIn.logger.info("Some fields are not filled. Asking user if losing unsubmitted information is okay...");
 
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.get() == ButtonType.OK;
+    }
+
+    private boolean ensureOverride() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Overdue Override");
+        alert.setHeaderText("This student has overdue equipment.");
+        alert.setContentText("Do you want to override and checkout anyway?");
         Optional<ButtonType> result = alert.showAndWait();
         return result.get() == ButtonType.OK;
     }
@@ -1055,6 +1111,17 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             parsable = false;
         }
         return parsable;
+    }
+
+    /**
+     * Alert that the pin entered does not match one of the admin pins.
+     */
+    private void invalidAdminPinAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("The pin entered is invalid.");
+        StudentCheckIn.logger.error("The pin entered is invalid.");
+        alert.showAndWait();
     }
 
 }

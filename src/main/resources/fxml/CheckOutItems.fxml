@@ -17,7 +17,7 @@
 
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#submitAfterStudentIDScanned" prefHeight="620.0" prefWidth="789.0" style="jfx-rippler-fill: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
    <children>
-      <JFXTextField fx:id="studentID" layoutX="342.0" layoutY="57.0" onKeyReleased="#checkStudentHasOverdue" prefHeight="24.0" prefWidth="125.0" />
+      <JFXTextField fx:id="studentID" layoutX="342.0" layoutY="57.0" prefHeight="24.0" prefWidth="125.0" />
       <JFXTextField fx:id="studentNameField" disable="true" layoutX="342.0" layoutY="110.0" prefHeight="25.0" prefWidth="125.0" />
       <JFXTextField fx:id="studentEmail" layoutX="343.0" layoutY="162.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
       <JFXTextField fx:id="barcode" layoutX="343.0" layoutY="162.0" onKeyTyped="#newBarcode1" prefHeight="24.0" prefWidth="125.0" />
@@ -57,7 +57,7 @@
       <Label layoutX="248.0" layoutY="123.0" text="Student Name" />
       <Label fx:id="studentNameText" layoutX="101.0" layoutY="561.0" />
       <TextArea fx:id="faultyTextArea" layoutX="282.0" layoutY="327.0" prefHeight="95.0" prefWidth="265.0" promptText="Please enter description of fault" visible="false" />
-      <JFXTextField fx:id="courseName" layoutX="342.0" layoutY="289.0" onKeyReleased="#checkStudentHasOverdue" prefHeight="24.0" prefWidth="125.0" visible="false" />
+      <JFXTextField fx:id="courseName" layoutX="342.0" layoutY="289.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
       <JFXTextField fx:id="profName" layoutX="343.0" layoutY="350.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
       <Label fx:id="dueAt" layoutX="291.0" layoutY="424.0" text="Due At" visible="false" />
       <Label fx:id="courseNameLabel" layoutX="256.0" layoutY="299.0" text="Course Name" visible="false" />
