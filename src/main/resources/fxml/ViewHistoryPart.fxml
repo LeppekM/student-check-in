@@ -2,49 +2,100 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="root" fx:id="sceneViewHistoryPart" prefHeight="450.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerViewHistoryPart">
+<?import java.net.URL?>
+<VBox id="root" fx:id="sceneViewHistoryPart" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerViewHistoryPart">
     <children>
-        <GridPane prefHeight="450.0" prefWidth="410.0">
+        <GridPane hgap="3.0" vgap="15.0">
             <children>
                 <Label text="Student Name:">
                     <font>
                         <Font size="18.0" fx:id="x1" />
                     </font>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
                 </Label>
-                <Label id="nameLabel" font="$x1" layoutX="45.0" layoutY="55.0" text="Student Email:" GridPane.rowIndex="1" />
-                <Label id="nameLabel" font="$x1" layoutX="52.0" layoutY="148.0" text="Part Name:" GridPane.rowIndex="2" />
-                <Label id="nameLabel" font="$x1" layoutX="90.0" layoutY="192.0" text="Serial Number:" GridPane.rowIndex="3" />
-                <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="235.0" text="Action:" GridPane.rowIndex="4" />
-                <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="323.0" text="Date:" GridPane.rowIndex="5" />
-                <JFXTextField fx:id="studentNameField" editable="false" layoutX="193.0" layoutY="15.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                <JFXTextField fx:id="studentEmailField" editable="false" layoutX="193.0" layoutY="56.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <JFXTextField fx:id="partNameField" editable="false" layoutX="193.0" layoutY="104.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <JFXTextField fx:id="serialNumberField" editable="false" layoutX="193.0" layoutY="149.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <JFXTextField fx:id="actionField" editable="false" layoutX="193.0" layoutY="193.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <JFXTextField fx:id="dateField" editable="false" layoutX="193.0" layoutY="235.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <Label id="nameLabel" font="$x1" layoutX="45.0" layoutY="55.0" text="Student Email:" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></Label>
+                <Label id="nameLabel" font="$x1" layoutX="52.0" layoutY="148.0" text="Part Name:" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></Label>
+                <Label id="nameLabel" font="$x1" layoutX="90.0" layoutY="192.0" text="Serial Number:" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></Label>
+                <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="235.0" text="Action:" GridPane.rowIndex="4">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></Label>
+                <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="323.0" text="Date:" GridPane.rowIndex="5">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></Label>
+                <JFXTextField fx:id="studentNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></JFXTextField>
+                <JFXTextField fx:id="studentEmailField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></JFXTextField>
+                <JFXTextField fx:id="partNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></JFXTextField>
+                <JFXTextField fx:id="serialNumberField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></JFXTextField>
+                <JFXTextField fx:id="actionField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></JFXTextField>
+                <JFXTextField fx:id="dateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></JFXTextField>
             </children>
             <columnConstraints>
                 <ColumnConstraints halignment="RIGHT" />
-                <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints />
                 <ColumnConstraints />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                <RowConstraints valignment="BASELINE" />
+                <RowConstraints valignment="BASELINE" />
+                <RowConstraints valignment="BASELINE" />
+                <RowConstraints valignment="BASELINE" />
+                <RowConstraints valignment="BASELINE" />
+                <RowConstraints valignment="BASELINE" />
             </rowConstraints>
+         <VBox.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </VBox.margin>
         </GridPane>
-        <JFXButton onAction="#goBack" style="-fx-border-color: #DC143C;" text="Done" />
+      <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0">
+         <children>
+             <JFXButton onAction="#goBack" style="-fx-border-color: #6e6e6e;" text="Done">
+                 <stylesheets>
+                     <URL value="@../css/ButtonStyle.css" />
+                 </stylesheets></JFXButton>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+      </HBox>
     </children>
 </VBox>

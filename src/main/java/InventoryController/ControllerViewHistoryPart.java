@@ -1,5 +1,6 @@
 package InventoryController;
 
+import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -10,8 +11,16 @@ public class ControllerViewHistoryPart {
     @FXML
     private VBox sceneViewHistoryPart;
 
-    public void populate(HistoryTabTableRow row) {
+    @FXML
+    private JFXTextField studentNameField, studentEmailField, partNameField, serialNumberField, actionField, dateField;
 
+    public void populate(HistoryTabTableRow row) {
+        studentNameField.setText(row.getStudentName().get());
+        studentEmailField.setText(row.getStudentEmail().get());
+        partNameField.setText(row.getPartName().get());
+        serialNumberField.setText(row.getSerialNumber().get());
+        actionField.setText(row.getStatus().get());
+        dateField.setText(row.getDate().get());
     }
 
     public void goBack() {
