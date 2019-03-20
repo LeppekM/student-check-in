@@ -54,7 +54,7 @@ public class ControllerMenu implements IController, Initializable {
     public void initWorker(Worker worker) {
         if (this.worker == null) {
             this.worker = worker;
-            if (this.worker != null && this.worker.isAdmin()) {
+            if (this.worker != null && (this.worker.isAdmin() || this.worker.isWorker())) {
                 manageWorkers.setDisable(false);
             }
         }
@@ -74,7 +74,7 @@ public class ControllerMenu implements IController, Initializable {
 
     private void openManageWorkers() {
         if (worker != null) {
-            if (worker.isAdmin()) {
+            if (worker.isAdmin() || worker.isWorker()) {
                 newStage("/fxml/manageWorkers.fxml");
             } else {
                 adminStatusRequiredForManageWorkersError();

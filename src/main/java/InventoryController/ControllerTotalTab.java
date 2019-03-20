@@ -127,9 +127,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editOneButton.setGraphic(editOneImageView);
                                 editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOneButton.setOnAction(event -> {
-                                    if (worker != null && worker.isAdmin()
-                                        || requestAdminPin("edit a part")) {
+                                    if (worker != null && worker.isParts()){
                                         editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                    }else {
+                                        if (worker != null && worker.isAdmin()
+                                                || requestAdminPin("edit a part")) {
+                                            editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                        }
                                     }
                                 });
                                 editOneButton.setTooltip(new Tooltip("Edit this part"));
@@ -141,9 +145,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editAllButton.setGraphic(editAllImageView);
                                 editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editAllButton.setOnAction(event -> {
-                                    if ((worker != null && worker.isAdmin())
-                                        || requestAdminPin("edit parts")) {
+                                    if (worker != null && worker.isParts()){
                                         editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                    }else {
+                                        if ((worker != null && worker.isAdmin())
+                                                || requestAdminPin("edit parts")) {
+                                            editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                        }
                                     }
                                     editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
                                 });
@@ -157,12 +165,20 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setGraphic(deleteOneImageView);
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteOneButton.setOnAction(event -> {
-                                    if ((worker != null && worker.isAdmin())
-                                            || requestAdminPin("Delete a Part")) {
+                                    if (worker != null && worker.isParts()){
                                         if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
                                             deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                         } else {
                                             deleteCheckedOutPartAlert();
+                                        }
+                                    }else {
+                                        if ((worker != null && worker.isAdmin())
+                                                || requestAdminPin("Delete a Part")) {
+                                            if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
+                                                deletePart(getTreeTableRow().getItem().getPartID().getValue());
+                                            } else {
+                                                deleteCheckedOutPartAlert();
+                                            }
                                         }
                                     }
                                 });
@@ -176,8 +192,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllButton.setGraphic(deleteAllImageView);
                                 deleteAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteAllButton.setOnAction(event -> {
-                                    if ((worker != null && worker.isAdmin())
-                                            || requestAdminPin("edit parts")) {
+                                    if (worker != null && worker.isParts()){
                                         boolean typeHasOneCheckedOut = false;
                                         ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
                                         for (String id : partIDs) {
@@ -189,6 +204,22 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                             deletePartType(getTreeTableRow().getItem().getPartName().getValue());
                                         } else {
                                             typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
+                                        }
+                                    }else {
+                                        if ((worker != null && worker.isAdmin())
+                                                || requestAdminPin("edit parts")) {
+                                            boolean typeHasOneCheckedOut = false;
+                                            ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
+                                            for (String id : partIDs) {
+                                                if (database.getIsCheckedOut(id)) {
+                                                    typeHasOneCheckedOut = true;
+                                                }
+                                            }
+                                            if (!typeHasOneCheckedOut) {
+                                                deletePartType(getTreeTableRow().getItem().getPartName().getValue());
+                                            } else {
+                                                typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
+                                            }
                                         }
                                     }
                                 });
