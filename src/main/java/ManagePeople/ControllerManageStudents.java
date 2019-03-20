@@ -3,6 +3,7 @@ package ManagePeople;
 import Database.Database;
 import Database.Objects.Student;
 import Database.Objects.Worker;
+import HelperClasses.AdminPinRequestController;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -291,15 +293,53 @@ public class ControllerManageStudents implements IController, Initializable {
 
     public void deleteStudent(ActionEvent actionEvent) {
         if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0){
-            int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
-            alert.setTitle("Delete This Student?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK){
-                database.deleteStudent(data.get(row).getName());
-                data.remove(row);
+            if ((worker != null && worker.isAdmin())
+                || requestAdminPin("delete a student")) {
+                int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
+                alert.setTitle("Delete This Student?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    database.deleteStudent(data.get(row).getName());
+                    data.remove(row);
+                }
             }
         }
+    }
+
+    public boolean requestAdminPin(String action) {
+        AtomicBoolean isValid = new AtomicBoolean(false);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
+            Parent root = loader.load();
+            ((AdminPinRequestController) loader.getController()).setAction(action);
+            Scene scene = new Scene(root, 350, 250);
+            Stage stage = new Stage();
+            stage.setTitle("Admin Pin Required");
+            stage.initOwner(manageStudentsScene.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.setOnCloseRequest(e -> {
+                // checks to see whether the pin was submitted or the window was just closed
+                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
+                    // checks to see whether the submitted pin matches one of the admin's pins
+                    if (((AdminPinRequestController) loader.getController()).isValid()) {
+                        stage.close();
+                        isValid.set(true);
+                    } else {
+                        stage.close();
+                        invalidAdminPinAlert();
+                        isValid.set(false);
+                    }
+                }
+            });
+            stage.showAndWait();
+        } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
+            e.printStackTrace();
+        }
+        return isValid.get();
     }
 
     public void edit(MouseEvent event) {
@@ -337,5 +377,16 @@ public class ControllerManageStudents implements IController, Initializable {
         if (this.worker == null) {
             this.worker = worker;
         }
+    }
+
+    /**
+     * Alert that the pin entered does not match one of the admin pins.
+     */
+    private void invalidAdminPinAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("The pin entered is invalid.");
+        StudentCheckIn.logger.error("The pin entered is invalid.");
+        alert.showAndWait();
     }
 }
