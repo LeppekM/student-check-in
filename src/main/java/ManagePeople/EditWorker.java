@@ -138,10 +138,12 @@ public class EditWorker {
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
                 worker.setAdmin(admin.isSelected());
-                worker.setOver(overdue.isSelected());
-                worker.setParts(parts.isSelected());
-                worker.setStudent(students.isSelected());
-                worker.setWorker(workers.isSelected());
+                if (admin.isSelected()) {
+                    worker.setOver(overdue.isSelected());
+                    worker.setParts(parts.isSelected());
+                    worker.setStudent(students.isSelected());
+                    worker.setWorker(workers.isSelected());
+                }
                 database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
                 alert1.showAndWait();
@@ -161,13 +163,9 @@ public class EditWorker {
             students.setDisable(false);
         }else {
             parts.setDisable(true);
-            parts.managedProperty().setValue(false);
             overdue.setDisable(true);
-            overdue.managedProperty().setValue(false);
             workers.setDisable(true);
-            workers.managedProperty().setValue(false);
             students.setDisable(true);
-            students.managedProperty().setValue(false);
         }
     }
 }

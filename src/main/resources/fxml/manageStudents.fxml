@@ -34,7 +34,7 @@
             <URL value="@../css/ButtonStyle.css" />
         </stylesheets>
     </Button>
-   <Button fx:id="deleteStudent" layoutX="615.0" layoutY="554.0" mnemonicParsing="false" onAction="#deleteStudent" prefHeight="35.0" prefWidth="160.0" text="Delete Student" textAlignment="CENTER">
+   <Button fx:id="deleteStudent" layoutX="615.0" layoutY="554.0" mnemonicParsing="false" onAction="#deleteStudent" prefHeight="35.0" prefWidth="160.0" text="Delete" textAlignment="CENTER">
       <stylesheets>
          <URL value="@../css/ButtonStyle.css" />
       </stylesheets>
