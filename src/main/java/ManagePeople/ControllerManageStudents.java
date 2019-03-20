@@ -302,6 +302,7 @@ public class ControllerManageStudents implements IController, Initializable {
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     database.deleteStudent(data.get(row).getName());
                     data.remove(row);
+                    populateTable();
                 }
             }
         }
