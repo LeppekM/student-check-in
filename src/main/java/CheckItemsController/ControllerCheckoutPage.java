@@ -548,7 +548,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Resets all fields
      */
     public void reset() {
-        stageWrapper.newStage("fxml/CheckOutItems.fxml", main);
+        stageWrapper.newStage("/fxml/CheckOutItems.fxml", main, worker);
     }
 
     /**

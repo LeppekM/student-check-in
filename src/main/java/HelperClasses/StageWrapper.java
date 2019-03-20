@@ -1,5 +1,8 @@
 package HelperClasses;
 
+import Database.Objects.Worker;
+import InventoryController.IController;
+import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.animation.PauseTransition;
@@ -9,6 +12,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextFormatter;
@@ -38,6 +42,25 @@ public class StageWrapper {
             node.getScene().setRoot(loader.load(myFxmlURL));
 
         } catch (IOException invoke) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+            invoke.printStackTrace();
+        }
+    }
+
+    public void newStage(String fxml, Node node, Worker worker){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            IController controller = loader.<IController>getController();
+            controller.initWorker(worker);
+            node.getScene().setRoot(root);
+            ((IController) loader.getController()).initWorker(worker);
+            // NEEDED?
+            //mainMenuScene.getChildren().clear();
+        }
+        catch(IOException invoke){
+            StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
             invoke.printStackTrace();
