@@ -134,7 +134,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                     @Override
                     public void handle(MouseEvent event) {
                         if (event.getClickCount() == 2) {
-                            viewPart();
+                            viewPart(row.getIndex());
                         } else {
                             final int index = row.getIndex();
                             if (index >= 0 && index < historyTable.getCurrentItemsCount() && historyTable.getSelectionModel().isSelected(index)) {
@@ -191,7 +191,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
     }
 
-    private void viewPart() {
+    private void viewPart(int index) {
         Stage stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewHistoryPart.fxml"));
@@ -200,12 +200,15 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             stage.setTitle("Checked Out Item");
             stage.initOwner(inventoryHistoryPage.getScene().getWindow());
             stage.setScene(scene);
-            int index = historyTable.getSelectionModel().getSelectedIndex();
             if (index != -1) {
-                HistoryTabTableRow item = ((HistoryTabTableRow) historyTable.getSelectionModel().getModelItem(index).getValue());
-                ((ControllerViewHistoryPart) loader.getController()).populate(item);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                TreeItem item = historyTable.getSelectionModel().getModelItem(index);
+                // null if user clicks on empty row
+                if (item != null) {
+                    HistoryTabTableRow row = ((HistoryTabTableRow) item.getValue());
+                    ((ControllerViewHistoryPart) loader.getController()).populate(row);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
             }
 //                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
         } catch (IOException e) {
