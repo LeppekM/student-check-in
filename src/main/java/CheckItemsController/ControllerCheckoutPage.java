@@ -111,8 +111,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         barcode.setOnKeyReleased(event -> {
             statusLabel.setVisible(true);
             if (itemIsBeingCheckedIn(getBarcode())) {
+                setCheckinInformation();
                 statusLabel.setText("In");
             } else {
+                setCheckoutInformation();
                 statusLabel.setText("Out");
             }
             if (containsNumber(barcode.getText())) {
@@ -216,8 +218,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * If no movement is recorded on page for 15 minutes, item will submit automatically
      */
     private void submitTimer() {
-        int duration = 10;
-        delay = new PauseTransition(Duration.seconds(duration));
+        int duration = 5;
+        delay = new PauseTransition(Duration.minutes(duration));
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
         delay.setOnFinished(event -> submit());
         delay.play();
@@ -309,7 +311,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 || (!barcode4.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode4.getText())))
                 || (!barcode5.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode5.getText())))) {
             if (student.getOverdueItems().size() > 0) {
-                if ((worker != null && worker.isAdmin())) {
+                if ((worker != null && worker.isAdmin() || worker.isOver())) {
                     return ensureOverride();
                 } else {
                     return requestAdminPin("override overdue");
@@ -396,7 +398,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 }
 //                else {
 //                    stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
-//                }
+//                }ln
 
             }
         }
@@ -541,6 +543,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Helper method to set button access
      */
     private void setItemStatusNewStudent() {
+        HBoxBarcode.setVisible(false);
         studentEmail.setVisible(true);
         studentEmailLabel.setVisible(true);
         studentNameField.setDisable(false);
