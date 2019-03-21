@@ -304,7 +304,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 
     private boolean ensureNotOverdue(Student student) {
         if (student.getOverdueItems().size() > 0) {
-            if ((worker != null && worker.isAdmin())) {
+            if ((worker != null && (worker.isAdmin() || worker.isOver()))) {
                 return ensureOverride();
             } else {
                 return requestAdminPin("override overdue");

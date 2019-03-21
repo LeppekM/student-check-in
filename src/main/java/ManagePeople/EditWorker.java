@@ -68,12 +68,17 @@ public class EditWorker {
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());
-        parts.managedProperty().setValue(w.isParts());
-        overdue.managedProperty().setValue(w.isOver());
-        students.managedProperty().setValue(w.isStudent());
-        workers.managedProperty().setValue(w.isWorker());
+        parts.selectedProperty().setValue(w.isParts());
+        overdue.selectedProperty().setValue(w.isOver());
+        students.selectedProperty().setValue(w.isStudent());
+        workers.selectedProperty().setValue(w.isWorker());
         if (w.isParts() || w.isStudent() || w.isOver() || w.isWorker()){
-            admin.managedProperty().setValue(true);
+            admin.selectedProperty().setValue(true);
+            parts.setDisable(false);
+            overdue.setDisable(false);
+            workers.setDisable(false);
+            students.setDisable(false);
+
         }
         name = workerName.getText();
         workerEmail = email.getText();
@@ -162,6 +167,10 @@ public class EditWorker {
             workers.setDisable(false);
             students.setDisable(false);
         }else {
+            parts.selectedProperty().setValue(false);
+            overdue.selectedProperty().setValue(false);
+            students.selectedProperty().setValue(false);
+            workers.selectedProperty().setValue(false);
             parts.setDisable(true);
             overdue.setDisable(true);
             workers.setDisable(true);

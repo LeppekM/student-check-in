@@ -373,7 +373,20 @@ public class ControllerManageStudents implements IController, Initializable {
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("images/msoe.png"));
-                stage.showAndWait();
+                stage.setOnCloseRequest(event1 -> {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?\nThere could be unsaved changes.");
+                    alert.setTitle("Confirm Close");
+                    alert.setHeaderText("Close?");
+                    alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+                    alert.showAndWait().ifPresent(buttonType -> {
+                        if (buttonType == ButtonType.YES){
+                            stage.close();
+                        }else if (buttonType == ButtonType.NO){
+                            event1.consume();
+                        }
+                    });
+                });
+                stage.show();
                 populateTable();
             }catch (IOException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student info page");
