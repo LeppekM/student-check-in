@@ -305,11 +305,17 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     }
 
     private boolean ensureNotOverdue(Student student) {
-        if (student.getOverdueItems().size() > 0) {
-            if ((worker != null && (worker.isAdmin() || worker.isOver()))) {
-                return ensureOverride();
-            } else {
-                return requestAdminPin("override overdue");
+        if (!barcode.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode.getText()))
+                || (!barcode2.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode2.getText())))
+                || (!barcode3.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode3.getText())))
+                || (!barcode4.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode4.getText())))
+                || (!barcode5.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode5.getText())))) {
+            if (student.getOverdueItems().size() > 0) {
+                if ((worker != null && worker.isAdmin() || worker.isOver())) {
+                    return ensureOverride();
+                } else {
+                    return requestAdminPin("override overdue");
+                }
             }
         }
         return true;
@@ -440,7 +446,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
         return false;
     }
-
 
     /**
      * Helper method if item is extended checkout
