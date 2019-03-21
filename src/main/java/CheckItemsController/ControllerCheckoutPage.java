@@ -111,8 +111,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         barcode.setOnKeyReleased(event -> {
             statusLabel.setVisible(true);
             if (itemIsBeingCheckedIn(getBarcode())) {
+                setCheckinInformation();
                 statusLabel.setText("In");
             } else {
+                setCheckoutInformation();
                 statusLabel.setText("Out");
             }
             if (containsNumber(barcode.getText())) {
@@ -390,7 +392,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 }
 //                else {
 //                    stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
-//                }
+//                }ln
 
             }
         }
@@ -438,6 +440,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
         return false;
     }
+
 
     /**
      * Helper method if item is extended checkout
@@ -535,6 +538,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Helper method to set button access
      */
     private void setItemStatusNewStudent() {
+        HBoxBarcode.setVisible(false);
         studentEmail.setVisible(true);
         studentEmailLabel.setVisible(true);
         studentNameField.setDisable(false);
