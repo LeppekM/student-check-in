@@ -216,8 +216,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * If no movement is recorded on page for 15 minutes, item will submit automatically
      */
     private void submitTimer() {
-        int duration = 10;
-        delay = new PauseTransition(Duration.seconds(duration));
+        int duration = 5;
+        delay = new PauseTransition(Duration.minutes(duration));
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
         delay.setOnFinished(event -> submit());
         delay.play();
