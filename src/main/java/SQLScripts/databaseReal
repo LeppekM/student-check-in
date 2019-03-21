@@ -277,6 +277,14 @@ CREATE PROCEDURE load_workers()
     VALUES ('langdk@msoe.edu', 'Daniel Lang', 'Sharks12', 3412, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
     INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
     VALUES ('karczma@msoe.edu', 'Matthew Karcz', 'Sharks12', 0, 0, 1, 1, 1, 1, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    VALUES ('test1@msoe.edu', 'Parts Admin', 'Sharks12', 0, 0, 1, 0, 0, 0, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    VALUES ('test2@msoe.edu', 'Overdue Admin', 'Sharks12', 0, 0, 0, 1, 0, 0, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    VALUES ('test3@msoe.edu', 'Student Admin', 'Sharks12', 0, 0, 0, 0, 1, 0, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    VALUES ('test4@msoe.edu', 'Worker Admin', 'Sharks12', 0, 0, 0, 0, 0, 1, '2019-2-11', 'Jim');
   end;
 
 drop table if exists parts;

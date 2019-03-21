@@ -374,9 +374,9 @@ public class ControllerManageStudents implements IController, Initializable {
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("images/msoe.png"));
                 stage.setOnCloseRequest(event1 -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?\nThere could be unsaved changes.");
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
                     alert.setTitle("Confirm Close");
-                    alert.setHeaderText("Close?");
+                    alert.setHeaderText("If you leave now, unsaved changes could be lost.");
                     alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
                     alert.showAndWait().ifPresent(buttonType -> {
                         if (buttonType == ButtonType.YES){
