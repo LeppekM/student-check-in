@@ -108,8 +108,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
 
         quantity.setDisable(true);
+
         barcode.setOnKeyReleased(event -> {
             statusLabel.setVisible(true);
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
             if (itemIsBeingCheckedIn(getBarcode())) {
                 setCheckinInformation();
                 statusLabel.setText("In");
@@ -165,39 +169,47 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     private void setLabelStatuses() {
         barcode2.setOnKeyReleased(event -> {
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
             if (itemIsBeingCheckedIn(getBarcode2())) {
                 statusLabel2.setText("In");
             } else {
                 statusLabel2.setText("Out");
             }
         });
-
         barcode3.setOnKeyReleased(event -> {
-            if (itemIsBeingCheckedIn(getBarcode2())) {
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
+            if (itemIsBeingCheckedIn(getBarcode3())) {
                 statusLabel3.setText("In");
             } else {
                 statusLabel3.setText("Out");
             }
         });
-
         barcode4.setOnKeyReleased(event -> {
-            if (itemIsBeingCheckedIn(getBarcode2())) {
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
+            if (itemIsBeingCheckedIn(getBarcode4())) {
                 statusLabel4.setText("In");
             } else {
                 statusLabel4.setText("Out");
             }
         });
-
         barcode5.setOnKeyReleased(event -> {
-            if (itemIsBeingCheckedIn(getBarcode2())) {
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
+            if (itemIsBeingCheckedIn(getBarcode5())) {
                 statusLabel5.setText("In");
             } else {
                 statusLabel5.setText("Out");
             }
         });
-
-
     }
+
 
     /**
      * Method to submit after new student ID is scanned
@@ -438,8 +450,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         // getStudentID returns -1 if the field does not contain a number
         if (studentID != -1) {
             CheckedOutPartsObject currentInfo = new CheckedOutPartsObject(barcode, getstudentID());
-            for (int i = 0; i < checkoutParts.size(); i++) {
-                if (checkoutParts.get(i).equals(currentInfo)) {
+            for (CheckedOutPartsObject checkoutPart : checkoutParts) {
+                if (checkoutPart.equals(currentInfo)) {
                     return true;
                 }
             }
