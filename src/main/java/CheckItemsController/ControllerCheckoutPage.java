@@ -64,7 +64,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 
     @FXML
     private Label studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel, studentEmailLabel, scanBarcode, statusLabel,
-    statusLabel2, statusLabel3, statusLabel4, statusLabel5;
+            statusLabel2, statusLabel3, statusLabel4, statusLabel5;
 
 
     @FXML
@@ -76,8 +76,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     @FXML
     private HBox HBoxBarcode, HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
 
+    private PauseTransition delay;
     private CheckoutObject checkoutObject;
-
     private StageWrapper stageWrapper = new StageWrapper();
     private Database database = new Database();
     //private CheckedOutParts checkedOutParts = new CheckedOutParts();
@@ -110,9 +110,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         quantity.setDisable(true);
         barcode.setOnKeyReleased(event -> {
             statusLabel.setVisible(true);
-            if(itemIsBeingCheckedIn(getBarcode())){
+            if (itemIsBeingCheckedIn(getBarcode())) {
                 statusLabel.setText("In");
-            }else{
+            } else {
                 statusLabel.setText("Out");
             }
             if (containsNumber(barcode.getText())) {
@@ -161,35 +161,35 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     /**
      * Helper method to set items in or out
      */
-    private void setLabelStatuses(){
-        barcode2.setOnKeyReleased(event->{
-            if (itemIsBeingCheckedIn(getBarcode2())){
+    private void setLabelStatuses() {
+        barcode2.setOnKeyReleased(event -> {
+            if (itemIsBeingCheckedIn(getBarcode2())) {
                 statusLabel2.setText("In");
-            }else{
+            } else {
                 statusLabel2.setText("Out");
             }
         });
 
-        barcode3.setOnKeyReleased(event->{
-            if (itemIsBeingCheckedIn(getBarcode2())){
+        barcode3.setOnKeyReleased(event -> {
+            if (itemIsBeingCheckedIn(getBarcode2())) {
                 statusLabel3.setText("In");
-            }else{
+            } else {
                 statusLabel3.setText("Out");
             }
         });
 
-        barcode4.setOnKeyReleased(event->{
-            if (itemIsBeingCheckedIn(getBarcode2())){
+        barcode4.setOnKeyReleased(event -> {
+            if (itemIsBeingCheckedIn(getBarcode2())) {
                 statusLabel4.setText("In");
-            }else{
+            } else {
                 statusLabel4.setText("Out");
             }
         });
 
-        barcode5.setOnKeyReleased(event->{
-            if (itemIsBeingCheckedIn(getBarcode2())){
+        barcode5.setOnKeyReleased(event -> {
+            if (itemIsBeingCheckedIn(getBarcode2())) {
                 statusLabel5.setText("In");
-            }else{
+            } else {
                 statusLabel5.setText("Out");
             }
         });
@@ -216,8 +216,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * If no movement is recorded on page for 15 minutes, item will submit automatically
      */
     private void submitTimer() {
-        int duration = 5;
-        PauseTransition delay = new PauseTransition(Duration.minutes(duration));
+        int duration = 10;
+        delay = new PauseTransition(Duration.seconds(duration));
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
         delay.setOnFinished(event -> submit());
         delay.play();
@@ -280,11 +280,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         Student thisStudent = database.selectStudent(getstudentID());
         if (ensureNotOverdue(thisStudent)) {
             if (!fieldsFilled()) {
-                stageWrapper.errorAlert("Please fill out all fields before submitting info!");
-                StudentCheckIn.logger.error("Not all fields filled out on checkout page. All fields must be filled before submitting.");
                 return;
             }
-//        if (thisStudent.getOverdueItems().size() == 0) {
             if (extendedCheckoutIsSelected(getBarcode())) {
                 if (newStudentIsCheckingOutItem()) {
                     createNewStudent();
@@ -388,7 +385,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             if (itemIsBeingCheckedIn(stripped.get(i))) {
                 checkOut.setItemtoCheckedin(stripped.get(i));
             } else {
-                if(thisStudent.getOverdueItems().size()==0){
+                if (thisStudent.getOverdueItems().size() == 0) {
                     checkOut.addNewCheckoutItem(stripped.get(i), getstudentID());
                 }
 //                else {
@@ -479,8 +476,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             ((IController) loader.getController()).initWorker(worker);
             // NEEDED?
             //mainMenuScene.getChildren().clear();
-        }
-        catch(IOException invoke){
+        } catch (IOException invoke) {
             StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
@@ -559,7 +555,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @return True if fields are not empty
      */
     private boolean fieldsFilled() {
-        return !studentID.getText().isEmpty() | !barcode.getText().isEmpty() | quantity.getText().isEmpty();
+        return !studentID.getText().isEmpty() | !barcode.getText().isEmpty();
     }
 
     /**
@@ -687,14 +683,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     }
 
 
-
     /**
      * Gets barcode as text, returns as int
      *
      * @return barcode as integer
      */
     private long getBarcode() {
-        if(!barcode.getText().isEmpty()) {
+        if (!barcode.getText().isEmpty()) {
             return Long.parseLong(barcode.getText());
         }
         return 0;
@@ -702,10 +697,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 
     /**
      * Gets barcode as text, returns as int
+     *
      * @return barcode as integer
      */
     private long getBarcode2() {
-        if(!barcode2.getText().isEmpty()) {
+        if (!barcode2.getText().isEmpty()) {
             return Long.parseLong(barcode2.getText());
         }
         return 0;
@@ -717,7 +713,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @return barcode as integer
      */
     private long getBarcode3() {
-        if(!barcode3.getText().isEmpty()) {
+        if (!barcode3.getText().isEmpty()) {
             return Long.parseLong(barcode3.getText());
         }
         return 0;
@@ -729,7 +725,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @return barcode as integer
      */
     private long getBarcode4() {
-        if(!barcode4.getText().isEmpty()) {
+        if (!barcode4.getText().isEmpty()) {
             return Long.parseLong(barcode4.getText());
         }
         return 0;
@@ -741,7 +737,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @return barcode as integer
      */
     private long getBarcode5() {
-        if(!barcode5.getText().isEmpty()) {
+        if (!barcode5.getText().isEmpty()) {
             return Long.parseLong(barcode5.getText());
         }
         return 0;
@@ -967,7 +963,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         HBoxBarcode.setVisible(!value);
     }
 
-    private void faultyTransitionItems(boolean value){
+    private void faultyTransitionItems(boolean value) {
         barcode2.setVisible(!value);
         HBoxBarcode2.setVisible(!value);
         quantity.setVisible(value);
@@ -1025,8 +1021,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     /**
      * Makes new barcode field
      */
-    public void newBarcode1(){
-        if(studentEmail.isVisible()){
+    public void newBarcode1() {
+        if (studentEmail.isVisible()) {
             return; //New students can only submit 1 item
         }
         setNewBarcodeFieldsHelper();
@@ -1038,8 +1034,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     /**
      * New barcode field maker
      */
-    public void dropBarcode2(){
-        if(barcode3.isVisible()){
+    public void dropBarcode2() {
+        if (barcode3.isVisible()) {
             return;
         }
         barcodeDropHelper();
@@ -1049,8 +1045,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     /**
      * New barcode field maker
      */
-    public void dropBarcode3(){
-        if(barcode4.isVisible()){
+    public void dropBarcode3() {
+        if (barcode4.isVisible()) {
             return;
         }
         barcodeDropHelper();
@@ -1060,8 +1056,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     /**
      * New barcode field maker
      */
-    public void dropBarcode4(){
-        if(barcode5.isVisible()){
+    public void dropBarcode4() {
+        if (barcode5.isVisible()) {
             return;
         }
         barcodeDropHelper();
@@ -1072,11 +1068,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     /**
      * Helper method for dropping barcode down
      */
-    private void barcodeDropHelper(){
+    private void barcodeDropHelper() {
         extended.setVisible(false);
         faulty.setVisible(false);
     }
-
 
 
     /**
@@ -1099,7 +1094,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @param barcode4     Barcode field to be used
      * @param newQuantity4 Quantity of parts
      */
-    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {        ;
+    private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
+        ;
         transitionHelper.translateBarcodeItems(submitButton, resetButton, extended, faulty, 60);
         transitionHelper.fadeTransition(hBoxBarcode4);
         transitionHelper.fadeTransition(barcode4);
