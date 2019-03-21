@@ -33,7 +33,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="240.0" layoutY="67.0" text="Scan Student RFID" />
+      <Label layoutX="228.0" layoutY="67.0" text="Scan Student RFID" />
       <Label fx:id="scanBarcode" layoutX="257.0" layoutY="174.0" text="Scan Barcode" />
       <JFXSpinner fx:id="loadIndicator" layoutX="511.0" layoutY="354.0" prefHeight="25.0" prefWidth="46.0" visible="false" />
       <JFXButton fx:id="home" layoutX="17.0" layoutY="15.0" mnemonicParsing="false" onAction="#returnHome">
@@ -52,8 +52,6 @@
       <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="417.0" layoutY="329.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Reset" textFill="#043993" />
       <JFXButton fx:id="studentInfo" disable="true" layoutX="625.0" layoutY="16.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Switch to Student Info" />
       <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="317.0" layoutY="329.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
-      <Label layoutX="14.0" layoutY="589.0" text="Current Item Status:" />
-      <Label fx:id="itemStatus" layoutX="127.0" layoutY="589.0" text="Checking Out" />
       <Label layoutX="248.0" layoutY="123.0" text="Student Name" />
       <Label fx:id="studentNameText" layoutX="101.0" layoutY="561.0" />
       <TextArea fx:id="faultyTextArea" layoutX="282.0" layoutY="327.0" prefHeight="95.0" prefWidth="265.0" promptText="Please enter description of fault" visible="false" />

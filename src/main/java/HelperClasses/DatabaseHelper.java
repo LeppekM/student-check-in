@@ -17,10 +17,18 @@ public class DatabaseHelper {
         return new SimpleDateFormat("dd MMM yyyy hh:mm a").format(Calendar.getInstance().getTime());
     }
 
+    /**
+     * Gets current date
+     * @return Current date
+     */
     public String getCurrentDate(){
         return LocalDateTime.now().toString();
     }
 
+    /**
+     * Sets custom due date
+     * @return Custom due date
+     */
     public String setDueDate(){
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -34,6 +42,11 @@ public class DatabaseHelper {
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * Sets extended due date
+     * @param localDate Date to be set
+     * @return Extended due date
+     */
     public String setExtendedDuedate(LocalDate localDate){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
         Calendar calendar = Calendar.getInstance();
