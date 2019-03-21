@@ -14,7 +14,7 @@ public class DatabaseHelper {
      * @return Current date
      */
     public String getCurrentDateTimeStamp(){
-        return new SimpleDateFormat("dd MMM yyyy hh:mm a").format(Calendar.getInstance().getTime());
+        return new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(Calendar.getInstance().getTime());
     }
 
     /**
@@ -32,7 +32,7 @@ public class DatabaseHelper {
     public String setDueDate(){
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
@@ -48,7 +48,7 @@ public class DatabaseHelper {
      * @return Extended due date
      */
     public String setExtendedDuedate(LocalDate localDate){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
         calendar.set(localDate.getYear(), localDate.getMonthValue()-1, localDate.getDayOfMonth());

@@ -112,7 +112,7 @@ public class Database {
      * @return True if item is overdue
      */
     boolean isOverdue(String date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         if(!date.isEmpty()) {
             try {
                 Date current = dateFormat.parse(databaseHelper.getCurrentDateTimeStamp());
@@ -659,7 +659,7 @@ public class Database {
             // date null if no checkouts
             for (int i = 0; i < checkedOutItems.size() && date != null; i++){
                 try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm a");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
                     Date d = sdf.parse(date);
                     Date d1 = sdf.parse(checkedOutItems.get(i).getCheckedOutAt().get());
                     if (d1.after(d)){
