@@ -393,9 +393,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             if (itemIsBeingCheckedIn(stripped.get(i))) {
                 checkOut.setItemtoCheckedin(stripped.get(i));
             } else {
-                if (thisStudent.getOverdueItems().size() == 0) {
+                //if (thisStudent.getOverdueItems().size() == 0) {
                     checkOut.addNewCheckoutItem(stripped.get(i), getstudentID());
-                }
+                //}
 //                else {
 //                    stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
 //                }ln
