@@ -65,6 +65,9 @@ public class StageWrapper {
             alert.showAndWait();
             invoke.printStackTrace();
         }
+        catch (NullPointerException e){
+            StudentCheckIn.logger.error("Checkout page timer");
+        }
     }
 
     public String getStudentID(List<String> list){
