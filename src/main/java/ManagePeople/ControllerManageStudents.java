@@ -1,8 +1,8 @@
 package ManagePeople;
 
 import Database.Database;
-import Database.Objects.Student;
-import Database.Objects.Worker;
+import Database.ObjectClasses.Student;
+import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;

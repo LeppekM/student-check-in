@@ -1,7 +1,7 @@
 package ManagePeople;
 
 import Database.*;
-import Database.Objects.Worker;
+import Database.ObjectClasses.Worker;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;

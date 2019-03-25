@@ -1,4 +1,4 @@
-package Database.Objects;
+package Database.ObjectClasses;
 
 import InventoryController.CheckedOutItems;
 import javafx.collections.FXCollections;

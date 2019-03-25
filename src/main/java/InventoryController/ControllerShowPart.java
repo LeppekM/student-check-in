@@ -1,6 +1,6 @@
 package InventoryController;
 
-import Database.Objects.Part;
+import Database.ObjectClasses.Part;
 import Database.VendorInformation;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

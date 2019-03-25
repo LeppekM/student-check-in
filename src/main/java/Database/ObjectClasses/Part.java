@@ -1,6 +1,5 @@
-package Database.Objects;
+package Database.ObjectClasses;
 
-import Database.Database;
 import Database.AddPart;
 import javafx.beans.property.*;
 

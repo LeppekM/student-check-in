@@ -1,10 +1,10 @@
 package CheckItemsController;
 
 import Database.*;
-import Database.Objects.CheckedOutPartsObject;
-import Database.Objects.Student;
+import Database.ObjectClasses.CheckedOutPartsObject;
+import Database.ObjectClasses.Student;
 
-import Database.Objects.Worker;
+import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
@@ -45,9 +45,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private AnchorPane main;
 
     @FXML
-    private JFXSpinner loadIndicator;
-
-    @FXML
     private JFXTextField studentID, barcode, barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName, studentNameField, studentEmail;
 
     @FXML
@@ -57,21 +54,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private JFXCheckBox faulty, extended;
 
     @FXML
-    private JFXButton studentInfo, submitButton, home, resetButton;
+    private JFXButton studentInfo, submitButton, resetButton;
 
     @FXML
     private Spinner<Integer> newQuantity, newQuantity2, newQuantity3, newQuantity4, newQuantity5;
 
     @FXML
-    private Label studentNameText, profNameLabel, courseNameLabel, dueAt, checkoutHeader, quantityLabel, studentEmailLabel, scanBarcode, statusLabel,
+    private Label profNameLabel, courseNameLabel, dueAt, quantityLabel, studentEmailLabel, scanBarcode, statusLabel,
             statusLabel2, statusLabel3, statusLabel4, statusLabel5;
 
 
     @FXML
     private TextArea faultyTextArea;
 
-    @FXML
-    private JFXToggleButton checkingOutToggle;
 
     @FXML
     private HBox HBoxBarcode, HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
@@ -80,7 +75,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private CheckoutObject checkoutObject;
     private StageWrapper stageWrapper = new StageWrapper();
     private Database database = new Database();
-    //private CheckedOutParts checkedOutParts = new CheckedOutParts();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
     private TransitionHelper transitionHelper = new TransitionHelper();
@@ -96,58 +90,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.worker = null;
-
-        home.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
-        studentInfo.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         setFieldValidator();
         setItemStatus();
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
-            studentInfo.setDisable(false);
-        } else {
-            studentInfo.setDisable(true);
-        }
-
-        quantity.setDisable(true);
-
-        barcode.setOnKeyReleased(event -> {
-            statusLabel.setVisible(true);
-            if(event.getCode() == KeyCode.TAB){
-                return;
-            }
-            if (itemIsBeingCheckedIn(getBarcode())) {
-                setCheckinInformation();
-                statusLabel.setText("In");
-            } else {
-                setCheckoutInformation();
-                statusLabel.setText("Out");
-            }
-            if (containsNumber(barcode.getText())) {
-                partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
-                if (database.hasUniqueBarcodes(partNameFromBarcode)) {
-                    quantity.setDisable(true);
-                    quantity.setText("1");
-                } else {
-                    quantity.setDisable(false);
-                }
-            }
-        });
-        studentID.setOnKeyReleased(event -> {
-            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
-                studentInfo.setDisable(false);
-            } else {
-                studentInfo.setDisable(true);
-            }
-        });
-
-        // only allows user to enter 5 digits
-        studentID.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$")) {
-                    studentID.setText(oldValue);
-                }
-            }
-        });
+        initialBarodeFieldFunctions();
+        initialStudentFieldFunctions();
         setLabelStatuses();
         getStudentName();
         unlockFields();
@@ -163,53 +109,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             this.worker = worker;
         }
     }
-
-    /**
-     * Helper method to set items in or out
-     */
-    private void setLabelStatuses() {
-        barcode2.setOnKeyReleased(event -> {
-            if(event.getCode() == KeyCode.TAB){
-                return;
-            }
-            if (itemIsBeingCheckedIn(getBarcode2())) {
-                statusLabel2.setText("In");
-            } else {
-                statusLabel2.setText("Out");
-            }
-        });
-        barcode3.setOnKeyReleased(event -> {
-            if(event.getCode() == KeyCode.TAB){
-                return;
-            }
-            if (itemIsBeingCheckedIn(getBarcode3())) {
-                statusLabel3.setText("In");
-            } else {
-                statusLabel3.setText("Out");
-            }
-        });
-        barcode4.setOnKeyReleased(event -> {
-            if(event.getCode() == KeyCode.TAB){
-                return;
-            }
-            if (itemIsBeingCheckedIn(getBarcode4())) {
-                statusLabel4.setText("In");
-            } else {
-                statusLabel4.setText("Out");
-            }
-        });
-        barcode5.setOnKeyReleased(event -> {
-            if(event.getCode() == KeyCode.TAB){
-                return;
-            }
-            if (itemIsBeingCheckedIn(getBarcode5())) {
-                statusLabel5.setText("In");
-            } else {
-                statusLabel5.setText("Out");
-            }
-        });
-    }
-
 
     /**
      * Method to submit after new student ID is scanned
@@ -274,18 +173,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
     }
 
-    /**
-     * Sets cursor to next field
-     */
-    public void checkStudentHasOverdue() {
-        Student thisStudent = database.selectStudent(Integer.parseInt(studentID.getText()));
-        if (thisStudent.getOverdueItems().size() != 0 && checkingOutToggle.isSelected()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Student has overdue items, they cannot checkout more items");
-            alert.initStyle(StageStyle.UTILITY);
-            StudentCheckIn.logger.warn("Student has overdue items, they cannot checkout more items.");
-            alert.showAndWait();
-        }
-    }
 
     /**
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
@@ -310,9 +197,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 submitMultipleItems();
             }
             reset();
-//        } else { //todo: check to see if there are overdue items that arent saved, if there is only saved items overdue then don't show popup
-//            stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
-//        }
         }
     }
 
@@ -401,17 +285,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 
         List<Long> stripped = barcodes.stream().distinct().collect(Collectors.toList());
 
-        for (int i = 0; i < stripped.size(); i++) {
-            if (itemIsBeingCheckedIn(stripped.get(i))) {
-                checkOut.setItemtoCheckedin(stripped.get(i));
+        for (Long aStripped : stripped) {
+            if (itemIsBeingCheckedIn(aStripped)) {
+                checkOut.setItemtoCheckedin(aStripped);
             } else {
-               // if (thisStudent.getOverdueItems().size() == 0) {
-                    checkOut.addNewCheckoutItem(stripped.get(i), getstudentID());
-                //}
-//                else {
-//                    stageWrapper.errorAlert("Student has overdue items and cannot check anything" + " else out until they return or pay for these items");
-//                }ln
-
+                checkOut.addNewCheckoutItem(aStripped, getstudentID());
             }
         }
         StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + barcodes.toString());
@@ -494,8 +372,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             controller.initWorker(worker);
             main.getScene().setRoot(root);
             ((IController) loader.getController()).initWorker(worker);
-            // NEEDED?
-            //mainMenuScene.getChildren().clear();
         } catch (IOException invoke) {
             StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
@@ -662,10 +538,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 e.printStackTrace();
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no student found with associated RFID");
-            alert.initStyle(StageStyle.UTILITY);
-            StudentCheckIn.logger.error("No student found with associated RFID.");
-            alert.showAndWait();
+            stageWrapper.errorAlert("No student found with asscoiated RFID");
         }
     }
 
@@ -696,9 +569,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 } else {
                     setCheckoutInformation();
                 }
-            }
-            if (!newV) {
-                //main.requestFocus();
             }
         });
     }
@@ -828,10 +698,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @return Return extended date
      */
     private String getExtendedDueDate() {
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm a");
         LocalDate ld = datePicker.getValue();
         return dbHelp.setExtendedDuedate(ld);
-        //return datePicker.getValue().format(DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a"));
     }
 
     /**
@@ -952,9 +820,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     private boolean loseExtendedInformation() {
         if (extendedItemLossInfo()) {
-            if (!fieldsNotFilledDialog()) {
-                return true;
-            }
+            return !fieldsNotFilledDialog();
         }
         return false;
     }
@@ -966,9 +832,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     private boolean faultyItemLossInfo() {
         if (!faultyTextArea.getText().isEmpty()) {
-            if (!fieldsNotFilledDialog()) {
-                return true;
-            }
+            return !fieldsNotFilledDialog();
         }
         return false;
     }
@@ -1099,8 +963,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Sets correct field info when new barcode field is added
      */
     private void setNewBarcodeFieldsHelper() {
-        //extended.setVisible(false);
-        //faulty.setVisible(false);
         quantity.setVisible(false);
         quantityLabel.setVisible(false);
         newQuantity.setVisible(true);
@@ -1145,11 +1007,113 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Alert that the pin entered does not match one of the admin pins.
      */
     private void invalidAdminPinAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("The pin entered is invalid.");
-        StudentCheckIn.logger.error("The pin entered is invalid.");
-        alert.showAndWait();
+        stageWrapper.errorAlert("The entered pin is invalid");
     }
+
+    /**
+     * Helper method to initialize barcode field properties.
+     */
+    private void initialBarodeFieldFunctions(){
+        barcode.setOnKeyReleased(event -> {
+            statusLabel.setVisible(true);
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
+            if (itemIsBeingCheckedIn(getBarcode())) {
+                setCheckinInformation();
+                statusLabel.setText("In");
+            } else {
+                setCheckoutInformation();
+                statusLabel.setText("Out");
+            }
+            if (containsNumber(barcode.getText())) {
+                partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
+                if (database.hasUniqueBarcodes(partNameFromBarcode)) {
+                    quantity.setDisable(true);
+                    quantity.setText("1");
+                } else {
+                    quantity.setDisable(false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Helper method to initialize student id field properties.
+     */
+    private void initialStudentFieldFunctions(){
+
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+            studentInfo.setDisable(false);
+        } else {
+            studentInfo.setDisable(true);
+        }
+
+        studentID.setOnKeyReleased(event -> {
+            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+                studentInfo.setDisable(false);
+            } else {
+                studentInfo.setDisable(true);
+            }
+        });
+
+        // only allows user to enter 5 digits
+        studentID.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$")) {
+                    studentID.setText(oldValue);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Helper method to set items in or out
+     */
+    private void setLabelStatuses() {
+        barcode2.setOnKeyReleased(event -> {
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
+            if (itemIsBeingCheckedIn(getBarcode2())) {
+                statusLabel2.setText("In");
+            } else {
+                statusLabel2.setText("Out");
+            }
+        });
+        barcode3.setOnKeyReleased(event -> {
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
+            if (itemIsBeingCheckedIn(getBarcode3())) {
+                statusLabel3.setText("In");
+            } else {
+                statusLabel3.setText("Out");
+            }
+        });
+        barcode4.setOnKeyReleased(event -> {
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
+            if (itemIsBeingCheckedIn(getBarcode4())) {
+                statusLabel4.setText("In");
+            } else {
+                statusLabel4.setText("Out");
+            }
+        });
+        barcode5.setOnKeyReleased(event -> {
+            if(event.getCode() == KeyCode.TAB){
+                return;
+            }
+            if (itemIsBeingCheckedIn(getBarcode5())) {
+                statusLabel5.setText("In");
+            } else {
+                statusLabel5.setText("Out");
+            }
+        });
+    }
+
 
 }

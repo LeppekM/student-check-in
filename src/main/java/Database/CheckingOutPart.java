@@ -1,6 +1,6 @@
 package Database;
 
-import Database.Objects.CheckedOutPartsObject;
+import Database.ObjectClasses.CheckedOutPartsObject;
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.StudentCheckIn;

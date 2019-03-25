@@ -1,6 +1,6 @@
 package InventoryController;
 
-import Database.Objects.Worker;
+import Database.ObjectClasses.Worker;
 import HelperClasses.StageWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

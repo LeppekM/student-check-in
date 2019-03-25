@@ -1,8 +1,8 @@
 package CheckItemsController;
 
 import Database.Database;
-import Database.Objects.SavedPart;
-import Database.Objects.Student;
+import Database.ObjectClasses.SavedPart;
+import Database.ObjectClasses.Student;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;

@@ -1,8 +1,10 @@
 package InventoryController;
 
-import Database.Objects.Part;
+import Database.FaultyPartLookup;
+import Database.ObjectClasses.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,14 +31,14 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     public AnchorPane faultyPage;
 
     @FXML
-    private ObservableList<FaultyTabTableRow> tableRows;
+    private ObservableList<FaultyPartTabTableRow> tableRows;
 
     @FXML
-    private JFXTreeTableView<FaultyTabTableRow> faultyTable;
+    private JFXTreeTableView<FaultyPartTabTableRow> faultyTable;
 
-    private TreeItem<FaultyTabTableRow> root;
+    private TreeItem<FaultyPartTabTableRow> root;
 
-    private JFXTreeTableColumn<FaultyTabTableRow,String> partNameCol, serialNumberCol, locationCol,
+    private JFXTreeTableColumn<FaultyPartTabTableRow,String> partNameCol, serialNumberCol, locationCol,
             barcodeCol, faultDescCol;
 
     private String partName, serialNumber, loc, barcode, faultDescription;
@@ -47,7 +49,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     @FXML
     private JFXButton searchButton;
 
-    private static ObservableList<Part> data
+    private static ObservableList<FaultyPartTabTableRow> data
             = FXCollections.observableArrayList();
 
     /**
@@ -65,29 +67,19 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.setPrefWidth(150);
         partNameCol.setResizable(false);
-        partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
+        partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String> param) {
                 return param.getValue().getValue().getPartName();
-            }
-        });
-
-        serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
-        serialNumberCol.setPrefWidth(150);
-        serialNumberCol.setResizable(false);
-        serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
-                return param.getValue().getValue().getSerialNumber();
             }
         });
 
         locationCol = new JFXTreeTableColumn<>("Location");
         locationCol.setPrefWidth(150);
         locationCol.setResizable(false);
-        locationCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
+        locationCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String> param) {
                 return param.getValue().getValue().getLocation();
             }
         });
@@ -95,19 +87,20 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.setPrefWidth(150);
         barcodeCol.setResizable(false);
-        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
+        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String> param) {
                 return param.getValue().getValue().getBarcode();
+//                return new ReadOnlyStringWrapper(param.getValue().getValue().getBarcode().toString());
             }
         });
 
         faultDescCol = new JFXTreeTableColumn<>("Fault Description");
         faultDescCol.setPrefWidth(150);
         faultDescCol.setResizable(false);
-        faultDescCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String>, ObservableValue<String>>() {
+        faultDescCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyTabTableRow, String> param) {
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String> param) {
                 return param.getValue().getValue().getFaultDescription();
             }
         });
@@ -121,10 +114,10 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         });
 
         // Click to select if unselected and deselect if selected
-        faultyTable.setRowFactory(new Callback<TreeTableView<FaultyTabTableRow>, TreeTableRow<FaultyTabTableRow>>() {
+        faultyTable.setRowFactory(new Callback<TreeTableView<FaultyPartTabTableRow>, TreeTableRow<FaultyPartTabTableRow>>() {
             @Override
-            public TreeTableRow<FaultyTabTableRow> call(TreeTableView<FaultyTabTableRow> param) {
-                final TreeTableRow<FaultyTabTableRow> row = new TreeTableRow<>();
+            public TreeTableRow<FaultyPartTabTableRow> call(TreeTableView<FaultyPartTabTableRow> param) {
+                final TreeTableRow<FaultyPartTabTableRow> row = new TreeTableRow<>();
                 row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
@@ -155,34 +148,34 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     public void populateTable() {
         tableRows.clear();
         faultyTable.getColumns().clear();
-        this.data.clear();
-        this.data = selectParts("SELECT * from parts WHERE isDeleted = 0 AND isFaulty = 1 ORDER BY partID", this.data);
+        FaultyPartLookup faulty = new FaultyPartLookup();
+        data.clear();
+        data = faulty.populateFaulty();
 
         for (int i = 0; i < data.size(); i++) {
-            tableRows.add(new FaultyTabTableRow(data.get(i).getPartName(),
-                    data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                    data.get(i).getBarcode().toString(), data.get(i).getFaultDesc(), data.get(i).getPartID()));
+            tableRows.add(new FaultyPartTabTableRow(data.get(i).getPartID().getValue(), data.get(i).getPartName().getValue(),
+                     data.get(i).getLocation().getValue(),
+                    "" + data.get(i).getBarcode().getValue(), data.get(i).getFaultDescription().getValue()));
         }
 
-        root = new RecursiveTreeItem<FaultyTabTableRow>(
+        root = new RecursiveTreeItem<FaultyPartTabTableRow>(
                 tableRows, RecursiveTreeObject::getChildren
         );
 
-        faultyTable.getColumns().setAll(partNameCol, serialNumberCol, locationCol, barcodeCol, faultDescCol);
+        faultyTable.getColumns().setAll(partNameCol, locationCol, barcodeCol, faultDescCol);
         faultyTable.setRoot(root);
         faultyTable.setShowRoot(false);
     }
 
     @FXML
     private void search() {
-        faultyTable.setPredicate(new Predicate<TreeItem<FaultyTabTableRow>>() {
+        faultyTable.setPredicate(new Predicate<TreeItem<FaultyPartTabTableRow>>() {
             @Override
-            public boolean test(TreeItem<FaultyTabTableRow> tableRow) {
+            public boolean test(TreeItem<FaultyPartTabTableRow> tableRow) {
                 String input = searchInput.getText().toLowerCase();
                 partName = tableRow.getValue().getPartName().getValue();
-                serialNumber = tableRow.getValue().getSerialNumber().getValue();
                 loc = tableRow.getValue().getLocation().getValue();
-                barcode = tableRow.getValue().getBarcode().getValue();
+                barcode = tableRow.getValue().getBarcode().getValue().toString();
                 faultDescription = tableRow.getValue().getFaultDescription().getValue();
 
                 return ((partName != null && partName.toLowerCase().contains(input))

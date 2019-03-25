@@ -1,10 +1,9 @@
 package Database;
 
-import Database.Objects.Part;
+import Database.ObjectClasses.Part;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 /**
  * This class uses a query to edit a part in the database

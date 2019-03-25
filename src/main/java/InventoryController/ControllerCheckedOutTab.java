@@ -1,7 +1,7 @@
 package InventoryController;
 
 import Database.CheckedOutParts;
-import Database.Objects.Part;
+import Database.ObjectClasses.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;

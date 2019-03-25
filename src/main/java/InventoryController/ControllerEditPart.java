@@ -1,6 +1,6 @@
 package InventoryController;
 
-import Database.Objects.Part;
+import Database.ObjectClasses.Part;
 import javafx.fxml.Initializable;
 
 abstract class ControllerEditPart extends ControllerInventoryPage implements Initializable {

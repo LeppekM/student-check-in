@@ -1,32 +1,15 @@
 package ManagePeople;
 
-import CheckItemsController.CheckoutPopUp;
-import CheckItemsController.SavedPopUp;
 import Database.Database;
-import Database.Objects.SavedPart;
-import Database.Objects.Student;
-import Database.Objects.Worker;
-import Database.OverdueItem;
-import InventoryController.CheckedOutItems;
-import InventoryController.OverduePopUpController;
+import Database.ObjectClasses.Worker;
 import com.jfoenix.controls.*;
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.util.Callback;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public class EditWorker {

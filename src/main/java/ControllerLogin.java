@@ -1,5 +1,5 @@
 import Database.Database;
-import Database.Objects.Worker;
+import Database.ObjectClasses.Worker;
 import InventoryController.ControllerMenu;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
