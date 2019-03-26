@@ -292,8 +292,9 @@ public class ControllerManageStudents implements IController, Initializable {
     }
 
     public void deleteStudent(ActionEvent actionEvent) {
-        if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0){
-            if (worker.isStudent()) {
+        if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0) {
+            if ((worker != null && worker.isAdmin())
+                    || requestAdminPin("delete a student")) {
                 int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
                 alert.setTitle("Delete This Student?");
@@ -302,19 +303,6 @@ public class ControllerManageStudents implements IController, Initializable {
                     database.deleteStudent(data.get(row).getName());
                     data.remove(row);
                     populateTable();
-                }
-            }else {
-                if ((worker != null && worker.isAdmin())
-                        || requestAdminPin("delete a student")) {
-                    int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
-                    alert.setTitle("Delete This Student?");
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.isPresent() && result.get() == ButtonType.OK) {
-                        database.deleteStudent(data.get(row).getName());
-                        data.remove(row);
-                        populateTable();
-                    }
                 }
             }
         }

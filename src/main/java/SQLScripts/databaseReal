@@ -5,13 +5,13 @@ CREATE PROCEDURE load_parts()
   BEGIN
     DECLARE i int DEFAULT 1;
     DECLARE j int DEFAULT 0;
-    TRUNCATE TABLE parts;
+    TRUNCATE TABLE edit;
     START TRANSACTION;
     WHILE i < 683 DO
       IF i < 104
       THEN
         set j = i;
-        insert into parts (partName,
+        insert into edit (partName,
                            serialNumber,
                            manufacturer,
                            price,
@@ -27,7 +27,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 208
         THEN
           set j = i - 103;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -43,7 +43,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 298
         THEN
           set j = i - 207;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -59,7 +59,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 379
         THEN
           set j = i - 297;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -75,7 +75,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 440
         THEN
           set j = i - 378;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -91,7 +91,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 467
         THEN
           set j = i - 439;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -107,7 +107,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 480
         THEN
           set j = i - 466;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -123,7 +123,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 494
         THEN
           set j = i - 479;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -139,7 +139,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 580
         THEN
           set j = i - 493;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -155,7 +155,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 592
         THEN
           set j = i - 579;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -171,7 +171,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 611
         THEN
           set j = i - 591;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -198,7 +198,7 @@ CREATE PROCEDURE load_parts()
       ELSEIF i < 632
         THEN
           set j = i - 610;
-          insert into parts (partName,
+          insert into edit (partName,
                              serialNumber,
                              manufacturer,
                              price,
@@ -215,7 +215,7 @@ CREATE PROCEDURE load_parts()
       ELSE
         #        set j = i - 675;
         set j = i - 631;
-        insert into parts (partName,
+        insert into edit (partName,
                            serialNumber,
                            manufacturer,
                            price,
@@ -269,26 +269,26 @@ CREATE PROCEDURE load_workers()
   BEGIN
     TRUNCATE TABLE workers;
     START TRANSACTION;
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('terrybc@msoe.edu', 'Bailey Terry', 'Sharks12', 1234, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 'Sharks12', 4123, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('langdk@msoe.edu', 'Daniel Lang', 'Sharks12', 3412, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('karczma@msoe.edu', 'Matthew Karcz', 'Sharks12', 0, 0, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
-    VALUES ('test1@msoe.edu', 'Parts Admin', 'Sharks12', 0, 0, 1, 0, 0, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    VALUES ('test1@msoe.edu', 'Edit Parts Admin', 'Sharks12', 0, 0, 1, 0, 0, 0, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('test2@msoe.edu', 'Overdue Admin', 'Sharks12', 0, 0, 0, 1, 0, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
-    VALUES ('test3@msoe.edu', 'Student Admin', 'Sharks12', 0, 0, 0, 0, 1, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    VALUES ('test3@msoe.edu', 'Remove Parts Admin', 'Sharks12', 0, 0, 0, 0, 1, 0, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('test4@msoe.edu', 'Worker Admin', 'Sharks12', 0, 0, 0, 0, 0, 1, '2019-2-11', 'Jim');
   end;
 
-drop table if exists parts;
-create table parts (
+drop table if exists edit;
+create table edit (
   partID       int         NOT NULL AUTO_INCREMENT,
   partName     varchar(50) NOT NULL,
   serialNumber varchar(20),
@@ -315,9 +315,9 @@ CALL load_parts();
 
 drop table if exists checkout;
 create table checkout (
-  checkoutID int NOT NULL AUTO_INCREMENT,
-  partID     int NOT NULL,
-  studentID  int NOT NULL,
+  checkoutID int    NOT NULL AUTO_INCREMENT,
+  partID     int    NOT NULL,
+  studentID  int    NOT NULL,
   barcode    bigint NOT NULL,
   checkoutAt varchar(55),
   prof       varchar(256),
@@ -364,22 +364,22 @@ call load_students();
 
 drop table if exists workers;
 create table workers (
-  workerID   int                NOT NULL AUTO_INCREMENT,
-  email      varchar(50) UNIQUE NOT NULL,
-  workerName varchar(50)        NOT NULL,
-  pin        int,
-  pass       varchar(20)        NOT NULL,
-  isAdmin    bit                NOT NULL,
-  overdue       bit,
-  parts      bit,
-  workers    bit,
-  students   bit,
-  createdAt  date,
-  updatedAt  date,
-  deletedAt  date,
-  createdBy  varchar(50),
-  updatedBy  varchar(50),
-  deletedBy  varchar(50),
+  workerID    int                NOT NULL AUTO_INCREMENT,
+  email       varchar(50) UNIQUE NOT NULL,
+  workerName  varchar(50)        NOT NULL,
+  pin         int,
+  pass        varchar(20)        NOT NULL,
+  isAdmin     bit                NOT NULL,
+  overdue     bit,
+  editParts   bit,
+  workers     bit,
+  removeParts bit,
+  createdAt   date,
+  updatedAt   date,
+  deletedAt   date,
+  createdBy   varchar(50),
+  updatedBy   varchar(50),
+  deletedBy   varchar(50),
   PRIMARY KEY (workerID)
 );
 
