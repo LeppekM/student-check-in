@@ -284,15 +284,24 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
 
         List<Long> stripped = barcodes.stream().distinct().collect(Collectors.toList());
-
-        for (Long aStripped : stripped) {
-            if (itemIsBeingCheckedIn(aStripped)) {
-                checkOut.setItemtoCheckedin(aStripped);
-            } else {
-                checkOut.addNewCheckoutItem(aStripped, getstudentID());
+        if(quantityIsOne()) {
+            for (Long aStripped : stripped) {
+                if (itemIsBeingCheckedIn(aStripped)) {
+                    checkOut.setItemtoCheckedin(aStripped);
+                } else {
+                    checkOut.addNewCheckoutItem(aStripped, getstudentID());
+                }
             }
         }
+        else {
+            checkOut.addMultipleCheckouts(getBarcode(), getstudentID(), getQuantitySpinner());
+
+        }
         StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + barcodes.toString());
+    }
+
+    private boolean quantityIsOne(){
+        return getQuantitySpinner() == 1;
     }
 
     private boolean barcodeIsNotEmpty(JFXTextField barcode) {
@@ -642,6 +651,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private int getQuantity() {
         return Integer.parseInt(quantity.getText());
     }
+
+    private int getQuantitySpinner(){return Integer.parseInt(newQuantity.getValue().toString());}
 
     /**
      * Gets studentID as text, returns as int

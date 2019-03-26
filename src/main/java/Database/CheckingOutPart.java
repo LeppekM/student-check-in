@@ -66,6 +66,14 @@ public class CheckingOutPart {
         }
     }
 
+    public void addMultipleCheckouts(long barcode, int studentID, int quantity){
+
+        for (int i =0; i< quantity; i++){
+            addNewCheckoutItem(barcode, studentID);
+            barcode++;
+        }
+    }
+
     /**
      * Helper for adding checkout item to DB, also sets isCheckedout in parts table to 1
      * @param barcode Barcode of part
