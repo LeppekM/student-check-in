@@ -1,6 +1,5 @@
 package InventoryController;
 
-import Database.Objects.Worker;
 import HelperClasses.ImageViewPane;
 import Database.ObjectClasses.Worker;
 import HelperClasses.StageWrapper;

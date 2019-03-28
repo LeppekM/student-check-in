@@ -1,5 +1,4 @@
 import Database.Database;
-import Database.Objects.Worker;
 import HelperClasses.ImageViewPane;
 import Database.ObjectClasses.Worker;
 import InventoryController.ControllerMenu;
