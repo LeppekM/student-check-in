@@ -3,17 +3,20 @@ package CheckItemsController;
 import Database.*;
 import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
+import Database.ObjectClasses.Worker;
+import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 
+import java.nio.file.Watchable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SavedPopUp extends StudentPage {
+public class SavedPopUp extends StudentPage implements IController {
 
     @FXML
     private JFXTextField name, part, quantity, coDate, dueDate, saved, returnDate, course;
@@ -22,6 +25,14 @@ public class SavedPopUp extends StudentPage {
     private AnchorPane main;
 
     private Database database;
+    private Worker worker;
+
+    @Override
+    public void initWorker(Worker worker){
+        if (this.worker == null){
+            this.worker = worker;
+        }
+    }
 
     public void populate(SavedPart part){
         name.setText(part.getStudentName().get());
@@ -52,8 +63,10 @@ public class SavedPopUp extends StudentPage {
         try {
             Connection connection = database.getConnection();
             Statement statement = connection.createStatement();
-            statement.executeUpdate("UPDATE checkout SET reservedAt = NULL, returnDate = NULL, course = NULL WHERE studentID = " +
-                    s.getRFID() + " and checkoutID = " + id + ";");
+            long time = System.currentTimeMillis();
+            java.sql.Date d = new java.sql.Date(time);
+            statement.executeUpdate("UPDATE checkout SET reservedAt = NULL, returnDate = NULL, course = NULL, updatedAt = date('"
+                    + d.toString() + "'), updatedBy = '" + worker + "' WHERE studentID = " + s.getRFID() + " and checkoutID = " + id + ";");
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot update database");
             alert.showAndWait();

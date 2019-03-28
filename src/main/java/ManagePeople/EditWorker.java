@@ -2,6 +2,7 @@ package ManagePeople;
 
 import Database.Database;
 import Database.ObjectClasses.Worker;
+import InventoryController.IController;
 import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.Optional;
 
-public class EditWorker {
+public class EditWorker implements IController {
 
     @FXML
     private AnchorPane main = new AnchorPane();
@@ -35,8 +36,8 @@ public class EditWorker {
     @FXML
     private JFXCheckBox showPass;
 
-    private static Worker worker;
-    private Database database = new Database();
+    private static Worker worker, loggedWorker;
+    private Database database;
     private static String name;
     private static String workerEmail;
     private static String password;
@@ -46,8 +47,16 @@ public class EditWorker {
     private static boolean work;
     private static boolean remove;
 
+    @Override
+    public void initWorker(Worker worker) {
+        if (loggedWorker == null){
+            loggedWorker = worker;
+        }
+    }
+
     public void setWorker(Worker w) {
         worker = w;
+        database = new Database();
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());
@@ -125,13 +134,12 @@ public class EditWorker {
                 worker.setName(workerName.getText());
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
-                worker.setAdmin(admin.isSelected());
-//                if (admin.isSelected()) {
-                    worker.setOver(overdue.isSelected());
-                    worker.setEdit(editParts.isSelected());
-                    worker.setRemove(removeParts.isSelected());
-                    worker.setWorker(workers.isSelected());
-//                }
+                worker.setAdmin(false);
+                worker.setOver(overdue.isSelected());
+                worker.setEdit(editParts.isSelected());
+                worker.setRemove(removeParts.isSelected());
+                worker.setWorker(workers.isSelected());
+                database.initWorker(loggedWorker);
                 database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
                 alert1.showAndWait();

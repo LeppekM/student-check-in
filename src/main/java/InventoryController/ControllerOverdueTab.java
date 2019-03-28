@@ -211,5 +211,4 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             }
         });
     }
-
 }

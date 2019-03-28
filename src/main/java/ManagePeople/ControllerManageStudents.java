@@ -266,6 +266,7 @@ public class ControllerManageStudents implements IController, Initializable {
             }
         }
         if (notIncluded && name != null && id != null && email != null) {
+            database.initWorker(worker);
             database.addStudent(new Student(name.toString(), Integer.parseInt(id), email));
         }
         populateTable();

@@ -74,7 +74,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private PauseTransition delay;
     private CheckoutObject checkoutObject;
     private StageWrapper stageWrapper = new StageWrapper();
-    private Database database = new Database();
+    private Database database;
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
     private TransitionHelper transitionHelper = new TransitionHelper();
@@ -179,6 +179,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     public void submit() {
         Student thisStudent = database.selectStudent(getstudentID());
+        database.initWorker(worker);
         if (ensureNotOverdue(thisStudent)) {
             if (!fieldsFilled()) {
                 return;

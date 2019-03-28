@@ -3,6 +3,7 @@ package CheckItemsController;
 import Database.Database;
 import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
+import Database.ObjectClasses.Worker;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;
@@ -31,6 +32,14 @@ public class CheckoutPopUp extends StudentPage implements IController {
     private AnchorPane main;
 
     private Database database;
+    private Worker worker;
+
+    @Override
+    public void initWorker(Worker worker){
+        if (this.worker == null){
+            this.worker = worker;
+        }
+    }
 
     public void populate(CheckedOutItems checked){
         name.setText(checked.getStudentName().get());
@@ -98,8 +107,9 @@ public class CheckoutPopUp extends StudentPage implements IController {
                     Statement statement = connection.createStatement();
                     long time = System.currentTimeMillis();
                     java.sql.Date d = new java.sql.Date(time);
-                    statement.executeUpdate("UPDATE checkout SET  reservedAt = date('" + d.toString() + "'), returnDate = '" + returnDate + "', course = '" + course + "'" +
-                            " WHERE studentID = " + s.getRFID() + " and checkoutID = " + cID.getText().substring(13) + ";");
+                    statement.executeUpdate("UPDATE checkout SET  reservedAt = date('" + d.toString() + "'), returnDate = '" +
+                            returnDate + "', course = '" + course + "'" + ", updatedAt = date('" + d.toString() + "'), updatedBy = '"
+                            + worker + "' WHERE studentID = " + s.getRFID() + " and checkoutID = " + cID.getText().substring(13) + ";");
                 } catch (SQLException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update database");
                     alert.showAndWait();

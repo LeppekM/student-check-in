@@ -2,6 +2,7 @@ package ManagePeople;
 
 import Database.Database;
 import Database.ObjectClasses.Worker;
+import InventoryController.IController;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -15,7 +16,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.Optional;
 
-public class EditAdmin {
+public class EditAdmin implements IController {
 
     @FXML
     private AnchorPane main = new AnchorPane();
@@ -35,8 +36,8 @@ public class EditAdmin {
     @FXML
     private JFXCheckBox showPass, showPin;
 
-    private static Worker worker;
-    private Database database = new Database();
+    private static Worker worker, loggedWorker;
+    private Database database;
     private static String name;
     private static String workerEmail;
     private static String password;
@@ -44,6 +45,7 @@ public class EditAdmin {
 
     public void setAdmin(Worker w) {
         worker = w;
+        database = new Database();
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());
@@ -102,6 +104,7 @@ public class EditAdmin {
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
                 worker.setPin(Integer.parseInt(pin.getText()));
+                database.initWorker(loggedWorker);
                 database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
                 alert1.showAndWait();
@@ -111,6 +114,13 @@ public class EditAdmin {
                 pass.setText(password);
                 pin.setText(adminPin + "");
             }
+        }
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (loggedWorker == null){
+            loggedWorker = worker;
         }
     }
 }
