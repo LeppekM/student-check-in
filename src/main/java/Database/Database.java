@@ -6,6 +6,7 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.DatabaseHelper;
 import InventoryController.CheckedOutItems;
+import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class Database {
+public class Database implements IController {
     //DB root pass: Userpassword123
     public static final String username = "root";
     public static final String password = "Userpassword123";
@@ -29,6 +30,7 @@ public class Database {
     static final String dbname = "student_check_in";
     static Connection connection;
     private DatabaseHelper databaseHelper = new DatabaseHelper();
+    private Worker worker;
 
     /**
      * This creates a connection to the database
@@ -96,7 +98,8 @@ public class Database {
     }
 
     public void removeOverdue(int barcode){
-        String query = "update checkout set checkout.dueAt = null where checkout.barcode = " + barcode + ";";
+        String query = "update checkout set checkout.dueAt = null, checkout.updatedAt = date('" + gettoday().toString() +
+                "'), checkout.updatedBy = '" + this.worker.getName() + "' where checkout.barcode = " + barcode + ";";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -146,7 +149,8 @@ public class Database {
      */
     public void deleteItem(int partID) {
         try {
-            String delete = "update parts p set p.deletedBy = 'root', p.isDeleted = 1, p.deletedAt = date('" + gettoday() + "') where p.partID = " + partID + ";";
+            String delete = "update parts p set p.deletedBy = '" + this.worker.getName() + "', p.isDeleted = 1, p.deletedAt = date('"
+                    + gettoday() + "') where p.partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
             statement.close();
@@ -158,7 +162,7 @@ public class Database {
 
     public void deleteParts(String partName) {
         try {
-            String deleteQuery = "UPDATE parts p set p.deletedBy = 'root', p.isDeleted = 1, " +
+            String deleteQuery = "UPDATE parts p set p.deletedBy = '" + this.worker.getName() + "', p.isDeleted = 1, " +
                     "p.deletedAt = date('" + gettoday() + "') WHERE p.partName = '" + partName + "';";
             Statement statement = connection.createStatement();
             statement.executeUpdate(deleteQuery);
@@ -683,7 +687,7 @@ public class Database {
      */
     public void addStudent(Student s){
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), 'root');";
+                + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), '" + this.worker.getName() + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -698,7 +702,8 @@ public class Database {
 
     public void updateStudent(Student s){
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
-                s.getName() + "', students.email = '" + s.getEmail() + "' where students.uniqueID = " + s.getUniqueID() +";";
+                s.getName() + "', students.email = '" + s.getEmail() + "', students.updatedAt = date('" +
+                gettoday().toString() + "'), students.updatedBy = '" + this.worker.getName() + "' where students.uniqueID = " + s.getUniqueID() +";";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -738,7 +743,7 @@ public class Database {
     public void addWorker(Worker w){
         int bit = w.isAdmin()? 1 : 0;
         String query = "insert into workers (email, workerName, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail() +
-                "', '" + w.getName() + "', '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), 'root');";
+                "', '" + w.getName() + "', '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), '" + this.worker.getName() + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -772,9 +777,16 @@ public class Database {
 
     public void updateWorker(Worker w){
         int admin = w.isAdmin() ? 1 : 0;
+        int over = w.isOver() ? 1: 0;
+        int edit = w.isEdit() ? 1: 0;
+        int remove = w.isRemove() ? 1 : 0;
+        int work = w.isWorker() ? 1 : 0;
         String query = "update workers set workers.workerName = '" + w.getName() + "', workers.pin = " +
                 w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.isAdmin = " + admin + "," +
-                " workers.email = " + w.getEmail() + " where workers.workerID = " + w.getID() +";";
+                " workers.email = '" + w.getEmail() + "', workers.overdue = " + over + ", workers.editParts = " + edit +
+                ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
+                gettoday().toString() + "'), workers.updatedBy = '" + this.worker.getName() + "' where workers.workerID = " +
+                w.getID() + ";";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -784,6 +796,13 @@ public class Database {
             StudentCheckIn.logger.error("Could not update worker, SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null){
+            this.worker = worker;
         }
     }
 }

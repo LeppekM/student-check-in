@@ -109,7 +109,7 @@ public class EditWorker {
                 alert.setContentText(alert.getContentText() + "\t Admin: " + priv + " --> Admin: " + admin.isSelected() + "\n");
             }
             if (edit != editParts.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Remove/Edit Parts: " + edit + " --> Remove/Edit Parts: " + editParts.isSelected() + "\n");
+                alert.setContentText(alert.getContentText() + "\t Edit Parts: " + edit + " --> Edit Parts: " + editParts.isSelected() + "\n");
             }
             if (over != overdue.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Override Overdue: " + over + " --> Override Overdue: " + overdue.isSelected() + "\n");
@@ -118,7 +118,7 @@ public class EditWorker {
                 alert.setContentText(alert.getContentText() + "\t Manage Workers: " + work + " --> Manage Workers: " + workers.isSelected() + "\n");
             }
             if (remove != removeParts.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Remove Students: " + remove + " --> Remove Students: " + removeParts.isSelected() + "\n");
+                alert.setContentText(alert.getContentText() + "\t Remove Parts: " + remove + " --> Remove Parts: " + removeParts.isSelected() + "\n");
             }
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -126,12 +126,12 @@ public class EditWorker {
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
                 worker.setAdmin(admin.isSelected());
-                if (admin.isSelected()) {
+//                if (admin.isSelected()) {
                     worker.setOver(overdue.isSelected());
                     worker.setEdit(editParts.isSelected());
                     worker.setRemove(removeParts.isSelected());
                     worker.setWorker(workers.isSelected());
-                }
+//                }
                 database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
                 alert1.showAndWait();
