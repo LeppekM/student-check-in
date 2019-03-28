@@ -2,8 +2,8 @@ package InventoryController;
 
 import Database.Objects.Worker;
 import HelperClasses.ImageViewPane;
+import Database.ObjectClasses.Worker;
 import HelperClasses.StageWrapper;
-import com.jfoenix.svg.SVGGlyph;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

@@ -1,6 +1,5 @@
-package Database.Objects;
+package Database.ObjectClasses;
 
-import Database.Database;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

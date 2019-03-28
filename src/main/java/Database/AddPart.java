@@ -1,6 +1,6 @@
 package Database;
 
-import Database.Objects.Part;
+import Database.ObjectClasses.Part;
 
 import java.sql.*;
 import java.time.LocalDateTime;

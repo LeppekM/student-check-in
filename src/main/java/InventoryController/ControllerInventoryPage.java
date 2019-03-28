@@ -1,9 +1,8 @@
 package InventoryController;
 
 import Database.*;
-import Database.Objects.Part;
-import Database.Objects.Worker;
-import javafx.application.Platform;
+import Database.ObjectClasses.Part;
+import Database.ObjectClasses.Worker;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;

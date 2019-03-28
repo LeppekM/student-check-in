@@ -1,7 +1,7 @@
 package InventoryController;
 
 import Database.EditPart;
-import Database.Objects.Part;
+import Database.ObjectClasses.Part;
 import Database.VendorInformation;
 import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXButton;
@@ -11,25 +11,16 @@ import javafx.application.Platform;
 import com.jfoenix.controls.JFXSpinner;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import javafx.util.StringConverter;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;

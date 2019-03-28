@@ -1,7 +1,7 @@
 package InventoryController;
 
-import Database.Objects.Part;
-import Database.Objects.Worker;
+import Database.ObjectClasses.Part;
+import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;

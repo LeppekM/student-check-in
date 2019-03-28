@@ -1,8 +1,8 @@
 package CheckItemsController;
 
-import Database.Objects.SavedPart;
-import Database.Objects.Student;
-import Database.Objects.Worker;
+import Database.ObjectClasses.SavedPart;
+import Database.ObjectClasses.Student;
+import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
 import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;

@@ -1,6 +1,6 @@
 package Database;
 
-import Database.Objects.CheckedOutPartsObject;
+import Database.ObjectClasses.CheckedOutPartsObject;
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.StudentCheckIn;
@@ -63,6 +63,14 @@ public class CheckingOutPart {
         }
         else {
             stageWrapper.errorAlert("Barcode was not found in database, part was not checked out");
+        }
+    }
+
+    public void addMultipleCheckouts(long barcode, int studentID, int quantity){
+
+        for (int i =0; i< quantity; i++){
+            addNewCheckoutItem(barcode, studentID);
+            barcode++;
         }
     }
 

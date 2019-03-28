@@ -1,6 +1,6 @@
 package InventoryController;
 
-import Database.Objects.Worker;
+import Database.ObjectClasses.Worker;
 
 public interface IController {
 

@@ -1,4 +1,4 @@
-package Database.Objects;
+package Database.ObjectClasses;
 
 public class Worker {
 
