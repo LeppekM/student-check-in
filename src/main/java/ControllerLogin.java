@@ -1,5 +1,6 @@
 import Database.Database;
 import Database.Objects.Worker;
+import HelperClasses.ImageViewPane;
 import InventoryController.ControllerMenu;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -23,8 +24,7 @@ public class ControllerLogin implements Initializable {
     @FXML
     private StackPane loginScene;
 
-    @FXML
-    private ImageView msoeBackgroundImage;
+    private ImageViewPane msoeBackgroundImage;
 
     @FXML
     private JFXTextField emailInputLoginPage;
@@ -41,7 +41,14 @@ public class ControllerLogin implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         database = new Database();
         Image image = new Image("images/msoeBackgroundImage.png");
-        this.msoeBackgroundImage.setImage(image);
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        msoeBackgroundImage = new ImageViewPane(imageView);
+        msoeBackgroundImage.setPrefWidth(591);
+        msoeBackgroundImage.setPrefHeight(789);
+        msoeBackgroundImage.setOpacity(0.55);
+        loginScene.getChildren().add(msoeBackgroundImage);
+        msoeBackgroundImage.toBack();
         passwordInputLoginPage.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 login();

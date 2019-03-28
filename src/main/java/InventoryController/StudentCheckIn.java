@@ -46,9 +46,10 @@ public class StudentCheckIn extends Application  {
         URL myFxmlURL = ClassLoader.getSystemResource("fxml/Login.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = loader.load(myFxmlURL);
-        Scene scene = new Scene(root, 789, 620);
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("Barcode Scanner");
+        Scene scene = new Scene(root, 1150, 800);
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(1020);
+        primaryStage.setTitle("Parts Inventory");
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image("images/msoe.png"));
         primaryStage.show();

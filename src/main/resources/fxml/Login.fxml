@@ -15,19 +15,19 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="loginScene" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerLogin">
+<StackPane fx:id="loginScene" prefHeight="400.0" prefWidth="640.0" minWidth="1000.0" minHeight="525.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerLogin">
     <children>
-        <ImageView fx:id="msoeBackgroundImage" fitHeight="525.0" fitWidth="700.0" opacity="0.55" pickOnBounds="true" preserveRatio="true" />
         <VBox alignment="CENTER">
             <StackPane>
                 <children>
-                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="60.0" stroke="BLACK" strokeType="INSIDE" width="550.0">
+                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="85.0" stroke="BLACK" strokeType="INSIDE" width="1000.0">
                         <effect>
                             <DropShadow />
-                        </effect></Rectangle>
+                        </effect>
+                    </Rectangle>
                     <Label style="-fx-font-weight: bold" text="MSOE Technical Support Center" underline="true">
                         <font>
-                            <Font size="36.0" />
+                            <Font size="64.0" />
                         </font>
                     </Label>
                 </children>
@@ -37,7 +37,7 @@
             </StackPane>
             <StackPane prefHeight="150.0" prefWidth="200.0">
                 <children>
-                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="200.0" stroke="BLACK" strokeType="INSIDE" width="235.0">
+                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="225.0" stroke="BLACK" strokeType="INSIDE" width="300.0">
                         <effect>
                             <DropShadow />
                         </effect></Rectangle>
@@ -45,7 +45,7 @@
                         <children>
                             <Label style="-fx-font-weight: bold" text="Login">
                                 <font>
-                                    <Font size="24.0" />
+                                    <Font size="54.0" />
                                 </font>
                                 <VBox.margin>
                                     <Insets bottom="10.0" />
