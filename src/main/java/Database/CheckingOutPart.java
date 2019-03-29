@@ -67,11 +67,54 @@ public class CheckingOutPart {
     }
 
     public void addMultipleCheckouts(long barcode, int studentID, int quantity){
+        List<Long> barcodes = getNonCheckedOutBarcodes(barcode);
 
         for (int i =0; i< quantity; i++){
-            addNewCheckoutItem(barcode, studentID);
-            barcode++;
+            if(i<barcodes.size()){
+                addNewCheckoutItem(barcodes.get(i), studentID);
+            }
+            else {
+                stageWrapper.errorAlert("Checked out " + i + " part(s). No more parts in inventory can be checked out");
+                return;
+            }
         }
+        barcodes.clear();
+    }
+
+    private List<Long> getNonCheckedOutBarcodes(long barcode){
+        String selectBarcodesNotCheckedOut = "select barcode from parts where partName = ? and isCheckedOut = 0";
+        String partName = getListofBarcodes(barcode);
+        List<Long> barcodes = new LinkedList<>();
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(selectBarcodesNotCheckedOut);
+            statement.setString(1, partName);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                barcodes.add(rs.getLong("barcode"));
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return barcodes;
+    }
+
+    private String getListofBarcodes(long barcode){
+        String getPartName = "select partName from parts where barcode = ?";
+        String partName = null;
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(getPartName);
+            statement.setLong(1, barcode);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                partName = rs.getString("partName");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return partName;
     }
 
     /**

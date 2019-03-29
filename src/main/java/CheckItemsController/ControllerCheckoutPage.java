@@ -261,11 +261,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         return (!barcode2.getText().isEmpty() | !barcode3.getText().isEmpty() | !barcode4.getText().isEmpty() | !barcode5.getText().isEmpty());
     }
 
-    /**
-     * Submits multiple items
-     */
-    private void submitMultipleItems() {
-        Student thisStudent = database.selectStudent(getstudentID());
+    private List<Long> collectBarcodes (){
         List<Long> barcodes = new ArrayList<>();
         if (barcodeIsNotEmpty(barcode)) {
             barcodes.add(getBarcode());
@@ -282,8 +278,21 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         if (barcodeIsNotEmpty(barcode5)) {
             barcodes.add(getBarcode5());
         }
+        return barcodes;
+    }
 
-        List<Long> stripped = barcodes.stream().distinct().collect(Collectors.toList());
+    private void collectMultipleBarcodes(){
+
+        HashMap<Long, Integer> barcodeQuantities = new HashMap<>();
+
+
+    }
+
+    /**
+     * Submits multiple items
+     */
+    private void submitMultipleItems() {
+        List<Long> stripped = collectBarcodes().stream().distinct().collect(Collectors.toList());
         if(quantityIsOne()) {
             for (Long aStripped : stripped) {
                 if (itemIsBeingCheckedIn(aStripped)) {
@@ -295,9 +304,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
         else {
             checkOut.addMultipleCheckouts(getBarcode(), getstudentID(), getQuantitySpinner());
-
         }
-        StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + barcodes.toString());
+        StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + stripped.toString());
     }
 
     private boolean quantityIsOne(){
@@ -653,6 +661,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     }
 
     private int getQuantitySpinner(){return Integer.parseInt(newQuantity.getValue().toString());}
+
+    private int getQuantitySpinnger2(){return Integer.parseInt(newQuantity2.getValue().toString());}
+
+    private int getQuantitySpinnger3(){return Integer.parseInt(newQuantity3.getValue().toString());}
+
+    private int getQuantitySpinnger4(){return Integer.parseInt(newQuantity4.getValue().toString());}
+
+    private int getQuantitySpinnger5(){return Integer.parseInt(newQuantity5.getValue().toString());}
 
     /**
      * Gets studentID as text, returns as int
