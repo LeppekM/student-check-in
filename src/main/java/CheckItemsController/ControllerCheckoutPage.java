@@ -281,35 +281,71 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         return barcodes;
     }
 
-    private void collectMultipleBarcodes(){
+    private List<MultipleCheckoutObject> collectMultipleBarcodes(){
 
-        HashMap<Long, Integer> barcodeQuantities = new HashMap<>();
-
-
+        List<MultipleCheckoutObject> barcodeInfo = new LinkedList<>();
+        if(barcodeIsNotEmpty(barcode)){
+            addBarcodes(getQuantitySpinner(), barcodeInfo, statusLabel, getBarcode());
+        }
+        if (barcodeIsNotEmpty(barcode2)) {
+            addBarcodes(getQuantitySpinner2(), barcodeInfo, statusLabel2, getBarcode2());
+        }
+        if (barcodeIsNotEmpty(barcode3)) {
+            addBarcodes(getQuantitySpinner3(), barcodeInfo, statusLabel3, getBarcode3());
+        }
+        if (barcodeIsNotEmpty(barcode4)) {
+            addBarcodes(getQuantitySpinner4(), barcodeInfo, statusLabel4, getBarcode4());
+        }
+        if (barcodeIsNotEmpty(barcode5)) {
+            addBarcodes(getQuantitySpinner5(), barcodeInfo, statusLabel5, getBarcode5());
+        }
+        return barcodeInfo;
     }
 
+    private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode){
+        boolean checkStatus = statusIsOut(status);
+        barcodes.add(new MultipleCheckoutObject(barcode, getstudentID(),checkStatus, quantity));
+    }
+
+    private boolean statusIsOut(Label status){
+        return status.getText().equals("Out");
+    }
     /**
      * Submits multiple items
      */
     private void submitMultipleItems() {
-        List<Long> stripped = collectBarcodes().stream().distinct().collect(Collectors.toList());
-        if(quantityIsOne()) {
-            for (Long aStripped : stripped) {
-                if (itemIsBeingCheckedIn(aStripped)) {
-                    checkOut.setItemtoCheckedin(aStripped);
-                } else {
-                    checkOut.addNewCheckoutItem(aStripped, getstudentID());
-                }
+        List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
+        for (int i =0; i<barcodes.size();i++){
+            System.out.println(barcodes.get(i).getBarcode());
+            System.out.println(barcodes.get(i).getQuantity());
+            System.out.println(barcodes.get(i).getStudentID());
+            System.out.println("-----");
+            if(barcodes.get(i).isCheckedOut()){
+                checkOut.addMultipleCheckouts(barcodes.get(i).getBarcode(), barcodes.get(i).getStudentID(), barcodes.get(i).getQuantity());
+            }
+            else {
+                checkOut.setItemtoCheckedin(barcodes.get(i).getBarcode());
             }
         }
-        else {
-            checkOut.addMultipleCheckouts(getBarcode(), getstudentID(), getQuantitySpinner());
-        }
-        StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + stripped.toString());
+
+//        List<Long> stripped = collectBarcodes().stream().distinct().collect(Collectors.toList());
+//        if(quantityIsOne(newQuantity)) {
+//            for (Long aStripped : stripped) {
+//                if (itemIsBeingCheckedIn(aStripped)) {
+//                    checkOut.setItemtoCheckedin(aStripped);
+//                } else {
+//                    checkOut.addNewCheckoutItem(aStripped, getstudentID());
+//                }
+//            }
+//        }
+//        else {
+//            checkOut.addMultipleCheckouts(getBarcode(), getstudentID(), getQuantitySpinner());
+//        }
+        //StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + stripped.toString());
     }
 
-    private boolean quantityIsOne(){
-        return getQuantitySpinner() == 1;
+    private boolean quantityIsOne(Spinner current){
+        return Integer.parseInt(current.getValue().toString()) == 1;
     }
 
     private boolean barcodeIsNotEmpty(JFXTextField barcode) {
@@ -662,13 +698,13 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 
     private int getQuantitySpinner(){return Integer.parseInt(newQuantity.getValue().toString());}
 
-    private int getQuantitySpinnger2(){return Integer.parseInt(newQuantity2.getValue().toString());}
+    private int getQuantitySpinner2(){return Integer.parseInt(newQuantity2.getValue().toString());}
 
-    private int getQuantitySpinnger3(){return Integer.parseInt(newQuantity3.getValue().toString());}
+    private int getQuantitySpinner3(){return Integer.parseInt(newQuantity3.getValue().toString());}
 
-    private int getQuantitySpinnger4(){return Integer.parseInt(newQuantity4.getValue().toString());}
+    private int getQuantitySpinner4(){return Integer.parseInt(newQuantity4.getValue().toString());}
 
-    private int getQuantitySpinnger5(){return Integer.parseInt(newQuantity5.getValue().toString());}
+    private int getQuantitySpinner5(){return Integer.parseInt(newQuantity5.getValue().toString());}
 
     /**
      * Gets studentID as text, returns as int

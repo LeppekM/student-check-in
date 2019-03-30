@@ -68,6 +68,10 @@ public class CheckingOutPart {
 
     public void addMultipleCheckouts(long barcode, int studentID, int quantity){
         List<Long> barcodes = getNonCheckedOutBarcodes(barcode);
+        if(quantity ==1){
+            addNewCheckoutItem(barcode, studentID);
+            return;
+        }
 
         for (int i =0; i< quantity; i++){
             if(i<barcodes.size()){
