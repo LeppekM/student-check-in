@@ -89,6 +89,8 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println(submitButton.getLayoutY());
+        System.out.println(extended.getLayoutY());
         this.worker = null;
         setFieldValidator();
         setItemStatus();
@@ -316,10 +318,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private void submitMultipleItems() {
         List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
         for (int i =0; i<barcodes.size();i++){
-            System.out.println(barcodes.get(i).getBarcode());
-            System.out.println(barcodes.get(i).getQuantity());
-            System.out.println(barcodes.get(i).getStudentID());
-            System.out.println("-----");
+//            System.out.println(barcodes.get(i).getBarcode());
+//            System.out.println(barcodes.get(i).getQuantity());
+//            System.out.println(barcodes.get(i).getStudentID());
+//            System.out.println("-----");
             if(barcodes.get(i).isCheckedOut()){
                 checkOut.addMultipleCheckouts(barcodes.get(i).getBarcode(), barcodes.get(i).getStudentID(), barcodes.get(i).getQuantity());
             }
@@ -790,6 +792,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         unlockExtended();
         int translateDown = 190;
         int translateUp = -190;
+        if(!barcode5.getText().isEmpty()){
+            translateDown = 0;
+            translateUp = 0;
+        } else if(!barcode4.getText().isEmpty()){
+            translateDown = 0;
+            translateUp = -80;
+        } else if(!barcode3.getText().isEmpty()){
+            translateDown = 80;
+            translateUp = -140;
+        } else if (!barcode2.getText().isEmpty()){
+            translateDown = 140;
+            translateUp = -190;
+        }
         if (extended.isSelected()) {
             setExtendedTransition(translateDown, true);
             setCheckoutItemsDisable(true);
@@ -820,10 +835,21 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @param showItems True if items should be shown
      */
     private void setExtendedTransition(int direction, boolean showItems) {
+//        submitButton.setLayoutY(329);
+//        resetButton.setLayoutY(329);
+//        extended.setLayoutY(279);
+//        if(HBoxBarcode3.isVisible()){
+//            extendedItemsFadeTransition();
+//            setExtendedItemsVisible(showItems);
+//            return;
+//        }
         transitionHelper.translateButtons(submitButton, resetButton, direction);
         translateExtended(direction);
         extendedItemsFadeTransition();
         setExtendedItemsVisible(showItems);
+
+
+
     }
 
     /**
@@ -834,6 +860,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private void setExtendedItemsVisible(boolean isVisible) {
         barcode2.setVisible(!isVisible);
         HBoxBarcode2.setVisible(!isVisible);
+        barcode3.setVisible(!isVisible);
+        HBoxBarcode3.setVisible(!isVisible);
+        barcode4.setVisible(!isVisible);
+        HBoxBarcode4.setVisible(!isVisible);
+        barcode5.setVisible(!isVisible);
+        HBoxBarcode5.setVisible(!isVisible);
         quantity.setVisible(isVisible);
         quantityLabel.setVisible(isVisible);
         dueAt.setVisible(isVisible);
@@ -1017,7 +1049,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Helper method for dropping barcode down
      */
     private void barcodeDropHelper() {
-        extended.setVisible(false);
+        //extended.setVisible(false);
         faulty.setVisible(false);
     }
 
