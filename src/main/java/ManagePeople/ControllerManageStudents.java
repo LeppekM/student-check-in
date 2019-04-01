@@ -187,7 +187,7 @@ public class ControllerManageStudents implements IController, Initializable {
                     id = id.substring(5);
                 }
                 if (!id.matches("[a-zA-Z]*") && id.length() == 5) {
-                    if (!database.selectStudent(Integer.parseInt(id)).getName().equals("")) {
+                    if (!database.selectStudent(Integer.parseInt(id), null).getName().equals("")) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
                         StudentCheckIn.logger.info("Manage Students: Student is already in the database!");
                         alert.showAndWait();
@@ -349,7 +349,7 @@ public class ControllerManageStudents implements IController, Initializable {
             Stage stage = new Stage();
             int f = manageStudentsTable.getSelectionModel().getSelectedIndex();
             ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(f).getValue();
-            Student s = database.selectStudent(Integer.parseInt(r.getId().get()));
+            Student s = database.selectStudent(Integer.parseInt(r.getId().get()), null);
             try {
                 URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);

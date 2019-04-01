@@ -578,25 +578,47 @@ public class Database implements IController {
      * @return a student
      * @author Bailey Terry
      */
-    public Student selectStudent(int ID){
-        String todaysDate = gettoday().toString();
-        String query = "select * from students where studentID = " + ID;
-        String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
-                "from students " +
-                "left join checkout on students.studentID = checkout.studentID " +
-                "left join parts on checkout.partID = parts.partID" +
-                " where students.studentID = " + ID  +
-                " AND checkout.checkinAt is null;";
-        String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
-                "from students " +
-                "left join checkout on students.studentID = checkout.studentID " +
-                "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
-        String oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
-                "inner join parts on checkout.partID = parts.partID " +
-                "inner join students on checkout.studentID = students.studentID " +
-                "where checkout.checkinAt is null";
+    public Student selectStudent(int ID, String studentEmail){
+        String query = null;
+        String coList = null;
+        String pList = null;
+        String oList = null;
+        if (studentEmail == null) {
+            query = "select * from students where studentID = " + ID;
+            coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
+                    "from students " +
+                    "left join checkout on students.studentID = checkout.studentID " +
+                    "left join parts on checkout.partID = parts.partID" +
+                    " where students.studentID = " + ID +
+                    " AND checkout.checkinAt is null;";
+            pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
+                    "from students " +
+                    "left join checkout on students.studentID = checkout.studentID " +
+                    "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
+            oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
+                    "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
+                    "inner join parts on checkout.partID = parts.partID " +
+                    "inner join students on checkout.studentID = students.studentID " +
+                    "where checkout.checkinAt is null";
 //                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
+        }else if (ID == -1){
+            query = "select * from students where email = " + studentEmail;
+            coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
+                    "from students " +
+                    "left join checkout on students.studentID = checkout.studentID " +
+                    "left join parts on checkout.partID = parts.partID" +
+                    " where students.email = " + studentEmail +
+                    " AND checkout.checkinAt is null;";
+            pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
+                    "from students " +
+                    "left join checkout on students.studentID = checkout.studentID " +
+                    "left join parts on checkout.partID = parts.partID where students.email = " + studentEmail + " and checkout.reservedAt != '';";
+            oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
+                    "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
+                    "inner join parts on checkout.partID = parts.partID " +
+                    "inner join students on checkout.studentID = students.studentID " +
+                    "where checkout.checkinAt is null";
+        }
         Student student = null;
         String name = "";
         String email = "";

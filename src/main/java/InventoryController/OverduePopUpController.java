@@ -43,7 +43,7 @@ public class OverduePopUpController extends ControllerOverdueTab {
             overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll("\\$", ""));
             overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll(",", ""));
             fee.setText("$" + df.format(Double.parseDouble(overdueTabTableRow.getFee().get())));
-            Student student = database.selectStudent(Integer.parseInt(overdueTabTableRow.getStudentID().get()));
+            Student student = database.selectStudent(Integer.parseInt(overdueTabTableRow.getStudentID().get()), null);
             nameField.setText(student.getName());
             email.setText(student.getEmail());
         }
