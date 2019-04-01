@@ -74,7 +74,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private PauseTransition delay;
     private CheckoutObject checkoutObject;
     private StageWrapper stageWrapper = new StageWrapper();
-    private Database database;
+    private Database database = new Database();
     private CheckingOutPart checkOut = new CheckingOutPart();
     private StudentInfo student = new StudentInfo();
     private TransitionHelper transitionHelper = new TransitionHelper();
@@ -524,6 +524,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @author Bailey Terry
      */
     public void goToStudent() {
+        int i = Integer.parseInt(studentID.getText());
         Student s = database.selectStudent(Integer.parseInt(studentID.getText()));
         if (!s.getName().equals("")) {
             try {
