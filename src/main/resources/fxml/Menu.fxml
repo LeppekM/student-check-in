@@ -13,7 +13,6 @@
   <children>
     <StackPane fx:id="pane" VBox.vgrow="ALWAYS">
       <children>
-        <ImageView fx:id="msoeBackgroundImage" fitHeight="620.0" fitWidth="800.0" opacity="0.50" pickOnBounds="true" preserveRatio="true" />
         <VBox alignment="CENTER">
           <children>
             <HBox alignment="CENTER">

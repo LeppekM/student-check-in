@@ -1,5 +1,6 @@
 package InventoryController;
 
+import HelperClasses.ImageViewPane;
 import Database.ObjectClasses.Worker;
 import HelperClasses.StageWrapper;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -26,10 +28,12 @@ public class ControllerMenu implements IController, Initializable {
     private VBox mainMenuScene;
 
     @FXML
-    private Button inventory, manageStudents, manageWorkers;
+    private StackPane pane;
 
     @FXML
-    private ImageView msoeBackgroundImage;
+    private Button inventory, manageStudents, manageWorkers;
+
+    private ImageViewPane msoeBackgroundImage;
 
     private Worker worker;
 
@@ -47,7 +51,14 @@ public class ControllerMenu implements IController, Initializable {
         manageStudents.setOnAction(event -> openMangeStudents());
         manageWorkers.setOnAction(event -> openManageWorkers());
         Image image = new Image("images/msoeBackgroundImage.png");
-        this.msoeBackgroundImage.setImage(image);
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        this.msoeBackgroundImage = new ImageViewPane(imageView);
+        this.msoeBackgroundImage.setPrefWidth(591);
+        this.msoeBackgroundImage.setPrefHeight(789);
+        this.msoeBackgroundImage.setOpacity(0.55);
+        pane.getChildren().add(this.msoeBackgroundImage);
+        this.msoeBackgroundImage.toBack();
     }
 
     @Override
