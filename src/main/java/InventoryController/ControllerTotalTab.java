@@ -563,6 +563,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             stage.getIcons().add(new Image("images/msoe.png"));
+            stage.setResizable(false);
             stage.setOnCloseRequest(e -> {
                 // checks to see whether the pin was submitted or the window was just closed
                 if (((AdminPinRequestController) loader.getController()).isSubmitted()) {

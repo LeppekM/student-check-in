@@ -2,6 +2,7 @@ import Database.Database;
 import HelperClasses.ImageViewPane;
 import Database.ObjectClasses.Worker;
 import InventoryController.ControllerMenu;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
@@ -33,6 +34,9 @@ public class ControllerLogin implements Initializable {
     private JFXPasswordField passwordInputLoginPage;
 
     @FXML
+    private JFXButton loginButtonLoginPage;
+
+    @FXML
     private Label invalidLoginCredentialsError;
 
     private Database database;
@@ -49,7 +53,17 @@ public class ControllerLogin implements Initializable {
         msoeBackgroundImage.setOpacity(0.55);
         loginScene.getChildren().add(msoeBackgroundImage);
         msoeBackgroundImage.toBack();
+        emailInputLoginPage.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                login();
+            }
+        });
         passwordInputLoginPage.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                login();
+            }
+        });
+        loginButtonLoginPage.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 login();
             }

@@ -48,7 +48,7 @@ public class StudentCheckIn extends Application  {
         Parent root = loader.load(myFxmlURL);
         Scene scene = new Scene(root, 1150, 800);
         primaryStage.setMinHeight(600);
-        primaryStage.setMinWidth(1020);
+        primaryStage.setMinWidth(1030);
         primaryStage.setTitle("Parts Inventory");
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image("images/msoe.png"));

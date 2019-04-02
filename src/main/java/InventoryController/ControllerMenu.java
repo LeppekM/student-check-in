@@ -3,18 +3,19 @@ package InventoryController;
 import HelperClasses.ImageViewPane;
 import Database.ObjectClasses.Worker;
 import HelperClasses.StageWrapper;
+import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +32,7 @@ public class ControllerMenu implements IController, Initializable {
     private StackPane pane;
 
     @FXML
-    private Button inventory, manageStudents, manageWorkers;
+    private JFXButton inventory, manageStudents, manageWorkers;
 
     private ImageViewPane msoeBackgroundImage;
 
@@ -44,9 +45,9 @@ public class ControllerMenu implements IController, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.worker = null;
+        manageWorkers.setDisable(true);
         manageStudents.setText("Manage\nStudents");
         manageWorkers.setText("Manage\nWorkers");
-        manageWorkers.setDisable(true);
         inventory.setOnAction(event -> openInventory());
         manageStudents.setOnAction(event -> openMangeStudents());
         manageWorkers.setOnAction(event -> openManageWorkers());
