@@ -4,11 +4,9 @@ import Database.Database;
 import Database.OverdueItem;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -18,8 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,7 +32,7 @@ import java.util.function.Predicate;
 public class ControllerOverdueTab extends ControllerInventoryPage implements Initializable {
 
     @FXML
-    private AnchorPane overduePage;
+    private VBox overduePage;
 
     @FXML
     JFXTreeTableView<OverdueTabTableRow> overdueTable;
@@ -75,7 +72,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         overdueTable.setPlaceholder(emptyTableLabel);
 
         studentIDCol = new JFXTreeTableColumn<>("Student ID");
-        studentIDCol.setPrefWidth(150);
+        studentIDCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
         studentIDCol.setResizable(false);
         studentIDCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -85,7 +82,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         });
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.setPrefWidth(200);
+        partNameCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
         partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -95,7 +92,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         });
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
-        serialNumberCol.setPrefWidth(150);
+        serialNumberCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
         serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -105,7 +102,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         });
 
         dueDateCol = new JFXTreeTableColumn<>("Due Date");
-        dueDateCol.setPrefWidth(150);
+        dueDateCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
         dueDateCol.setResizable(false);
         dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -115,7 +112,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         });
 
         feeCol = new JFXTreeTableColumn<>("Fee");
-        feeCol.setPrefWidth(150);
+        feeCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
         feeCol.setResizable(false);
         feeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override

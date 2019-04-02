@@ -188,7 +188,7 @@ public class StudentPage implements IController {
     }
 
     public void goHome() {
-        stageWrapper.newStage("fxml/Menu.fxml", main);
+        stageWrapper.newStage("/fxml/Menu.fxml", main, worker);
     }
 
     public void coPopUp(MouseEvent event) {

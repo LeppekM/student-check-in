@@ -1,31 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-
-<?import java.net.URL?>
-<?import com.jfoenix.controls.JFXTreeTableView?>
-<?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXButton?>
-<AnchorPane fx:id="checkedOutPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerCheckedOutTab">
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="checkedOutPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerCheckedOutTab">
     <children>
-        <Label layoutX="14.0" layoutY="14.0" text="Checked Out Items">
-            <stylesheets>
-                <URL value="@../css/HeaderStyle.css" />
-            </stylesheets>
-        </Label>
-        <JFXTextField fx:id="searchInput" layoutX="567.0" layoutY="25.0" promptText="search" />
-        <JFXButton fx:id="searchButton" layoutX="714.0" layoutY="23.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
-        <JFXTreeTableView fx:id="checkedOutTable" layoutX="6.0" layoutY="63.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+      <HBox>
+         <children>
+              <Label text="Checked Out Items">
+                  <stylesheets>
+                      <URL value="@../css/HeaderStyle.css" />
+                  </stylesheets>
+               <HBox.margin>
+                  <Insets left="20.0" top="14.0" />
+               </HBox.margin>
+              </Label>
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+               <children>
+                    <JFXTextField fx:id="searchInput" promptText="search">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin></JFXTextField>
+                    <JFXButton fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
+               </children>
+               <HBox.margin>
+                  <Insets right="20.0" top="14.0" />
+               </HBox.margin>
+            </HBox>
+         </children>
+      </HBox>
+        <JFXTreeTableView fx:id="checkedOutTable" VBox.vgrow="ALWAYS">
             <stylesheets>
                 <URL value="@../css/TableStyle.css" />
             </stylesheets>
          <columnResizePolicy>
             <JFXTreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
+         <VBox.margin>
+            <Insets bottom="63.0" />
+         </VBox.margin>
         </JFXTreeTableView>
     </children>
-</AnchorPane>
+</VBox>

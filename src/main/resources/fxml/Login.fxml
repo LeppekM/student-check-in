@@ -21,7 +21,7 @@
         <VBox alignment="CENTER">
             <StackPane>
                 <children>
-                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="95.0" stroke="BLACK" strokeType="INSIDE" width="1020.0">
+                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="95.0" stroke="BLACK" strokeType="INSIDE" width="1010.0">
                         <effect>
                             <DropShadow />
                         </effect>
@@ -38,7 +38,7 @@
             </StackPane>
             <StackPane prefHeight="150.0" prefWidth="200.0">
                 <children>
-                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="255.0" stroke="BLACK" strokeType="INSIDE" width="300.0">
+                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="275.0" stroke="BLACK" strokeType="INSIDE" width="300.0">
                         <effect>
                             <DropShadow />
                         </effect></Rectangle>
@@ -52,7 +52,7 @@
                                     <Insets bottom="10.0" />
                                 </VBox.margin>
                             </Label>
-                            <GridPane alignment="CENTER" hgap="2.0" vgap="20.0">
+                            <GridPane alignment="CENTER" hgap="2.0" vgap="30.0">
                                 <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" style="-fx-font-weight: bold" text="email:">
                                     <font>
                                         <Font size="18.0" />
@@ -63,15 +63,30 @@
                                         <Font size="18.0" />
                                     </font>
                                 </Label>
-                                <JFXTextField fx:id="emailInputLoginPage" GridPane.columnIndex="1" />
-                                <JFXPasswordField fx:id="passwordInputLoginPage" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <JFXTextField fx:id="emailInputLoginPage" GridPane.columnIndex="1">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <padding>
+                              <Insets top="7.0" />
+                           </padding></JFXTextField>
+                                <JFXPasswordField fx:id="passwordInputLoginPage" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <padding>
+                              <Insets top="7.0" />
+                           </padding>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin></JFXPasswordField>
                         <columnConstraints>
                            <ColumnConstraints halignment="RIGHT" />
-                           <ColumnConstraints minWidth="10.0" prefWidth="130.0" />
+                           <ColumnConstraints minWidth="10.0" prefWidth="170.0" />
                         </columnConstraints>
                         <rowConstraints>
-                           <RowConstraints />
-                           <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                           <RowConstraints valignment="BOTTOM" />
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" />
                         </rowConstraints>
                         <padding>
                            <Insets bottom="10.0" />

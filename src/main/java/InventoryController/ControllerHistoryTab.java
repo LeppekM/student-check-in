@@ -16,7 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 public class ControllerHistoryTab  extends ControllerInventoryPage implements Initializable {
 
     @FXML
-    private AnchorPane inventoryHistoryPage;
+    private VBox inventoryHistoryPage;
 
     private ObservableList<HistoryTabTableRow> tableRows;
 
@@ -68,7 +68,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
 
         studentCol = new JFXTreeTableColumn<>("Student");
-        studentCol.setPrefWidth(150);
+        studentCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         studentCol.setResizable(false);
         studentCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -78,7 +78,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
 
         partNameCol = new JFXTreeTableColumn<>("Part");
-        partNameCol.setPrefWidth(200);
+        partNameCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -88,7 +88,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
-        serialNumberCol.setPrefWidth(150);
+        serialNumberCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -98,7 +98,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
 
         statusCol = new JFXTreeTableColumn<>("Status");
-        statusCol.setPrefWidth(150);
+        statusCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         statusCol.setResizable(false);
         statusCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -108,7 +108,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
 
         dateCol = new JFXTreeTableColumn<>("Date");
-        dateCol.setPrefWidth(150);
+        dateCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         dateCol.setResizable(false);
         dateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override

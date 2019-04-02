@@ -16,7 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 public class ControllerInventoryPage extends ControllerMenu implements IController, Initializable {
 
     @FXML
-    private AnchorPane inventoryScene;
+    private StackPane inventoryScene;
 
     @FXML
     private TabPane tabPane;

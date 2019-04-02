@@ -4,7 +4,6 @@ import Database.FaultyPartLookup;
 import Database.ObjectClasses.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
@@ -24,11 +23,8 @@ import java.util.function.Predicate;
 
 public class ControllerFaultyTab  extends ControllerInventoryPage implements Initializable {
 
-//    @FXML
-//    private TextField searchTotal;
-
     @FXML
-    public AnchorPane faultyPage;
+    public VBox faultyPage;
 
     @FXML
     private ObservableList<FaultyPartTabTableRow> tableRows;
@@ -38,10 +34,10 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
     private TreeItem<FaultyPartTabTableRow> root;
 
-    private JFXTreeTableColumn<FaultyPartTabTableRow,String> partNameCol, serialNumberCol, locationCol,
+    private JFXTreeTableColumn<FaultyPartTabTableRow,String> partNameCol, locationCol,
             barcodeCol, faultDescCol;
 
-    private String partName, serialNumber, loc, barcode, faultDescription;
+    private String partName, loc, barcode, faultDescription;
 
     @FXML
     private JFXTextField searchInput;
@@ -65,7 +61,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         faultyTable.setPlaceholder(emptyTableLabel);
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.setPrefWidth(150);
+        partNameCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
         partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -75,7 +71,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         });
 
         locationCol = new JFXTreeTableColumn<>("Location");
-        locationCol.setPrefWidth(150);
+        locationCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
         locationCol.setResizable(false);
         locationCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -85,7 +81,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         });
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
-        barcodeCol.setPrefWidth(150);
+        barcodeCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
         barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -96,7 +92,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         });
 
         faultDescCol = new JFXTreeTableColumn<>("Fault Description");
-        faultDescCol.setPrefWidth(150);
+        faultDescCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
         faultDescCol.setResizable(false);
         faultDescCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -179,7 +175,6 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                 faultDescription = tableRow.getValue().getFaultDescription().getValue();
 
                 return ((partName != null && partName.toLowerCase().contains(input))
-                        || (serialNumber != null && serialNumber.toLowerCase().contains(input))
                         || (loc != null && loc.toLowerCase().contains(input))
                         || (barcode != null && barcode.toLowerCase().contains(input))
                         || (faultDescription != null && faultDescription.toLowerCase().contains(input)));

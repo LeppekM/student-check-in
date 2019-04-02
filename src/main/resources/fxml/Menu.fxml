@@ -19,12 +19,12 @@
               <children>
                 <VBox>
                   <children>
-                    <JFXButton fx:id="inventory" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" text="Inventory" style="-fx-font-size: 32">
+                    <JFXButton fx:id="inventory" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" text="Inventory" style="-fx-font-size: 28">
                       <VBox.margin>
                         <Insets bottom="50.0" />
                       </VBox.margin>
                     </JFXButton>
-                    <JFXButton fx:id="inventory1" mnemonicParsing="false" onAction="#openCheckItemsPage" prefHeight="150.0" prefWidth="225.0" text="Checkout/In" style="-fx-font-size: 32">
+                    <JFXButton fx:id="inventory1" mnemonicParsing="false" onAction="#openCheckItemsPage" prefHeight="150.0" prefWidth="225.0" text="Checkout/In" style="-fx-font-size: 28">
                       <VBox.margin>
                         <Insets top="25.0" />
                       </VBox.margin>
@@ -36,12 +36,12 @@
                 </VBox>
                 <VBox>
                   <children>
-                    <JFXButton fx:id="manageStudents" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" text="Button" textAlignment="CENTER" style="-fx-font-size: 32">
+                    <JFXButton fx:id="manageStudents" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" text="Button" textAlignment="CENTER" style="-fx-font-size: 28">
                     <VBox.margin>
                       <Insets bottom="50.0" />
                     </VBox.margin>
                   </JFXButton>
-                    <JFXButton fx:id="manageWorkers" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" textAlignment="CENTER" style="-fx-font-size: 32">
+                    <JFXButton fx:id="manageWorkers" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" textAlignment="CENTER" style="-fx-font-size: 28">
                       <VBox.margin>
                         <Insets top="25.0" />
                       </VBox.margin>

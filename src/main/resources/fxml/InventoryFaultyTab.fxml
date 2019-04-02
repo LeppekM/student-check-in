@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.text.Font?>
-
-<?import java.net.URL?>
-<?import com.jfoenix.controls.JFXTreeTableView?>
-<?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXButton?>
-<AnchorPane fx:id="faultyPage" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="InventoryController.ControllerFaultyTab">
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="faultyPage" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerFaultyTab">
   <children>
-    <Label layoutX="20.0" layoutY="14.0" text="Faulty Parts">
-      <stylesheets>
-        <URL value="@../css/HeaderStyle.css" />
-      </stylesheets>
-    </Label>
-    <JFXTextField fx:id="searchInput" layoutX="567.0" layoutY="25.0" promptText="search" />
-    <JFXButton fx:id="searchButton" layoutX="714.0" layoutY="23.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
-    <JFXTreeTableView id="tableInv" fx:id="faultyTable" layoutX="0.0" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0">
+      <HBox>
+         <children>
+          <Label text="Faulty Parts">
+            <stylesheets>
+              <URL value="@../css/HeaderStyle.css" />
+            </stylesheets>
+               <HBox.margin>
+                  <Insets left="20.0" top="14.0" />
+               </HBox.margin>
+          </Label>
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+               <children>
+                <JFXTextField fx:id="searchInput" promptText="search">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin></JFXTextField>
+                <JFXButton fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
+               </children>
+               <HBox.margin>
+                  <Insets right="20.0" top="14.0" />
+               </HBox.margin>
+            </HBox>
+         </children>
+      </HBox>
+    <JFXTreeTableView id="tableInv" fx:id="faultyTable" prefHeight="475.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="65.0" VBox.vgrow="ALWAYS">
       <columnResizePolicy>
         <JFXTreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
       <stylesheets>
         <URL value="@../css/TableStyle.css" />
       </stylesheets>
+         <VBox.margin>
+            <Insets bottom="63.0" />
+         </VBox.margin>
     </JFXTreeTableView>
   </children>
-</AnchorPane>
+</VBox>
