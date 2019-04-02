@@ -348,14 +348,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
 
         // getStudentID returns -1 if the field does not contain a number
-        if (studentID != -1) {
-            CheckedOutPartsObject currentInfo = new CheckedOutPartsObject(barcode, database.selectStudent(studentID, getstudentID()).getRFID());
+//        if (containsNumber(getstudentID())) {
+            CheckedOutPartsObject currentInfo = containsNumber(getstudentID()) ? new CheckedOutPartsObject(barcode,
+                    database.selectStudent(studentID, null).getRFID()) : new CheckedOutPartsObject(barcode,
+                    database.selectStudent(studentID, getstudentID()).getRFID());
             for (CheckedOutPartsObject checkoutPart : checkoutParts) {
                 if (checkoutPart.equals(currentInfo)) {
                     return true;
                 }
             }
-        }
+//        }
         return false;
     }
 
@@ -585,7 +587,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         stageWrapper.requiredInputValidator(studentID);
         stageWrapper.requiredInputValidator(barcode);
         stageWrapper.requiredInputValidator(quantity);
-        stageWrapper.acceptIntegerOnly(studentID);
+//        stageWrapper.acceptIntegerOnly(studentID);
         stageWrapper.acceptIntegerOnly(quantity);
         stageWrapper.acceptIntegerOnly(barcode);
         stageWrapper.acceptIntegerOnly(barcode2);
@@ -1083,14 +1085,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     private void initialStudentFieldFunctions(){
 
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
         }
 
         studentID.setOnKeyReleased(event -> {
-            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
                 studentInfo.setDisable(false);
             } else {
                 studentInfo.setDisable(true);
@@ -1101,7 +1103,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         studentID.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$")) {
+                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$") && !newValue.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
                     studentID.setText(oldValue);
                 }
             }

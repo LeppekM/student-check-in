@@ -221,7 +221,8 @@ public class StudentPage implements IController {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopUp.fxml"));
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
                 Parent root = loader.load();
                 ((IController) loader.getController()).initWorker(worker);
                 Scene scene = new Scene(root, 400, 300);

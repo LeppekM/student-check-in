@@ -13,7 +13,7 @@ public class OverduePopUpController extends ControllerOverdueTab {
     @FXML
     private JFXTextField nameField = new JFXTextField();
     @FXML
-    private JFXTextField email = new JFXTextField();
+    private JFXTextField emailField = new JFXTextField();
     @FXML
     private JFXTextField serialNumber = new JFXTextField();
     @FXML
@@ -29,7 +29,7 @@ public class OverduePopUpController extends ControllerOverdueTab {
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         if (overdueTabTableRow == null && overdueItems != null) {
             nameField.setText(overdueItems.getName().get());
-            email.setText(overdueItems.getEmail().get());
+            emailField.setText(overdueItems.getEmail().get());
             serialNumber.setText(overdueItems.getSerial().get());
             partName.setText(overdueItems.getPart().get());
             dueDate.setText(overdueItems.getDate().get());
@@ -45,7 +45,7 @@ public class OverduePopUpController extends ControllerOverdueTab {
             fee.setText("$" + df.format(Double.parseDouble(overdueTabTableRow.getFee().get())));
             Student student = database.selectStudent(Integer.parseInt(overdueTabTableRow.getStudentID().get()), null);
             nameField.setText(student.getName());
-            email.setText(student.getEmail());
+            emailField.setText(student.getEmail());
         }
     }
 }
