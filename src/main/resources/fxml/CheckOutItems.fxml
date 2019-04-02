@@ -2,7 +2,6 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXDatePicker?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
@@ -53,14 +52,7 @@
       <JFXButton fx:id="studentInfo" disable="true" layoutX="625.0" layoutY="16.0" mnemonicParsing="false" onAction="#goToStudent" prefHeight="42.0" prefWidth="150.0" stylesheets="@../css/ButtonStyle.css" text="Student Info" />
       <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="317.0" layoutY="329.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
       <Label layoutX="248.0" layoutY="123.0" text="Student Name" />
-      <Label fx:id="studentNameText" layoutX="101.0" layoutY="561.0" />
       <TextArea fx:id="faultyTextArea" layoutX="282.0" layoutY="327.0" prefHeight="95.0" prefWidth="265.0" promptText="Please enter description of fault" visible="false" />
-      <JFXTextField fx:id="courseName" layoutX="342.0" layoutY="289.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
-      <JFXTextField fx:id="profName" layoutX="343.0" layoutY="350.0" prefHeight="24.0" prefWidth="125.0" visible="false" />
-      <Label fx:id="dueAt" layoutX="291.0" layoutY="424.0" text="Due At" visible="false" />
-      <Label fx:id="courseNameLabel" layoutX="256.0" layoutY="299.0" text="Course Name" visible="false" />
-      <Label fx:id="profNameLabel" layoutX="243.0" layoutY="364.0" text="Instructor Name" visible="false" />
-      <JFXDatePicker fx:id="datePicker" defaultColor="#4059a9" layoutX="343.0" layoutY="412.0" visible="false" />
       <HBox fx:id="HBoxBarcode" layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0">
          <children>
             <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" visible="false" />

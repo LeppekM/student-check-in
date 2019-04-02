@@ -15,6 +15,16 @@ public class ExtendedCheckoutController implements Initializable {
 
     @FXML
     JFXDatePicker returnDate;
+
+    private ExtendedCheckoutObject checkout;
+
+    public void initExtendedInfo(ExtendedCheckoutObject extendedCheckoutObject){
+        this.checkout = extendedCheckoutObject;
+    }
+
+    private void setInfo(){
+
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

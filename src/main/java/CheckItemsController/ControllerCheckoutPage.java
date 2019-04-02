@@ -73,6 +73,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 
     private PauseTransition delay;
     private CheckoutObject checkoutObject;
+    private ExtendedCheckoutObject extendedCheckOutObject;
     private StageWrapper stageWrapper = new StageWrapper();
     private Database database = new Database();
     private CheckingOutPart checkOut = new CheckingOutPart();
@@ -99,7 +100,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         setLabelStatuses();
         getStudentName();
         unlockFields();
-        unlockExtended();
+        //unlockExtended();
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
     }
@@ -137,6 +138,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         delay.setOnFinished(event -> submit());
         delay.play();
     }
+
+//    public void initExtended(ExtendedCheckoutObject checkout){
+//        this.extendedCheckOutObject = checkout;
+//        barcode.setText(checkout.getBarcode());
+//        barcode2.setText(ch);
+//    }
 
 
     public void initCheckoutObject(CheckoutObject checkoutObject) {
@@ -767,114 +774,64 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         return dbHelp.setExtendedDuedate(ld);
     }
 
-    /**
-     * Disables submitting information until all fields are filled out for extended checkbox.
-     */
-    private void unlockExtended() {
-        BooleanBinding binding;
-        if (extended.isSelected()) {
-            binding = courseName.textProperty().isEmpty()
-                    .or(profName.textProperty().isEmpty())
-                    .or(studentID.textProperty().isEmpty())
-                    .or(barcode.textProperty().isEmpty())
-                    .or(quantity.textProperty().isEmpty())
-                    .or(datePicker.valueProperty().isNull());
-            submitButton.disableProperty().bind(binding);
-        } else {
-            unlockFields();
-        }
-    }
+
 
     /**
      * If extended is selected, more items will be displayed
      */
     public void isExtended() {
-        unlockExtended();
-        int translateDown = 190;
-        int translateUp = -190;
-        if(!barcode5.getText().isEmpty()){
-            translateDown = 0;
-            translateUp = 0;
-        } else if(!barcode4.getText().isEmpty()){
-            translateDown = 0;
-            translateUp = -80;
-        } else if(!barcode3.getText().isEmpty()){
-            translateDown = 80;
-            translateUp = -140;
-        } else if (!barcode2.getText().isEmpty()){
-            translateDown = 140;
-            translateUp = -190;
-        }
-        if (extended.isSelected()) {
-            setExtendedTransition(translateDown, true);
-            setCheckoutItemsDisable(true);
-        } else {
-            if (loseExtendedInformation()) {
-                extended.setSelected(true);
-                return;
-            }
-            resetExtended();
-            setExtendedTransition(translateUp, false);
-            setCheckoutItemsDisable(false);
-        }
+       if(extended.isSelected()) {
+           stageWrapper.popupPage("fxml/ExtendedCheckout.fxml", main);
+       }
     }
 
-    /**
-     * Resets extended fields.
-     */
-    private void resetExtended() {
-        courseName.setText("");
-        profName.setText("");
-        datePicker.setValue(null);
-    }
-
-    /**
-     * Helper method to show extended fields
-     *
-     * @param direction Direction items will be moved in
-     * @param showItems True if items should be shown
-     */
-    private void setExtendedTransition(int direction, boolean showItems) {
-//        submitButton.setLayoutY(329);
-//        resetButton.setLayoutY(329);
-//        extended.setLayoutY(279);
-//        if(HBoxBarcode3.isVisible()){
-//            extendedItemsFadeTransition();
-//            setExtendedItemsVisible(showItems);
-//            return;
-//        }
-        transitionHelper.translateButtons(submitButton, resetButton, direction);
-        translateExtended(direction);
-        extendedItemsFadeTransition();
-        setExtendedItemsVisible(showItems);
 
 
 
-    }
-
-    /**
-     * Helper method to set extended items to be visible
-     *
-     * @param isVisible True if items should be shown
-     */
-    private void setExtendedItemsVisible(boolean isVisible) {
-        barcode2.setVisible(!isVisible);
-        HBoxBarcode2.setVisible(!isVisible);
-        barcode3.setVisible(!isVisible);
-        HBoxBarcode3.setVisible(!isVisible);
-        barcode4.setVisible(!isVisible);
-        HBoxBarcode4.setVisible(!isVisible);
-        barcode5.setVisible(!isVisible);
-        HBoxBarcode5.setVisible(!isVisible);
-        quantity.setVisible(isVisible);
-        quantityLabel.setVisible(isVisible);
-        dueAt.setVisible(isVisible);
-        courseName.setVisible(isVisible);
-        profName.setVisible(isVisible);
-        datePicker.setVisible(isVisible);
-        courseNameLabel.setVisible(isVisible);
-        profNameLabel.setVisible(isVisible);
-    }
+//    /**
+//     * Helper method to set extended items to be visible
+//     *
+//     * @param isVisible True if items should be shown
+//     */
+//    private void setExtendedItemsVisible(boolean isVisible) {
+//        //if(!barcode5.getText().isEmpty()) {
+//            barcode2.setVisible(!isVisible);
+//            HBoxBarcode2.setVisible(!isVisible);
+//            barcode3.setVisible(!isVisible);
+//            HBoxBarcode3.setVisible(!isVisible);
+//            barcode4.setVisible(!isVisible);
+//            HBoxBarcode4.setVisible(!isVisible);
+//            barcode5.setVisible(!isVisible);
+//            HBoxBarcode5.setVisible(!isVisible);
+//        //}
+////        else if(!barcode4.getText().isEmpty()){
+////            barcode2.setVisible(!isVisible);
+////            HBoxBarcode2.setVisible(!isVisible);
+////            barcode3.setVisible(!isVisible);
+////            HBoxBarcode3.setVisible(!isVisible);
+////            barcode4.setVisible(!isVisible);
+////            HBoxBarcode4.setVisible(!isVisible);
+////        } else if(!barcode3.getText().isEmpty()){
+////            barcode2.setVisible(!isVisible);
+////            HBoxBarcode2.setVisible(!isVisible);
+////            barcode3.setVisible(!isVisible);
+////            HBoxBarcode3.setVisible(!isVisible);
+////        } else if (!barcode2.getText().isEmpty()){
+////            barcode2.setVisible(!isVisible);
+////            HBoxBarcode2.setVisible(!isVisible);
+////        }else if(!barcode.getText().isEmpty()){
+////            barcode2.setVisible(!isVisible);
+////            HBoxBarcode2.setVisible(!isVisible);
+////        }
+//        quantity.setVisible(isVisible);
+//        quantityLabel.setVisible(isVisible);
+//        dueAt.setVisible(isVisible);
+//        courseName.setVisible(isVisible);
+//        profName.setVisible(isVisible);
+//        datePicker.setVisible(isVisible);
+//        courseNameLabel.setVisible(isVisible);
+//        profNameLabel.setVisible(isVisible);
+//    }
 
     /**
      * If faulty checkbox is shown, more items will be displayed
@@ -899,26 +856,26 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
     }
 
-    /**
-     * Fields to check if user clicks away
-     *
-     * @return Returns true if fields are not empty
-     */
-    private boolean extendedItemLossInfo() {
-        return !(courseName.getText().isEmpty() | profName.getText().isEmpty() | datePicker.getValue() == null);
-    }
-
-    /**
-     * Alerts user if they click away and information could be lost
-     *
-     * @return User response to alert
-     */
-    private boolean loseExtendedInformation() {
-        if (extendedItemLossInfo()) {
-            return !fieldsNotFilledDialog();
-        }
-        return false;
-    }
+//    /**
+//     * Fields to check if user clicks away
+//     *
+//     * @return Returns true if fields are not empty
+//     */
+//    private boolean extendedItemLossInfo() {
+//        return !(courseName.getText().isEmpty() | profName.getText().isEmpty() | datePicker.getValue() == null);
+//    }
+//
+//    /**
+//     * Alerts user if they click away and information could be lost
+//     *
+//     * @return User response to alert
+//     */
+//    private boolean loseExtendedInformation() {
+//        if (extendedItemLossInfo()) {
+//            return !fieldsNotFilledDialog();
+//        }
+//        return false;
+//    }
 
     /**
      * Alerts user if they click away and information could be lost
