@@ -84,8 +84,5 @@
          </children>
       </HBox>
       <Label fx:id="studentEmailLabel" layoutX="254.0" layoutY="174.0" text="Student Email" visible="false" />
-      <Label fx:id="courseNameLabel" layoutX="89.0" layoutY="423.0" text="Course Name" />
-      <Label fx:id="profNameLabel" layoutX="89.0" layoutY="465.0" text="Prof Name" />
-      <Label fx:id="extendedDate" layoutX="89.0" layoutY="503.0" text="Date" />
    </children>
 </AnchorPane>
