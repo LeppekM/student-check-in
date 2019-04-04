@@ -657,7 +657,7 @@ public class Database implements IController {
             while (resultSet.next()){
                 String dueAt = resultSet.getString("checkout.dueAt");
                 int studentID = resultSet.getInt("checkout.studentID");
-                if (isOverdue(dueAt) && studentID==ID) {
+                if (isOverdue(dueAt) && (studentID==ID || email.equals(studentEmail))) {
                     overdueItems.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
                             resultSet.getString("students.studentName"), resultSet.getString("students.email"),
                             resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),

@@ -7,11 +7,15 @@ import Database.ObjectClasses.Worker;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.WindowEvent;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -70,7 +74,7 @@ public class CheckoutPopUp extends StudentPage implements IController {
             String course = "";
             while (dataCheck) {
                 returnDate = JOptionPane.showInputDialog(null, "Please enter a date on which the item will \nbe taken back out (in the form yyyy-mm-dd)");
-                if (returnDate != null) {
+                if (returnDate != null && !returnDate.matches("\\s*")) {
                     if (returnDate.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
                         dataCheck = false;
                         date = true;
@@ -86,7 +90,7 @@ public class CheckoutPopUp extends StudentPage implements IController {
             dataCheck = true;
             while (dataCheck) {
                 course = JOptionPane.showInputDialog(null, "Please enter a course code (i.e. CS3840)");
-                if (course != null) {
+                if (course != null && !course.matches("\\s*")) {
                     if (course.matches("^[A-Za-z]{2}\\d{3,4}$")) {
                         dataCheck = false;
                         curse = true;

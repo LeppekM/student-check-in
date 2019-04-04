@@ -6,6 +6,7 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -65,8 +66,9 @@ public class SavedPopUp extends StudentPage implements IController {
             Statement statement = connection.createStatement();
             long time = System.currentTimeMillis();
             java.sql.Date d = new java.sql.Date(time);
-            statement.executeUpdate("UPDATE checkout SET reservedAt = NULL, returnDate = NULL, course = NULL, updatedAt = date('"
-                    + d.toString() + "'), updatedBy = '" + worker + "' WHERE studentID = " + s.getRFID() + " and checkoutID = " + id + ";");
+            String query = "UPDATE checkout SET reservedAt = NULL, returnDate = NULL, course = NULL, updatedAt = date('"
+                    + d.toString() + "'), updatedBy = '" + worker + "' WHERE studentID = " + s.getRFID() + " and checkoutID = " + id + ";";
+            statement.executeUpdate(query);
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot update database");
             alert.showAndWait();

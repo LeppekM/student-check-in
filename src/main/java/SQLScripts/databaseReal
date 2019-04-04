@@ -320,7 +320,6 @@ create table checkout (
   studentID  int    NOT NULL,
   barcode    bigint NOT NULL,
   checkoutAt varchar(55),
-  prof       varchar(256),
   reservedAt date,
   returnDate varchar(25),
   course     varchar(256),
