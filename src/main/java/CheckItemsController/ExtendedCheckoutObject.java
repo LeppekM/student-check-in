@@ -4,15 +4,10 @@ import java.time.LocalDate;
 
 public class ExtendedCheckoutObject {
 
-    private static String barcode, barcode2, barcode3, barcode4, barcode5, course, prof;
-    private static LocalDate extendedDate;
+    private static String barcode, barcode2, barcode3, barcode4, barcode5, course, prof, extendedDate;
 
-    public ExtendedCheckoutObject(String barcode, String barcode2, String barcode3, String barcode4, String barcode5, String course, String prof, LocalDate extendedDate) {
-        this.barcode = barcode;
-        this.barcode2 = barcode2;
-        this.barcode3 = barcode3;
-        this.barcode4 = barcode4;
-        this.barcode5 = barcode5;
+
+    public ExtendedCheckoutObject(String course, String prof, String extendedDate) {
         this.course = course;
         this.prof = prof;
         this.extendedDate = extendedDate;
@@ -74,11 +69,11 @@ public class ExtendedCheckoutObject {
         ExtendedCheckoutObject.prof = prof;
     }
 
-    public LocalDate getExtendedDate() {
+    public String getExtendedDate() {
         return extendedDate;
     }
 
-    public void setExtendedDate(LocalDate extendedDate) {
+    public void setExtendedDate(String extendedDate) {
         ExtendedCheckoutObject.extendedDate = extendedDate;
     }
 }

@@ -60,7 +60,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private Spinner<Integer> newQuantity, newQuantity2, newQuantity3, newQuantity4, newQuantity5;
 
     @FXML
-    private Label profNameLabel, courseNameLabel, dueAt, quantityLabel, studentEmailLabel, scanBarcode, statusLabel,
+    private Label profNameLabel, courseNameLabel, extendedDate, quantityLabel, studentEmailLabel, scanBarcode, statusLabel,
             statusLabel2, statusLabel3, statusLabel4, statusLabel5;
 
 
@@ -85,13 +85,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
     private List<String> studentIDVerifier = new ArrayList<>();
     private DatabaseHelper dbHelp = new DatabaseHelper();
+    private static String professor, course, dueDate;
+
 
     private Worker worker;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println(submitButton.getLayoutY());
-        System.out.println(extended.getLayoutY());
+//        System.out.println(submitButton.getLayoutY());
+//        System.out.println(extended.getLayoutY());
         this.worker = null;
         setFieldValidator();
         setItemStatus();
@@ -144,6 +146,17 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 //        barcode.setText(checkout.getBarcode());
 //        barcode2.setText(ch);
 //    }
+
+    public void initExtendedObject(ExtendedCheckoutObject checkout){
+
+        this.extendedCheckOutObject = checkout;
+        course = checkout.getCourse();
+        professor = checkout.getProf();
+        dueDate = checkout.getExtendedDate().toString();
+        courseNameLabel.setText(checkout.getCourse());
+        profNameLabel.setText(checkout.getProf());
+        extendedDate.setText(checkout.getExtendedDate().toString());
+    }
 
 
     public void initCheckoutObject(CheckoutObject checkoutObject) {
@@ -366,7 +379,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Helper method to checkout an item
      */
     private void extendedCheckoutHelper() {
-        extendedCheckOut.addExtendedCheckout(getBarcode(), getstudentID(), getProfName(), getCourseName(), getExtendedDueDate());
+        System.out.println(professor);
+        System.out.println(course);
+        System.out.println(dueDate);
+        extendedCheckOut.addExtendedCheckout(getBarcode(), getstudentID(), professor, course, dueDate);
     }
 
     /**
@@ -483,7 +499,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Drops down more fields to create a new student
      */
     private void setNewStudentDropdown() {
-        transitionHelper.translateExtendedStudentItems(courseNameLabel, profNameLabel, dueAt, courseName, profName, datePicker, extended, submitButton, resetButton);
+        //transitionHelper.translateExtendedStudentItems(courseNameLabel, profNameLabel, dueAt, courseName, profName, datePicker, extended, submitButton, resetButton);
         transitionHelper.translateNewStudentItems(scanBarcode, quantityLabel, barcode, quantity, extended, submitButton, resetButton);
         transitionHelper.fadeTransitionNewStudentObjects(studentEmailLabel, studentEmail);
         setItemStatusNewStudent();
@@ -936,23 +952,23 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Helper method that transitions item to be visible
      */
     private void extendedItemsFadeTransition() {
-        List<FadeTransition> transitions = new ArrayList<>();
-        int initial = 0;
-        int end = 1;
-        int numItems = 6;
-        int duration = 750;
-
-        transitions.add(new FadeTransition(Duration.millis(duration), dueAt));
-        transitions.add(new FadeTransition(Duration.millis(duration), datePicker));
-        transitions.add(new FadeTransition(Duration.millis(duration), courseName));
-        transitions.add(new FadeTransition(Duration.millis(duration), courseNameLabel));
-        transitions.add(new FadeTransition(Duration.millis(duration), profName));
-        transitions.add(new FadeTransition(Duration.millis(duration), profNameLabel));
-        for (int i = 0; i < numItems; i++) {
-            transitions.get(i).setFromValue(initial);
-            transitions.get(i).setToValue(end);
-            transitions.get(i).play();
-        }
+//        List<FadeTransition> transitions = new ArrayList<>();
+//        int initial = 0;
+//        int end = 1;
+//        int numItems = 6;
+//        int duration = 750;
+//
+//        transitions.add(new FadeTransition(Duration.millis(duration), dueAt));
+//        transitions.add(new FadeTransition(Duration.millis(duration), datePicker));
+//        transitions.add(new FadeTransition(Duration.millis(duration), courseName));
+//        transitions.add(new FadeTransition(Duration.millis(duration), courseNameLabel));
+//        transitions.add(new FadeTransition(Duration.millis(duration), profName));
+//        transitions.add(new FadeTransition(Duration.millis(duration), profNameLabel));
+//        for (int i = 0; i < numItems; i++) {
+//            transitions.get(i).setFromValue(initial);
+//            transitions.get(i).setToValue(end);
+//            transitions.get(i).play();
+//        }
     }
 
     /**

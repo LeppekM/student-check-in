@@ -1,14 +1,29 @@
 package CheckItemsController;
 
+import HelperClasses.DatabaseHelper;
+import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class ExtendedCheckoutController implements Initializable {
+    @FXML
+    Pane main;
 
     @FXML
     JFXTextField courseName, profName;
@@ -17,13 +32,16 @@ public class ExtendedCheckoutController implements Initializable {
     JFXDatePicker returnDate;
 
     private ExtendedCheckoutObject checkout;
+    private DatabaseHelper dbHelp = new DatabaseHelper();
 
-    public void initExtendedInfo(ExtendedCheckoutObject extendedCheckoutObject){
-        this.checkout = extendedCheckoutObject;
-    }
-
-    private void setInfo(){
-
+    /**
+     * Gets extended due date
+     *
+     * @return Return extended date
+     */
+    private String getExtendedDueDate() {
+        LocalDate ld = returnDate.getValue();
+        return dbHelp.setExtendedDuedate(ld);
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -31,8 +49,19 @@ public class ExtendedCheckoutController implements Initializable {
     }
 
     public void submit(){
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/CheckOutItems.fxml"));
+            Parent root = (Parent) loader.load();
+            ControllerCheckoutPage controller = loader.getController();
+            checkout = new ExtendedCheckoutObject(courseName.getText(), profName.getText(), getExtendedDueDate());
+            controller.initExtendedObject(checkout);
+            main.getScene().getWindow().hide();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student page");
+            alert.initStyle(StageStyle.UTILITY);
+            StudentCheckIn.logger.error("IOException: Couldn't load student page.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
     }
-
-
 }
