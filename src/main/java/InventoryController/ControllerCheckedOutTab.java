@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 public class ControllerCheckedOutTab  extends ControllerInventoryPage implements Initializable {
 
     @FXML
-    private AnchorPane checkedOutPage;
+    private VBox checkedOutPage;
 
     @FXML
     private ObservableList<CheckedOutTabTableRow> tableRows;
@@ -58,7 +58,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         checkedOutTable.setPlaceholder(emptyTableLabel);
 
         studentNameCol = new JFXTreeTableColumn<>("Student");
-        studentNameCol.setPrefWidth(150);
+        studentNameCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         studentNameCol.setResizable(false);
         studentNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -68,7 +68,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         });
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.setPrefWidth(200);
+        partNameCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -78,7 +78,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         });
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
-        barcodeCol.setPrefWidth(150);
+        barcodeCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -88,7 +88,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         });
 
         checkedOutAtCol = new JFXTreeTableColumn<>("Check Out Date");
-        checkedOutAtCol.setPrefWidth(150);
+        checkedOutAtCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         checkedOutAtCol.setResizable(false);
         checkedOutAtCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -98,7 +98,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         });
 
         dueDateCol = new JFXTreeTableColumn<>("Due Date");
-        dueDateCol.setPrefWidth(150);
+        dueDateCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         dueDateCol.setResizable(false);
         dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
             @Override

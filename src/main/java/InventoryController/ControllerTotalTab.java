@@ -46,7 +46,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
 
     @FXML
-    public AnchorPane totalTabPage;
+    public VBox totalTabPage;
 
     @FXML
     private ObservableList<TotalTabTableRow> tableRows;
@@ -69,6 +69,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private CheckComboBox<String> sortCheckBox;
 
+    @FXML
+    private HBox filterDropDown;
+
     private String partName, serialNumber, loc, barcode, partID;
 
     private static ObservableList<Part> data
@@ -81,7 +84,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     private final ObservableList<String> types = FXCollections.observableArrayList(new String[] { "All", "Checked Out", "Overdue", "Faulty"});
 
-    private final int CHECKBOX_X = 310, CHECKBOX_Y = 25, CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
+    private final int CHECKBOX_PREF_HEIGHT = 10, CHECKBOX_PREF_WIDTH = 150;
 
     private ArrayList<String> selectedFilters = new ArrayList<>();
 
@@ -102,7 +105,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
 
-        partNameCol.setPrefWidth(150);
+        partNameCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         partNameCol.setResizable(false);
         partNameCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, String>, TreeTableCell<TotalTabTableRow, String>>() {
             @Override
@@ -228,7 +231,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
                                 VBox column = new VBox();
                                 HBox actionButtons = new HBox();
-                                actionButtons.setPrefHeight(column.getHeight()/4);
+                                actionButtons.setPrefHeight(column.getHeight()/5);
                                 actionButtons.setAlignment(Pos.TOP_RIGHT);
                                 actionButtons.setOpacity(0);
                                 actionButtons.hoverProperty().addListener(observable -> {
@@ -239,10 +242,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     }
                                 });
                                 actionButtons.getChildren().addAll(editOneButton, editAllButton, deleteOneButton, deleteAllButton);
-                                actionButtons.setMaxHeight(12);
                                 VBox text = new VBox();
-//                                text.setMinHeight(30);
-                                text.setAlignment(Pos.TOP_LEFT);
+                                text.setMinHeight(30);
+                                text.setAlignment(Pos.TOP_CENTER);
                                 text.getChildren().add(partName);
                                 column.getChildren().addAll(actionButtons, text);
                                 setGraphic(column);
@@ -257,22 +259,22 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         });
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
-        serialNumberCol.setPrefWidth(150);
+        serialNumberCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
 
         locationCol = new JFXTreeTableColumn<>("Location");
-        locationCol.setPrefWidth(150);
+        locationCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         locationCol.setResizable(false);
         locationCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
-        barcodeCol.setPrefWidth(150);
+        barcodeCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode());
 
         faultCol = new JFXTreeTableColumn<>("Fault?");
-        faultCol.setPrefWidth(100);
+        faultCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         faultCol.setResizable(false);
         faultCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, Boolean>, TreeTableCell<TotalTabTableRow, Boolean>>() {
             @Override
@@ -284,7 +286,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         });
 
         partIDCol = new JFXTreeTableColumn<>("Part ID");
-        partIDCol.setPrefWidth(100);
+        partIDCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         partIDCol.setResizable(false);
         partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID());
 
@@ -325,11 +327,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         sortCheckBox = new CheckComboBox<>(types);
         sortCheckBox.getCheckModel().checkIndices(0);
         selectedFilters.add("All");
-        sortCheckBox.setLayoutX(CHECKBOX_X);
-        sortCheckBox.setLayoutY(CHECKBOX_Y);
         sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
         totalTabPage.getChildren().add(sortCheckBox);
-
+        filterDropDown.getChildren().add(sortCheckBox);
         searchInput.setOnKeyReleased(event -> {
                 if (event.getCode() == KeyCode.ENTER) {
                     search();
