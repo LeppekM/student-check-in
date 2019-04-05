@@ -6,6 +6,7 @@ import Database.ObjectClasses.Student;
 
 import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
+import HelperClasses.AutoCompleteTextField;
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
@@ -18,6 +19,7 @@ import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -45,7 +47,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private AnchorPane main;
 
     @FXML
-    private JFXTextField studentID, barcode, barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName, studentNameField, studentEmail;
+    private JFXTextField barcode, barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName, studentNameField, studentEmail;
+
+    @FXML
+    private AutoCompleteTextField studentID;
 
     @FXML
     private JFXDatePicker datePicker;
@@ -94,6 +99,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         setItemStatus();
         initialBarodeFieldFunctions();
         initialStudentFieldFunctions();
+        studentID.initEntrySet(new TreeSet(database.getStudentEmails()));
         setLabelStatuses();
         getStudentName();
         unlockFields();
@@ -348,7 +354,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
 
         // getStudentID returns -1 if the field does not contain a number
-//        if (containsNumber(getstudentID())) {
+        if (containsNumber(getstudentID())) {
             CheckedOutPartsObject currentInfo = containsNumber(getstudentID()) ? new CheckedOutPartsObject(barcode,
                     database.selectStudent(studentID, null).getRFID()) : new CheckedOutPartsObject(barcode,
                     database.selectStudent(studentID, getstudentID()).getRFID());
@@ -357,7 +363,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                     return true;
                 }
             }
-//        }
+        }
         return false;
     }
 
@@ -416,9 +422,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 extended.setDisable(false);
                 resetButton.setDisable(false);
                 String studentName = "";
-                if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
+                if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
                     studentName = student.getStudentNameFromEmail(studentID.getText());
-                }else if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+                } else if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                     studentName = student.getStudentNameFromID(studentID.getText());
                 }
                 if (studentName.isEmpty()) { //If no student is found in database create new one
@@ -1084,7 +1090,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Helper method to initialize student id field properties.
      */
     private void initialStudentFieldFunctions(){
-
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
             studentInfo.setDisable(false);
         } else {
@@ -1108,6 +1113,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 }
             }
         });
+    }
+
+    private void setStudentEmailSuggestionListener() {
+        ObservableList<Student> students = database.getStudents();
+
     }
 
 
