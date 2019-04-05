@@ -13,8 +13,6 @@ import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -28,7 +26,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -40,7 +37,7 @@ import java.util.stream.IntStream;
 public class StudentPage implements IController {
 
     @FXML
-    private Pane main = new Pane();
+    private VBox main = new VBox();
 
     @FXML
     private VBox vbox = new VBox();
@@ -131,7 +128,7 @@ public class StudentPage implements IController {
 
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
-        coTableCol.setPrefWidth(198);
+        coTableCol.setPrefWidth(218);
         coTableCol.setResizable(false);
         coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
             @Override
@@ -141,7 +138,7 @@ public class StudentPage implements IController {
         });
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
-        oTableCol.setPrefWidth(198);
+        oTableCol.setPrefWidth(218);
         oTableCol.setResizable(false);
         oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
             @Override
@@ -151,7 +148,7 @@ public class StudentPage implements IController {
         });
 
         sTableCol = new JFXTreeTableColumn<>("Part Name");
-        sTableCol.setPrefWidth(198);
+        sTableCol.setPrefWidth(218);
         sTableCol.setResizable(false);
         sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
             @Override
