@@ -1,10 +1,13 @@
 package CheckItemsController;
 
 import HelperClasses.DatabaseHelper;
+import HelperClasses.StageWrapper;
 import InventoryController.StudentCheckIn;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,8 +34,12 @@ public class ExtendedCheckoutController implements Initializable {
     @FXML
     JFXDatePicker returnDate;
 
+    @FXML
+    JFXButton submitButton;
+
     private ExtendedCheckoutObject checkout;
     private DatabaseHelper dbHelp = new DatabaseHelper();
+    private StageWrapper helper = new StageWrapper();
 
     /**
      * Gets extended due date
@@ -45,7 +52,7 @@ public class ExtendedCheckoutController implements Initializable {
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        unlockFields();
     }
 
     public void submit(){
@@ -63,5 +70,22 @@ public class ExtendedCheckoutController implements Initializable {
             alert.showAndWait();
             e.printStackTrace();
         }
+    }
+
+    public void reset(){
+        courseName.clear();
+        profName.clear();
+        returnDate.setValue(null);
+    }
+
+    /**
+     * Only allows user to submit when all fields are filled out
+     */
+    private void unlockFields() {
+        BooleanBinding binding;
+        binding = courseName.textProperty().isEmpty()
+                .or(profName.textProperty().isEmpty())
+                .or(returnDate.valueProperty().isNull());
+        submitButton.disableProperty().bind(binding);
     }
 }

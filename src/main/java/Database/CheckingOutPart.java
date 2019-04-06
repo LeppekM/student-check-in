@@ -85,10 +85,40 @@ public class CheckingOutPart {
         barcodes.clear();
     }
 
-    private List<Long> getNonCheckedOutBarcodes(long barcode){
+    public List<Long> getAllBarcodes(long barcode){
+        List<Long> barcodes = new LinkedList<>();
+        if(!barcodeExists(barcode)){
+            barcodes.add(1L);
+            barcodes.add(2L);
+            return barcodes;
+        }
+        String selectBarcodes = "select barcode from parts where partName = ?";
+        String partName = getListofBarcodes(barcode);
+
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(selectBarcodes);
+            statement.setString(1, partName);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                barcodes.add(rs.getLong("barcode"));
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return barcodes;
+    }
+
+    public List<Long> getNonCheckedOutBarcodes(long barcode){
+        List<Long> barcodes = new LinkedList<>();
+        if(!barcodeExists(barcode)){//Always return a case where barcodes will be different for method to checkout multiple barcodes.
+            barcodes.add(1L);
+            barcodes.add(2L);
+            return barcodes;
+        }
         String selectBarcodesNotCheckedOut = "select barcode from parts where partName = ? and isCheckedOut = 0";
         String partName = getListofBarcodes(barcode);
-        List<Long> barcodes = new LinkedList<>();
+
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(selectBarcodesNotCheckedOut);
             statement.setString(1, partName);
@@ -103,7 +133,7 @@ public class CheckingOutPart {
         return barcodes;
     }
 
-    private String getListofBarcodes(long barcode){
+     private String getListofBarcodes(long barcode){
         String getPartName = "select partName from parts where barcode = ?";
         String partName = null;
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
@@ -130,7 +160,6 @@ public class CheckingOutPart {
      */
     private PreparedStatement addNewCheckoutHelper(long barcode, int studentID, PreparedStatement preparedStatement){
         int partID = getPartIDFromBarcode(barcode, getPartIDtoAdd);
-        System.out.println(partID);
         if (partID == 0){
             throw new  NullPointerException();
         }

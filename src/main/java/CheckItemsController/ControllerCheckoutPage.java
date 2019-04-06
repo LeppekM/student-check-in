@@ -3,7 +3,6 @@ package CheckItemsController;
 import Database.*;
 import Database.ObjectClasses.CheckedOutPartsObject;
 import Database.ObjectClasses.Student;
-
 import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
 import HelperClasses.DatabaseHelper;
@@ -12,9 +11,7 @@ import InventoryController.ControllerMenu;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
-import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -38,7 +35,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+
 
 public class ControllerCheckoutPage extends ControllerMenu implements IController, Initializable {
     @FXML
@@ -135,7 +132,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         delay.play();
     }
 
-
+    /**
+     * Initializes extended object
+     * @param checkout Object to be instantiated
+     */
     public void initExtendedObject(ExtendedCheckoutObject checkout) {
 
         this.extendedCheckOutObject = checkout;
@@ -145,7 +145,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
 
     }
 
-
+    /**
+     * Initialize checkout object when returning from student page
+     * @param checkoutObject Object to initialize
+     */
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
         studentID.setText(checkoutObject.getStudentID());
@@ -209,6 +212,11 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
     }
 
+    /**
+     * If student has overdue items, system will ask for override to checkout more items.
+     * @param student Student checking out items
+     * @return Response if override is authorized
+     */
     private boolean ensureNotOverdue(Student student) {
         if (!barcode.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode.getText()))
                 || (!barcode2.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode2.getText())))
@@ -262,34 +270,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     }
 
     /**
-     * Checks if multiple items being checked out
-     *
-     * @return True if multiple items being checked out
+     * Collects barcodes and pertinent information about them
+     * @return List of barcodes and their information
      */
-    private boolean multipleItemsBeingCheckedOut() {
-        return (!barcode2.getText().isEmpty() | !barcode3.getText().isEmpty() | !barcode4.getText().isEmpty() | !barcode5.getText().isEmpty());
-    }
-
-    private List<Long> collectBarcodes() {
-        List<Long> barcodes = new ArrayList<>();
-        if (barcodeIsNotEmpty(barcode)) {
-            barcodes.add(getBarcode());
-        }
-        if (barcodeIsNotEmpty(barcode2)) {
-            barcodes.add(getBarcode2());
-        }
-        if (barcodeIsNotEmpty(barcode3)) {
-            barcodes.add(getBarcode3());
-        }
-        if (barcodeIsNotEmpty(barcode4)) {
-            barcodes.add(getBarcode4());
-        }
-        if (barcodeIsNotEmpty(barcode5)) {
-            barcodes.add(getBarcode5());
-        }
-        return barcodes;
-    }
-
     private List<MultipleCheckoutObject> collectMultipleBarcodes() {
 
         List<MultipleCheckoutObject> barcodeInfo = new LinkedList<>();
@@ -311,11 +294,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         return barcodeInfo;
     }
 
+    /**
+     * Helper method to add barcodes
+     */
     private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode) {
         boolean checkStatus = statusIsOut(status);
         barcodes.add(new MultipleCheckoutObject(barcode, getstudentID(), checkStatus, quantity));
     }
 
+    /**
+     * Helper to check if item is being checked in or out
+     * @param status Status of item
+     * @return True if item is being checked out
+     */
     private boolean statusIsOut(Label status) {
         return status.getText().equals("Out");
     }
@@ -325,15 +316,22 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     private void submitMultipleItems() {
         List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
-        for (MultipleCheckoutObject barcode1 : barcodes) {
-            if (barcode1.isCheckedOut()) {
-                checkOut.addMultipleCheckouts(barcode1.getBarcode(), barcode1.getStudentID(), barcode1.getQuantity());
+        for (MultipleCheckoutObject barcode : barcodes) {
+            if (barcode.isCheckedOut()) {
+                checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
             } else {
-                checkOut.setItemtoCheckedin(barcode1.getBarcode());
+                for(int i = 0;i<barcode.getQuantity();i++) {
+                    checkOut.setItemtoCheckedin(barcode.getBarcode());
+                }
             }
         }
     }
 
+    /**
+     * Helper method to check if barcode field contains any barccodes
+     * @param barcode Barcode field
+     * @return True if not empty
+     */
     private boolean barcodeIsNotEmpty(JFXTextField barcode) {
         return !(barcode.getText().isEmpty() || barcode.getText().equals("Removed"));
     }
@@ -343,9 +341,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Helper method to checkout an item
      */
     private void extendedCheckoutHelper() {
-        collectBarcodes();
-        for (int i = 0; i < collectBarcodes().size(); i++) {
-            extendedCheckOut.addExtendedCheckout(collectBarcodes().get(i), getstudentID(), professor, course, dueDate);
+        for(MultipleCheckoutObject barcode : collectMultipleBarcodes()){
+            for(int i = 0; i<barcode.getQuantity(); i++){
+                extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), getstudentID(), professor, course, dueDate);
+            }
         }
     }
 
@@ -676,14 +675,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         return 0;
     }
 
-    /**
-     * Gets quantity as text, returns as int
-     *
-     * @return quantity as integer
-     */
-    private int getQuantity() {
-        return Integer.parseInt(quantity.getText());
-    }
+
 
     private int getQuantitySpinner() {
         return Integer.parseInt(newQuantity.getValue().toString());
@@ -887,7 +879,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @param newQuantity4 Quantity of parts
      */
     private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
-        ;
         transitionHelper.translateBarcodeItems(submitButton, resetButton, extended, faulty, 60);
         transitionHelper.fadeTransition(hBoxBarcode4);
         transitionHelper.fadeTransition(barcode4);
@@ -944,7 +935,17 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                     quantity.setDisable(false);
                 }
             }
+            if (barcodesSame(getBarcode())) {
+                newQuantity.setDisable(false);
+            } else {
+                newQuantity.setDisable(true);
+                transitionHelper.spinnerInit(newQuantity);
+            }
         });
+    }
+
+    private boolean barcodesSame(long barcode) {
+        return checkOut.getAllBarcodes(barcode).get(0).equals(checkOut.getAllBarcodes(barcode).get(1));
     }
 
     /**
@@ -988,8 +989,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             }
             if (itemIsBeingCheckedIn(getBarcode2())) {
                 statusLabel2.setText("In");
+                extended.setDisable(true);
             } else {
                 statusLabel2.setText("Out");
+            }
+            if (barcodesSame(getBarcode2())) {
+                newQuantity2.setDisable(false);
+            } else {
+                newQuantity2.setDisable(true);
+                transitionHelper.spinnerInit(newQuantity2);
             }
         });
         barcode3.setOnKeyReleased(event -> {
@@ -998,8 +1006,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             }
             if (itemIsBeingCheckedIn(getBarcode3())) {
                 statusLabel3.setText("In");
+                extended.setDisable(true);
             } else {
                 statusLabel3.setText("Out");
+            }
+            if (barcodesSame(getBarcode3())) {
+                newQuantity3.setDisable(false);
+            } else {
+                newQuantity3.setDisable(true);
+                transitionHelper.spinnerInit(newQuantity3);
             }
         });
         barcode4.setOnKeyReleased(event -> {
@@ -1008,8 +1023,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             }
             if (itemIsBeingCheckedIn(getBarcode4())) {
                 statusLabel4.setText("In");
+                extended.setDisable(true);
             } else {
                 statusLabel4.setText("Out");
+            }
+            if (barcodesSame(getBarcode4())) {
+                newQuantity4.setDisable(false);
+            } else {
+                newQuantity4.setDisable(true);
+                transitionHelper.spinnerInit(newQuantity4);
             }
         });
         barcode5.setOnKeyReleased(event -> {
@@ -1018,8 +1040,15 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             }
             if (itemIsBeingCheckedIn(getBarcode5())) {
                 statusLabel5.setText("In");
+                extended.setDisable(true);
             } else {
                 statusLabel5.setText("Out");
+            }
+            if (barcodesSame(getBarcode5())) {
+                newQuantity5.setDisable(false);
+            } else {
+                newQuantity5.setDisable(true);
+                transitionHelper.spinnerInit(newQuantity5);
             }
         });
     }
