@@ -130,7 +130,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editOneButton.setGraphic(editOneImageView);
                                 editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOneButton.setOnAction(event -> {
-                                    if (worker != null && worker.isParts()){
+                                    if (worker != null && worker.isEdit()){
                                         editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                     }else {
                                         if (worker != null && worker.isAdmin()
@@ -148,7 +148,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editAllButton.setGraphic(editAllImageView);
                                 editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editAllButton.setOnAction(event -> {
-                                    if (worker != null && worker.isParts()){
+                                    if (worker != null && worker.isEdit()){
                                         editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                     }else {
                                         if ((worker != null && worker.isAdmin())
@@ -168,7 +168,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setGraphic(deleteOneImageView);
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteOneButton.setOnAction(event -> {
-                                    if (worker != null && worker.isParts()){
+                                    if (worker != null && worker.isRemove()){
                                         if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
                                             deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                         } else {
@@ -195,7 +195,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllButton.setGraphic(deleteAllImageView);
                                 deleteAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteAllButton.setOnAction(event -> {
-                                    if (worker != null && worker.isParts()){
+                                    if (worker != null && worker.isRemove()){
                                         boolean typeHasOneCheckedOut = false;
                                         ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
                                         for (String id : partIDs) {
@@ -210,7 +210,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                         }
                                     }else {
                                         if ((worker != null && worker.isAdmin())
-                                                || requestAdminPin("edit parts")) {
+                                                || requestAdminPin("delete parts")) {
                                             boolean typeHasOneCheckedOut = false;
                                             ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
                                             for (String id : partIDs) {

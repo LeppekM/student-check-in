@@ -2,6 +2,7 @@ package ManagePeople;
 
 import Database.Database;
 import Database.ObjectClasses.Worker;
+import InventoryController.IController;
 import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.Optional;
 
-public class EditWorker {
+public class EditWorker implements IController {
 
     @FXML
     private AnchorPane main = new AnchorPane();
@@ -30,47 +31,55 @@ public class EditWorker {
     private JFXPasswordField pass;
 
     @FXML
-    private JFXCheckBox admin, parts, overdue, workers, students;
+    private JFXCheckBox admin, editParts, overdue, workers, removeParts;
 
     @FXML
     private JFXCheckBox showPass;
 
-    private static Worker worker;
-    private Database database = new Database();
+    private static Worker worker, loggedWorker;
+    private Database database;
     private static String name;
     private static String workerEmail;
     private static String password;
     private static boolean priv;
-    private static boolean allParts;
+    private static boolean edit;
     private static boolean over;
     private static boolean work;
-    private static boolean stu;
+    private static boolean remove;
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (loggedWorker == null){
+            loggedWorker = worker;
+        }
+    }
 
     public void setWorker(Worker w) {
         worker = w;
+        database = new Database();
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());
-        parts.selectedProperty().setValue(w.isParts());
+        editParts.selectedProperty().setValue(w.isEdit());
         overdue.selectedProperty().setValue(w.isOver());
-        students.selectedProperty().setValue(w.isStudent());
+        removeParts.selectedProperty().setValue(w.isRemove());
         workers.selectedProperty().setValue(w.isWorker());
-        if (w.isParts() || w.isStudent() || w.isOver() || w.isWorker()){
+        if (w.isEdit() || w.isRemove() || w.isOver() || w.isWorker()){
             admin.selectedProperty().setValue(true);
-            parts.setDisable(false);
+            editParts.setDisable(false);
             overdue.setDisable(false);
             workers.setDisable(false);
-            students.setDisable(false);
+            removeParts.setDisable(false);
 
         }
         name = workerName.getText();
         workerEmail = email.getText();
         password = pass.getText();
         priv = admin.isSelected();
-        allParts = w.isParts();
+        edit = w.isEdit();
         over = w.isOver();
         work = w.isWorker();
-        stu = w.isStudent();
+        remove = w.isRemove();
         unmasked.setManaged(false);
         unmasked.setVisible(false);
         unmasked.managedProperty().bind(showPass.selectedProperty());
@@ -86,8 +95,8 @@ public class EditWorker {
 
     public void save(ActionEvent actionEvent) {
         if (name.equals(workerName.getText()) && password.equals(pass.getText()) && workerEmail.equals(email.getText()) &&
-                priv == admin.isSelected() && allParts == parts.isSelected() && over == overdue.isSelected() &&
-                work == workers.isSelected() && stu == students.isSelected()){
+                priv == admin.isSelected() && edit == editParts.isSelected() && over == overdue.isSelected() &&
+                work == workers.isSelected() && remove == removeParts.isSelected()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
@@ -108,8 +117,8 @@ public class EditWorker {
             if (priv != admin.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Admin: " + priv + " --> Admin: " + admin.isSelected() + "\n");
             }
-            if (allParts != parts.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Remove/Edit Parts: " + allParts + " --> Remove/Edit Parts: " + parts.isSelected() + "\n");
+            if (edit != editParts.isSelected()){
+                alert.setContentText(alert.getContentText() + "\t Edit Parts: " + edit + " --> Edit Parts: " + editParts.isSelected() + "\n");
             }
             if (over != overdue.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Override Overdue: " + over + " --> Override Overdue: " + overdue.isSelected() + "\n");
@@ -117,21 +126,20 @@ public class EditWorker {
             if (work != workers.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Manage Workers: " + work + " --> Manage Workers: " + workers.isSelected() + "\n");
             }
-            if (stu != students.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Remove Students: " + stu + " --> Remove Students: " + students.isSelected() + "\n");
+            if (remove != removeParts.isSelected()){
+                alert.setContentText(alert.getContentText() + "\t Remove Parts: " + remove + " --> Remove Parts: " + removeParts.isSelected() + "\n");
             }
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 worker.setName(workerName.getText());
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
-                worker.setAdmin(admin.isSelected());
-                if (admin.isSelected()) {
-                    worker.setOver(overdue.isSelected());
-                    worker.setParts(parts.isSelected());
-                    worker.setStudent(students.isSelected());
-                    worker.setWorker(workers.isSelected());
-                }
+                worker.setAdmin(false);
+                worker.setOver(overdue.isSelected());
+                worker.setEdit(editParts.isSelected());
+                worker.setRemove(removeParts.isSelected());
+                worker.setWorker(workers.isSelected());
+                database.initWorker(loggedWorker);
                 database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
                 alert1.showAndWait();
@@ -145,19 +153,19 @@ public class EditWorker {
 
     public void unblock(ActionEvent actionEvent) {
         if (admin.isSelected()){
-            parts.setDisable(false);
+            editParts.setDisable(false);
             overdue.setDisable(false);
             workers.setDisable(false);
-            students.setDisable(false);
+            removeParts.setDisable(false);
         }else {
-            parts.selectedProperty().setValue(false);
+            editParts.selectedProperty().setValue(false);
             overdue.selectedProperty().setValue(false);
-            students.selectedProperty().setValue(false);
+            removeParts.selectedProperty().setValue(false);
             workers.selectedProperty().setValue(false);
-            parts.setDisable(true);
+            editParts.setDisable(true);
             overdue.setDisable(true);
             workers.setDisable(true);
-            students.setDisable(true);
+            removeParts.setDisable(true);
         }
     }
 }

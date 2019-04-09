@@ -8,13 +8,13 @@ public class Worker {
     private String pass;
     private int pin;
     private boolean isAdmin;
-    private boolean parts;
+    private boolean edit;
     private boolean worker;
-    private boolean student;
+    private boolean remove;
     private boolean over;
 
-    public Worker(String name, int ID, String email, String pass, int pin, boolean isAdmin, boolean parts, boolean worker,
-                  boolean student, boolean over){
+    public Worker(String name, int ID, String email, String pass, int pin, boolean isAdmin, boolean edit, boolean worker,
+                  boolean remove, boolean over){
         this.name = name;
         this.ID = ID;
         this.email = email;
@@ -22,14 +22,14 @@ public class Worker {
         this.pin = pin;
         this.isAdmin = isAdmin;
         if (isAdmin){
-            parts = true;
+            edit = true;
             worker = true;
-            student = true;
+            remove = true;
             over = true;
         }else {
-            this.parts = parts;
+            this.edit = edit;
             this.worker = worker;
-            this.student = student;
+            this.remove = remove;
             this.over = over;
         }
     }
@@ -40,9 +40,9 @@ public class Worker {
         this.pass = pass;
         this.pin = 0;
         this.isAdmin = false;
-        parts = false;
+        edit = false;
         worker = false;
-        student = false;
+        remove = false;
         over = false;
     }
 
@@ -90,12 +90,12 @@ public class Worker {
         isAdmin = admin;
     }
 
-    public boolean isParts() {
-        return parts;
+    public boolean isEdit() {
+        return edit;
     }
 
-    public void setParts(boolean parts) {
-        this.parts = parts;
+    public void setEdit(boolean edit) {
+        this.edit = edit;
     }
 
     public boolean isWorker() {
@@ -106,12 +106,12 @@ public class Worker {
         this.worker = worker;
     }
 
-    public boolean isStudent() {
-        return student;
+    public boolean isRemove() {
+        return remove;
     }
 
-    public void setStudent(boolean student) {
-        this.student = student;
+    public void setRemove(boolean remove) {
+        this.remove = remove;
     }
 
     public boolean isOver() {

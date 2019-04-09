@@ -6,6 +6,7 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.DatabaseHelper;
 import InventoryController.CheckedOutItems;
+import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class Database {
+public class Database implements IController {
     //DB root pass: Userpassword123
     public static final String username = "root";
     public static final String password = "Userpassword123";
@@ -29,6 +30,7 @@ public class Database {
     static final String dbname = "student_check_in";
     static Connection connection;
     private DatabaseHelper databaseHelper = new DatabaseHelper();
+    private Worker worker;
 
     /**
      * This creates a connection to the database
@@ -96,7 +98,8 @@ public class Database {
     }
 
     public void removeOverdue(int barcode){
-        String query = "update checkout set checkout.dueAt = null where checkout.barcode = " + barcode + ";";
+        String query = "update checkout set checkout.dueAt = null, checkout.updatedAt = date('" + gettoday().toString() +
+                "'), checkout.updatedBy = '" + this.worker.getName() + "' where checkout.barcode = " + barcode + ";";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -146,7 +149,8 @@ public class Database {
      */
     public void deleteItem(int partID) {
         try {
-            String delete = "update parts p set p.deletedBy = 'root', p.isDeleted = 1, p.deletedAt = date('" + gettoday() + "') where p.partID = " + partID + ";";
+            String delete = "update parts p set p.deletedBy = '" + this.worker.getName() + "', p.isDeleted = 1, p.deletedAt = date('"
+                    + gettoday() + "') where p.partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
             statement.close();
@@ -158,7 +162,7 @@ public class Database {
 
     public void deleteParts(String partName) {
         try {
-            String deleteQuery = "UPDATE parts p set p.deletedBy = 'root', p.isDeleted = 1, " +
+            String deleteQuery = "UPDATE parts p set p.deletedBy = '" + this.worker.getName() + "', p.isDeleted = 1, " +
                     "p.deletedAt = date('" + gettoday() + "') WHERE p.partName = '" + partName + "';";
             Statement statement = connection.createStatement();
             statement.executeUpdate(deleteQuery);
@@ -467,6 +471,27 @@ public class Database {
         return studentsList;
     }
 
+    public ObservableList<String> getStudentEmails() {
+        ObservableList<String> emails = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT email FROM students");
+            String email;
+            while (resultSet.next()) {
+                email = resultSet.getString("email");
+                emails.add(email);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of students");
+            StudentCheckIn.logger.error("Could not retrieve the list of students");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return emails;
+    }
+
     /**
      * Gets the list of workers from the database
      * @return observable list of workers
@@ -493,10 +518,10 @@ public class Database {
                 email = resultSet.getString("email");
                 pin = resultSet.getInt("pin");
                 admin = resultSet.getByte("isAdmin") == 1;
-                parts = resultSet.getByte("parts") == 1;
+                parts = resultSet.getByte("editParts") == 1;
                 over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;
-                students = resultSet.getByte("students") == 1;
+                students = resultSet.getByte("removeParts") == 1;
                 workerList.add(new Worker(name, ID, email, pass, pin, admin, parts, workers, students, over));
             }
             resultSet.close();
@@ -529,10 +554,10 @@ public class Database {
                 ID = resultSet.getInt("workerID");
                 password = resultSet.getString("pass");
                 isAdmin = resultSet.getByte("isAdmin") == 1;
-                parts = resultSet.getByte("parts") == 1;
+                parts = resultSet.getByte("editParts") == 1;
                 over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;
-                students = resultSet.getByte("students") == 1;
+                students = resultSet.getByte("removeParts") == 1;
                 pin = resultSet.getInt("pin");
                 worker = new Worker(name, ID, email, password, pin, isAdmin, parts, workers, students, over);
             }
@@ -574,25 +599,47 @@ public class Database {
      * @return a student
      * @author Bailey Terry
      */
-    public Student selectStudent(int ID){
-        String todaysDate = gettoday().toString();
-        String query = "select * from students where studentID = " + ID;
-        String coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
-                "from students " +
-                "left join checkout on students.studentID = checkout.studentID " +
-                "left join parts on checkout.partID = parts.partID" +
-                " where students.studentID = " + ID  +
-                " AND checkout.checkinAt is null;";
-        String pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
-                "from students " +
-                "left join checkout on students.studentID = checkout.studentID " +
-                "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
-        String oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
-                "inner join parts on checkout.partID = parts.partID " +
-                "inner join students on checkout.studentID = students.studentID " +
-                "where checkout.checkinAt is null";
+    public Student selectStudent(int ID, String studentEmail){
+        String query = null;
+        String coList = null;
+        String pList = null;
+        String oList = null;
+        if (studentEmail == null) {
+            query = "select * from students where studentID = " + ID;
+            coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
+                    "from students " +
+                    "left join checkout on students.studentID = checkout.studentID " +
+                    "left join parts on checkout.partID = parts.partID" +
+                    " where students.studentID = " + ID +
+                    " AND checkout.checkinAt is null;";
+            pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
+                    "from students " +
+                    "left join checkout on students.studentID = checkout.studentID " +
+                    "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
+            oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
+                    "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
+                    "inner join parts on checkout.partID = parts.partID " +
+                    "inner join students on checkout.studentID = students.studentID " +
+                    "where checkout.checkinAt is null";
 //                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
+        }else if (ID == -1){
+            query = "select * from students where email = '" + studentEmail + "';";
+            coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
+                    "from students " +
+                    "left join checkout on students.studentID = checkout.studentID " +
+                    "left join parts on checkout.partID = parts.partID" +
+                    " where students.email = '" + studentEmail +
+                    "' AND checkout.checkinAt is null;";
+            pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
+                    "from students " +
+                    "left join checkout on students.studentID = checkout.studentID " +
+                    "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail + "' and checkout.reservedAt != '';";
+            oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
+                    "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
+                    "inner join parts on checkout.partID = parts.partID " +
+                    "inner join students on checkout.studentID = students.studentID " +
+                    "where checkout.checkinAt is null";
+        }
         Student student = null;
         String name = "";
         String email = "";
@@ -683,7 +730,7 @@ public class Database {
      */
     public void addStudent(Student s){
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), 'root');";
+                + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), '" + this.worker.getName() + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -698,7 +745,8 @@ public class Database {
 
     public void updateStudent(Student s){
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
-                s.getName() + "', students.email = '" + s.getEmail() + "' where students.uniqueID = " + s.getUniqueID() +";";
+                s.getName() + "', students.email = '" + s.getEmail() + "', students.updatedAt = date('" +
+                gettoday().toString() + "'), students.updatedBy = '" + this.worker.getName() + "' where students.uniqueID = " + s.getUniqueID() +";";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -738,7 +786,7 @@ public class Database {
     public void addWorker(Worker w){
         int bit = w.isAdmin()? 1 : 0;
         String query = "insert into workers (email, workerName, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail() +
-                "', '" + w.getName() + "', '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), 'root');";
+                "', '" + w.getName() + "', '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), '" + this.worker.getName() + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -772,9 +820,16 @@ public class Database {
 
     public void updateWorker(Worker w){
         int admin = w.isAdmin() ? 1 : 0;
+        int over = w.isOver() ? 1: 0;
+        int edit = w.isEdit() ? 1: 0;
+        int remove = w.isRemove() ? 1 : 0;
+        int work = w.isWorker() ? 1 : 0;
         String query = "update workers set workers.workerName = '" + w.getName() + "', workers.pin = " +
                 w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.isAdmin = " + admin + "," +
-                " workers.email = " + w.getEmail() + " where workers.workerID = " + w.getID() +";";
+                " workers.email = '" + w.getEmail() + "', workers.overdue = " + over + ", workers.editParts = " + edit +
+                ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
+                gettoday().toString() + "'), workers.updatedBy = '" + this.worker.getName() + "' where workers.workerID = " +
+                w.getID() + ";";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -784,6 +839,13 @@ public class Database {
             StudentCheckIn.logger.error("Could not update worker, SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null){
+            this.worker = worker;
         }
     }
 }

@@ -187,7 +187,7 @@ public class ControllerManageStudents implements IController, Initializable {
                     id = id.substring(5);
                 }
                 if (!id.matches("[a-zA-Z]*") && id.length() == 5) {
-                    if (!database.selectStudent(Integer.parseInt(id)).getName().equals("")) {
+                    if (!database.selectStudent(Integer.parseInt(id), null).getName().equals("")) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
                         StudentCheckIn.logger.info("Manage Students: Student is already in the database!");
                         alert.showAndWait();
@@ -266,6 +266,7 @@ public class ControllerManageStudents implements IController, Initializable {
             }
         }
         if (notIncluded && name != null && id != null && email != null) {
+            database.initWorker(worker);
             database.addStudent(new Student(name.toString(), Integer.parseInt(id), email));
         }
         populateTable();
@@ -292,8 +293,9 @@ public class ControllerManageStudents implements IController, Initializable {
     }
 
     public void deleteStudent(ActionEvent actionEvent) {
-        if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0){
-            if (worker.isStudent()) {
+        if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0) {
+            if ((worker != null && worker.isAdmin())
+                    || requestAdminPin("delete a student")) {
                 int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
                 alert.setTitle("Delete This Student?");
@@ -302,19 +304,6 @@ public class ControllerManageStudents implements IController, Initializable {
                     database.deleteStudent(data.get(row).getName());
                     data.remove(row);
                     populateTable();
-                }
-            }else {
-                if ((worker != null && worker.isAdmin())
-                        || requestAdminPin("delete a student")) {
-                    int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
-                    alert.setTitle("Delete This Student?");
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.isPresent() && result.get() == ButtonType.OK) {
-                        database.deleteStudent(data.get(row).getName());
-                        data.remove(row);
-                        populateTable();
-                    }
                 }
             }
         }
@@ -361,7 +350,7 @@ public class ControllerManageStudents implements IController, Initializable {
             Stage stage = new Stage();
             int f = manageStudentsTable.getSelectionModel().getSelectedIndex();
             ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(f).getValue();
-            Student s = database.selectStudent(Integer.parseInt(r.getId().get()));
+            Student s = database.selectStudent(Integer.parseInt(r.getId().get()), null);
             try {
                 URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);

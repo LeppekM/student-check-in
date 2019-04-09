@@ -1,5 +1,6 @@
 package Database;
 
+import Database.ObjectClasses.Student;
 import HelperClasses.DatabaseHelper;
 import InventoryController.StudentCheckIn;
 
@@ -12,11 +13,9 @@ public class StudentInfo {
             "where studentID = ?";
     private final String createNewStudent ="insert into students(studentID, email, studentName, createdAt, createdBy)\n" +
             "values(?,?,?,?,?);";
+    private final String getStudentNameFromEmailQuery = "select studentName from students where email = ?";
 
     private DatabaseHelper helper = new DatabaseHelper();
-
-
-
 
     public String getStudentNameFromID(String studentID){
         String sName = "";
@@ -59,5 +58,31 @@ public class StudentInfo {
         }
     }
 
+    public void createNewStudent(Student s){
+        try(Connection connection = DriverManager.getConnection(url, Database.username, Database.password)){
+            PreparedStatement statement = connection.prepareStatement(createNewStudent);
+            createNewStudentHelper(s.getRFID(), s.getEmail(), s.getName(), statement);
+            statement.close();
+        }catch (SQLException e){
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    public String getStudentNameFromEmail(String email){
+        String sName = "";
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(getStudentNameFromEmailQuery);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                sName = rs.getString("studentName");
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return sName;
+    }
 
 }

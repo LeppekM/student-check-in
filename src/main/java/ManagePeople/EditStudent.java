@@ -3,10 +3,12 @@ package ManagePeople;
 import CheckItemsController.CheckoutPopUp;
 import CheckItemsController.SavedPopUp;
 import Database.Database;
+import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
 import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
 import InventoryController.CheckedOutItems;
+import InventoryController.IController;
 import InventoryController.OverduePopUpController;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -29,9 +31,10 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 
-public class EditStudent {
+public class EditStudent implements IController {
 
     @FXML
     private AnchorPane main = new AnchorPane();
@@ -64,13 +67,15 @@ public class EditStudent {
     private JFXTreeTableColumn<SavedPart, String> sTableCol;
 
     private static Student student;
-    private Database database = new Database();
+    private Worker worker;
+    private Database database;
     private static String name;
     private static int id;
     private static String studentEmail;
 
     public void setStudent(Student s) {
         student = s;
+        database = new Database();
         studentName.setText(student.getName());
         email.setText(student.getEmail());
         RFID.setText(student.getRFID() + "");
@@ -158,7 +163,8 @@ public class EditStudent {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/OverduePopUp.fxml"));
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
@@ -227,6 +233,7 @@ public class EditStudent {
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 student.setName(studentName.getText());
                 student.setRFID(Integer.parseInt(RFID.getText()));
+                database.initWorker(worker);
                 database.updateStudent(student);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
                 alert1.showAndWait();
@@ -234,6 +241,13 @@ public class EditStudent {
                 studentName.setText(name);
                 RFID.setText(id + "");
             }
+        }
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null){
+            this.worker = worker;
         }
     }
 }

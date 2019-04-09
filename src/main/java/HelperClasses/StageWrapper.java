@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -96,6 +97,36 @@ public class StageWrapper {
     }
 
     public void requiredInputValidator(JFXTextField textField){
+        RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
+        textField.getValidators().addAll(requiredFieldValidator);
+        requiredFieldValidator.setMessage("This field is required");
+        requiredFieldValidator.autosize();
+        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue){
+                    textField.validate();
+                }
+            }
+        });
+    }
+
+    public void requiredInputValidator(JFXComboBox comboBox) {
+        RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
+        comboBox.getValidators().add(requiredFieldValidator);
+        requiredFieldValidator.setMessage("This field is required");
+        requiredFieldValidator.autosize();
+        comboBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    comboBox.validate();
+                }
+            }
+        });
+    }
+
+    public void requiredInputValidator(AutoCompleteTextField textField) {
         RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
         textField.getValidators().addAll(requiredFieldValidator);
         requiredFieldValidator.setMessage("This field is required");

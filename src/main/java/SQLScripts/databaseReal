@@ -269,21 +269,21 @@ CREATE PROCEDURE load_workers()
   BEGIN
     TRUNCATE TABLE workers;
     START TRANSACTION;
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('terrybc@msoe.edu', 'Bailey Terry', 'Sharks12', 1234, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 'Sharks12', 4123, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('langdk@msoe.edu', 'Daniel Lang', 'Sharks12', 3412, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('karczma@msoe.edu', 'Matthew Karcz', 'Sharks12', 0, 0, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
-    VALUES ('test1@msoe.edu', 'Parts Admin', 'Sharks12', 0, 0, 1, 0, 0, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    VALUES ('test1@msoe.edu', 'Edit Parts Admin', 'Sharks12', 0, 0, 1, 0, 0, 0, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('test2@msoe.edu', 'Overdue Admin', 'Sharks12', 0, 0, 0, 1, 0, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
-    VALUES ('test3@msoe.edu', 'Student Admin', 'Sharks12', 0, 0, 0, 0, 1, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, parts, overdue, students, workers, createdAt, createdBy)
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    VALUES ('test3@msoe.edu', 'Remove Parts Admin', 'Sharks12', 0, 0, 0, 0, 1, 0, '2019-2-11', 'Jim');
+    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
     VALUES ('test4@msoe.edu', 'Worker Admin', 'Sharks12', 0, 0, 0, 0, 0, 1, '2019-2-11', 'Jim');
   end;
 
@@ -315,9 +315,9 @@ CALL load_parts();
 
 drop table if exists checkout;
 create table checkout (
-  checkoutID int NOT NULL AUTO_INCREMENT,
-  partID     int NOT NULL,
-  studentID  int NOT NULL,
+  checkoutID int    NOT NULL AUTO_INCREMENT,
+  partID     int    NOT NULL,
+  studentID  int    NOT NULL,
   barcode    bigint NOT NULL,
   checkoutAt varchar(55),
   prof       varchar(256),
@@ -353,10 +353,8 @@ create table students (
   studentName varchar(50)        NOT NULL,
   createdAt   varchar(50),
   updatedAt   varchar(50),
-  deletedAt   varchar(50),
   createdBy   varchar(50),
   updatedBy   varchar(50),
-  deletedBy   varchar(50),
   PRIMARY KEY (uniqueID)
 );
 
@@ -364,22 +362,20 @@ call load_students();
 
 drop table if exists workers;
 create table workers (
-  workerID   int                NOT NULL AUTO_INCREMENT,
-  email      varchar(50) UNIQUE NOT NULL,
-  workerName varchar(50)        NOT NULL,
-  pin        int,
-  pass       varchar(20)        NOT NULL,
-  isAdmin    bit                NOT NULL,
-  overdue       bit,
-  parts      bit,
-  workers    bit,
-  students   bit,
-  createdAt  date,
-  updatedAt  date,
-  deletedAt  date,
-  createdBy  varchar(50),
-  updatedBy  varchar(50),
-  deletedBy  varchar(50),
+  workerID    int                NOT NULL AUTO_INCREMENT,
+  email       varchar(50) UNIQUE NOT NULL,
+  workerName  varchar(50)        NOT NULL,
+  pin         int,
+  pass        varchar(20)        NOT NULL,
+  isAdmin     bit                NOT NULL,
+  overdue     bit,
+  editParts   bit,
+  workers     bit,
+  removeParts bit,
+  createdAt   date,
+  updatedAt   date,
+  createdBy   varchar(50),
+  updatedBy   varchar(50),
   PRIMARY KEY (workerID)
 );
 

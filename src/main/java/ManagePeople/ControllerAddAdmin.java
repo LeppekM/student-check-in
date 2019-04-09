@@ -2,6 +2,7 @@ package ManagePeople;
 
 import Database.*;
 import Database.ObjectClasses.Worker;
+import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
@@ -18,7 +19,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ControllerAddAdmin implements Initializable {
+public class ControllerAddAdmin implements Initializable, IController {
 
     @FXML
     private AnchorPane main;
@@ -33,6 +34,7 @@ public class ControllerAddAdmin implements Initializable {
     private JFXButton submit;
 
     private Database database;
+    private Worker worker;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -113,9 +115,17 @@ public class ControllerAddAdmin implements Initializable {
         }
         if (emailValid && fValid && lValid && passValid && pinValid){
             ObservableList<Worker> w = database.getWorkers();
+            database.initWorker(worker);
             database.addWorker(new Worker(n.toString(), w.get(w.size() - 1).getID() + 1, email.getText(), pass.getText(),
                     Integer.parseInt(pin.getText()), true, true, true, true, true));
             main.getScene().getWindow().hide();
+        }
+    }
+
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null){
+            this.worker = worker;
         }
     }
 }
