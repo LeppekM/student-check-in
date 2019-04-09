@@ -334,8 +334,14 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * Helper method to add barcodes
      */
     private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode) {
+        Student thisStudent = null;
+        if (containsNumber(getstudentID())) {
+            thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
+        }else {
+            thisStudent = database.selectStudent(-1, getstudentID());
+        }        database.initWorker(worker);
         boolean checkStatus = statusIsOut(status);
-        barcodes.add(new MultipleCheckoutObject(barcode, Integer.parseInt(getstudentID()), checkStatus, quantity));
+        barcodes.add(new MultipleCheckoutObject(barcode, thisStudent.getUniqueID(), checkStatus, quantity));
     }
 
     /**
