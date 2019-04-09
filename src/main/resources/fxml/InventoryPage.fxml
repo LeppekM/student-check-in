@@ -7,7 +7,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="inventoryScene" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
   <children>
@@ -40,9 +39,7 @@
             </Tab>
           </tabs>
         </JFXTabPane>
-            <VBox alignment="BOTTOM_LEFT" prefWidth="100.0">
-               <children>
-              <JFXButton fx:id="back" mnemonicParsing="false" onAction="#goBack">
+              <JFXButton fx:id="back" mnemonicParsing="false" onAction="#goBack" StackPane.alignment="BOTTOM_LEFT">
                 <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0">
                     <image>
@@ -50,17 +47,9 @@
                     </image>
                   </ImageView>
                 </graphic>
-               <VBox.margin>
-                  <Insets left="20.0" />
-               </VBox.margin>
+         <StackPane.margin>
+            <Insets bottom="10.0" left="20.0" />
+         </StackPane.margin>
               </JFXButton>
-               </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <StackPane.margin>
-                  <Insets bottom="10.0" />
-               </StackPane.margin>
-            </VBox>
   </children>
 </StackPane>
