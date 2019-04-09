@@ -67,11 +67,88 @@ public class CheckingOutPart {
     }
 
     public void addMultipleCheckouts(long barcode, int studentID, int quantity){
+        List<Long> barcodes = getNonCheckedOutBarcodes(barcode);
+        if(quantity ==1){
+            addNewCheckoutItem(barcode, studentID);
+            return;
+        }
 
         for (int i =0; i< quantity; i++){
-            addNewCheckoutItem(barcode, studentID);
-            barcode++;
+            if(i<barcodes.size()){
+                addNewCheckoutItem(barcodes.get(i), studentID);
+            }
+            else {
+                stageWrapper.errorAlert("Checked out " + i + " part(s). No more parts in inventory can be checked out");
+                return;
+            }
         }
+        barcodes.clear();
+    }
+
+    public List<Long> getAllBarcodes(long barcode){
+        List<Long> barcodes = new LinkedList<>();
+        if(!barcodeExists(barcode)){
+            barcodes.add(1L);
+            barcodes.add(2L);
+            return barcodes;
+        }
+        String selectBarcodes = "select barcode from parts where partName = ?";
+        String partName = getListofBarcodes(barcode);
+
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(selectBarcodes);
+            statement.setString(1, partName);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                barcodes.add(rs.getLong("barcode"));
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return barcodes;
+    }
+
+    public List<Long> getNonCheckedOutBarcodes(long barcode){
+        List<Long> barcodes = new LinkedList<>();
+        if(!barcodeExists(barcode)){//Always return a case where barcodes will be different for method to checkout multiple barcodes.
+            barcodes.add(1L);
+            barcodes.add(2L);
+            return barcodes;
+        }
+        String selectBarcodesNotCheckedOut = "select barcode from parts where partName = ? and isCheckedOut = 0";
+        String partName = getListofBarcodes(barcode);
+
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(selectBarcodesNotCheckedOut);
+            statement.setString(1, partName);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                barcodes.add(rs.getLong("barcode"));
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return barcodes;
+    }
+
+     private String getListofBarcodes(long barcode){
+        String getPartName = "select partName from parts where barcode = ?";
+        String partName = null;
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(getPartName);
+            statement.setLong(1, barcode);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                partName = rs.getString("partName");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return partName;
     }
 
     /**
@@ -83,7 +160,6 @@ public class CheckingOutPart {
      */
     private PreparedStatement addNewCheckoutHelper(long barcode, int studentID, PreparedStatement preparedStatement){
         int partID = getPartIDFromBarcode(barcode, getPartIDtoAdd);
-        System.out.println(partID);
         if (partID == 0){
             throw new  NullPointerException();
         }

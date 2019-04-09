@@ -1,6 +1,8 @@
 package HelperClasses;
 
+import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Worker;
+import InventoryController.ControllerShowPart;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
@@ -15,7 +17,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -28,6 +33,25 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class StageWrapper {
+
+    public void popupPage(String fxml, AnchorPane anchorPane) {
+        Stage stage = new Stage();
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource(fxml);
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 550, 400);
+            stage.setTitle("Part Information");
+            stage.initOwner(anchorPane.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Show Part.");
+            e.printStackTrace();
+        }
+
+    }
 
     public void newStage(String fxml, Node node) {
         try {
@@ -42,7 +66,7 @@ public class StageWrapper {
         }
     }
 
-    public void newStage(String fxml, Node node, Worker worker){
+    public void newStage(String fxml, Node node, Worker worker) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
@@ -52,21 +76,19 @@ public class StageWrapper {
             ((IController) loader.getController()).initWorker(worker);
             // NEEDED?
             //mainMenuScene.getChildren().clear();
-        }
-        catch(IOException invoke){
+        } catch (IOException invoke) {
             StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
             invoke.printStackTrace();
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             StudentCheckIn.logger.error("Checkout page timer");
         }
     }
 
-    public String getStudentID(List<String> list){
+    public String getStudentID(List<String> list) {
         StringBuilder studentID = new StringBuilder();
-        for (int i =0; i<list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             studentID.append(list.get(i));
         }
         return studentID.toString();
@@ -95,7 +117,7 @@ public class StageWrapper {
         }).start();
     }
 
-    public void requiredInputValidator(JFXTextField textField){
+    public void requiredInputValidator(JFXTextField textField) {
         RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
         textField.getValidators().addAll(requiredFieldValidator);
         requiredFieldValidator.setMessage("This field is required");
@@ -103,14 +125,14 @@ public class StageWrapper {
         textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (!newValue){
+                if (!newValue) {
                     textField.validate();
                 }
             }
         });
     }
 
-    public void acceptIntegerOnly(JFXTextField textField){
+    public void acceptIntegerOnly(JFXTextField textField) {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
             if (text.matches("[0-9]*")) {
@@ -134,13 +156,13 @@ public class StageWrapper {
         passwordField.setTextFormatter(textFormatter);
     }
 
-    public void errorAlert(String errorText){
+    public void errorAlert(String errorText) {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setHeaderText("Error");
         errorAlert.setContentText(errorText);
         errorAlert.initStyle(StageStyle.UTILITY);
 
-        Platform.runLater(errorAlert :: showAndWait);
+        Platform.runLater(errorAlert::showAndWait);
     }
 
 

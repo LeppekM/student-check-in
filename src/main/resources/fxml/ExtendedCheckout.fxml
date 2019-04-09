@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ExtendedCheckoutController">
+   <children>
+      <Label layoutX="127.0" layoutY="89.0" text="Course Name">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="101.0" layoutY="178.0" text="Professor Name">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="144.0" layoutY="266.0" text="Return Date">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="courseName" layoutX="257.0" layoutY="90.0" />
+      <JFXTextField fx:id="profName" layoutX="257.0" layoutY="178.0" />
+      <JFXDatePicker fx:id="returnDate" defaultColor="#043993" layoutX="257.0" layoutY="260.0" />
+      <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" layoutX="340.0" layoutY="323.0" onAction="#reset" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Reset" textFill="#043993" />
+      <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" layoutX="240.0" layoutY="323.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
+      <Label layoutX="132.0" layoutY="14.0" text="Extended Checkout Information" textAlignment="CENTER">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
