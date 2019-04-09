@@ -12,6 +12,7 @@ import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -533,6 +534,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         return result.get() == ButtonType.OK;
     }
 
+    private boolean trus(){
+        return true;
+    }
+
     /**
      * Sets checkin information
      */
@@ -866,7 +871,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private void setNewBarcodeFieldsHelper() {
         quantity.setVisible(false);
         quantityLabel.setVisible(false);
-        newQuantity.setVisible(true);
+        HBoxBarcode.setVisible(true);
         barcode2.setVisible(true);
         HBoxBarcode2.setVisible(true);
     }

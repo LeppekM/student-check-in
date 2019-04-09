@@ -53,9 +53,9 @@
       <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="317.0" layoutY="329.0" onAction="#submit" prefHeight="42.0" prefWidth="77.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" text="Submit" textFill="#043993" />
       <Label layoutX="248.0" layoutY="123.0" text="Student Name" />
       <TextArea fx:id="faultyTextArea" layoutX="282.0" layoutY="327.0" prefHeight="95.0" prefWidth="265.0" promptText="Please enter description of fault" visible="false" />
-      <HBox fx:id="HBoxBarcode" layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0">
+      <HBox fx:id="HBoxBarcode" layoutX="480.0" layoutY="166.0" prefHeight="43.0" prefWidth="155.0" visible="false">
          <children>
-            <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" disable="true" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" visible="false" />
+            <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" disable="true" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
             <Label fx:id="statusLabel" text="--" translateX="8.0" translateY="10.0" visible="false" />
          </children>
       </HBox>
