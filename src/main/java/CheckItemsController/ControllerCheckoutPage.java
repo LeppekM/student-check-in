@@ -341,7 +341,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             thisStudent = database.selectStudent(-1, getstudentID());
         }        database.initWorker(worker);
         boolean checkStatus = statusIsOut(status);
-        barcodes.add(new MultipleCheckoutObject(barcode, thisStudent.getUniqueID(), checkStatus, quantity));
+        barcodes.add(new MultipleCheckoutObject(barcode, thisStudent.getRFID(), checkStatus, quantity));
     }
 
     /**
