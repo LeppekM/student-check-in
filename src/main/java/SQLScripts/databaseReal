@@ -322,6 +322,7 @@ create table checkout (
   checkoutAt varchar(55),
   reservedAt date,
   returnDate varchar(25),
+  prof varchar(256),
   course     varchar(256),
   checkinAt  varchar(55),
   dueAt      varchar(55),
