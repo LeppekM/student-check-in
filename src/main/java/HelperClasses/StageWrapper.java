@@ -16,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -132,7 +133,37 @@ public class StageWrapper {
         });
     }
 
-    public void acceptIntegerOnly(JFXTextField textField) {
+    public void requiredInputValidator(JFXComboBox comboBox) {
+        RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
+        comboBox.getValidators().add(requiredFieldValidator);
+        requiredFieldValidator.setMessage("This field is required");
+        requiredFieldValidator.autosize();
+        comboBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    comboBox.validate();
+                }
+            }
+        });
+    }
+
+    public void requiredInputValidator(AutoCompleteTextField textField) {
+        RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
+        textField.getValidators().addAll(requiredFieldValidator);
+        requiredFieldValidator.setMessage("This field is required");
+        requiredFieldValidator.autosize();
+        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue){
+                    textField.validate();
+                }
+            }
+        });
+    }
+
+    public void acceptIntegerOnly(JFXTextField textField){
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
             if (text.matches("[0-9]*")) {
@@ -156,13 +187,13 @@ public class StageWrapper {
         passwordField.setTextFormatter(textFormatter);
     }
 
-    public void errorAlert(String errorText) {
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setHeaderText("Error");
-        errorAlert.setContentText(errorText);
-        errorAlert.initStyle(StageStyle.UTILITY);
+    public void errorAlert(String errorText){
+        Alert errorAlert2 = new Alert(Alert.AlertType.ERROR);
+        errorAlert2.setHeaderText("Error");
+        errorAlert2.setContentText(errorText);
+        errorAlert2.initStyle(StageStyle.UTILITY);
 
-        Platform.runLater(errorAlert::showAndWait);
+        Platform.runLater(errorAlert2::showAndWait);
     }
 
 

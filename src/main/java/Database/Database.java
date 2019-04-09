@@ -471,6 +471,27 @@ public class Database implements IController {
         return studentsList;
     }
 
+    public ObservableList<String> getStudentEmails() {
+        ObservableList<String> emails = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT email FROM students");
+            String email;
+            while (resultSet.next()) {
+                email = resultSet.getString("email");
+                emails.add(email);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of students");
+            StudentCheckIn.logger.error("Could not retrieve the list of students");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return emails;
+    }
+
     /**
      * Gets the list of workers from the database
      * @return observable list of workers

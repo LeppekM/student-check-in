@@ -5,6 +5,7 @@ import Database.ObjectClasses.CheckedOutPartsObject;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
+import HelperClasses.AutoCompleteTextField;
 import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
@@ -16,6 +17,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -43,7 +45,12 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private AnchorPane main;
 
     @FXML
-    private JFXTextField studentID, barcode, barcode2, barcode3, barcode4, barcode5, quantity, studentNameField, studentEmail;
+
+    private JFXTextField barcode, barcode2, barcode3, barcode4, barcode5, quantity, profName, courseName, studentNameField, studentEmail;
+
+    @FXML
+    private AutoCompleteTextField studentID;
+
 
     @FXML
     private JFXCheckBox faulty, extended;
@@ -80,6 +87,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
     private List<String> studentIDVerifier = new ArrayList<>();
     private DatabaseHelper dbHelp = new DatabaseHelper();
+    private static String professor, course, dueDate;
 
 
     private Worker worker;
@@ -91,6 +99,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         setItemStatus();
         initialBarodeFieldFunctions();
         initialStudentFieldFunctions();
+        studentID.initEntrySet(new TreeSet(database.getStudentEmails()));
         setLabelStatuses();
         getStudentName();
         unlockFields();
@@ -280,18 +289,6 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      * @return List of barcodes and their information
      */
     private List<MultipleCheckoutObject> collectMultipleBarcodes() {
-
-    /**
-     * Submits multiple items
-     */
-    private void submitMultipleItems() {
-        Student thisStudent = null;
-        if (containsNumber(getstudentID())) {
-            thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
-        }else {
-            thisStudent = database.selectStudent(-1, getstudentID());
-        }
-        List<Long> barcodes = new ArrayList<>();
         List<MultipleCheckoutObject> barcodeInfo = new LinkedList<>();
         if (barcodeIsNotEmpty(barcode)) {
             addBarcodes(getQuantitySpinner(), barcodeInfo, statusLabel, getBarcode());
@@ -312,11 +309,33 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     }
 
     /**
+     * Submits multiple items
+     */
+    private void submitMultipleItems() {
+        Student thisStudent = null;
+        if (containsNumber(getstudentID())) {
+            thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
+        }else {
+            thisStudent = database.selectStudent(-1, getstudentID());
+        }
+        List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
+        for (MultipleCheckoutObject barcode : barcodes) {
+            if (barcode.isCheckedOut()) {
+                checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+            } else {
+                for(int i = 0;i<barcode.getQuantity();i++) {
+                    checkOut.setItemtoCheckedin(barcode.getBarcode());
+                }
+            }
+        }
+    }
+
+    /**
      * Helper method to add barcodes
      */
     private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode) {
         boolean checkStatus = statusIsOut(status);
-        barcodes.add(new MultipleCheckoutObject(barcode, getstudentID(), checkStatus, quantity));
+        barcodes.add(new MultipleCheckoutObject(barcode, Integer.parseInt(getstudentID()), checkStatus, quantity));
     }
 
     /**
@@ -328,39 +347,39 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         return status.getText().equals("Out");
     }
 
-    /**
-     * Submits multiple items
-     */
-    private void submitMultipleItems() {
-        List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
-        for (MultipleCheckoutObject barcode : barcodes) {
-            if (barcode.isCheckedOut()) {
-                checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
-            } else {
-                for(int i = 0;i<barcode.getQuantity();i++) {
-                    checkOut.setItemtoCheckedin(barcode.getBarcode());
-        List<Long> stripped = barcodes.stream().distinct().collect(Collectors.toList());
-        if(quantityIsOne()) {
-            for (Long aStripped : stripped) {
-                if (itemIsBeingCheckedIn(aStripped)) {
-                    checkOut.setItemtoCheckedin(aStripped);
-                } else {
-                    checkOut.addNewCheckoutItem(aStripped, thisStudent.getRFID());
-                }
-            }
-        }
-        else {
-            checkOut.addMultipleCheckouts(getBarcode(), thisStudent.getRFID(), getQuantitySpinner());
+//    /**
+//     * Submits multiple items
+//     */
+//    private void submitMultipleItems() {
+//        List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
+//        for (MultipleCheckoutObject barcode : barcodes) {
+//            if (barcode.isCheckedOut()) {
+//                checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+//            } else {
+//                for(int i = 0;i<barcode.getQuantity();i++) {
+//                    checkOut.setItemtoCheckedin(barcode.getBarcode());
+//        List<Long> stripped = barcodes.stream().distinct().collect(Collectors.toList());
+//        if(quantityIsOne()) {
+//            for (Long aStripped : stripped) {
+//                if (itemIsBeingCheckedIn(aStripped)) {
+//                    checkOut.setItemtoCheckedin(aStripped);
+//                } else {
+//                    checkOut.addNewCheckoutItem(aStripped, thisStudent.getRFID());
+//                }
+//            }
+//        }
+//        else {
+//            checkOut.addMultipleCheckouts(getBarcode(), thisStudent.getRFID(), getQuantitySpinner());
+//
+//        }
+//        StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + barcodes.toString());
+//    }
 
-        }
-        StudentCheckIn.logger.info("Submitting multiple items with barcodes: " + barcodes.toString());
-    }
-
-    /**
-     * Helper method to check if barcode field contains any barccodes
-     * @param barcode Barcode field
-     * @return True if not empty
-     */
+//    /**
+//     * Helper method to check if barcode field contains any barccodes
+//     * @param barcode Barcode field
+//     * @return True if not empty
+//     */
     private boolean barcodeIsNotEmpty(JFXTextField barcode) {
         return !(barcode.getText().isEmpty() || barcode.getText().equals("Removed"));
     }
@@ -369,10 +388,10 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     /**
      * Helper method to checkout an item
      */
-    private void extendedCheckoutHelper() {
+    private void extendedCheckoutHelper(int id) {
         for(MultipleCheckoutObject barcode : collectMultipleBarcodes()){
             for(int i = 0; i<barcode.getQuantity(); i++){
-                extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), getstudentID(), professor, course, dueDate);
+                extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
             }
         }
     }
@@ -400,7 +419,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         }
 
         // getStudentID returns -1 if the field does not contain a number
-//        if (containsNumber(getstudentID())) {
+        if (containsNumber(getstudentID())) {
             CheckedOutPartsObject currentInfo = containsNumber(getstudentID()) ? new CheckedOutPartsObject(barcode,
                     database.selectStudent(studentID, null).getRFID()) : new CheckedOutPartsObject(barcode,
                     database.selectStudent(studentID, getstudentID()).getRFID());
@@ -409,7 +428,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                     return true;
                 }
             }
-//        }
+        }
         return false;
     }
 
@@ -468,9 +487,9 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
                 extended.setDisable(false);
                 resetButton.setDisable(false);
                 String studentName = "";
-                if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
+                if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
                     studentName = student.getStudentNameFromEmail(studentID.getText());
-                }else if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+                } else if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                     studentName = student.getStudentNameFromID(studentID.getText());
                 }
                 if (studentName.isEmpty()) { //If no student is found in database create new one
@@ -1005,8 +1024,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
     /**
      * Helper method to initialize student id field properties.
      */
-    private void initialStudentFieldFunctions() {
-
+    private void initialStudentFieldFunctions(){
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
             studentInfo.setDisable(false);
         } else {
@@ -1032,11 +1050,16 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
         });
     }
 
+    private void setStudentEmailSuggestionListener() {
+        ObservableList<Student> students = database.getStudents();
+
+    }
+
 
     /**
      * Helper method to set items in or out
      */
-    private void setLabelStatuses() {
+    private void setLabelStatuses(){
         barcode2.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.TAB) {
                 return;
