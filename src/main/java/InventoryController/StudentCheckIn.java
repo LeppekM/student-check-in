@@ -40,7 +40,7 @@ public class StudentCheckIn extends Application  {
 ////        scene.getStylesheets().add(ControllerMenu.class.getResource("MenuStyle.css").toExternalForm());
 //        primaryStage.show();
 //    }
-
+//
     @Override
     public void start(Stage primaryStage) throws Exception{
         URL myFxmlURL = ClassLoader.getSystemResource("fxml/Login.fxml");
