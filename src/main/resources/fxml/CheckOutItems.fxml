@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import HelperClasses.AutoCompleteTextField?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXSpinner?>
@@ -14,8 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<?import HelperClasses.AutoCompleteTextField?>
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#submitAfterStudentIDScanned" prefHeight="620.0" prefWidth="789.0" style="jfx-rippler-fill: #ffffff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#submitAfterStudentIDScanned" prefHeight="800.0" prefWidth="1150.0" style="jfx-rippler-fill: #ffffff;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ControllerCheckoutPage">
    <children>
       <AutoCompleteTextField fx:id="studentID" editable="true" layoutX="342.0" layoutY="57.0" prefHeight="24.0" prefWidth="125.0" />
       <JFXTextField fx:id="studentNameField" disable="true" layoutX="342.0" layoutY="110.0" prefHeight="25.0" prefWidth="125.0" />
