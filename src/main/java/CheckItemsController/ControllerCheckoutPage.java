@@ -40,6 +40,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
+//See CheckoutController for up to date controller for the checkout page. This is old version, do not use anymore
+//TODO:Delete this class and ensure everything is up to date in new class
+
+@Deprecated
 public class ControllerCheckoutPage extends ControllerMenu implements IController, Initializable {
     @FXML
     private AnchorPane main;
