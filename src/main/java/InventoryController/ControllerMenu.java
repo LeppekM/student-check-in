@@ -81,7 +81,7 @@ public class ControllerMenu implements IController, Initializable {
     }
 
     public void openCheckItemsPage(){
-        newStage("/fxml/CheckOutItems.fxml");
+        newStage("/fxml/test.fxml");
     }
 
     private void openManageWorkers() {
