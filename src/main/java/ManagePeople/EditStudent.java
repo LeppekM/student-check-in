@@ -89,7 +89,7 @@ public class EditStudent implements IController {
 
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
-        coTableCol.setPrefWidth(198);
+        coTableCol.prefWidthProperty().bind(coTable.widthProperty());
         coTableCol.setResizable(false);
         coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
             @Override
@@ -99,7 +99,7 @@ public class EditStudent implements IController {
         });
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
-        oTableCol.setPrefWidth(198);
+        oTableCol.prefWidthProperty().bind(oTable.widthProperty());
         oTableCol.setResizable(false);
         oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
             @Override
@@ -109,7 +109,7 @@ public class EditStudent implements IController {
         });
 
         sTableCol = new JFXTreeTableColumn<>("Part Name");
-        sTableCol.setPrefWidth(198);
+        sTableCol.prefWidthProperty().bind(sTable.widthProperty());
         sTableCol.setResizable(false);
         sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
             @Override

@@ -80,15 +80,19 @@ public class StudentPage implements IController {
         studentName = new Label("");
         studentName.setText(student.getName());
         studentName.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
+        studentName.setStyle("-fx-font-size: 45px");
         email = new Label("");
         email.setText(student.getEmail());
         email.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
+        email.setStyle("-fx-font-size: 45px");
         RFID = new Label("");
         RFID.setText(student.getRFID() + "");
         RFID.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
+        RFID.setStyle("-fx-font-size: 45px");
         fees = new Label("");
         fees.setText("Outstanding fees: $" + overdueFees);
         fees.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
+        fees.setStyle("-fx-font-size: 45px");
         date = new Label("");
         if(student.getDate() == null){
             date.setText("Date of last rental: Never");
@@ -96,6 +100,7 @@ public class StudentPage implements IController {
             date.setText("Date of last rental: " + sdf.format(new Date(student.getDate())));
         }
         date.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
+        date.setStyle("-fx-font-size: 45px");
         vbox.getChildren().add(studentName);
         vbox.getChildren().add(email);
         vbox.getChildren().add(RFID);
@@ -128,7 +133,7 @@ public class StudentPage implements IController {
 
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
-        coTableCol.setPrefWidth(218);
+        coTableCol.prefWidthProperty().bind(coTable.widthProperty());
         coTableCol.setResizable(false);
         coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
             @Override
@@ -138,7 +143,7 @@ public class StudentPage implements IController {
         });
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
-        oTableCol.setPrefWidth(218);
+        oTableCol.prefWidthProperty().bind(oTable.widthProperty());
         oTableCol.setResizable(false);
         oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
             @Override
@@ -148,7 +153,7 @@ public class StudentPage implements IController {
         });
 
         sTableCol = new JFXTreeTableColumn<>("Part Name");
-        sTableCol.setPrefWidth(218);
+        sTableCol.prefWidthProperty().bind(sTable.widthProperty());
         sTableCol.setResizable(false);
         sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
             @Override
