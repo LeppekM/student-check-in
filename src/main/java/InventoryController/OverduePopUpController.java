@@ -2,13 +2,14 @@ package InventoryController;
 
 import Database.*;
 import Database.ObjectClasses.Student;
+import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 
 import java.text.DecimalFormat;
 
-public class OverduePopUpController extends ControllerOverdueTab {
+public class OverduePopUpController {
 
     @FXML
     private JFXTextField nameField = new JFXTextField();

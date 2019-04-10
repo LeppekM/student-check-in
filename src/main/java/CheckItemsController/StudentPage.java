@@ -224,7 +224,6 @@ public class StudentPage implements IController {
                 URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);
                 Parent root = loader.load();
-                ((IController) loader.getController()).initWorker(worker);
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(main.getScene().getWindow());
