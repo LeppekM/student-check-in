@@ -69,6 +69,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         studentCol = new JFXTreeTableColumn<>("Student");
         studentCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
+        studentCol.setStyle("-fx-font-size: 18px");
         studentCol.setResizable(false);
         studentCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -79,6 +80,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         partNameCol = new JFXTreeTableColumn<>("Part");
         partNameCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
+        partNameCol.setStyle("-fx-font-size: 18px");
         partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -89,6 +91,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
+        serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -99,6 +102,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         statusCol = new JFXTreeTableColumn<>("Status");
         statusCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
+        statusCol.setStyle("-fx-font-size: 18px");
         statusCol.setResizable(false);
         statusCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -109,6 +113,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         dateCol = new JFXTreeTableColumn<>("Date");
         dateCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
+        dateCol.setStyle("-fx-font-size: 18px");
         dateCol.setResizable(false);
         dateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override

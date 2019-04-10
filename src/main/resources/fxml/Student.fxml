@@ -10,13 +10,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="main" alignment="CENTER" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.StudentPage">
+<VBox fx:id="main" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="800" prefWidth="1150" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.StudentPage">
    <children>
-      <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <children>
-            <Button mnemonicParsing="false" onAction="#goBack" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" HBox.hgrow="ALWAYS">
+            <Button mnemonicParsing="false" onAction="#goBack" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" HBox.hgrow="ALWAYS">
                <graphic>
-                  <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="35.0" fitWidth="39.0" nodeOrientation="INHERIT" pickOnBounds="true">
                      <image>
                         <Image url="@../images/back.png" />
                      </image>
@@ -29,11 +29,11 @@
                   <Insets bottom="210.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <VBox fx:id="vbox" alignment="CENTER" maxWidth="664.0" prefHeight="279.0" prefWidth="664.0" HBox.hgrow="ALWAYS">
+            <VBox fx:id="vbox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="279.0" prefWidth="664.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin></VBox>
-            <Button mnemonicParsing="false" onAction="#goHome" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" HBox.hgrow="ALWAYS">
+            <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#goHome" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" HBox.hgrow="ALWAYS">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -47,42 +47,48 @@
             </Button>
          </children>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="342.0" prefWidth="789.0" VBox.vgrow="ALWAYS">
+      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="342.0" prefWidth="789.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox alignment="CENTER" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label stylesheets="@../css/HeaderStyle.css" text="Checked Out" VBox.vgrow="ALWAYS">
+                  <Label style="-fx-font-size: 45px" stylesheets="@../css/HeaderStyle.css" text="Checked Out" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets bottom="10.0" />
                      </padding>
                   </Label>
-                  <JFXTreeTableView fx:id="coTable" layoutX="20.0" onMouseClicked="#coPopUp" prefHeight="272.0" prefWidth="220.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS">
+                  <JFXTreeTableView fx:id="coTable" layoutX="20.0" onMouseClicked="#coPopUp" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS">
                      <VBox.margin>
-                        <Insets bottom="10.0" right="5.0" />
+                        <Insets bottom="10.0" />
                      </VBox.margin>
                   </JFXTreeTableView>
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" right="5.0" />
                </VBox.margin>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label stylesheets="@../css/HeaderStyle.css" text="Overdue" VBox.vgrow="ALWAYS">
+                  <Label style="-fx-font-size: 45px" stylesheets="@../css/HeaderStyle.css" text="Overdue" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets bottom="10.0" />
                      </padding>
                   </Label>
-                  <JFXTreeTableView fx:id="oTable" onMouseClicked="#oPopUp" prefHeight="272.0" prefWidth="220.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS">
+                  <JFXTreeTableView fx:id="oTable" onMouseClicked="#oPopUp" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </JFXTreeTableView>
                </children>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label stylesheets="@../css/HeaderStyle.css" text="Saved" VBox.vgrow="ALWAYS">
+                  <Label style="-fx-font-size: 45px" stylesheets="@../css/HeaderStyle.css" text="Saved" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets bottom="10.0" />
                      </padding>
@@ -90,7 +96,7 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <JFXTreeTableView fx:id="sTable" onMouseClicked="#sPopUp" prefHeight="272.0" prefWidth="220.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS">
+                  <JFXTreeTableView fx:id="sTable" onMouseClicked="#sPopUp" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>

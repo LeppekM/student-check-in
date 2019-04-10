@@ -35,7 +35,7 @@ import java.util.function.UnaryOperator;
 
 public class StageWrapper {
 
-    public void popupPage(String fxml, AnchorPane anchorPane) {
+    public void popupPage(String fxml, Node node) {
         Stage stage = new Stage();
         try {
             URL myFxmlURL = ClassLoader.getSystemResource(fxml);
@@ -43,7 +43,7 @@ public class StageWrapper {
             Parent root = loader.load();
             Scene scene = new Scene(root, 550, 400);
             stage.setTitle("Part Information");
-            stage.initOwner(anchorPane.getScene().getWindow());
+            stage.initOwner(node.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             stage.showAndWait();

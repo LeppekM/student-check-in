@@ -106,6 +106,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
 
         partNameCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        partNameCol.setStyle("-fx-font-size: 18px");
         partNameCol.setResizable(false);
         partNameCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, String>, TreeTableCell<TotalTabTableRow, String>>() {
             @Override
@@ -260,16 +261,19 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
 
         locationCol = new JFXTreeTableColumn<>("Location");
         locationCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        locationCol.setStyle("-fx-font-size: 18px");
         locationCol.setResizable(false);
         locationCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode());
 
@@ -287,6 +291,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         partIDCol = new JFXTreeTableColumn<>("Part ID");
         partIDCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        partIDCol.setStyle("-fx-font-size: 18px");
         partIDCol.setResizable(false);
         partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID());
 
