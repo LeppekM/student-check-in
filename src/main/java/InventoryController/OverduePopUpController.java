@@ -11,8 +11,6 @@ import java.text.DecimalFormat;
 
 public class OverduePopUpController {
 
-    private Worker worker;
-
     @FXML
     private JFXTextField nameField = new JFXTextField();
     @FXML
