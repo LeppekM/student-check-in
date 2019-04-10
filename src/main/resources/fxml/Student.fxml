@@ -66,7 +66,7 @@
                   <Insets bottom="10.0" right="5.0" />
                </VBox.margin>
                <HBox.margin>
-                  <Insets right="5.0" />
+                  <Insets right="10.0" />
                </HBox.margin>
             </VBox>
             <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
@@ -83,7 +83,7 @@
                   </JFXTreeTableView>
                </children>
                <HBox.margin>
-                  <Insets right="5.0" />
+                  <Insets right="10.0" />
                </HBox.margin>
             </VBox>
             <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
