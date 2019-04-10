@@ -57,9 +57,9 @@ public class ExtendedCheckoutController implements Initializable {
 
     public void submit(){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/CheckOutItems.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/test.fxml"));
             Parent root = (Parent) loader.load();
-            ControllerCheckoutPage controller = loader.getController();
+            CheckOutController controller = loader.getController();
             checkout = new ExtendedCheckoutObject(courseName.getText(), profName.getText(), getExtendedDueDate());
             controller.initExtendedObject(checkout);
             main.getScene().getWindow().hide();

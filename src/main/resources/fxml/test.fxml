@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import HelperClasses.AutoCompleteTextField?>
+<VBox fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.CheckOutController">
+   <children>
+      <HBox prefHeight="106.0" prefWidth="1150.0" VBox.vgrow="NEVER">
+         <children>
+            <JFXButton fx:id="home" onAction="#returnHome" stylesheets="@../css/CheckButton.css" text="Button" translateX="25.0" translateY="10.0" HBox.hgrow="NEVER">
+               <graphic>
+                  <ImageView fitHeight="35.0" fitWidth="39.0">
+                     <image>
+                        <Image url="@../images/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <Pane prefHeight="53.0" prefWidth="325.0" HBox.hgrow="ALWAYS" />
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Checkout/In Item" textAlignment="CENTER">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Label>
+            <Pane prefHeight="53.0" prefWidth="329.0" HBox.hgrow="ALWAYS" />
+            <JFXButton fx:id="studentInfo" onAction="#goToStudent" prefHeight="53.0" prefWidth="129.0" stylesheets="@../css/CheckButton.css" text="Student Info" translateX="-25.0" translateY="10.0" HBox.hgrow="NEVER" />
+         </children>
+      </HBox>
+      <HBox prefHeight="469.0" prefWidth="1150.0" VBox.vgrow="NEVER">
+         <children>
+            <GridPane prefHeight="397.0" prefWidth="1150.0" HBox.hgrow="ALWAYS">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <AutoCompleteTextField fx:id="studentID" GridPane.columnIndex="1" />
+                  <JFXTextField fx:id="studentNameField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <JFXTextField fx:id="barcode" onKeyTyped="#newBarcode1" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <JFXTextField fx:id="barcode2" onKeyTyped="#dropBarcode2" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <JFXTextField fx:id="barcode3" onKeyTyped="#dropBarcode3" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <JFXTextField fx:id="barcode4" onKeyTyped="#dropBarcode4" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                   <JFXTextField fx:id="barcode5" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <HBox fx:id="HBoxBarcode" alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <children>
+                        <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+                        <Label fx:id="statusLabel" text="--" translateX="8.0" translateY="10.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Student ID  ">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Student Name  ">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+                     <children>
+                        <Label text="Scan Barcodes  ">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxBarcode2" alignment="CENTER_LEFT" layoutX="777.0" layoutY="185.0" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <children>
+                        <Spinner fx:id="newQuantity2" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+                        <Label fx:id="statusLabel2" text="--" translateX="8.0" translateY="10.0" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxBarcode3" alignment="CENTER_LEFT" layoutX="777.0" layoutY="272.0" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                     <children>
+                        <Spinner fx:id="newQuantity3" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+                        <Label fx:id="statusLabel3" text="--" translateX="8.0" translateY="10.0" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxBarcode4" alignment="CENTER_LEFT" layoutX="777.0" layoutY="359.0" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                     <children>
+                        <Spinner fx:id="newQuantity4" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+                        <Label fx:id="statusLabel4" text="--" translateX="8.0" translateY="10.0" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxBarcode5" alignment="CENTER_LEFT" layoutX="777.0" layoutY="446.0" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                     <children>
+                        <Spinner fx:id="newQuantity5" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
+                        <Label fx:id="statusLabel5" text="--" translateX="8.0" translateY="10.0" />
+                     </children>
+                  </HBox>
+                  <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="170.0" prefWidth="1150.0" StackPane.alignment="CENTER">
+                           <children>
+                              <JFXButton fx:id="submitButton" onAction="#submit" prefHeight="65.0" prefWidth="179.0" stylesheets="@../css/CheckButton.css" text="Submit" translateX="-20.0" translateY="50.0" HBox.hgrow="NEVER" />
+                              <JFXButton fx:id="resetButton" onAction="#reset" prefHeight="65.0" prefWidth="168.0" stylesheets="@../css/CheckButton.css" text="Reset" translateY="50.0" HBox.hgrow="NEVER" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="143.0" prefWidth="1150.0">
+                           <children>
+                              <VBox prefHeight="118.0" prefWidth="1150.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                       <children>
+                                          <Pane prefHeight="42.0" prefWidth="290.0" HBox.hgrow="ALWAYS" />
+                                          <StackPane prefHeight="150.0" prefWidth="200.0">
+                                             <children>
+                                                <JFXCheckBox fx:id="extended" checkedColor="#043993" disable="true" onAction="#isExtended" prefHeight="35.0" prefWidth="162.0" text="Extended?" translateY="-10.0">
+                                                   <font>
+                                                      <Font size="24.0" />
+                                                   </font>
+                                                </JFXCheckBox>
+                                                <JFXCheckBox fx:id="faulty" onAction="#isFaulty" prefHeight="35.0" prefWidth="162.0" text="Faulty" translateY="-10.0" visible="false">
+                                                   <font>
+                                                      <Font size="24.0" />
+                                                   </font>
+                                                </JFXCheckBox>
+                                             </children>
+                                          </StackPane>
+                                          <Pane prefHeight="42.0" prefWidth="263.0" HBox.hgrow="ALWAYS" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
+               </children>
+            </GridPane>
+         </children>
+      </HBox>
+      <HBox prefHeight="89.0" prefWidth="1150.0">
+         <children>
+            <Pane prefHeight="145.0" prefWidth="215.0" HBox.hgrow="ALWAYS" />
+            <TextArea fx:id="faultyTextArea" prefHeight="70.0" prefWidth="300.0" promptText="Please enter description of fault" visible="false" />
+            <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

@@ -7,32 +7,9 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="inventoryScene" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
   <children>
-            <VBox alignment="BOTTOM_LEFT" prefWidth="100.0">
-               <children>
-              <JFXButton fx:id="back" mnemonicParsing="false" onAction="#goBack">
-                <graphic>
-                  <ImageView fitHeight="35.0" fitWidth="39.0">
-                    <image>
-                      <Image url="@../images/home.png" />
-                    </image>
-                  </ImageView>
-                </graphic>
-               <VBox.margin>
-                  <Insets left="20.0" />
-               </VBox.margin>
-              </JFXButton>
-               </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <StackPane.margin>
-                  <Insets bottom="10.0" />
-               </StackPane.margin>
-            </VBox>
         <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" stylesheets="@../css/TabStyle.css" tabClosingPolicy="UNAVAILABLE">
           <tabs>
             <Tab fx:id="totalTab" text="Total Inventory">
@@ -62,5 +39,17 @@
             </Tab>
           </tabs>
         </JFXTabPane>
+              <JFXButton fx:id="back" mnemonicParsing="false" onAction="#goBack" StackPane.alignment="BOTTOM_LEFT">
+                <graphic>
+                  <ImageView fitHeight="35.0" fitWidth="39.0">
+                    <image>
+                      <Image url="@../images/home.png" />
+                    </image>
+                  </ImageView>
+                </graphic>
+         <StackPane.margin>
+            <Insets bottom="10.0" left="20.0" />
+         </StackPane.margin>
+              </JFXButton>
   </children>
 </StackPane>

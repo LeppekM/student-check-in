@@ -185,11 +185,11 @@ public class StudentPage implements IController {
 
     public void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckoutItems.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/test.fxml"));
             Parent root = loader.load();
             main.getScene().setRoot(root);
-            ((ControllerCheckoutPage) loader.getController()).initCheckoutObject(checkoutObject);
-            ((ControllerCheckoutPage) loader.getController()).initWorker(worker);
+            ((CheckOutController) loader.getController()).initCheckoutObject(checkoutObject);
+            ((CheckOutController) loader.getController()).initWorker(worker);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -232,7 +232,6 @@ public class StudentPage implements IController {
                 URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);
                 Parent root = loader.load();
-                ((IController) loader.getController()).initWorker(worker);
                 Scene scene = new Scene(root, 400, 300);
                 stage.setTitle("Overdue Item");
                 stage.initOwner(main.getScene().getWindow());
