@@ -134,6 +134,7 @@ public class StudentPage implements IController {
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
         coTableCol.prefWidthProperty().bind(coTable.widthProperty());
+        coTableCol.setStyle("-fx-font-size: 18px");
         coTableCol.setResizable(false);
         coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
             @Override
@@ -144,6 +145,7 @@ public class StudentPage implements IController {
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
         oTableCol.prefWidthProperty().bind(oTable.widthProperty());
+        oTableCol.setStyle("-fx-font-size: 18px");
         oTableCol.setResizable(false);
         oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
             @Override
@@ -154,6 +156,7 @@ public class StudentPage implements IController {
 
         sTableCol = new JFXTreeTableColumn<>("Part Name");
         sTableCol.prefWidthProperty().bind(sTable.widthProperty());
+        sTableCol.setStyle("-fx-font-size: 18px");
         sTableCol.setResizable(false);
         sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
             @Override

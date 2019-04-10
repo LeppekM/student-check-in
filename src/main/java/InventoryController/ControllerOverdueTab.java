@@ -73,6 +73,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         studentIDCol = new JFXTreeTableColumn<>("Student ID");
         studentIDCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        studentIDCol.setStyle("-fx-font-size: 18px");
         studentIDCol.setResizable(false);
         studentIDCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -83,6 +84,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        partNameCol.setStyle("-fx-font-size: 18px");
         partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -93,6 +95,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -103,6 +106,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         dueDateCol = new JFXTreeTableColumn<>("Due Date");
         dueDateCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        dueDateCol.setStyle("-fx-font-size: 18px");
         dueDateCol.setResizable(false);
         dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -113,6 +117,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         feeCol = new JFXTreeTableColumn<>("Fee");
         feeCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        feeCol.setStyle("-fx-font-size: 18px");
         feeCol.setResizable(false);
         feeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
             @Override
