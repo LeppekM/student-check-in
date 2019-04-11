@@ -67,8 +67,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
             statusLabel2, statusLabel3, statusLabel4, statusLabel5;
 
 
-    @FXML
-    private TextArea faultyTextArea;
+//    @FXML
+//    private TextArea faultyTextArea;
 
 
     @FXML
@@ -89,6 +89,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private List<String> studentIDVerifier = new ArrayList<>();
     private DatabaseHelper dbHelp = new DatabaseHelper();
     private static String professor, course, dueDate;
+    private String faultyText;
 
     private Worker worker;
 
@@ -169,7 +170,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 //            datePicker.setValue(checkoutObject.getExtendedReturnDate());
         } else if (checkoutObject.isFaulty()) {
             faulty.setSelected(true);
-            faultyTextArea.setText(checkoutObject.getFaultyDescription());
+            //faultyTextArea.setText(checkoutObject.getFaultyDescription());
         }
 
         // enable the switch to student info button iff the student ID field contains a student ID
@@ -208,20 +209,40 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 return;
             }
             if (extendedCheckoutIsSelected(getBarcode())) {
-//                if (newStudentIsCheckingOutItem()) {
-//                    createNewStudent();
-//                }
+                if (newStudentIsCheckingOutItem()) {
+                    createNewStudent();
+                    return;
+                }
                 extendedCheckoutHelper(thisStudent.getRFID());
             } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
-                faultyCheckinHelper();
-//            } else if (newStudentIsCheckingOutItem()) {
-//                createNewStudent();
-//                checkOut.addNewCheckoutItem(getBarcode(), thisStudent.getRFID());
+                faultyCheckinHelper(faultyText);
+            } else if (newStudentIsCheckingOutItem()) {
+                createNewStudent();
+                return;
+                //checkOut.addNewCheckoutItem(getBarcode(), thisStudent.getRFID());
             } else {
                 submitMultipleItems();
             }
             reset();
         }
+    }
+
+    /**
+     * Checks if student is new
+     *
+     * @return True if student email has text
+     */
+    private boolean newStudentIsCheckingOutItem() {
+        return studentNameField.getText().isEmpty();
+    }
+
+    private String faultyItem(){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Faulty Description");
+        dialog.setHeaderText("Please enter description of faulty item");
+        dialog.setContentText("Please enter description of faulty item");
+        dialog.showAndWait();
+        return dialog.getResult();
     }
 
     /**
@@ -404,9 +425,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
     /**
      * Helper method to checkin an item
      */
-    private void faultyCheckinHelper() {
+    private void faultyCheckinHelper(String faultyText) {
         faultyCheckIn.setPartToFaultyStatus(getBarcode());
-        faultyCheckIn.addToFaultyTable(getBarcode(), faultyTextArea.getText());
+        faultyCheckIn.addToFaultyTable(getBarcode(), faultyText);
         checkOut.setItemtoCheckedin(getBarcode());
     }
 
@@ -509,11 +530,16 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Adds new student to database
      */
     private void createNewStudent() {
-        if (containsNumber(getstudentID())) {
-            //student.createNewStudent(Integer.parseInt(getstudentID()), getStudentEmail(), getNewStudentName());
-        }else {
-            student.createNewStudent(database.selectStudent(-1, getstudentID()));
-        }
+//        if (containsNumber(getstudentID())) {
+//            //student.createNewStudent(Integer.parseInt(getstudentID()), getStudentEmail(), getNewStudentName());
+//        }else {
+//            student.createNewStudent(database.selectStudent(-1, getstudentID()));
+//        }
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("No student found in the system with associated ID");
+
+        alert.showAndWait();
     }
 
     /**
@@ -640,7 +666,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 if (extended.isSelected()) {
                     //checkoutObject.initExtendedInfo(courseName.getText(), profName.getText(), datePicker.getValue());
                 } else if (faulty.isSelected()) {
-                    checkoutObject.initFaultyInfo(faultyTextArea.getText());
+                    //checkoutObject.initFaultyInfo(faultyTextArea.getText());
                 }
                 sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
@@ -819,18 +845,19 @@ public class CheckOutController extends ControllerMenu implements IController, I
         int translateFaultyDown = 75;
         int translateFaultyUp = -75;
         if (faulty.isSelected()) {
-            setFaultyTransition(translateFaultyDown, true);
+            faultyText = faultyItem();
+            //setFaultyTransition(translateFaultyDown, true);
             setCheckoutItemsDisable(true);
-            faultyTransitionItems(true);
+           // faultyTransitionItems(true);
         } else {
             if (faultyItemLossInfo()) {
                 faulty.setSelected(true);
                 return;
             }
-            setFaultyTransition(translateFaultyUp, false);
-            faultyTextArea.setText("");
+            //setFaultyTransition(translateFaultyUp, false);
+            //faultyTextArea.setText("");
             setCheckoutItemsDisable(false);
-            faultyTransitionItems(false);
+            //faultyTransitionItems(false);
 
         }
     }
@@ -841,9 +868,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @return User response to alert
      */
     private boolean faultyItemLossInfo() {
-        if (!faultyTextArea.getText().isEmpty()) {
-            return !fieldsNotFilledDialog();
-        }
+        //if (!faultyTextArea.getText().isEmpty()) {
+            //return !fieldsNotFilledDialog();
+       // }
         return false;
     }
 
@@ -875,7 +902,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private void setFaultyTransition(int direction, boolean showTextarea) {
         transitionHelper.translateButtons(submitButton, resetButton, direction);
         transitionHelper.faultyBoxFadeTransition(faulty);
-        faultyTextArea.setVisible(showTextarea);
+        //faultyTextArea.setVisible(showTextarea);
     }
 
 
@@ -932,7 +959,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private void barcodeDropHelper() {
         //extended.setVisible(false);
-       // faulty.setVisible(false);
+        faulty.setVisible(false);
     }
 
 
