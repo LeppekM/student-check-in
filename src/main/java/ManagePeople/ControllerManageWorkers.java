@@ -26,6 +26,8 @@ import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -46,7 +48,7 @@ public class ControllerManageWorkers implements IController, Initializable {
     private Worker worker;
 
     @FXML
-    private AnchorPane manageWorkersScene;
+    private VBox manageWorkersScene;
 
     @FXML
     private JFXTreeTableView<ManageWorkersTabTableRow> manageWorkersTable;
@@ -77,7 +79,8 @@ public class ControllerManageWorkers implements IController, Initializable {
         manageWorkersTable.setPlaceholder(emptyTableLabel);
 
         nameCol = new JFXTreeTableColumn<>("Name");
-        nameCol.setPrefWidth(800/3);
+        nameCol.prefWidthProperty().bind(manageWorkersTable.widthProperty().divide(3));
+        nameCol.setStyle("-fx-font-size: 18px");
         nameCol.setResizable(false);
         nameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -87,7 +90,8 @@ public class ControllerManageWorkers implements IController, Initializable {
         });
 
         emailCol = new JFXTreeTableColumn<>("Email");
-        emailCol.setPrefWidth(800/3);
+        emailCol.prefWidthProperty().bind(manageWorkersTable.widthProperty().divide(3));
+        emailCol.setStyle("-fx-font-size: 18px");
         emailCol.setResizable(false);
         emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -97,7 +101,7 @@ public class ControllerManageWorkers implements IController, Initializable {
         });
 
         adminCol = new JFXTreeTableColumn<>("Admin");
-        adminCol.setPrefWidth(800/3);
+        adminCol.prefWidthProperty().bind(manageWorkersTable.widthProperty().divide(3));
         adminCol.setResizable(false);
         adminCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageWorkersTabTableRow, Boolean>,
                 ObservableValue<Boolean>>() {
