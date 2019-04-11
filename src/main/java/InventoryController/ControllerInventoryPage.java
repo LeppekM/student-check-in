@@ -78,7 +78,8 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
             }
         });
 
-        back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
+        //back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
+        back.getStylesheets().add("/css/ButtonStyle.css");
         //});
     }
 
