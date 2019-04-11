@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
     <children>
@@ -26,8 +27,11 @@
                   <JFXTextField fx:id="searchInput" promptText="search">
                      <HBox.margin>
                         <Insets right="5.0" />
-                     </HBox.margin></JFXTextField>
-                    <JFXButton fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" text="Go" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="18.0" />
+                     </font></JFXTextField>
+                    <JFXButton fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="40.0" stylesheets="@../css/ButtonStyle.css" text="Go" />
                </children>
                <HBox.margin>
                   <Insets right="20.0" top="14.0" />

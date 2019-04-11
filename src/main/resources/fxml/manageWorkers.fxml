@@ -16,7 +16,7 @@
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0">
             <children>
-                <Label style="-fx-font-size: 45px;" text="Manage Workers" HBox.hgrow="ALWAYS">
+                <Label text="Manage Workers" HBox.hgrow="ALWAYS">
                     <stylesheets>
                         <URL value="@../css/HeaderStyle.css" />
                     </stylesheets>

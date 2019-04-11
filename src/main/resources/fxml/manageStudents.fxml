@@ -14,7 +14,7 @@
 
 <VBox fx:id="manageStudentsScene" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerManageStudents">
     <HBox>
-        <Label layoutX="20.0" layoutY="14.0" style="-fx-font-size: 45px;" text="Manage Students">
+        <Label layoutX="20.0" layoutY="14.0" text="Manage Students">
             <stylesheets>
                 <URL value="@../css/HeaderStyle.css" />
             </stylesheets>

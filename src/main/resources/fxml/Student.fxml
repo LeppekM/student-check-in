@@ -51,7 +51,7 @@
          <children>
             <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label style="-fx-font-size: 45px" stylesheets="@../css/HeaderStyle.css" text="Checked Out" VBox.vgrow="ALWAYS">
+                  <Label stylesheets="@../css/HeaderStyle.css" text="Checked Out" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets bottom="10.0" />
                      </padding>
@@ -71,7 +71,7 @@
             </VBox>
             <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label style="-fx-font-size: 45px" stylesheets="@../css/HeaderStyle.css" text="Overdue" VBox.vgrow="ALWAYS">
+                  <Label stylesheets="@../css/HeaderStyle.css" text="Overdue" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets bottom="10.0" />
                      </padding>
@@ -88,7 +88,7 @@
             </VBox>
             <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="346.0" prefWidth="265.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label style="-fx-font-size: 45px" stylesheets="@../css/HeaderStyle.css" text="Saved" VBox.vgrow="ALWAYS">
+                  <Label stylesheets="@../css/HeaderStyle.css" text="Saved" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets bottom="10.0" />
                      </padding>
