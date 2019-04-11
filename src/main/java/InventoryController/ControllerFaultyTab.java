@@ -62,6 +62,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
+        partNameCol.setStyle("-fx-font-size: 18px");
         partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -72,6 +73,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         locationCol = new JFXTreeTableColumn<>("Location");
         locationCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
+        locationCol.setStyle("-fx-font-size: 18px");
         locationCol.setResizable(false);
         locationCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -82,6 +84,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
+        barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -93,6 +96,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
         faultDescCol = new JFXTreeTableColumn<>("Fault Description");
         faultDescCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
+        faultDescCol.setStyle("-fx-font-size: 18px");
         faultDescCol.setResizable(false);
         faultDescCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
