@@ -57,7 +57,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     public void initialize(URL location, ResourceBundle resources) {
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setFont(new Font(18));
-        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
+//        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         faultyTable.setPlaceholder(emptyTableLabel);
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
