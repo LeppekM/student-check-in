@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox fx:id="totalTabPage" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerTotalTab">
   <children>
@@ -32,6 +33,9 @@
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
+                     <font>
+                        <Font size="18.0" />
+                     </font>
                   </JFXTextField>
               <JFXButton fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="45.0" prefWidth="69.0" stylesheets="@../css/ButtonStyle.css" text="Go">
                      <HBox.margin>
