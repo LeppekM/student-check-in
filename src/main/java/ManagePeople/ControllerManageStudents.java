@@ -81,6 +81,7 @@ public class ControllerManageStudents implements IController, Initializable {
 
         nameCol = new JFXTreeTableColumn<>("Name");
         nameCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
+        nameCol.setStyle("-fx-font-size: 18px");
         nameCol.setResizable(false);
         nameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -91,6 +92,7 @@ public class ControllerManageStudents implements IController, Initializable {
 
         idCol = new JFXTreeTableColumn<>("ID");
         idCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
+        idCol.setStyle("-fx-font-size: 18px");
         idCol.setResizable(false);
         idCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -101,6 +103,7 @@ public class ControllerManageStudents implements IController, Initializable {
 
         emailCol = new JFXTreeTableColumn<>("Email");
         emailCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
+        emailCol.setStyle("-fx-font-size: 18px");
         emailCol.setResizable(false);
         emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
