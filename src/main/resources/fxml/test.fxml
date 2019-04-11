@@ -5,7 +5,6 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -22,7 +21,7 @@
    <children>
       <HBox prefHeight="106.0" prefWidth="1150.0" VBox.vgrow="NEVER">
          <children>
-            <JFXButton fx:id="home" onAction="#returnHome" stylesheets="@../css/CheckButton.css" text="Button" translateX="25.0" translateY="10.0" HBox.hgrow="NEVER">
+            <JFXButton fx:id="home" onAction="#returnHome" stylesheets="@../css/CheckButton.css" text="Home" translateX="25.0" translateY="10.0" HBox.hgrow="NEVER">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0">
                      <image>
@@ -164,13 +163,6 @@
                   </StackPane>
                </children>
             </GridPane>
-         </children>
-      </HBox>
-      <HBox prefHeight="89.0" prefWidth="1150.0">
-         <children>
-            <Pane prefHeight="145.0" prefWidth="215.0" HBox.hgrow="ALWAYS" />
-            <TextArea fx:id="faultyTextArea" prefHeight="70.0" prefWidth="300.0" promptText="Please enter description of fault" visible="false" />
-            <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

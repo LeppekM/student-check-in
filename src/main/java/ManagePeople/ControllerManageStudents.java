@@ -22,6 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -47,7 +48,7 @@ public class ControllerManageStudents implements IController, Initializable {
     Worker worker;
 
     @FXML
-    private AnchorPane manageStudentsScene;
+    private VBox manageStudentsScene;
 
     @FXML
     private JFXTreeTableView<ManageStudentsTabTableRow> manageStudentsTable;
@@ -79,7 +80,7 @@ public class ControllerManageStudents implements IController, Initializable {
         manageStudentsTable.setPlaceholder(emptyTableLabel);
 
         nameCol = new JFXTreeTableColumn<>("Name");
-        nameCol.setPrefWidth(800/3);
+        nameCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
         nameCol.setResizable(false);
         nameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -89,7 +90,7 @@ public class ControllerManageStudents implements IController, Initializable {
         });
 
         idCol = new JFXTreeTableColumn<>("ID");
-        idCol.setPrefWidth(800/3);
+        idCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
         idCol.setResizable(false);
         idCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
@@ -99,7 +100,7 @@ public class ControllerManageStudents implements IController, Initializable {
         });
 
         emailCol = new JFXTreeTableColumn<>("Email");
-        emailCol.setPrefWidth(800/3);
+        emailCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
         emailCol.setResizable(false);
         emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
