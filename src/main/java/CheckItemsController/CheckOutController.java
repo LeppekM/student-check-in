@@ -1060,13 +1060,18 @@ public class CheckOutController extends ControllerMenu implements IController, I
             studentInfo.setDisable(true);
         }
 
-        studentID.setOnKeyReleased(event -> {
-            if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
-                studentInfo.setDisable(false);
-            } else {
-                studentInfo.setDisable(true);
-            }
-        });
+        studentID.textProperty().addListener(
+                new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                            studentInfo.setDisable(false);
+                        } else {
+                            studentInfo.setDisable(true);
+                        }
+                    }
+                }
+        );
 
         // only allows user to enter 5 digits
         studentID.textProperty().addListener(new ChangeListener<String>() {
