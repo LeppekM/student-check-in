@@ -239,6 +239,7 @@ public class ControllerManageWorkers implements IController, Initializable {
             alert.showAndWait();
             e.printStackTrace();
         }
+        populateTable();
     }
 
     /**
