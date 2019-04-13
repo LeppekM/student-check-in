@@ -361,7 +361,7 @@ public class ControllerManageStudents implements IController, Initializable {
                 Parent root = loader.load();
                 EditStudent sp = loader.getController();
                 sp.setStudent(s);
-                Scene scene = new Scene(root, 790, 620);
+                Scene scene = new Scene(root, 840, 630);
                 stage.setTitle("Edit " + s.getName());
                 stage.initOwner(manageStudentsScene.getScene().getWindow());
                 stage.initModality(Modality.WINDOW_MODAL);

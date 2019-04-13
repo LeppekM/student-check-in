@@ -38,7 +38,6 @@ public class ControllerAddAdmin implements Initializable, IController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        submit.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         database = new Database();
     }
 

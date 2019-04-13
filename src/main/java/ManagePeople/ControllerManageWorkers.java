@@ -200,7 +200,7 @@ public class ControllerManageWorkers implements IController, Initializable {
             Parent root = loader.load();
             IController controller = loader.getController();
             controller.initWorker(worker);
-            Scene scene = new Scene(root, 300, 260);
+            Scene scene = new Scene(root, 350, 325);
             stage.setTitle("Add a New Worker");
             stage.initOwner(manageWorkersScene.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
@@ -225,7 +225,7 @@ public class ControllerManageWorkers implements IController, Initializable {
             Parent root = loader.load();
             IController controller = loader.getController();
             controller.initWorker(worker);
-            Scene scene = new Scene(root, 300, 260);
+            Scene scene = new Scene(root, 350, 375);
             stage.setTitle("Add a New Worker");
             stage.initOwner(manageWorkersScene.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
