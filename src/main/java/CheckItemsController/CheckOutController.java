@@ -160,6 +160,12 @@ public class CheckOutController extends ControllerMenu implements IController, I
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
         studentID.setText(checkoutObject.getStudentID());
+
+        // Yes... these two lines are actually required and work for some reason.
+        // Without them, the suggested student ID drop down appears top left of screen.
+        studentID.setVisible(false);
+        studentID.setVisible(true);
+
         barcode.setText(checkoutObject.getBarcode());
         //quantity.setText(checkoutObject.getQuantity());
         if (checkoutObject.isExtended()) {
