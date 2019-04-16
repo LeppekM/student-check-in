@@ -925,8 +925,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                             studentInfo.setDisable(false);
+                        } else if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                            studentInfo.setDisable(false);
+                            studentNameField.setText(student.getStudentNameFromEmail(studentID.getText()));
                         } else {
                             studentInfo.setDisable(true);
                         }
