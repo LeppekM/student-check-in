@@ -30,10 +30,13 @@ import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class StageWrapper {
+
+
 
     public void popupPage(String fxml, Node node) {
         Stage stage = new Stage();
