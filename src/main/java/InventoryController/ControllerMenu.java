@@ -129,7 +129,7 @@ public class ControllerMenu implements IController, Initializable {
     public void openCheckoutFromScanner(KeyEvent keyEvent){
         studentIDArray.add(keyEvent.getCharacter());
         if(stageWrapper.getStudentID(studentIDArray).matches("^(rfid)$")) {
-                newStage("fxml/CheckOutItems.fxml");
+                newStage("/fxml/test.fxml");
             }
     }
 

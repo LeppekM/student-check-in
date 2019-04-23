@@ -166,6 +166,19 @@ public class StageWrapper {
         });
     }
 
+    public void rfidFilter(JFXTextField textField){
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if (text.matches("[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+        textField.setTextFormatter(textFormatter);
+
+    }
+
     public void acceptIntegerOnly(JFXTextField textField){
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();

@@ -290,12 +290,12 @@ CREATE PROCEDURE load_workers()
 drop table if exists parts;
 create table parts (
   partID       int         NOT NULL AUTO_INCREMENT,
-  partName     varchar(50) NOT NULL,
-  serialNumber varchar(20),
-  manufacturer varchar(50),
+  partName     varchar(255) NOT NULL,
+  serialNumber varchar(255),
+  manufacturer varchar(255),
   price        int,
   vendorID     int         NOT NULL,
-  location     varchar(20),
+  location     varchar(255),
   barcode      bigint,
   isFaulty     bit,
   isCheckedOut bit,
