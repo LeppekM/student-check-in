@@ -269,13 +269,19 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
             stage.setOnCloseRequest(e -> {
                 // checks to see whether the pin was submitted or the window was just closed
                 if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
-                    // checks to see whether the submitted pin matches one of the admin's pins
-                    if (((AdminPinRequestController) loader.getController()).isValid()) {
-                        stage.close();
-                        isValid.set(true);
+                    // checks to see if the input pin is empty. if empty, close pop up
+                    if (((AdminPinRequestController) loader.getController()).isNotEmpty()) {
+                        // checks to see whether the submitted pin matches one of the admin's pins
+                        if (((AdminPinRequestController) loader.getController()).isValid()) {
+                            stage.close();
+                            isValid.set(true);
+                        } else {
+                            stage.close();
+                            invalidAdminPinAlert();
+                            isValid.set(false);
+                        }
                     } else {
                         stage.close();
-                        invalidAdminPinAlert();
                         isValid.set(false);
                     }
                 }

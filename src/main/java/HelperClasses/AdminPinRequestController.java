@@ -55,6 +55,10 @@ public class AdminPinRequestController implements Initializable {
         return submitted;
     }
 
+    public boolean isNotEmpty() {
+        return !adminPinInputAdminPinRequest.getText().equals("");
+    }
+
     public boolean isValid() {
         Database database = new Database();
         return database.isValidPin(Integer.parseInt(adminPinInputAdminPinRequest.getText()));
