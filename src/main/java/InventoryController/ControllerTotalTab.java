@@ -157,7 +157,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                             editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
                                         }
                                     }
-                                    editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
                                 });
                                 Tooltip editAllTip = new Tooltip("Edit all parts named: " + partName.getText());
                                 editAllButton.setTooltip(editAllTip);
