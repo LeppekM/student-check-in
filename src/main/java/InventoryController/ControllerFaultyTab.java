@@ -1,7 +1,6 @@
 package InventoryController;
 
 import Database.FaultyPartLookup;
-import Database.ObjectClasses.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
@@ -9,14 +8,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -101,7 +106,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         faultDescCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String> param) {
-                return param.getValue().getValue().getFaultDescription();
+                return param.getValue().getValue().getDescription();
             }
         });
 
@@ -121,17 +126,14 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                 row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        final int index = row.getIndex();
-                        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                            Part rowData = database.selectPart(faultyTable.getSelectionModel().getModelItem(index).getValue().getPartID().get());
-                            if(!rowData.equals(null)) {
-                                showInfoPage(rowData, "fault");
+                        if (event.getClickCount() == 2) {
+                            viewPart(row.getIndex());
+                        } else {
+                            final int index = row.getIndex();
+                            if (index >= 0 && index < faultyTable.getCurrentItemsCount() && faultyTable.getSelectionModel().isSelected(index)) {
+                                faultyTable.getSelectionModel().clearSelection();
+                                event.consume();
                             }
-                            faultyTable.getSelectionModel().clearSelection();
-                            event.consume();
-                        } else if (index >= 0 && index < faultyTable.getCurrentItemsCount() && faultyTable.getSelectionModel().isSelected(index)) {
-                            faultyTable.getSelectionModel().clearSelection();
-                            event.consume();
                         }
                     }
                 });
@@ -140,22 +142,50 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         });
     }
 
+    private void viewPart(int index){
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewFaultyPart.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setTitle("Checked Out Item");
+            stage.initOwner(faultyPage.getScene().getWindow());
+            stage.setScene(scene);
+            if (index != -1) {
+                TreeItem item = faultyTable.getSelectionModel().getModelItem(index);
+                // null if user clicks on empty row
+                if (item != null) {
+                    FaultyPartTabTableRow row = ((FaultyPartTabTableRow) item.getValue());
+                    ((ControllerViewFaultyPart) loader.getController()).populate(row);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
+            }
+//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
      * @author Matthew Karcz
      */
     @FXML
     public void populateTable() {
-        tableRows.clear();
-        faultyTable.getColumns().clear();
+        //tableRows.clear();
+        //faultyTable.getColumns().clear();
         FaultyPartLookup faulty = new FaultyPartLookup();
-        data.clear();
-        data = faulty.populateFaulty();
+        //data.clear();
+        data = faulty.getDetailedFaultyInfo();
+        tableRows = FXCollections.observableArrayList();
 
         for (int i = 0; i < data.size(); i++) {
-            tableRows.add(new FaultyPartTabTableRow(data.get(i).getPartID().getValue(), data.get(i).getPartName().getValue(),
-                     data.get(i).getLocation().getValue(),
-                    "" + data.get(i).getBarcode().getValue(), data.get(i).getFaultDescription().getValue()));
+            tableRows.add(new FaultyPartTabTableRow(data.get(i).getStudentName().getValue(), data.get(i).getStudentEmail().getValue(),
+                    data.get(i).getPartName().getValue(), data.get(i).getBarcode().getValue(),
+                    data.get(i).getDescription().getValue(), data.get(i).getPrice().getValue(),
+                    data.get(i).getLocation().getValue(), data.get(i).getDate().getValue()));
         }
 
         root = new RecursiveTreeItem<FaultyPartTabTableRow>(
@@ -176,7 +206,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                 partName = tableRow.getValue().getPartName().getValue();
                 loc = tableRow.getValue().getLocation().getValue();
                 barcode = tableRow.getValue().getBarcode().getValue().toString();
-                faultDescription = tableRow.getValue().getFaultDescription().getValue();
+                faultDescription = tableRow.getValue().getDescription().getValue();
 
                 return ((partName != null && partName.toLowerCase().contains(input))
                         || (loc != null && loc.toLowerCase().contains(input))
