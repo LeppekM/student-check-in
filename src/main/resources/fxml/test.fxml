@@ -127,8 +127,8 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="170.0" prefWidth="1150.0" StackPane.alignment="CENTER">
                            <children>
-                              <JFXButton fx:id="submitButton" onAction="#submit" prefHeight="65.0" prefWidth="179.0" stylesheets="@../css/CheckButton.css" text="Submit" translateX="-20.0" translateY="50.0" HBox.hgrow="NEVER" />
-                              <JFXButton fx:id="resetButton" onAction="#reset" prefHeight="65.0" prefWidth="168.0" stylesheets="@../css/CheckButton.css" text="Reset" translateY="50.0" HBox.hgrow="NEVER" />
+                              <JFXButton fx:id="resetButton" onAction="#reset" prefHeight="65.0" prefWidth="179.0" stylesheets="@../css/CheckButton.css" text="Reset" translateX="-20.0" translateY="50.0" HBox.hgrow="NEVER" />
+                              <JFXButton fx:id="submitButton" onAction="#submit" prefHeight="65.0" prefWidth="168.0" stylesheets="@../css/CheckButton.css" text="Submit" translateY="50.0" HBox.hgrow="NEVER" />
                            </children>
                         </HBox>
                         <HBox prefHeight="143.0" prefWidth="1150.0">

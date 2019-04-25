@@ -101,7 +101,7 @@ public class TransitionHelper {
 
     void translateBarcodeItems(JFXButton button1, JFXButton button2, JFXCheckBox box1, JFXCheckBox box2, int direction){
         List<TranslateTransition> transitions = new ArrayList<>();
-        int duration = 500;
+        int duration = 1;
         transitions.add(new TranslateTransition(Duration.millis(duration), button1));
         transitions.add(new TranslateTransition(Duration.millis(duration), button2));
         transitions.add(new TranslateTransition(Duration.millis(duration), box1));
