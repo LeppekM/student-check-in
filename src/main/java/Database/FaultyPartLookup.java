@@ -7,49 +7,60 @@ import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class FaultyPartLookup {
     private final String url = Database.host + "/student_check_in";
     private Statement statement;
-    private Database database = new Database();
     private final String selectFaulty = "\n" +
             "select parts.partName, parts.location, parts.barcode, fault.partID, fault.description, parts.partID\n" +
             "from fault\n" +
             "inner join parts on fault.partID = parts.partID";
+    private String studentName, studentEmail, partName, barcode, description, price, location, date;
 
-    public ObservableList<FaultyPartTabTableRow> populateFaulty() {
+    public ObservableList<FaultyPartTabTableRow> getDetailedFaultyInfo(){
         ObservableList<FaultyPartTabTableRow> data = FXCollections.observableArrayList();
-        StudentCheckIn.logger.info(selectFaulty);
-        try {
-            Connection connection = database.getConnection();
+        String query = " select students.studentName, students.email,  parts.partName, parts.barcode, fault.description, parts.price, parts.location, checkout.checkinAt\n" +
+                " from fault\n" +
+                " inner join parts on fault.partID = parts.partID\n" +
+                " inner join checkout on fault.checkoutID = checkout.checkoutID\n" +
+                " inner join students on checkout.studentID = students.studentID;";
+
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(selectFaulty);
-            while (rs.next()) {
-                String partName = rs.getString("partName");
-                String location = rs.getString("location");
-                long barcode = rs.getLong("barcode");
-                String description = rs.getString("description");
-                int partID = rs.getInt("partID");
-                FaultyPartTabTableRow part = new FaultyPartTabTableRow(partID, partName, location, "" +barcode, description);
-                data.add(part);
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next()){
+                setVariables(resultSet);
+                FaultyPartTabTableRow faultyItems = new FaultyPartTabTableRow(studentName, studentEmail, partName, barcode, description, price, location, date);
+                data.add(faultyItems);
             }
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("Could not retrieve the list of students");
-            e.printStackTrace();
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            statement = null;
+            StudentCheckIn.logger.error("SQL Error: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+
         }
         return data;
+
     }
+
+    /**
+     * Sets variables to the results of the query
+     * @param resultSet The results of the query
+     */
+    private void setVariables(ResultSet resultSet){
+        try {
+            studentName = resultSet.getString("studentName");
+            studentEmail = resultSet.getString("email");
+            partName = resultSet.getString("partName");
+            barcode = resultSet.getString("barcode");
+            description = resultSet.getString("description");
+            price = resultSet.getString("price");
+            location = resultSet.getString("location");
+            date = resultSet.getString("checkinAt");
+        } catch (SQLException e){
+            StudentCheckIn.logger.error("Cannot connect to the database while populating CheckedOutParts");
+            throw new IllegalStateException("Cannot connect to the database");
+        }
+    }
+
 }
