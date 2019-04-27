@@ -24,23 +24,23 @@
                   <Insets />
                </GridPane.margin>
                 </Label>
-                <Label id="nameLabel" font="$x1" layoutX="45.0" layoutY="55.0" text="Student Email:" GridPane.rowIndex="1">
+                <Label id="nameLabel" font="$x1" text="Student Email:" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Label>
-                <Label id="nameLabel" font="$x1" layoutX="52.0" layoutY="148.0" text="Part Name:" GridPane.rowIndex="2">
+                <Label id="nameLabel" font="$x1" text="Part Name:" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Label>
-                <Label id="nameLabel" font="$x1" layoutX="90.0" layoutY="192.0" text="Serial Number:" GridPane.rowIndex="3">
+                <Label id="nameLabel" font="$x1" text="Serial Number:" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Label>
-                <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="235.0" text="Action:" GridPane.rowIndex="4">
+                <Label id="nameLabel" font="$x1" text="Action:" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Label>
-                <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="323.0" text="Date:" GridPane.rowIndex="5">
+                <Label id="nameLabel" font="$x1" text="Date:" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Label>
@@ -88,7 +88,7 @@
         </GridPane>
       <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0">
          <children>
-             <JFXButton onAction="#goBack" style="-fx-border-color: #6e6e6e;" text="Done">
+             <JFXButton onAction="#goBack" style="-fx-border-color: #6e6e6e;" text="Close">
                  <stylesheets>
                      <URL value="@../css/ButtonStyle.css" />
                  </stylesheets></JFXButton>

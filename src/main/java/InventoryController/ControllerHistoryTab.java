@@ -202,7 +202,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewHistoryPart.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            stage.setTitle("Checked Out Item");
+            stage.setTitle("View Transaction");
             stage.initOwner(inventoryHistoryPage.getScene().getWindow());
             stage.setScene(scene);
             if (index != -1) {

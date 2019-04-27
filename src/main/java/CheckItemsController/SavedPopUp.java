@@ -60,7 +60,7 @@ public class SavedPopUp extends StudentPage implements IController {
             }
         }
         s.getSavedItems().remove(index);
-        int id = s.getCheckedOut().get(index1).getCheckID().get();
+        int id = s.getCheckedOut().get(index1).getCheckoutID().get();
         try {
             Connection connection = database.getConnection();
             Statement statement = connection.createStatement();

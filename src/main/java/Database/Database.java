@@ -606,7 +606,7 @@ public class Database implements IController {
         String oList = null;
         if (studentEmail == null) {
             query = "select * from students where studentID = " + ID;
-            coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
+            coList = "select students.studentID, students.studentName, students.email, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
                     "from students " +
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID" +
@@ -624,7 +624,7 @@ public class Database implements IController {
 //                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         }else if (ID == -1){
             query = "select * from students where email = '" + studentEmail + "';";
-            coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.partID " +
+            coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
                     "from students " +
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID" +
@@ -665,10 +665,17 @@ public class Database implements IController {
             resultSet = statement.executeQuery(coList);
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
-                checkedOutItems.add(new CheckedOutItems(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"), resultSet.getLong("parts.barcode"),
-                        resultSet.getString("checkout.checkoutAt"), resultSet.getString("checkout.dueAt"),
-                        resultSet.getInt("checkout.checkoutID"), resultSet.getInt("parts.partID")));
+                checkedOutItems.add(new CheckedOutItems(
+                        resultSet.getInt("checkout.checkoutID"),
+                        resultSet.getString("students.studentName"),
+                        resultSet.getString("students.email"),
+                        resultSet.getInt("students.studentID"),
+                        resultSet.getString("parts.partName"), resultSet.getString("parts.barcode"),
+                        resultSet.getString("parts.serialNumber"),
+                        resultSet.getInt("parts.partID"),
+                        resultSet.getString("checkout.checkoutAt"),
+                        resultSet.getString("checkout.dueAt"),
+                        resultSet.getString("parts.price")));
             }
             statement.close();
             resultSet.close();
@@ -701,16 +708,16 @@ public class Database implements IController {
             statement.close();
             resultSet.close();
             if (checkedOutItems.size() > 0) {
-                date = checkedOutItems.get(0).getCheckedOutAt().get();
+                date = checkedOutItems.get(0).getCheckedOutDate().get();
             }
             // date null if no checkouts
             for (int i = 0; i < checkedOutItems.size() && date != null; i++){
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
                     Date d = sdf.parse(date);
-                    Date d1 = sdf.parse(checkedOutItems.get(i).getCheckedOutAt().get());
+                    Date d1 = sdf.parse(checkedOutItems.get(i).getCheckedOutDate().get());
                     if (d1.after(d)){
-                        date = checkedOutItems.get(i).getCheckedOutAt().get();
+                        date = checkedOutItems.get(i).getCheckedOutDate().get();
                     }
                 }catch (ParseException e){
                     e.printStackTrace();

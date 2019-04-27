@@ -9,13 +9,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -122,17 +128,15 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
                 row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        final int index = row.getIndex();
-                        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                            Part rowData = database.selectPart(checkedOutTable.getSelectionModel().getModelItem(index).getValue().getPartID().get());
-                            if(!rowData.equals(null)) {
-                                showInfoPage(rowData, "checkedOut");
+                        //final int index = row.getIndex();
+                        if (event.getClickCount() == 2) {
+                            viewPart(row.getIndex());
+                        } else {
+                            final int index = row.getIndex();
+                            if (index >= 0 && index < checkedOutTable.getCurrentItemsCount() && checkedOutTable.getSelectionModel().isSelected(index)) {
+                                checkedOutTable.getSelectionModel().clearSelection();
+                                event.consume();
                             }
-                            checkedOutTable.getSelectionModel().clearSelection();
-                            event.consume();
-                        } else if (index >= 0 && index < checkedOutTable.getCurrentItemsCount() && checkedOutTable.getSelectionModel().isSelected(index)) {
-                            checkedOutTable.getSelectionModel().clearSelection();
-                            event.consume();
                         }
                     }
                 });
@@ -152,8 +156,10 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new CheckedOutTabTableRow(list.get(i).getStudentName().getValue(),
-                    list.get(i).getPartName().getValue(), "" + list.get(i).getBarcode().getValue(),
-                    list.get(i).getCheckedOutAt().getValue(), list.get(i).getDueDate().getValue(), list.get(i).getPartID().getValue()));
+                    list.get(i).getStudentEmail().get(), list.get(i).getPartName().getValue(),
+                    list.get(i).getBarcode().getValue(), list.get(i).getSerialNumber().get(),
+                    list.get(i).getPartID().get(), list.get(i).getCheckedOutDate().getValue(),
+                    list.get(i).getDueDate().getValue(), list.get(i).getFee().getValue()));
         }
 
         root = new RecursiveTreeItem<CheckedOutTabTableRow>(
@@ -164,6 +170,31 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
                 checkedOutAtCol, dueDateCol);
         checkedOutTable.setRoot(root);
         checkedOutTable.setShowRoot(false);
+    }
+
+    private void viewPart(int index) {
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewCheckedOutPart.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setTitle("View Checked Out Part");
+            stage.initOwner(checkedOutPage.getScene().getWindow());
+            stage.setScene(scene);
+            if (index != -1) {
+                TreeItem item = checkedOutTable.getSelectionModel().getModelItem(index);
+                // null if user clicks on empty row
+                if (item != null) {
+                    CheckedOutTabTableRow row = ((CheckedOutTabTableRow) item.getValue());
+                    ((ControllerViewCheckedOutPart) loader.getController()).populate(row);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
+            }
+//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
