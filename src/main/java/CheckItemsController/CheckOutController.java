@@ -839,8 +839,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Sets correct field info when new barcode field is added
      */
     private void setNewBarcodeFieldsHelper() {
-        //quantity.setVisible(false);
-        //quantityLabel.setVisible(false);
         HBoxBarcode.setVisible(true);
         barcode2.setVisible(true);
         HBoxBarcode2.setVisible(true);
