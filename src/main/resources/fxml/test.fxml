@@ -58,13 +58,13 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <AutoCompleteTextField fx:id="studentID" GridPane.columnIndex="1" />
-                  <JFXTextField fx:id="studentNameField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <JFXTextField fx:id="barcode" onKeyTyped="#newBarcode1" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <JFXTextField fx:id="barcode2" onKeyTyped="#dropBarcode2" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <JFXTextField fx:id="barcode3" onKeyTyped="#dropBarcode3" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <JFXTextField fx:id="barcode4" onKeyTyped="#dropBarcode4" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                   <JFXTextField fx:id="barcode5" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <AutoCompleteTextField fx:id="studentID" focusColor="FIREBRICK" GridPane.columnIndex="1" />
+                  <JFXTextField fx:id="studentNameField" disable="true" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <JFXTextField fx:id="barcode" focusColor="FIREBRICK" onKeyTyped="#newBarcode1" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <JFXTextField fx:id="barcode2" focusColor="FIREBRICK" onKeyTyped="#dropBarcode2" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <JFXTextField fx:id="barcode3" focusColor="FIREBRICK" onKeyTyped="#dropBarcode3" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <JFXTextField fx:id="barcode4" focusColor="FIREBRICK" onKeyTyped="#dropBarcode4" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                   <JFXTextField fx:id="barcode5" focusColor="FIREBRICK" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <HBox fx:id="HBoxBarcode" alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <children>
                         <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
@@ -140,12 +140,12 @@
                                           <Pane prefHeight="42.0" prefWidth="290.0" HBox.hgrow="ALWAYS" />
                                           <StackPane prefHeight="150.0" prefWidth="200.0">
                                              <children>
-                                                <JFXCheckBox fx:id="extended" checkedColor="#043993" disable="true" onAction="#isExtended" prefHeight="35.0" prefWidth="162.0" text="Extended?" translateY="-10.0">
+                                                <JFXCheckBox fx:id="extended" checkedColor="FIREBRICK" disable="true" onAction="#isExtended" prefHeight="35.0" prefWidth="162.0" text="Extended?" translateY="-10.0">
                                                    <font>
                                                       <Font size="24.0" />
                                                    </font>
                                                 </JFXCheckBox>
-                                                <JFXCheckBox fx:id="faulty" onAction="#isFaulty" prefHeight="35.0" prefWidth="162.0" text="Faulty" translateY="-10.0" visible="false">
+                                                <JFXCheckBox fx:id="faulty" checkedColor="FIREBRICK" onAction="#isFaulty" prefHeight="35.0" prefWidth="162.0" text="Faulty" translateY="-10.0" visible="false">
                                                    <font>
                                                       <Font size="24.0" />
                                                    </font>

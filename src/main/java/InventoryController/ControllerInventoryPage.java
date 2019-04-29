@@ -80,6 +80,12 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
 
         //back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
         back.getStylesheets().add("/css/CheckButton.css");
+
+        tabPane.widthProperty().addListener((observable, oldValue, newValue) ->
+        {
+            tabPane.setTabMinWidth(tabPane.getWidth() / 5.05);
+            tabPane.setTabMaxWidth(tabPane.getWidth() / 5.05);
+        });
         //});
     }
 
