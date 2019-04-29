@@ -62,7 +62,7 @@ public class Database implements IController {
     }
 
     /**
-     * This method uses an SQL query to get all items in the databse with a due date less than todays date
+     * This method uses an SQL query to get all items in the databse with a due date less than today's date
      *
      * @return a list of overdue items
      * @author Bailey Terry
@@ -114,7 +114,7 @@ public class Database implements IController {
      * @param date Due date of item
      * @return True if item is overdue
      */
-    boolean isOverdue(String date){
+    public boolean isOverdue(String date){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         if(!date.isEmpty()) {
             try {

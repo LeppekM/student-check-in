@@ -14,7 +14,7 @@
 <?import java.net.URL?>
 <VBox id="root" fx:id="sceneViewCheckedOutPart" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerViewCheckedOutPart">
     <children>
-        <GridPane hgap="3.0" vgap="15.0">
+        <GridPane fx:id="grid" hgap="3.0" vgap="15.0">
             <children>
                 <Label text="Student Name:">
                     <font>
@@ -52,10 +52,6 @@
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin></Label>
-                <Label id="nameLabel" font="$x1" text="Fee:" GridPane.rowIndex="8">
-                    <GridPane.margin>
-                        <Insets />
-                    </GridPane.margin></Label>
                 <JFXTextField fx:id="studentNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
                     <GridPane.margin>
                         <Insets />
@@ -85,10 +81,6 @@
                         <Insets />
                     </GridPane.margin></JFXTextField>
                 <JFXTextField fx:id="dueDateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                    <GridPane.margin>
-                        <Insets />
-                    </GridPane.margin></JFXTextField>
-                <JFXTextField fx:id="feeField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8">
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin></JFXTextField>
