@@ -54,7 +54,7 @@
 }
 
 .tree-table-view .column-header-background{
-    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+    -fx-background-color: #c4c4c4;
 }
 
 .tree-table-view .column-header-background .label{

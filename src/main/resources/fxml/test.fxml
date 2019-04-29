@@ -21,7 +21,7 @@
    <children>
       <HBox prefHeight="106.0" prefWidth="1150.0" VBox.vgrow="NEVER">
          <children>
-            <JFXButton fx:id="home" onAction="#returnHome" stylesheets="@../css/CheckButton.css" text="Home" translateX="25.0" translateY="10.0" HBox.hgrow="NEVER">
+            <JFXButton fx:id="home" onAction="#returnHome" stylesheets="@../css/CheckButton.css" translateX="25.0" translateY="10.0" HBox.hgrow="NEVER">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0">
                      <image>

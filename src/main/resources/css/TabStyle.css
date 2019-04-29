@@ -8,7 +8,7 @@
 }
 
 .jfx-tab-pane .tab-selected-line {
-    -fx-border-color: #990000;
+    -fx-border-color: #8b0000;
 }
 
 .jfx-tab-pane .tab-header-area .jfx-rippler {
@@ -43,5 +43,5 @@
 
 .tab:selected .tab-label {
     -fx-alignment: CENTER;
-    -fx-text-fill: indianred;
+    -fx-text-fill: white;
 }
