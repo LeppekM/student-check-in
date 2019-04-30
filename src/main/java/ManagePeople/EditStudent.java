@@ -166,7 +166,7 @@ public class EditStudent implements IController {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/ViewOverduePart.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 300);

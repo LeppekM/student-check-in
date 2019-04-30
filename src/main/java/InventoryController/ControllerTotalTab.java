@@ -72,7 +72,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private HBox filterDropDown;
 
-    private String partName, serialNumber, loc, barcode, partID;
+    private String partName, partID, serialNumber, loc, barcode;
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
@@ -169,7 +169,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteOneButton.setOnAction(event -> {
                                     if (worker != null && worker.isRemove()){
-                                        if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
+                                        if (!database.getIsCheckedOut("" + getTreeTableRow().getItem().getPartID().getValue())) {
                                             deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                         } else {
                                             deleteCheckedOutPartAlert();
@@ -177,7 +177,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     }else {
                                         if ((worker != null && worker.isAdmin())
                                                 || requestAdminPin("Delete a Part")) {
-                                            if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
+                                            if (!database.getIsCheckedOut("" + getTreeTableRow().getItem().getPartID().getValue())) {
                                                 deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                             } else {
                                                 deleteCheckedOutPartAlert();
@@ -197,7 +197,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllButton.setOnAction(event -> {
                                     if (worker != null && worker.isRemove()){
                                         boolean typeHasOneCheckedOut = false;
-                                        ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
+                                        ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + getTreeTableRow().getItem().getPartID().getValue());
                                         for (String id : partIDs) {
                                             if (database.getIsCheckedOut(id)) {
                                                 typeHasOneCheckedOut = true;
@@ -212,7 +212,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                         if ((worker != null && worker.isAdmin())
                                                 || requestAdminPin("delete parts")) {
                                             boolean typeHasOneCheckedOut = false;
-                                            ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
+                                            ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + getTreeTableRow().getItem().getPartID().getValue());
                                             for (String id : partIDs) {
                                                 if (database.getIsCheckedOut(id)) {
                                                     typeHasOneCheckedOut = true;
@@ -304,28 +304,22 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        final int index = row.getIndex();
-                        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                            Part rowData = database.selectPart(Integer.parseInt(totalTable.getSelectionModel().getModelItem(index).getValue().getPartID().get()));
-                            if(!rowData.equals(null)) {
-                                if(rowData.getFault())
-                                    showInfoPage(rowData, "fault");
-                                else if(rowData.getCheckedOut())
-                                    showInfoPage(rowData, "checkedOut");
-                                else
-                                    showInfoPage(rowData, "total");
+                        if (event.getClickCount() == 2) {
+                            viewPart(row.getIndex());
+                        } else {
+                            final int index = row.getIndex();
+                            if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
+                                totalTable.getSelectionModel().clearSelection();
+                                event.consume();
                             }
-                            totalTable.getSelectionModel().clearSelection();
-                            event.consume();
-                        } else if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
-                            totalTable.getSelectionModel().clearSelection();
-                            event.consume();
                         }
                     }
                 });
                 return row;
             }
         });
+
+
         getNames();
 
         sortCheckBox = new CheckComboBox<>(types);
@@ -387,6 +381,30 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
+    private void viewPart(int index) {
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewTotalPart.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setTitle("View Part");
+            stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.setScene(scene);
+            if (index != -1) {
+                TreeItem item = totalTable.getSelectionModel().getModelItem(index);
+                // null if user clicks on empty row
+                if (item != null) {
+                    TotalTabTableRow row = ((TotalTabTableRow) item.getValue());
+                    ((ControllerViewTotalPart) loader.getController()).populate(row);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
+            }
+//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     private void search() {
         String filter = searchInput.getText();
@@ -435,10 +453,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
 
             for (int i = 0; i < data.size(); i++) {
-                tableRows.add(new TotalTabTableRow(data.get(i).getPartName(),
+                tableRows.add(new TotalTabTableRow("", data.get(i).getPartName(),
                         data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                        data.get(i).getBarcode().toString(), data.get(i).getFault(),
-                        "" + data.get(i).getPartID()));
+                        data.get(i).getBarcode().toString(),
+                        "" + data.get(i).getPartID(), "", "", "", "", "", "", data.get(i).getFault()));
             }
 
             root = new RecursiveTreeItem<TotalTabTableRow>(
