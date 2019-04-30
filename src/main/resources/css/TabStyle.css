@@ -45,3 +45,15 @@
     -fx-alignment: CENTER;
     -fx-text-fill: derive(#B22222, 30%);
 }
+
+.jfx-tab-pane .scroll-bar .thumb {
+    -fx-background-color: derive(#828282, 70%);
+}
+.jfx-tab-pane .scroll-bar .increment-button .increment-arrow {
+    -fx-background-color: firebrick;
+
+}
+.jfx-tab-pane .scroll-bar .decrement-button .decrement-arrow{
+    -fx-background-color: firebrick;
+}
+

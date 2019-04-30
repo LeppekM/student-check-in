@@ -90,5 +90,5 @@
 }
 
 .tree-table-view .column-header .arrow{
-    -fx-background-color: red;
+    -fx-background-color: firebrick;
 }
