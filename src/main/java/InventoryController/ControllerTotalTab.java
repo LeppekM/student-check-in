@@ -1,6 +1,8 @@
 package InventoryController;
 
+import CheckItemsController.CheckoutObject;
 import Database.ObjectClasses.Part;
+import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
 import com.jfoenix.controls.*;
@@ -439,7 +441,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
-     * @author Matthew Karcz
      */
     @FXML
     public void populateTable() {
@@ -451,14 +452,25 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         StudentCheckIn.logger.info("Populating table, showing types: " + types);
         if(!types.isEmpty()) {
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
-
+            Student student = null;
+            CheckoutObject checkoutObject = null;
             for (int i = 0; i < data.size(); i++) {
-                tableRows.add(new TotalTabTableRow("", data.get(i).getPartName(),
-                        data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                        data.get(i).getBarcode().toString(),
-                        "" + data.get(i).getPartID(), "", "", "", "", "", "", data.get(i).getFault()));
+                student = database.getStudentToLastCheckout(data.get(i).getPartID());
+                checkoutObject = database.getLastCheckoutOf(data.get(i).getPartID());
+                TotalTabTableRow row = new TotalTabTableRow(student.getName(), student.getEmail(),
+                        data.get(i).getPartName(), "" + data.get(i).getPartID(),
+                        "" + data.get(i).getBarcode(), data.get(i).getSerialNumber(),
+                        data.get(i).getLocation(), database.isOverdue("" + checkoutObject.getDueAt()) ? "In" : "Out",
+                        checkoutObject.getCheckoutAt(), checkoutObject.getDueAt(),
+                        data.get(i).getFault());
+                if (database.isOverdue(checkoutObject.getDueAt())) {
+                    row.initFee("" + data.get(i).getPrice());
+                }
+                if (checkoutObject.isFaulty()) {
+                    row.initFaultDescription(checkoutObject.getFaultyDescription());
+                }
+                tableRows.add(row);
             }
-
             root = new RecursiveTreeItem<TotalTabTableRow>(
                     tableRows, RecursiveTreeObject::getChildren
             );

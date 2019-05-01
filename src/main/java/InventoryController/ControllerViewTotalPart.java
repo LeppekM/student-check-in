@@ -41,7 +41,7 @@ public class ControllerViewTotalPart {
         if (database.isOverdue(row.getDueDate().get())) {
             Label feeLabel = new Label("Fee:");
             feeLabel.setFont(x1);
-            JFXTextField feeField = new JFXTextField("$" + df.format(Long.parseLong(row.getFee().get())/100));
+            JFXTextField feeField = new JFXTextField("$" + df.format(Double.parseDouble(row.getFee().get())/100));
             grid.add(feeLabel, 0, 8);
             grid.add(feeField, 1, 8);
         }

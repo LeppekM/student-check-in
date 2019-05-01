@@ -1,5 +1,6 @@
 package Database;
 
+import CheckItemsController.CheckoutObject;
 import Database.ObjectClasses.Part;
 import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
@@ -129,7 +130,6 @@ public class Database implements IController {
         return false;
     }
 
-
     /**
      * Helper method to get the current date
      *
@@ -203,6 +203,64 @@ public class Database implements IController {
         return part;
     }
 
+    public Student getStudentToLastCheckout(int partID) {
+        String query = "SELECT * FROM checkout WHERE partID = " + partID + ";";
+        int studentID = -1;
+        Student student = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                studentID = resultSet.getInt("studentID");
+            }
+            student = selectStudent(studentID, null);
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return student;
+    }
+
+    public CheckoutObject getLastCheckoutOf(int partID) {
+        String query = "SELECT * FROM checkout WHERE partID = " + partID + ";";
+
+        CheckoutObject checkoutObject = null;
+        String studentID = "", barcode= "", checkoutAt = "", dueAt = "";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                studentID = "" + resultSet.getInt("studentID");
+                barcode = "" + resultSet.getLong("barcode");
+                checkoutAt = resultSet.getString("checkoutAt");
+                dueAt = resultSet.getString("dueAt");
+            }
+            checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, dueAt);
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return checkoutObject;
+    }
+
+    public String getFaultDescription(int partID) {
+        String query = "SELECT * FROM fault WHERE partID = " + partID + ";";
+        String description = "";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                description = resultSet.getString("description");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return description;
+    }
+
+    // TODO: SHOULD FAULT ALWAYS BE FALSE?
     public Part selectPartByPartName(String partName) {
         String query = "select * from parts where partName = '" + partName + "';";
         Part part = null;

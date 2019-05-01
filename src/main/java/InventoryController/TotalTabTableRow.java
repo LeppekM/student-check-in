@@ -17,8 +17,7 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     public TotalTabTableRow(String studentName, String studentEmail, String partName, String partID,
                             String barcode, String serialNumber, String location, String status,
-                            String checkedOutAt, String dueDate, String fee,
-                            String faultDescription, boolean fault) {
+                            String checkedOutAt, String dueDate, boolean fault) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
@@ -27,11 +26,17 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.location = new SimpleStringProperty(location);
         this.status = new SimpleStringProperty(status);
-        this.checkedOutAt = new SimpleStringProperty(status);
+        this.checkedOutAt = new SimpleStringProperty(checkedOutAt);
         this.dueDate = new SimpleStringProperty(dueDate);
-        this.fee = new SimpleStringProperty(fee);
         this.fault = fault;
-        this.faultDescription = new SimpleStringProperty(faultDescription);
+    }
+
+    public void initFaultDescription(String description) {
+        this.faultDescription = new SimpleStringProperty(description);
+    }
+
+    public void initFee(String fee) {
+        this.fee = new SimpleStringProperty(fee);
     }
 
     public StringProperty getStudentName() {
