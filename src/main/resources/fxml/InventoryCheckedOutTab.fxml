@@ -24,7 +24,7 @@
               </Label>
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                <children>
-                    <JFXTextField fx:id="searchInput" promptText="search">
+                    <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" promptText="search">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>

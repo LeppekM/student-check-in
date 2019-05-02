@@ -611,7 +611,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             }
             Parent root = loader.load();
             ((ControllerEditPart) loader.getController()).initPart(part);
-            Scene scene = new Scene(root, 400, 400);
+            Scene scene = new Scene(root, 400, 500);
             Stage stage = new Stage();
             stage.setTitle("Edit a Part");
             stage.initOwner(totalTabPage.getScene().getWindow());

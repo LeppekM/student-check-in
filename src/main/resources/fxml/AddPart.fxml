@@ -28,20 +28,20 @@
             <Label id="nameLabel" font="$x1" layoutX="119.0" layoutY="235.0" text="Price:" />
             <Label id="nameLabel" font="$x1" layoutX="100.0" layoutY="280.0" text="Vendor:" />
             <Label id="nameLabel" font="$x1" layoutX="93.0" layoutY="323.0" text="Location:" />
-                  <JFXTextField fx:id="nameField" layoutX="193.0" layoutY="15.0" />
-                  <JFXTextField fx:id="serialField" layoutX="193.0" layoutY="56.0" />
-                  <JFXTextField fx:id="barcodeField" layoutX="192.0" layoutY="104.0" />
-                  <JFXTextField fx:id="manufacturerField" layoutX="193.0" layoutY="149.0" />
-                  <JFXTextField fx:id="quantityField" layoutX="193.0" layoutY="193.0" />
-                  <JFXTextField fx:id="priceField" layoutX="193.0" layoutY="235.0" />
-                  <JFXTextField fx:id="locationField" layoutX="193.0" layoutY="324.0" />
+                  <JFXTextField fx:id="nameField" focusColor="FIREBRICK" layoutX="193.0" layoutY="15.0" />
+                  <JFXTextField fx:id="serialField" focusColor="FIREBRICK" layoutX="193.0" layoutY="56.0" />
+                  <JFXTextField fx:id="barcodeField" focusColor="FIREBRICK" layoutX="192.0" layoutY="104.0" />
+                  <JFXTextField fx:id="manufacturerField" focusColor="FIREBRICK" layoutX="193.0" layoutY="149.0" />
+                  <JFXTextField fx:id="quantityField" focusColor="FIREBRICK" layoutX="193.0" layoutY="193.0" />
+                  <JFXTextField fx:id="priceField" focusColor="FIREBRICK" layoutX="193.0" layoutY="235.0" />
+                  <JFXTextField fx:id="locationField" focusColor="FIREBRICK" layoutX="193.0" layoutY="324.0" />
                   <JFXButton layoutX="206.0" layoutY="378.0" onAction="#submitItem" ripplerFill="BLACK" stylesheets="@../css/CheckButton.css" text="Submit" textOverrun="CLIP">
                      <effect>
                         <Blend mode="RED" />
                      </effect>
                   </JFXButton>
                   <JFXButton layoutX="311.0" layoutY="378.0" onAction="#goBack" stylesheets="@../css/CheckButton.css" text="Cancel" />
-                  <JFXComboBox fx:id="vendorField" editable="true" layoutX="193.0" layoutY="282.0" prefHeight="25.0" prefWidth="135.0" />
+                  <JFXComboBox fx:id="vendorField" editable="true" focusColor="FIREBRICK" layoutX="193.0" layoutY="282.0" prefHeight="25.0" prefWidth="135.0" />
                   <JFXSpinner fx:id="loadNotification" layoutX="217.0" layoutY="322.0" prefHeight="27.0" prefWidth="25.0" visible="false" />
                   <Label id="nameLabel" layoutX="93.0" layoutY="103.0" text="Barcode:">
                      <font>

@@ -54,8 +54,8 @@ public class StageWrapper {
             StudentCheckIn.logger.error("IOException: Loading Show Part.");
             e.printStackTrace();
         }
-
     }
+
 
     public void newStage(String fxml, Node node) {
         try {

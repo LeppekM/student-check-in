@@ -4,7 +4,8 @@
 
 .root {
     /*-fx-background-image: url("abstract.jpg");*/
-    -fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 20%, center 50% 50%, radius 50%, reflect, #cbcbcb, #c8c8c8 75%, #c5c5c5);
+    /*-fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 20%, center 50% 50%, radius 50%, reflect, #cbcbcb, #c8c8c8 75%, #c5c5c5);*/
+    -fx-background-color: #f4f4f4;
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
 }
