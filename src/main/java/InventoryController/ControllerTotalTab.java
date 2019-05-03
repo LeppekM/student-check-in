@@ -466,9 +466,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 if (database.isOverdue(checkoutObject.getDueAt())) {
                     row.initFee("" + data.get(i).getPrice());
                 }
-                if (checkoutObject.isFaulty()) {
-                    row.initFaultDescription(checkoutObject.getFaultyDescription());
-                }
                 tableRows.add(row);
             }
             root = new RecursiveTreeItem<TotalTabTableRow>(

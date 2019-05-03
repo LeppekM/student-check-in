@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -29,10 +30,10 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
         this.checkedOutAt = new SimpleStringProperty(checkedOutAt);
         this.dueDate = new SimpleStringProperty(dueDate);
         this.fault = fault;
-    }
-
-    public void initFaultDescription(String description) {
-        this.faultDescription = new SimpleStringProperty(description);
+        if (this.fault) {
+            Database database = new Database();
+            this.faultDescription = new SimpleStringProperty(database.getFaultDescription(Integer.parseInt(partID)));
+        }
     }
 
     public void initFee(String fee) {
@@ -87,7 +88,7 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
         return partID;
     }
 
-    public boolean getIsFaulty() {
+    public boolean sFaulty() {
         return fault;
     }
 }
