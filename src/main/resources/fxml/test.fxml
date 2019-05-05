@@ -5,6 +5,7 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -58,6 +59,11 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
+                  <StackPane fx:id="faultPane" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <children>
+                        <TextArea fx:id="faultyArea" prefHeight="200.0" prefWidth="383.0" visible="false" />
+                     </children>
+                  </StackPane>
                   <AutoCompleteTextField fx:id="studentID" focusColor="FIREBRICK" GridPane.columnIndex="1" />
                   <JFXTextField fx:id="studentNameField" disable="true" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <JFXTextField fx:id="barcode" focusColor="FIREBRICK" onKeyTyped="#newBarcode1" GridPane.columnIndex="1" GridPane.rowIndex="2" />

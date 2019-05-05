@@ -59,7 +59,7 @@
                <children>
                   <HBox prefHeight="142.0" prefWidth="200.0">
                      <children>
-                        <JFXCheckBox fx:id="admin" alignment="CENTER" checkedColor="BLACK" mnemonicParsing="false" onAction="#unblock" prefHeight="130.0" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Assign Privileges?">
+                        <JFXCheckBox fx:id="admin" alignment="CENTER" checkedColor="FIREBRICK" mnemonicParsing="false" onAction="#unblock" prefHeight="130.0" text="Assign Privileges?">
                            <HBox.margin>
                               <Insets left="150.0" />
                            </HBox.margin>
@@ -73,12 +73,12 @@
                      <children>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <JFXCheckBox fx:id="editParts" checkedColor="#070707" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Editing Parts">
+                              <JFXCheckBox fx:id="editParts" checkedColor="FIREBRICK" disable="true" mnemonicParsing="false" prefHeight="142.0" text="Editing Parts">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
                               </JFXCheckBox>
-                              <JFXCheckBox fx:id="overdue" checkedColor="BLACK" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Override Overdue">
+                              <JFXCheckBox fx:id="overdue" checkedColor="FIREBRICK" disable="true" mnemonicParsing="false" prefHeight="142.0" text="Override Overdue">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
@@ -90,12 +90,12 @@
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <JFXCheckBox fx:id="workers" checkedColor="#222222" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Manage Workers">
+                              <JFXCheckBox fx:id="workers" checkedColor="FIREBRICK" disable="true" mnemonicParsing="false" prefHeight="142.0" text="Manage Workers">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
                               </JFXCheckBox>
-                              <JFXCheckBox fx:id="removeParts" checkedColor="BLACK" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Removing Parts">
+                              <JFXCheckBox fx:id="removeParts" checkedColor="FIREBRICK" disable="true" mnemonicParsing="false" prefHeight="142.0" text="Removing Parts">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
@@ -106,7 +106,7 @@
                   </HBox>
                </children>
             </VBox>
-            <JFXCheckBox fx:id="showPass" checkedColor="#d71818" layoutX="680.0" layoutY="220.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="107.0" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Show Password" wrapText="true">
+            <JFXCheckBox fx:id="showPass" checkedColor="FIREBRICK" layoutX="680.0" layoutY="220.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="107.0" text="Show Password" wrapText="true">
                <font>
                   <Font name="Arial Black" size="14.0" />
                </font></JFXCheckBox>

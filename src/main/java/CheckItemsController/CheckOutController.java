@@ -28,6 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -53,6 +54,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
     @FXML
     private AutoCompleteTextField studentID;
 
+    @FXML
+    private TextArea faultyArea;
+
 
     @FXML
     private JFXCheckBox faulty, extended;
@@ -66,6 +70,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
     @FXML
     private Label statusLabel,
             statusLabel2, statusLabel3, statusLabel4, statusLabel5;
+
+    @FXML
+    private StackPane faultPane;
 
 
 //    @FXML
@@ -212,7 +219,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
                 extendedCheckoutHelper(thisStudent.getRFID());
             } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
-                faultyCheckinHelper(faultyText);
+                faultyCheckinHelper();
             } else if (newStudentIsCheckingOutItem()) {
                 createNewStudent();
                 return;
@@ -399,9 +406,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
     /**
      * Helper method to checkin an item
      */
-    private void faultyCheckinHelper(String faultyText) {
+    private void faultyCheckinHelper() {
         faultyCheckIn.setPartToFaultyStatus(getBarcode());
-        faultyCheckIn.addToFaultyTable(getBarcode(), faultyText);
+        faultyCheckIn.addToFaultyTable(getBarcode(), faultyArea.getText());
         checkOut.setItemtoCheckedin(getBarcode());
     }
 
@@ -763,9 +770,18 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     public void isFaulty() {
         if (faulty.isSelected()) {
-            faultyText = faultyItem();
+            faultyText = faultyArea.getText();
+            transitionHelper.faultyTransition(faulty, resetButton, submitButton, 60);
+            transitionHelper.faultyBoxFadeTransition(faultyArea, -40);
+            faultPane.toFront();
+            faultyArea.setPrefColumnCount(400);
+            faultyArea.setPrefRowCount(400);
             setCheckoutItemsDisable(true);
         } else {
+            faultPane.toBack();
+            barcode.requestFocus();
+            transitionHelper.faultyTransition(faulty, resetButton, submitButton, -60);
+            transitionHelper.faultyBoxFadeTransition(faultyArea, 40);
             setCheckoutItemsDisable(false);
         }
     }
@@ -776,9 +792,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @param value True or false to disable buttons
      */
     private void setCheckoutItemsDisable(boolean value) {
-        barcode.setDisable(value);
+        HBoxBarcode2.setVisible(!value);
+        barcode2.setVisible(!value);
         studentID.setDisable(value);
-        HBoxBarcode.setVisible(!value);
+        faultyArea.setVisible(value);
+
     }
 
     /**

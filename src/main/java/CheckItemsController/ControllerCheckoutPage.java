@@ -888,7 +888,7 @@ public class ControllerCheckoutPage extends ControllerMenu implements IControlle
      */
     private void setFaultyTransition(int direction, boolean showTextarea) {
         transitionHelper.translateButtons(submitButton, resetButton, direction);
-        transitionHelper.faultyBoxFadeTransition(faulty);
+        //transitionHelper.faultyBoxFadeTransition(faulty);
         faultyTextArea.setVisible(showTextarea);
     }
 
