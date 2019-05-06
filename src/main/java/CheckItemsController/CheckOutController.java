@@ -977,6 +977,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
             }
         });
+        rfidFilter(studentID);
+
     }
 
     private void setStudentEmailSuggestionListener() {
@@ -1076,6 +1078,20 @@ public class CheckOutController extends ControllerMenu implements IController, I
         TextFormatter<String> textFormatter = new TextFormatter<>(filter);
         textField.setTextFormatter(textFormatter);
     }
+
+    private void rfidFilter(JFXTextField textField){
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+//            id.add(text);
+            if(text.matches("[^rfid: ]")){
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+        textField.setTextFormatter(textFormatter);
+    }
+
 
 
 }

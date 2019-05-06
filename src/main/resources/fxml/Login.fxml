@@ -41,7 +41,7 @@
                         <effect>
                             <DropShadow />
                         </effect></Rectangle>
-                    <VBox alignment="CENTER" style="-fx-background-color: #;">
+                    <VBox alignment="CENTER">
                         <children>
                             <Label style="-fx-font-weight: bold" text="Login">
                                 <font>
