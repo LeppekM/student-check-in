@@ -97,6 +97,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private List<String> studentIDVerifier = new ArrayList<>();
     private DatabaseHelper dbHelp = new DatabaseHelper();
     private static String professor, course, dueDate;
+    private static boolean fieldsFilled;
     private String faultyText;
     private List<String> id = new ArrayList<>();
 
@@ -213,6 +214,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 return;
             }
             if (extendedCheckoutIsSelected(getBarcode())) {
+                if(extendedFieldsNotFilled()){
+                    stageWrapper.errorAlert("Some fields were not filled out for extended checkout");
+                    return;
+                }
                 if (newStudentIsCheckingOutItem()) {
                     createNewStudent();
                     return;
@@ -229,6 +234,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
             }
             reset();
         }
+    }
+
+    private boolean extendedFieldsNotFilled(){
+        return (professor == null || course == null || dueDate ==null);
     }
 
     /**
