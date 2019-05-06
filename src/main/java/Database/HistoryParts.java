@@ -18,12 +18,11 @@ public class HistoryParts {
 
     private static final String HISTORY_QUERY = "SELECT studentName, email, partName, serialNumber, " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
-            "THEN 'In' ELSE 'Out' END AS 'Status', " +
+            "THEN 'Checked In' ELSE 'Checked Out' END AS 'Action', " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
-            "THEN checkout.checkinAt ELSE checkout.checkoutAt END AS 'date' " +
+            "THEN checkout.checkinAt ELSE checkout.checkoutAt END AS 'Date' " +
             "FROM parts " +
             "INNER JOIN checkout ON parts.partID = checkout.partID " +
-//            "INNER JOIN checkout ON checkout.checkoutID = checkout.checkoutID " +
             "INNER JOIN students ON checkout.studentID = students.studentID " +
             "WHERE parts.isDeleted = 0 " +
             "ORDER BY CASE " +
