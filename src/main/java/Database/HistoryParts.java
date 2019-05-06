@@ -69,8 +69,8 @@ public class HistoryParts {
             studentEmail = resultSet.getString("email");
             partName = resultSet.getString("partName");
             serialNumber = resultSet.getString("serialNumber");
-            status = resultSet.getString("status");
-            date = resultSet.getString("date");
+            status = resultSet.getString("Action");
+            date = resultSet.getString("Date");
 
         } catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database");
