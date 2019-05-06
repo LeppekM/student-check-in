@@ -62,9 +62,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     public void initialize(URL location, ResourceBundle resources) {
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setFont(new Font(18));
-//        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         historyTable.setPlaceholder(emptyTableLabel);
-//        populateTable();
 
 
         studentCol = new JFXTreeTableColumn<>("Student");
@@ -124,6 +122,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
         tableRows = FXCollections.observableArrayList();
 
+        // sets that the search method will be called every time the user types in the search field
         searchInput.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 search();
@@ -175,6 +174,10 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         historyTable.setShowRoot(false);
     }
 
+    /**
+     * This method checks whether the search field's input matches each row in the table and only
+     * displays the matching rows.
+     */
     @FXML
     private void search() {
         historyTable.setPredicate(new Predicate<TreeItem<HistoryTabTableRow>>() {
@@ -196,6 +199,10 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
     }
 
+    /**
+     * This part brings up a pop up to show info about the part and it's last transaction
+     * @param index
+     */
     private void viewPart(int index) {
         Stage stage = new Stage();
         try {

@@ -16,6 +16,7 @@ public class HistoryParts {
     private static final String dbname = "student_check_in";
     private static Connection connection;
 
+    // This query is used to get the data for the transaction history table in the inventory
     private static final String HISTORY_QUERY = "SELECT studentName, email, partName, serialNumber, " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
             "THEN 'Checked In' ELSE 'Checked Out' END AS 'Action', " +

@@ -35,8 +35,6 @@ public class Database implements IController {
 
     /**
      * This creates a connection to the database
-     *
-     * @author Bailey Terry
      */
     public Database() {
         // Load the JDBC driver.
@@ -47,7 +45,6 @@ public class Database implements IController {
             e.printStackTrace();
             System.exit(0);
         }
-
         connection = null;
         try {
             connection = DriverManager.getConnection((host + "/" + dbname),
@@ -63,10 +60,16 @@ public class Database implements IController {
     }
 
     /**
+     * Returns the connection to the database created by constructor method
+     * @return the database connection
+     */
+    public Connection getConnection() {
+        return connection;
+    }
+
+    /**
      * This method uses an SQL query to get all items in the databse with a due date less than today's date
-     *
      * @return a list of overdue items
-     * @author Bailey Terry
      */
     public ObservableList<OverdueItem> getOverdue() {
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
@@ -98,22 +101,10 @@ public class Database implements IController {
         return data;
     }
 
-    public void removeOverdue(int barcode){
-        String query = "update checkout set checkout.dueAt = null, checkout.updatedAt = date('" + gettoday().toString() +
-                "'), checkout.updatedBy = '" + this.worker.getName() + "' where checkout.barcode = " + barcode + ";";
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(query);
-        }catch (SQLException e){
-            StudentCheckIn.logger.error("SQL error: " + e.getLocalizedMessage());
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Helper method to determine if item is overdue
      * @param date Due date of item
-     * @return True if item is overdue
+     * @return true if item is overdue; false otherwise
      */
     public boolean isOverdue(String date){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
@@ -132,9 +123,7 @@ public class Database implements IController {
 
     /**
      * Helper method to get the current date
-     *
-     * @return todays date
-     * @author Bailey Terry
+     * @return today's date
      */
     private static Date gettoday() {
         long date = System.currentTimeMillis();
@@ -143,9 +132,7 @@ public class Database implements IController {
 
     /**
      * This uses an SQL query to soft delete an item from the database
-     *
      * @param partID a unique part id
-     * @author Bailey Terry
      */
     public void deleteItem(int partID) {
         try {
@@ -160,6 +147,12 @@ public class Database implements IController {
         Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").hideAfter(new Duration(5000)).show();//.showWarning();
     }
 
+    /**
+     * For each part that's name equals partName, this sets the "isDeleted" value to 1, which is
+     * true. This is called a soft delete, because the part is not actually removed from the
+     * database, but will not show up in anything, since it is marked as deleted.
+     * @param partName the name of the parts that are deleted
+     */
     public void deleteParts(String partName) {
         try {
             String deleteQuery = "UPDATE parts p set p.deletedBy = '" + this.worker.getName() + "', p.isDeleted = 1, " +
@@ -172,16 +165,10 @@ public class Database implements IController {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
-
     /**
-     * Helper method to get a specific part from the database
-     *
+     * Gets a specific part from the database
      * @param partID unique id of the part
      * @return a Part
-     * @author Bailey Terry
      */
     public Part selectPart(int partID) {
         String query = "select * from parts where partID = " + partID;
@@ -203,6 +190,11 @@ public class Database implements IController {
         return part;
     }
 
+    /**
+     * Gets info about the student who most recently checked a part in or out
+     * @param partID the part ID of the part being checked
+     * @return a Student object that represents the student who last checked the part in or out
+     */
     public Student getStudentToLastCheckout(int partID) {
         String query = "SELECT * FROM checkout WHERE partID = " + partID + ";";
         int studentID = -1;
@@ -222,6 +214,11 @@ public class Database implements IController {
         return student;
     }
 
+    /**
+     * Gets info about the most recent checkin/out transaction for the part with the matching part ID
+     * @param partID the part ID of the part being checked
+     * @return a CheckoutObject object that represents info about the part's last checkout
+     */
     public CheckoutObject getLastCheckoutOf(int partID) {
         String query = "SELECT * FROM checkout WHERE partID = " + partID + ";";
 
@@ -245,6 +242,11 @@ public class Database implements IController {
         return checkoutObject;
     }
 
+    /**
+     * Gets the fault description for the part with the matching part ID
+     * @param partID the part ID for the part being checked
+     * @return the fault description of the part
+     */
     public String getFaultDescription(int partID) {
         String query = "SELECT * FROM fault WHERE partID = " + partID + ";";
         String description = "";
@@ -260,7 +262,11 @@ public class Database implements IController {
         return description;
     }
 
-    // TODO: SHOULD FAULT ALWAYS BE FALSE?
+    /**
+     * Gets a part that has the matching part name
+     * @param partName the name of the part being checked
+     * @return the part with the matching part name
+     */
     public Part selectPartByPartName(String partName) {
         String query = "select * from parts where partName = '" + partName + "';";
         Part part = null;
@@ -281,6 +287,11 @@ public class Database implements IController {
         return part;
     }
 
+    /**
+     * Gets the name of the part that the barcode corresponds to
+     * @param barcode the barcode for the part being checked
+     * @return the name of the part
+     */
     public String getPartNameFromBarcode(int barcode) {
         String query = "SELECT partName from parts where barcode = " + barcode + ";";
         String partName = "";
@@ -298,6 +309,11 @@ public class Database implements IController {
         return partName;
     }
 
+    /**
+     * Checks whether the part with the given part ID is currently checked out
+     * @param partID the part ID of the part being checked
+     * @return true if the matching part is checked out; false otherwise
+     */
     public boolean getIsCheckedOut(String partID) {
         String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND partID = " + partID + ";";
         ResultSet resultSet;
@@ -316,6 +332,12 @@ public class Database implements IController {
         return false;
     }
 
+    /**
+     * Gets a list of serial numbers used by a part with a given name, except for the part with the given part ID
+     * @param partName the name of parts being checked
+     * @param partID the part ID of the part exempt from the search
+     * @return the list of serial numbers
+     */
     public ArrayList<String> getOtherSerialNumbersForPartName(String partName, String partID) {
         String query = "SELECT serialNumber FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "' AND partID != " + partID + ";";
         ArrayList<String> serialNumbers = new ArrayList<>();
@@ -333,6 +355,12 @@ public class Database implements IController {
         return serialNumbers;
     }
 
+    /**
+     * Gets a list of barcodes used by a part with a given name, except for the part with the given part ID
+     * @param partName the name of parts being checked
+     * @param partID the part ID of the part exempt from the search
+     * @return the list of barcodes
+     */
     public ArrayList<String> getOtherBarcodesForPartName(String partName, String partID) {
         String query = "SELECT barcode FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "' AND partID != " + partID + ";";
         ArrayList<String> barcodes = new ArrayList<>();
@@ -350,6 +378,11 @@ public class Database implements IController {
         return barcodes;
     }
 
+    /**
+     * Gets a list of all barcodes used by parts with the given name
+     * @param partName name of the part being checked
+     * @return the list of barcodes
+     */
     public ArrayList<String> getAllBarcodesForPartName(String partName) {
         String query = "SELECT barcode FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
         ArrayList<String> barcodes = new ArrayList<>();
@@ -367,6 +400,11 @@ public class Database implements IController {
         return barcodes;
     }
 
+    /**
+     * Gets a list of all part IDs used by parts with the given name
+     * @param partName name of the part being checked
+     * @return the list of part IDs
+     */
     public ArrayList<String> getAllPartIDsForPartName(String partName) {
         String query = "SELECT partID FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
         ArrayList<String> partIDs = new ArrayList<>();
@@ -384,6 +422,11 @@ public class Database implements IController {
         return partIDs;
     }
 
+    /**
+     * Gets a list of all serial numbers used by parts with the given name
+     * @param partName name of the part being checked
+     * @return the list of serial numbers
+     */
     public ArrayList<String> getAllSerialNumbersForPartName(String partName) {
         String query = "SELECT serialNumber FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
         ArrayList<String> serialNumbers = new ArrayList<>();
@@ -401,6 +444,11 @@ public class Database implements IController {
         return serialNumbers;
     }
 
+    /**
+     * Checks whether the parts with the given part name have unique barcodes
+     * @param partName the name of the parts being checked
+     * @return true if the part has unique barcodes; false otherwise
+     */
     public boolean hasUniqueBarcodes(String partName) {
         ArrayList<String> barcodes = getAllBarcodesForPartName(partName);
         if (countPartsOfType(partName) > 1) {
@@ -415,6 +463,11 @@ public class Database implements IController {
         return true;
     }
 
+    /**
+     * Checks whether the parts with the given part name have unique serial numbers
+     * @param partName the name of the parts being checked
+     * @return true if the part has unique serial numbers; false otherwise
+     */
     public boolean hasUniqueSerialNumbers(String partName) {
         ArrayList<String> serialNumbers = getAllSerialNumbersForPartName(partName);
         if (countPartsOfType(partName) > 1) {
@@ -429,6 +482,11 @@ public class Database implements IController {
         return true;
     }
 
+    /**
+     * Gets the number of parts that's part name matches the given part name
+     * @param partName the part name being checked
+     * @return the number of parts
+     */
     public int countPartsOfType(String partName) {
         String query = "SELECT COUNT(*) FROM parts WHERE isDeleted = 0 AND partName = '" + partName + "';";
         ResultSet resultSet;
@@ -443,6 +501,11 @@ public class Database implements IController {
         return -1;
     }
 
+    /**
+     * Gets a list of different part names for all parts. This is used for ensuring that when
+     * a part name is added, it is not already used.
+     * @return the list of distinct part names
+     */
     public ArrayList<String> getUniquePartNames() {
         String query = "SELECT distinct partName FROM parts;";
         ArrayList<String> partNames = new ArrayList<>();
@@ -458,6 +521,11 @@ public class Database implements IController {
         return partNames;
     }
 
+    /**
+     * Gets a list of different barcodes for all parts. This is used for ensuring that when
+     * a barcode is added, it is not already used.
+     * @return the list of distinct barcodes
+     */
     public ArrayList<String> getUniqueBarcodes() {
         String query = "SELECT DISTINCT barcode FROM parts";
         ArrayList<String> barcodes = new ArrayList<>();
@@ -473,6 +541,13 @@ public class Database implements IController {
         return barcodes;
     }
 
+    /**
+     * This method returns a list of all distinct barcodes in the database, except for the ones
+     * that belong to a part with the passed in part name. This is used for making sure not to
+     * use an already existing barcode when adding parts.
+     * @param partName the part name that is an exception
+     * @return the list of barcodes
+     */
     public ArrayList<String> getUniqueBarcodesBesidesPart(String partName) {
         String query = "SELECT DISTINCT barcode FROM parts WHERE partName != '" + partName + "';";
         ArrayList<String> barcodes = new ArrayList<>();
@@ -488,6 +563,11 @@ public class Database implements IController {
         return barcodes;
     }
 
+    /**
+     * This method checks to see whether the database contains a part with a passed in part name
+     * @param partName the name of the part being checked
+     * @return true if the database contains a part with part name that equals partName; false otherwise
+     */
     public boolean hasPartName(String partName) {
         String query = "SELECT * from parts where partName = '" + partName + "';";
         try {
@@ -529,6 +609,10 @@ public class Database implements IController {
         return studentsList;
     }
 
+    /**
+     * This method returns a list of all of the student emails in the system
+     * @return the list of all student emails
+     */
     public ObservableList<String> getStudentEmails() {
         ObservableList<String> emails = FXCollections.observableArrayList();
         try {
@@ -593,6 +677,11 @@ public class Database implements IController {
         return workerList;
     }
 
+    /**
+     * This method gets a Worker object for the worker that has the passed in email
+     * @param email the email of the worker to be retrieved
+     * @return the Worker with the matching email
+     */
     public Worker getWorker(String email) {
         Worker worker = null;
         try {
@@ -630,6 +719,11 @@ public class Database implements IController {
         return worker;
     }
 
+    /**
+     * This method checks whether pin matches one of the administrators' pins
+     * @param pin the inputted pin that is being checked
+     * @return true if pin is one of the administrators' pins; false otherwise
+     */
     public boolean isValidPin(int pin) {
         try {
             Statement statement = connection.createStatement();
@@ -652,10 +746,8 @@ public class Database implements IController {
 
     /**
      * Gets a student from the database based on their RFID
-     *
      * @param ID RFID to search for
      * @return a student
-     * @author Bailey Terry
      */
     public Student selectStudent(int ID, String studentEmail){
         String query = null;
@@ -790,7 +882,6 @@ public class Database implements IController {
 
     /**
      * Adds a new student to the database
-     *
      * @param s student to be added
      */
     public void addStudent(Student s){
@@ -826,7 +917,6 @@ public class Database implements IController {
 
     /**
      * Deletes a student from the database
-     *
      * @param name students name
      */
     public void deleteStudent(String name){
@@ -845,7 +935,6 @@ public class Database implements IController {
 
     /**
      * Adds a new worker to the database
-     *
      * @param w worker to be added
      */
     public void addWorker(Worker w){
@@ -866,7 +955,6 @@ public class Database implements IController {
 
     /**
      * Deletes a worker from the database
-     *
      * @param name workers name
      */
     public void deleteWorker(String name){
@@ -907,6 +995,10 @@ public class Database implements IController {
         }
     }
 
+    /**
+     * This tells the Database class which worker is currently logged in.
+     * @param worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (this.worker == null){
