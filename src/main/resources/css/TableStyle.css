@@ -43,12 +43,9 @@
 
 
 .tree-table-view{
-    -fx-background-color: linear-gradient(#d2d2d2 0%, #f4f4f4 100%);
+    -fx-background-color: #616161;
 }
 
-.tree-table-view:focused{
-    -fx-background-color: linear-gradient(#d2d2d2 0%, #f4f4f4 100%);
-}
 
 .tree-table-view .column-header-background {
     -fx-background-color: transparent;
@@ -57,7 +54,7 @@
 
 .tree-table-view .column-header-background .label{
 
-    -fx-text-fill: #616161;
+    -fx-text-fill: white;
     -fx-font-size: 18px;
 
 }
@@ -85,10 +82,10 @@
 }
 
 .tree-table-row-cell:selected {
-    -fx-background-color: derive(#828282, 20%);
+    -fx-background-color: derive(firebrick, 60%);
 
 }
 
 .tree-table-view .column-header .arrow{
-    -fx-background-color: firebrick;
+    -fx-background-color: white;
 }
