@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
+<VBox fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
     <children>
       <HBox>
          <children>
@@ -38,9 +38,18 @@
                </HBox.margin></HBox>
          </children>
       </HBox>
-      <JFXTreeTableView fx:id="historyTable" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets bottom="63.0" />
-         </VBox.margin></JFXTreeTableView>
+        <JFXTreeTableView fx:id="historyTable" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
+        <HBox alignment="CENTER_RIGHT" VBox.vgrow="NEVER">
+            <children>
+                <JFXButton fx:id="clearOldHistory" disable="true" mnemonicParsing="false" onAction="#clearOldHistory" prefHeight="45.0" prefWidth="175.0" stylesheets="@../css/CheckButton.css" text="Clear Old History">
+                    <HBox.margin>
+                        <Insets right="20.0" top="14.0" />
+                    </HBox.margin>
+                </JFXButton>
+            </children>
+            <VBox.margin>
+                <Insets bottom="14.0" />
+            </VBox.margin>
+        </HBox>
     </children>
 </VBox>

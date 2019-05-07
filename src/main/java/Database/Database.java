@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import java.sql.*;
@@ -131,6 +132,18 @@ public class Database implements IController {
     }
 
     /**
+     * Calculates the date that was 2 years ago from today
+     * @return the date that was 2 years ago from today
+     */
+    private static Date getTwoYearsAgo() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -2);
+        Date date = new java.sql.Date(cal.getTimeInMillis());
+        System.out.println(date.toString());
+        return new java.sql.Date(cal.getTimeInMillis());
+    }
+
+    /**
      * This uses an SQL query to soft delete an item from the database
      * @param partID a unique part id
      */
@@ -240,6 +253,28 @@ public class Database implements IController {
             e.printStackTrace();
         }
         return checkoutObject;
+    }
+
+    /**
+     * This method clears the checkout data that is over 2 years old and does not involve a part
+     * that is faulty.
+     */
+    public void clearOldHistory() {
+        String query =
+                "DELETE checkout " +
+                "FROM checkout " +
+                        "INNER JOIN parts " +
+                        "ON checkout.partID = parts.partID " +
+                        "AND checkout.checkinAt < '" + getTwoYearsAgo().toString() + "' " +
+                        "AND parts.isFaulty = 0;";
+
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

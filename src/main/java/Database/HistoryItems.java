@@ -4,14 +4,14 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class HistoryItems {
 
-    private final SimpleStringProperty studentName, studentEmail, partName, serialNumber, status, date;
+    private final SimpleStringProperty studentName, studentEmail, partName, serialNumber, action, date;
 
-    public HistoryItems(String studentName, String studentEmail, String partName, String serialNumber, String status, String date) {
+    public HistoryItems(String studentName, String studentEmail, String partName, String serialNumber, String action, String date) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
-        this.status = new SimpleStringProperty(status);
+        this.action = new SimpleStringProperty(action);
         this.date = new SimpleStringProperty(date);
     }
 
@@ -43,8 +43,8 @@ public class HistoryItems {
         this.serialNumber.set(serialNumber);
     }
 
-    public String getStatus() {
-        return status.get();
+    public String getAction() {
+        return action.get();
     }
 
     public String getDate() {

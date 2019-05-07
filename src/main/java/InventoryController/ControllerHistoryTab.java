@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.*;
+import Database.ObjectClasses.Worker;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
@@ -21,6 +22,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,6 +32,8 @@ import java.util.function.Predicate;
  * This class acts as the controller for the history tab of the inventory page
  */
 public class ControllerHistoryTab  extends ControllerInventoryPage implements Initializable {
+
+    private Worker worker;
 
     @FXML
     private VBox inventoryHistoryPage;
@@ -46,12 +50,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     private HistoryParts historyParts;
 
     private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
-    serialNumberCol, statusCol, dateCol;
+    serialNumberCol, actionCol, dateCol;
 
     @FXML
-    private JFXButton searchButton;
+    private JFXButton searchButton, clearOldHistory;
 
-    private String student, partName, serialNumber, status, date;
+    private String student, partName, serialNumber, action, date;
 
     /**
      * This method sets the data in the history page.
@@ -98,14 +102,14 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             }
         });
 
-        statusCol = new JFXTreeTableColumn<>("Status");
-        statusCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
-        statusCol.setStyle("-fx-font-size: 18px");
-        statusCol.setResizable(false);
-        statusCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
+        actionCol = new JFXTreeTableColumn<>("Action");
+        actionCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
+        actionCol.setStyle("-fx-font-size: 18px");
+        actionCol.setResizable(false);
+        actionCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
-                return param.getValue().getValue().getStatus();
+                return param.getValue().getValue().getAction();
             }
         });
 
@@ -164,12 +168,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new HistoryTabTableRow(list.get(i).getStudentName(),
                     list.get(i).getStudentEmail(), list.get(i).getPartName(),
-                    list.get(i).getSerialNumber(), list.get(i).getStatus(),
+                    list.get(i).getSerialNumber(), list.get(i).getAction(),
                     list.get(i).getDate()));
         }
 
         final TreeItem<HistoryTabTableRow> root = new RecursiveTreeItem<HistoryTabTableRow>(tableRows, RecursiveTreeObject::getChildren);
-        historyTable.getColumns().setAll(studentCol, partNameCol, serialNumberCol, statusCol, dateCol);
+        historyTable.getColumns().setAll(studentCol, partNameCol, serialNumberCol, actionCol, dateCol);
         historyTable.setRoot(root);
         historyTable.setShowRoot(false);
     }
@@ -187,16 +191,35 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                 student = tableRow.getValue().getStudentName().getValue();
                 partName = tableRow.getValue().getPartName().getValue();
                 serialNumber = tableRow.getValue().getSerialNumber().getValue();
-                status = tableRow.getValue().getStatus().getValue();
+                action = tableRow.getValue().getAction().getValue();
                 date = tableRow.getValue().getDate().getValue().toLowerCase();
 
                 return ((student != null && student.toLowerCase().contains(input))
                         || (partName != null && partName.toLowerCase().contains(input))
                         || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                        || (status != null && status.toLowerCase().contains(input))
+                        || (action != null && action.toLowerCase().contains(input))
                         || (date != null & date.toLowerCase().contains(input)));
             }
         });
+    }
+
+    /**
+     * This method confirms that the worker is an admin, in which case it calls the method in the database to
+     * clear the checkout table to remove transactions older than 2 years old.
+     */
+    public void clearOldHistory() {
+        if (isAdmin()) {
+            database.clearOldHistory();
+            populateTable();
+        }
+    }
+
+    public boolean isAdmin() {
+        if (this.worker != null && this.worker.isAdmin()) {
+            return (JOptionPane.showConfirmDialog(null, "Are you sure you wish to clear the transaction " +
+                    "history for non-faulty parts older than 2 years:") == JOptionPane.YES_OPTION);
+        }
+        return false;
     }
 
     /**
@@ -222,9 +245,23 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                     stage.show();
                 }
             }
-//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method adds the current worker to the class, so that the class can confirm whether the
+     * current worker is an administrator if the worker tries to clear the history.
+     * @param worker the currently logged in worker
+     */
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
+            if (this.worker.isAdmin()) {
+                clearOldHistory.setDisable(false);
+            }
         }
     }
 

@@ -3,11 +3,10 @@ package Database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javax.swing.*;
 import java.sql.*;
 
 /**
- * This class queries the database for the transaction history, and returns a student name, part name, serial number, status, quantity, date
+ * This class queries the database for the transaction history, and returns a student name, part name, serial number, action, quantity, date
  */
 public class HistoryParts {
 
@@ -31,7 +30,7 @@ public class HistoryParts {
             "THEN checkout.checkinAt ELSE checkout.checkoutAt END DESC;";
 
     private Statement statement;
-    private String studentName, studentEmail, partName, serialNumber, status, date;
+    private String studentName, studentEmail, partName, serialNumber, action, date;
 
     public ObservableList<HistoryItems> data = FXCollections.observableArrayList();
 
@@ -51,7 +50,7 @@ public class HistoryParts {
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                HistoryItems historyItems = new HistoryItems(studentName, studentEmail, partName, serialNumber, status, date);
+                HistoryItems historyItems = new HistoryItems(studentName, studentEmail, partName, serialNumber, action, date);
                 data.add(historyItems);
             }
         } catch (SQLException e) {
@@ -70,7 +69,7 @@ public class HistoryParts {
             studentEmail = resultSet.getString("email");
             partName = resultSet.getString("partName");
             serialNumber = resultSet.getString("serialNumber");
-            status = resultSet.getString("Action");
+            action = resultSet.getString("Action");
             date = resultSet.getString("Date");
 
         } catch (SQLException e){
