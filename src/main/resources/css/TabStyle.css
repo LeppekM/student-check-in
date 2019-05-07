@@ -4,11 +4,11 @@
 
 .jfx-tab-pane .tab-header-background {
     -fx-opacity: .75;
-    -fx-background-color: lightgrey;
+    -fx-background-color:  #f4f4f4;
 }
 
 .jfx-tab-pane .tab-selected-line {
-    -fx-border-color: #990000;
+    -fx-border-color: red;
 }
 
 .jfx-tab-pane .tab-header-area .jfx-rippler {
@@ -21,12 +21,12 @@
 }
 
 .tab{
-    -fx-background-insets: 0 1 0 1,0,0;
+    -fx-background-insets: 0 0 0 0,0,0;
 }
 
 .tab-pane .tab
 {
-    -fx-background-color: #e6e6e6;
+    -fx-background-color: #f4f4f4;
 }
 
 .tab-pane .tab:selected
@@ -43,5 +43,17 @@
 
 .tab:selected .tab-label {
     -fx-alignment: CENTER;
-    -fx-text-fill: indianred;
+    -fx-text-fill: derive(#B22222, 30%);
 }
+
+.jfx-tab-pane .scroll-bar .thumb {
+    -fx-background-color: derive(#828282, 70%);
+}
+.jfx-tab-pane .scroll-bar .increment-button .increment-arrow {
+    -fx-background-color: firebrick;
+
+}
+.jfx-tab-pane .scroll-bar .decrement-button .decrement-arrow{
+    -fx-background-color: firebrick;
+}
+

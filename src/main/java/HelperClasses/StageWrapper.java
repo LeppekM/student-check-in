@@ -54,8 +54,28 @@ public class StageWrapper {
             StudentCheckIn.logger.error("IOException: Loading Show Part.");
             e.printStackTrace();
         }
-
     }
+
+    public void extendedPopup(String fxml, Node node){
+        Stage stage = new Stage();
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource(fxml);
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 550, 400);
+            stage.setTitle("Part Information");
+            stage.initOwner(node.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setOnCloseRequest((event -> event.consume()));
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Show Part.");
+            e.printStackTrace();
+        }
+    }
+
 
     public void newStage(String fxml, Node node) {
         try {

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public class ExtendedCheckoutObject {
 
     private static String barcode, barcode2, barcode3, barcode4, barcode5, course, prof, extendedDate;
+    private static boolean fieldsFilled;
 
 
     public ExtendedCheckoutObject(String course, String prof, String extendedDate) {
@@ -12,6 +13,11 @@ public class ExtendedCheckoutObject {
         this.prof = prof;
         this.extendedDate = extendedDate;
     }
+
+    public static boolean isFieldsFilled() {
+        return fieldsFilled;
+    }
+
 
     public String getBarcode() {
         return barcode;

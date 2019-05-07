@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="checkedOutPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerCheckedOutTab">
+<VBox fx:id="checkedOutPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerCheckedOutTab">
     <children>
       <HBox>
          <children>
@@ -24,7 +24,7 @@
               </Label>
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                <children>
-                    <JFXTextField fx:id="searchInput" promptText="search">
+                    <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" promptText="search">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>

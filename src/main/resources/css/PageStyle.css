@@ -3,7 +3,9 @@
  */
 
 .root {
-    -fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 20%, center 50% 50%, radius 50%, reflect, #d5d5d5, #d2d2d2 75%, #cfcfcf);
+    /**-fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 20%, center 50% 50%, radius 50%, reflect, #d5d5d5, #d2d2d2 75%, #cfcfcf);/**
+     */
+    -fx-background-color: #f4f4f4;
 }
 
 .button {
@@ -26,6 +28,3 @@
     -fx-text-fill: black;
 }
 
-.check-box{
-    -fx-text-fill: black;
-}

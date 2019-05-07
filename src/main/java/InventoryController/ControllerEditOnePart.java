@@ -61,7 +61,6 @@ public class ControllerEditOnePart extends ControllerEditPart {
     public void initialize(URL location, ResourceBundle resources) {
         disableFields();
         setFieldValidator();
-        saveButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         part = null;
     }
 

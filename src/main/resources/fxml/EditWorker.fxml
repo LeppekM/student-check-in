@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.EditWorker">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.EditWorker">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="789.0">
          <children>
@@ -28,12 +28,12 @@
             </Button>
             <VBox fx:id="vbox" layoutX="40.0" layoutY="16.0" prefHeight="300.0" prefWidth="668.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                <children>
-                  <JFXTextField fx:id="email" alignment="CENTER" prefHeight="100.0" promptText="MSOE Email" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="email" alignment="CENTER" focusColor="RED" prefHeight="100.0" promptText="MSOE Email" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                      <font>
                         <Font name="Arial Black" size="32.0" />
                      </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="workerName" alignment="CENTER" prefHeight="100.0" promptText="Name (First and Last)" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="workerName" alignment="CENTER" focusColor="RED" prefHeight="100.0" promptText="Name (First and Last)" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -42,12 +42,12 @@
                      </font></JFXTextField>
                   <Pane prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <JFXPasswordField fx:id="pass" alignment="CENTER" prefHeight="100.0" prefWidth="670.0" promptText="Password" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                        <JFXPasswordField fx:id="pass" alignment="CENTER" prefHeight="100.0" prefWidth="670.0" promptText="Password" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                            <font>
                               <Font name="Arial Black" size="32.0" />
                            </font>
                         </JFXPasswordField>
-                        <JFXTextField fx:id="unmasked" alignment="CENTER" prefHeight="100.0" prefWidth="670.0" promptText="Password" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                        <JFXTextField fx:id="unmasked" alignment="CENTER" focusColor="RED" prefHeight="100.0" prefWidth="670.0" promptText="Password" style="-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
                            <font>
                               <Font name="Arial Black" size="32.0" />
                            </font>
@@ -59,7 +59,7 @@
                <children>
                   <HBox prefHeight="142.0" prefWidth="200.0">
                      <children>
-                        <JFXCheckBox fx:id="admin" alignment="CENTER" checkedColor="#d71818" mnemonicParsing="false" onAction="#unblock" prefHeight="130.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Assign Privileges?">
+                        <JFXCheckBox fx:id="admin" alignment="CENTER" checkedColor="FIREBRICK" mnemonicParsing="false" onAction="#unblock" prefHeight="130.0" text="Assign Privileges?">
                            <HBox.margin>
                               <Insets left="150.0" />
                            </HBox.margin>
@@ -73,12 +73,12 @@
                      <children>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <JFXCheckBox fx:id="editParts" checkedColor="#d71818" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Editing Parts">
+                              <JFXCheckBox fx:id="editParts" checkedColor="FIREBRICK" disable="true" mnemonicParsing="false" prefHeight="142.0" text="Editing Parts">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
                               </JFXCheckBox>
-                              <JFXCheckBox fx:id="overdue" checkedColor="#d71818" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Override Overdue">
+                              <JFXCheckBox fx:id="overdue" checkedColor="FIREBRICK" disable="true" mnemonicParsing="false" prefHeight="142.0" text="Override Overdue">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
@@ -90,12 +90,12 @@
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <JFXCheckBox fx:id="workers" checkedColor="#d71818" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Manage Workers">
+                              <JFXCheckBox fx:id="workers" checkedColor="FIREBRICK" disable="true" mnemonicParsing="false" prefHeight="142.0" text="Manage Workers">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
                               </JFXCheckBox>
-                              <JFXCheckBox fx:id="removeParts" checkedColor="#d71818" disable="true" mnemonicParsing="false" prefHeight="142.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Removing Parts">
+                              <JFXCheckBox fx:id="removeParts" checkedColor="FIREBRICK" disable="true" mnemonicParsing="false" prefHeight="142.0" text="Removing Parts">
                                  <font>
                                     <Font name="Arial Black" size="24.0" />
                                  </font>
@@ -106,7 +106,7 @@
                   </HBox>
                </children>
             </VBox>
-            <JFXCheckBox fx:id="showPass" checkedColor="#d71818" layoutX="680.0" layoutY="220.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="107.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );" text="Show Password" wrapText="true">
+            <JFXCheckBox fx:id="showPass" checkedColor="FIREBRICK" layoutX="680.0" layoutY="220.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="107.0" text="Show Password" wrapText="true">
                <font>
                   <Font name="Arial Black" size="14.0" />
                </font></JFXCheckBox>

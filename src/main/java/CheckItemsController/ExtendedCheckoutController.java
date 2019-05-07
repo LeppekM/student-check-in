@@ -72,6 +72,8 @@ public class ExtendedCheckoutController implements Initializable {
         }
     }
 
+
+
     public void reset(){
         courseName.clear();
         profName.clear();

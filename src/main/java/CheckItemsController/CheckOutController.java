@@ -28,6 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -53,6 +54,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
     @FXML
     private AutoCompleteTextField studentID;
 
+    @FXML
+    private TextArea faultyArea;
+
 
     @FXML
     private JFXCheckBox faulty, extended;
@@ -66,6 +70,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
     @FXML
     private Label statusLabel,
             statusLabel2, statusLabel3, statusLabel4, statusLabel5;
+
+    @FXML
+    private StackPane faultPane;
 
 
 //    @FXML
@@ -90,6 +97,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private List<String> studentIDVerifier = new ArrayList<>();
     private DatabaseHelper dbHelp = new DatabaseHelper();
     private static String professor, course, dueDate;
+    private static boolean fieldsFilled;
     private String faultyText;
     private List<String> id = new ArrayList<>();
 
@@ -206,13 +214,17 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 return;
             }
             if (extendedCheckoutIsSelected(getBarcode())) {
+                if(extendedFieldsNotFilled()){
+                    stageWrapper.errorAlert("Some fields were not filled out for extended checkout");
+                    return;
+                }
                 if (newStudentIsCheckingOutItem()) {
                     createNewStudent();
                     return;
                 }
                 extendedCheckoutHelper(thisStudent.getRFID());
             } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
-                faultyCheckinHelper(faultyText);
+                faultyCheckinHelper();
             } else if (newStudentIsCheckingOutItem()) {
                 createNewStudent();
                 return;
@@ -222,6 +234,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
             }
             reset();
         }
+    }
+
+    private boolean extendedFieldsNotFilled(){
+        return (professor == null || course == null || dueDate ==null);
     }
 
     /**
@@ -399,9 +415,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
     /**
      * Helper method to checkin an item
      */
-    private void faultyCheckinHelper(String faultyText) {
+    private void faultyCheckinHelper() {
         faultyCheckIn.setPartToFaultyStatus(getBarcode());
-        faultyCheckIn.addToFaultyTable(getBarcode(), faultyText);
+        faultyCheckIn.addToFaultyTable(getBarcode(), faultyArea.getText());
         checkOut.setItemtoCheckedin(getBarcode());
     }
 
@@ -763,9 +779,18 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     public void isFaulty() {
         if (faulty.isSelected()) {
-            faultyText = faultyItem();
+            faultyText = faultyArea.getText();
+            transitionHelper.faultyTransition(faulty, resetButton, submitButton, 50);
+            transitionHelper.faultyBoxFadeTransition(faultyArea, -40);
+            faultPane.toFront();
+            faultyArea.setPrefColumnCount(400);
+            faultyArea.setPrefRowCount(400);
             setCheckoutItemsDisable(true);
         } else {
+            faultPane.toBack();
+            barcode.requestFocus();
+            transitionHelper.faultyTransition(faulty, resetButton, submitButton, -50);
+            transitionHelper.faultyBoxFadeTransition(faultyArea, 40);
             setCheckoutItemsDisable(false);
         }
     }
@@ -776,9 +801,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @param value True or false to disable buttons
      */
     private void setCheckoutItemsDisable(boolean value) {
-        barcode.setDisable(value);
+        HBoxBarcode2.setVisible(!value);
+        barcode2.setVisible(!value);
         studentID.setDisable(value);
-        HBoxBarcode.setVisible(!value);
+        faultyArea.setVisible(value);
+
     }
 
     /**
@@ -839,8 +866,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Sets correct field info when new barcode field is added
      */
     private void setNewBarcodeFieldsHelper() {
-        //quantity.setVisible(false);
-        //quantityLabel.setVisible(false);
         HBoxBarcode.setVisible(true);
         barcode2.setVisible(true);
         HBoxBarcode2.setVisible(true);
@@ -952,6 +977,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
             }
         });
+        rfidFilter(studentID);
+
     }
 
     private void setStudentEmailSuggestionListener() {
@@ -1051,6 +1078,20 @@ public class CheckOutController extends ControllerMenu implements IController, I
         TextFormatter<String> textFormatter = new TextFormatter<>(filter);
         textField.setTextFormatter(textFormatter);
     }
+
+    private void rfidFilter(JFXTextField textField){
+//        UnaryOperator<TextFormatter.Change> filter = change -> {
+//            String text = change.getText();
+////            id.add(text);
+//            if(text.matches("[^rfid: ]")){
+//                return change;
+//            }
+//            return null;
+//        };
+//        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+//        textField.setTextFormatter(textFormatter);
+    }
+
 
 
 }
