@@ -24,7 +24,7 @@
                   <Insets />
                </GridPane.margin>
                 </Label>
-                <Label id="nameLabel" font="$x1" text="Student Email:" GridPane.rowIndex="1">
+                <Label id="nameLabel" layoutX="45.0" layoutY="55.0" text="Student Email:" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Label>
@@ -88,10 +88,7 @@
         </GridPane>
       <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0">
          <children>
-             <JFXButton onAction="#goBack" style="-fx-border-color: #6e6e6e;" text="Close">
-                 <stylesheets>
-                     <URL value="@../css/ButtonStyle.css" />
-                 </stylesheets></JFXButton>
+             <JFXButton onAction="#goBack" stylesheets="@../css/CheckButton.css" text="Done" />
          </children>
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
