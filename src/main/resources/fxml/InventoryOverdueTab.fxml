@@ -31,9 +31,7 @@
                      <font>
                         <Font size="18.0" />
                      </font></JFXTextField>
-
                    <JFXButton fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="45.0" prefWidth="53.0" stylesheets="@../css/CheckButton.css" text="Go" />
-
                </children>
                <HBox.margin>
                   <Insets right="20.0" top="14.0" />
