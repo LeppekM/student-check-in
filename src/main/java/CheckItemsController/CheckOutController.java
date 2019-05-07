@@ -780,7 +780,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     public void isFaulty() {
         if (faulty.isSelected()) {
             faultyText = faultyArea.getText();
-            transitionHelper.faultyTransition(faulty, resetButton, submitButton, 60);
+            transitionHelper.faultyTransition(faulty, resetButton, submitButton, 50);
             transitionHelper.faultyBoxFadeTransition(faultyArea, -40);
             faultPane.toFront();
             faultyArea.setPrefColumnCount(400);
@@ -789,7 +789,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         } else {
             faultPane.toBack();
             barcode.requestFocus();
-            transitionHelper.faultyTransition(faulty, resetButton, submitButton, -60);
+            transitionHelper.faultyTransition(faulty, resetButton, submitButton, -50);
             transitionHelper.faultyBoxFadeTransition(faultyArea, 40);
             setCheckoutItemsDisable(false);
         }
@@ -1080,16 +1080,16 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
     private void rfidFilter(JFXTextField textField){
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getText();
-//            id.add(text);
-            if(text.matches("[^rfid: ]")){
-                return change;
-            }
-            return null;
-        };
-        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-        textField.setTextFormatter(textFormatter);
+//        UnaryOperator<TextFormatter.Change> filter = change -> {
+//            String text = change.getText();
+////            id.add(text);
+//            if(text.matches("[^rfid: ]")){
+//                return change;
+//            }
+//            return null;
+//        };
+//        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+//        textField.setTextFormatter(textFormatter);
     }
 
 
