@@ -1080,6 +1080,25 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
     private void rfidFilter(JFXTextField textField){
+        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue){
+                    //in focus
+                }
+                else {
+                    String id = textField.getText();
+                    if(textField.getText().contains("rfid:")){
+                        textField.setText(id.substring(5));
+                    }
+                }
+            }
+        });
+//        String id = textField.getText();
+//        if(textField.getText().contains("rfid:")){
+//            textField.setText(id.substring(5));
+//        }
+
 //        UnaryOperator<TextFormatter.Change> filter = change -> {
 //            String text = change.getText();
 ////            id.add(text);
