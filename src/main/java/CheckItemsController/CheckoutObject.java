@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class CheckoutObject {
 
-    private static String studentID, barcode, quantity, extendedCourseName, extendedProfessor, faultyDescription;
+    private static String studentID, barcode, quantity, checkoutAt, dueAt, extendedCourseName, extendedProfessor, faultyDescription;
     private static boolean isExtended, isFaulty;
     private LocalDate extendedReturnDate;
 
@@ -13,6 +13,14 @@ public class CheckoutObject {
         this.barcode = barcode;
         this.quantity = quantity;
         this.isExtended = isExtended;
+        this.isFaulty = isFaulty;
+    }
+
+    public CheckoutObject(String studentID, String barcode, String checkoutAt, String dueAt) {
+        this.studentID = studentID;
+        this.barcode = barcode;
+        this.checkoutAt = checkoutAt;
+        this.dueAt = dueAt;
         this.isFaulty = isFaulty;
     }
 
@@ -40,6 +48,14 @@ public class CheckoutObject {
 
     public LocalDate getExtendedReturnDate() {
         return extendedReturnDate;
+    }
+
+    public String getCheckoutAt() {
+        return checkoutAt;
+    }
+
+    public String getDueAt() {
+        return dueAt;
     }
 
     public String getFaultyDescription() {

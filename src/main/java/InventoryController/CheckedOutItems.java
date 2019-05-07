@@ -9,39 +9,55 @@ import javafx.beans.property.SimpleStringProperty;
  * This class allows the tableview for checked out items to be populated
  */
 public class CheckedOutItems extends RecursiveTreeObject{
-    private final SimpleIntegerProperty checkoutID, partID;
-    private final SimpleLongProperty barcode;
-    private final SimpleStringProperty partName, dueDate, checkedOutAt, studentName;
+    private final SimpleIntegerProperty checkoutID, studentID, partID;
+    private final SimpleStringProperty studentName, studentEmail, partName, barcode, serialNumber, checkedOutDate, dueDate, fee;
 
-    public CheckedOutItems(String sName, String pName, long barcodeCon, String checkOutDate, String due, int checkoutIDCon, int partID) {
-        this.studentName = new SimpleStringProperty(sName);
-        this.partName = new SimpleStringProperty(pName);
-        this.barcode = new SimpleLongProperty(barcodeCon);
-        this.checkedOutAt = new SimpleStringProperty(checkOutDate);
-        this.dueDate = new SimpleStringProperty(due);
-        this.checkoutID = new SimpleIntegerProperty(checkoutIDCon);
+    public CheckedOutItems(int checkoutID, String studentName, String studentEmail, int studentID, String partName, String barcode, String serialNumber, int partID, String checkedOutDate, String dueDate, String fee) {
+        this.checkoutID = new SimpleIntegerProperty(checkoutID);
+        this.studentName = new SimpleStringProperty(studentName);
+        this.studentEmail = new SimpleStringProperty(studentEmail);
+        this.studentID = new SimpleIntegerProperty(studentID);
+        this.partName = new SimpleStringProperty(partName);
+        this.barcode = new SimpleStringProperty(barcode);
+        this.serialNumber = new SimpleStringProperty(serialNumber);
         this.partID = new SimpleIntegerProperty(partID);
-
+        this.checkedOutDate = new SimpleStringProperty(checkedOutDate);
+        this.dueDate = new SimpleStringProperty(dueDate);
+        this.fee = new SimpleStringProperty(fee);
     }
 
-    public SimpleStringProperty getCheckedOutAt() { return checkedOutAt; }
+    public SimpleIntegerProperty getCheckoutID() {
+        return checkoutID;
+    }
 
     public SimpleStringProperty getStudentName() { return studentName; }
 
-    public SimpleLongProperty getBarcode() {
-        return barcode;
+    public SimpleStringProperty getStudentEmail() {
+        return studentEmail;
     }
 
     public SimpleStringProperty getPartName() {
         return partName;
     }
 
+    public SimpleStringProperty getBarcode() {
+        return barcode;
+    }
+
+    public SimpleStringProperty getSerialNumber() {
+        return serialNumber;
+    }
+
+    public SimpleIntegerProperty getPartID() {return partID; }
+
+    public SimpleStringProperty getCheckedOutDate() { return checkedOutDate; }
+
     public SimpleStringProperty getDueDate() {
         return dueDate;
     }
 
-    public SimpleIntegerProperty getCheckID() {return checkoutID; }
-
-    public SimpleIntegerProperty getPartID() {return partID; }
+    public SimpleStringProperty getFee() {
+        return fee;
+    }
 
 }

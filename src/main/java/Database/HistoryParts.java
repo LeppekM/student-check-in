@@ -16,14 +16,14 @@ public class HistoryParts {
     private static final String dbname = "student_check_in";
     private static Connection connection;
 
+    // This query is used to get the data for the transaction history table in the inventory
     private static final String HISTORY_QUERY = "SELECT studentName, email, partName, serialNumber, " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
-            "THEN 'In' ELSE 'Out' END AS 'Status', " +
+            "THEN 'Checked In' ELSE 'Checked Out' END AS 'Action', " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
-            "THEN checkout.checkinAt ELSE checkout.checkoutAt END AS 'date' " +
+            "THEN checkout.checkinAt ELSE checkout.checkoutAt END AS 'Date' " +
             "FROM parts " +
             "INNER JOIN checkout ON parts.partID = checkout.partID " +
-//            "INNER JOIN checkout ON checkout.checkoutID = checkout.checkoutID " +
             "INNER JOIN students ON checkout.studentID = students.studentID " +
             "WHERE parts.isDeleted = 0 " +
             "ORDER BY CASE " +
@@ -70,8 +70,8 @@ public class HistoryParts {
             studentEmail = resultSet.getString("email");
             partName = resultSet.getString("partName");
             serialNumber = resultSet.getString("serialNumber");
-            status = resultSet.getString("status");
-            date = resultSet.getString("date");
+            status = resultSet.getString("Action");
+            date = resultSet.getString("Date");
 
         } catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database");

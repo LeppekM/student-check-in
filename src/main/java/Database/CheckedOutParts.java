@@ -19,19 +19,16 @@ import java.util.List;
  */
 public class CheckedOutParts {
     private final String url = Database.host + "/student_check_in";
-    private final String SELECTQUERY = "SELECT students.studentName, parts.partName, parts.barcode, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.partID\n" +
+    private final String SELECTQUERY = "SELECT students.studentName, students.email, students.studentID, parts.partName, parts.barcode, parts.serialNumber, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.partID, parts.price\n" +
             "FROM checkout\n" +
             "INNER JOIN parts on checkout.partID = parts.partID\n" +
             "INNER JOIN students on checkout.studentID = students.studentID\n" +
             "WHERE checkout.checkinAt IS NULL";
 
     private Statement statement;
-    private int checkoutID, partID;
+    private int checkoutID, studentID, partID;
     private long barcode;
-    private String checkedOutAt;
-    private String dueDate;
-    private String partName;
-    private String studentName;
+    private String studentName, studentEmail, partName, serialNumber, checkedOutAt, dueDate, fee;
 
     public ObservableList<CheckedOutItems> data = FXCollections.observableArrayList();
 
@@ -45,7 +42,7 @@ public class CheckedOutParts {
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                CheckedOutItems checkedOutItems = new CheckedOutItems(studentName, partName, barcode, checkedOutAt, dueDate, checkoutID, partID);
+                CheckedOutItems checkedOutItems = new CheckedOutItems(checkoutID, studentName, studentEmail, studentID, partName, "" + barcode, serialNumber, partID, checkedOutAt, dueDate, fee);
                 data.add(checkedOutItems);
             }
         } catch (SQLException e) {
@@ -64,13 +61,17 @@ public class CheckedOutParts {
      */
     private void setVariables(ResultSet resultSet){
         try {
+            checkoutID = resultSet.getInt("checkoutID");
             studentName = resultSet.getString("studentName");
+            studentEmail = resultSet.getString("email");
+            studentID = resultSet.getInt("studentID");
             partName = resultSet.getString("partName");
             barcode = resultSet.getLong("barcode");
+            serialNumber = resultSet.getString("serialNumber");
             checkedOutAt = resultSet.getString("checkoutAt");
             dueDate = resultSet.getString("dueAt");
-            checkoutID = resultSet.getInt("checkoutID");
-            partID = resultSet.getInt("partID");
+            partID = resultSet.getInt("parts.partID");
+            fee = resultSet.getString("price");
         } catch (SQLException e){
             StudentCheckIn.logger.error("Cannot connect to the database while populating CheckedOutParts");
             throw new IllegalStateException("Cannot connect to the database");

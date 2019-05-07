@@ -4,6 +4,9 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * This class represents the info displayed in a row on the history tab of the inventory
+ */
 public class HistoryTabTableRow extends RecursiveTreeObject<HistoryTabTableRow> {
 
     private StringProperty studentName;

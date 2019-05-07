@@ -23,7 +23,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -229,7 +228,7 @@ public class StudentPage implements IController {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
             try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/OverduePopup.fxml");
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/ViewOverduePart.fxml");
                 FXMLLoader loader = new FXMLLoader(myFxmlURL);
                 Parent root = loader.load();
                 Scene scene = new Scene(root, 400, 300);

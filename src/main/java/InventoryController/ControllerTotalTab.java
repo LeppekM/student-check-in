@@ -1,6 +1,8 @@
 package InventoryController;
 
+import CheckItemsController.CheckoutObject;
 import Database.ObjectClasses.Part;
+import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
 import com.jfoenix.controls.*;
@@ -72,7 +74,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private HBox filterDropDown;
 
-    private String partName, serialNumber, loc, barcode, partID;
+    private String partName, partID, serialNumber, loc, barcode;
 
     private static ObservableList<Part> data
             = FXCollections.observableArrayList();
@@ -169,7 +171,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 deleteOneButton.setOnAction(event -> {
                                     if (worker != null && worker.isRemove()){
-                                        if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
+                                        if (!database.getIsCheckedOut("" + getTreeTableRow().getItem().getPartID().getValue())) {
                                             deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                         } else {
                                             deleteCheckedOutPartAlert();
@@ -177,7 +179,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     }else {
                                         if ((worker != null && worker.isAdmin())
                                                 || requestAdminPin("Delete a Part")) {
-                                            if (!database.getIsCheckedOut(getTreeTableRow().getItem().getPartID().getValue())) {
+                                            if (!database.getIsCheckedOut("" + getTreeTableRow().getItem().getPartID().getValue())) {
                                                 deletePart(getTreeTableRow().getItem().getPartID().getValue());
                                             } else {
                                                 deleteCheckedOutPartAlert();
@@ -197,7 +199,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteAllButton.setOnAction(event -> {
                                     if (worker != null && worker.isRemove()){
                                         boolean typeHasOneCheckedOut = false;
-                                        ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
+                                        ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + getTreeTableRow().getItem().getPartID().getValue());
                                         for (String id : partIDs) {
                                             if (database.getIsCheckedOut(id)) {
                                                 typeHasOneCheckedOut = true;
@@ -212,7 +214,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                         if ((worker != null && worker.isAdmin())
                                                 || requestAdminPin("delete parts")) {
                                             boolean typeHasOneCheckedOut = false;
-                                            ArrayList<String> partIDs = database.getAllPartIDsForPartName(getTreeTableRow().getItem().getPartID().getValue());
+                                            ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + getTreeTableRow().getItem().getPartID().getValue());
                                             for (String id : partIDs) {
                                                 if (database.getIsCheckedOut(id)) {
                                                     typeHasOneCheckedOut = true;
@@ -304,28 +306,22 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        final int index = row.getIndex();
-                        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                            Part rowData = database.selectPart(Integer.parseInt(totalTable.getSelectionModel().getModelItem(index).getValue().getPartID().get()));
-                            if(!rowData.equals(null)) {
-                                if(rowData.getFault())
-                                    showInfoPage(rowData, "fault");
-                                else if(rowData.getCheckedOut())
-                                    showInfoPage(rowData, "checkedOut");
-                                else
-                                    showInfoPage(rowData, "total");
+                        if (event.getClickCount() == 2) {
+                            viewPart(row.getIndex());
+                        } else {
+                            final int index = row.getIndex();
+                            if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
+                                totalTable.getSelectionModel().clearSelection();
+                                event.consume();
                             }
-                            totalTable.getSelectionModel().clearSelection();
-                            event.consume();
-                        } else if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
-                            totalTable.getSelectionModel().clearSelection();
-                            event.consume();
                         }
                     }
                 });
                 return row;
             }
         });
+
+
         getNames();
 
         sortCheckBox = new CheckComboBox<>(types);
@@ -387,6 +383,30 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
+    private void viewPart(int index) {
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewTotalPart.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setTitle("View Part");
+            stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.setScene(scene);
+            if (index != -1) {
+                TreeItem item = totalTable.getSelectionModel().getModelItem(index);
+                // null if user clicks on empty row
+                if (item != null) {
+                    TotalTabTableRow row = ((TotalTabTableRow) item.getValue());
+                    ((ControllerViewTotalPart) loader.getController()).populate(row);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
+            }
+//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     private void search() {
         String filter = searchInput.getText();
@@ -421,7 +441,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
-     * @author Matthew Karcz
      */
     @FXML
     public void populateTable() {
@@ -433,14 +452,22 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         StudentCheckIn.logger.info("Populating table, showing types: " + types);
         if(!types.isEmpty()) {
             this.data = selectParts("SELECT DISTINCT p.* from parts AS p " + getSortTypes(types) + " ORDER BY p.partID;", this.data);
-
+            Student student = null;
+            CheckoutObject checkoutObject = null;
             for (int i = 0; i < data.size(); i++) {
-                tableRows.add(new TotalTabTableRow(data.get(i).getPartName(),
-                        data.get(i).getSerialNumber(), data.get(i).getLocation(),
-                        data.get(i).getBarcode().toString(), data.get(i).getFault(),
-                        "" + data.get(i).getPartID()));
+                student = database.getStudentToLastCheckout(data.get(i).getPartID());
+                checkoutObject = database.getLastCheckoutOf(data.get(i).getPartID());
+                TotalTabTableRow row = new TotalTabTableRow(student.getName(), student.getEmail(),
+                        data.get(i).getPartName(), "" + data.get(i).getPartID(),
+                        "" + data.get(i).getBarcode(), data.get(i).getSerialNumber(),
+                        data.get(i).getLocation(), database.isOverdue("" + checkoutObject.getDueAt()) ? "In" : "Out",
+                        checkoutObject.getCheckoutAt(), checkoutObject.getDueAt(),
+                        data.get(i).getFault());
+                if (database.isOverdue(checkoutObject.getDueAt())) {
+                    row.initFee("" + data.get(i).getPrice());
+                }
+                tableRows.add(row);
             }
-
             root = new RecursiveTreeItem<TotalTabTableRow>(
                     tableRows, RecursiveTreeObject::getChildren
             );
