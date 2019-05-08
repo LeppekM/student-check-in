@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -138,9 +139,7 @@ public class Database implements IController {
     private static Date getTwoYearsAgo() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, -2);
-        Date date = new java.sql.Date(cal.getTimeInMillis());
-        System.out.println(date.toString());
-        return new java.sql.Date(cal.getTimeInMillis());
+        return cal.getTime();
     }
 
     /**
@@ -265,13 +264,17 @@ public class Database implements IController {
                 "FROM checkout " +
                         "INNER JOIN parts " +
                         "ON checkout.partID = parts.partID " +
-                        "AND checkout.checkinAt < '" + getTwoYearsAgo().toString() + "' " +
+                        "AND checkout.checkinAt < ? " +
                         "AND parts.isFaulty = 0;";
 
         try {
-            Statement statement = connection.createStatement();
-            statement.execute(query);
-            statement.close();
+            PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+            DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
+            String formattedDate = target.format(getTwoYearsAgo());
+            System.out.println(formattedDate);
+            preparedStatement.setString(1, formattedDate);
+            preparedStatement.execute();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
