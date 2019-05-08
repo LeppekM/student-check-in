@@ -45,6 +45,9 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * This class acts as the controller for the total inventory tab of the inventory.
+ */
 public class ControllerTotalTab extends ControllerInventoryPage implements Initializable {
 
     @FXML
@@ -95,6 +98,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private Image deleteOneImage = new Image("images/delete.png");
     private Image deleteAllImage = new Image("images/delete_all.png");
 
+    /**
+     * This method is called when the inventory is loaded. It populates the table and sets
+     * listeners for clicking on rows or the edit/delete buttons.
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //add.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
@@ -330,6 +339,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
         totalTabPage.getChildren().add(sortCheckBox);
         filterDropDown.getChildren().add(sortCheckBox);
+
+        // Updates the search if the user presses enter with the cursor in the search field
         searchInput.setOnKeyReleased(event -> {
                 if (event.getCode() == KeyCode.ENTER) {
                     search();
@@ -363,6 +374,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         populateTable();
     }
 
+    /**
+     * Adds the current worker to the class, so that the class knows whether an administrator
+     * or student worker is currently logged in.
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (this.worker == null) {
@@ -370,6 +386,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
+    /**
+     * Determines which rows fit the search input
+     */
     private void filter(TreeItem<TotalTabTableRow> root, String filter, TreeItem<TotalTabTableRow> filteredRoot) {
         TreeItem<TotalTabTableRow> filteredChild;
         for (TreeItem<TotalTabTableRow> child : root.getChildren()) {
@@ -383,6 +402,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
+    /**
+     * Displays a pop up for viewing everything about the part
+     * @param index index in the table for the part to be viewed
+     */
     private void viewPart(int index) {
         Stage stage = new Stage();
         try {
@@ -391,6 +414,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             Scene scene = new Scene(root);
             stage.setTitle("View Part");
             stage.initOwner(totalTabPage.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             if (index != -1) {
                 TreeItem item = totalTable.getSelectionModel().getModelItem(index);
@@ -402,11 +426,14 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     stage.show();
                 }
             }
-//                stage.setOnHiding(event1 -> fees.setText("Outstanding fees: $" + overdueFee(student)));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Updates the table based on the input text for the search
+     */
     @FXML
     private void search() {
         String filter = searchInput.getText();
@@ -420,6 +447,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
+    /**
+     * Determines whether a specific row matches the search input
+     * @param value the tested row
+     * @param filter the search input
+     * @return true if the row matches the search criteria; false otherwise
+     */
     private boolean isMatch(TotalTabTableRow value, String filter) {
         String input = filter.toLowerCase();
         partName = value.getPartName().getValue();
@@ -581,6 +614,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
 
+    /**
+     * Asks the student worker to enter an admin pin if they try to do something they do
+     * not have the privilege to do
+     * @param action the privileged action that the worker tried to do
+     * @return true if the inputted admin pin is correct; false otherwise
+     */
     public boolean requestAdminPin(String action) {
         AtomicBoolean isValid = new AtomicBoolean(false);
         try {
