@@ -24,6 +24,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -131,6 +132,10 @@ public class StudentPage implements IController {
     }
 
     private void setTables() {
+        Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setStyle("-fx-text-fill: white");
+        emptyTableLabel.setFont(new Font(18));
+        coTable.setPlaceholder(emptyTableLabel);
         coTableCol = new JFXTreeTableColumn<>("Part Name");
         coTableCol.prefWidthProperty().bind(coTable.widthProperty());
         coTableCol.setStyle("-fx-font-size: 18px");
@@ -142,6 +147,7 @@ public class StudentPage implements IController {
             }
         });
 
+        oTable.setPlaceholder(emptyTableLabel);
         oTableCol = new JFXTreeTableColumn<>("Part Name");
         oTableCol.prefWidthProperty().bind(oTable.widthProperty());
         oTableCol.setStyle("-fx-font-size: 18px");
@@ -153,6 +159,7 @@ public class StudentPage implements IController {
             }
         });
 
+        sTable.setPlaceholder(emptyTableLabel);
         sTableCol = new JFXTreeTableColumn<>("Part Name");
         sTableCol.prefWidthProperty().bind(sTable.widthProperty());
         sTableCol.setStyle("-fx-font-size: 18px");
