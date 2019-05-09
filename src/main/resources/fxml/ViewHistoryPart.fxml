@@ -19,93 +19,65 @@
                     <font>
                         <Font name="System Bold" size="18.0" fx:id="x1" />
                     </font>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
                 </Label>
                 <Label id="nameLabel" layoutX="45.0" layoutY="55.0" text="Student Email:" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
                 <Label id="nameLabel" layoutX="52.0" layoutY="148.0" text="Part Name:" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
                 <Label id="nameLabel" layoutX="90.0" layoutY="192.0" text="Serial Number:" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
                 <Label id="nameLabel" layoutX="119.0" layoutY="235.0" text="Action:" GridPane.rowIndex="4">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
                 <Label id="nameLabel" layoutX="93.0" layoutY="323.0" text="Date:" GridPane.rowIndex="5">
-
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
                 <JFXTextField fx:id="studentNameField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="0">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </JFXTextField>
                 <JFXTextField fx:id="studentEmailField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </JFXTextField>
                 <JFXTextField fx:id="partNameField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </JFXTextField>
                 <JFXTextField fx:id="serialNumberField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </JFXTextField>
                 <JFXTextField fx:id="actionField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </JFXTextField>
                 <JFXTextField fx:id="dateField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="5">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </JFXTextField>
             </children>
             <columnConstraints>
                 <ColumnConstraints halignment="RIGHT" />
-                <ColumnConstraints />
-                <ColumnConstraints />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints valignment="BASELINE" vgrow="ALWAYS" />

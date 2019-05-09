@@ -28,6 +28,9 @@ public class ControllerViewCheckedOutPart {
     @FXML
     private JFXTextField studentNameField, studentEmailField, partNameField, barcodeField, serialNumberField, partIDField, checkedOutDateField, dueDateField, feeField;
 
+    @FXML
+    private Label dueDatePrompt;
+
     public void populate(CheckedOutTabTableRow row) {
         studentNameField.setText(row.getStudentName().get());
         studentEmailField.setText(row.getStudentEmail().get());
@@ -39,6 +42,7 @@ public class ControllerViewCheckedOutPart {
         dueDateField.setText(row.getDueDate().get());
         Database database = new Database();
         if (database.isOverdue(row.getDueDate().get())) {
+            dueDatePrompt.setStyle("-fx-text-fill: red");
             Label feeLabel = new Label("Fee:");
             feeLabel.setFont(x1);
             JFXTextField feeField = new JFXTextField("$" + df.format(Long.parseLong(row.getFee().get())/100));

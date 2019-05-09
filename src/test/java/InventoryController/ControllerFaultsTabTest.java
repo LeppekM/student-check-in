@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.*;
+import Database.ObjectClasses.Part;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
