@@ -232,6 +232,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
             } else {
                 submitMultipleItems();
             }
+            stageWrapper.slidingAlert("Success", "Part(s) Checked in/out successfully");
             reset();
         }
     }
