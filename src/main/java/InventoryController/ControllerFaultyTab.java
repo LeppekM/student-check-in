@@ -152,6 +152,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
             Scene scene = new Scene(root);
             stage.setTitle("Checked Out Item");
             stage.initOwner(faultyPage.getScene().getWindow());
+            stage.setTitle("View Faulty Part");
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             if (index != -1) {
