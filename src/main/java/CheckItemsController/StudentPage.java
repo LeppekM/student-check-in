@@ -147,7 +147,10 @@ public class StudentPage implements IController {
             }
         });
 
-        oTable.setPlaceholder(emptyTableLabel);
+        Label emptyTableLabel2 = new Label("No parts found.");
+        emptyTableLabel2.setStyle("-fx-text-fill: white");
+        emptyTableLabel2.setFont(new Font(18));
+        oTable.setPlaceholder(emptyTableLabel2);
         oTableCol = new JFXTreeTableColumn<>("Part Name");
         oTableCol.prefWidthProperty().bind(oTable.widthProperty());
         oTableCol.setStyle("-fx-font-size: 18px");
@@ -159,7 +162,10 @@ public class StudentPage implements IController {
             }
         });
 
-        sTable.setPlaceholder(emptyTableLabel);
+        Label emptyTableLabel3 = new Label("No parts found.");
+        emptyTableLabel3.setStyle("-fx-text-fill: white");
+        emptyTableLabel3.setFont(new Font(18));
+        sTable.setPlaceholder(emptyTableLabel3);
         sTableCol = new JFXTreeTableColumn<>("Part Name");
         sTableCol.prefWidthProperty().bind(sTable.widthProperty());
         sTableCol.setStyle("-fx-font-size: 18px");
