@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.Database;
 import Database.OverdueItem;
+import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
@@ -56,6 +57,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
     private Database database;
     private ObservableList<OverdueItem> list = FXCollections.observableArrayList();
+    private ExportToExcel export = new ExportToExcel();
 
     /**
      * This method puts all overdue items into the list for populating the gui table
@@ -158,6 +160,11 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             }
 
         populateTable();
+    }
+
+    public void importToExcel(){
+        export.exportOverdue(list);
+
     }
 
     /**
