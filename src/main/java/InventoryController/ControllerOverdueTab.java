@@ -61,10 +61,8 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
     /**
      * This method puts all overdue items into the list for populating the gui table
-     *
      * @param location
      * @param resources
-     * @author Bailey Terry
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
