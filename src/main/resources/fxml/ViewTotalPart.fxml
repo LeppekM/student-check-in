@@ -30,45 +30,14 @@
                                   <font>
                                       <Font size="18.0" fx:id="x1" />
                                   </font>
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
                               </Label>
-                              <Label id="nameLabel" font="$x1" text="Barcode:" GridPane.rowIndex="1">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </Label>
-                              <Label id="nameLabel" font="$x1" text="Serial Number:" GridPane.rowIndex="2">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </Label>
-                              <Label id="nameLabel" font="$x1" text="Part ID:" GridPane.rowIndex="3">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </Label>
-                              <JFXTextField fx:id="partNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </JFXTextField>
-                              <JFXTextField fx:id="barcodeField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </JFXTextField>
-                              <JFXTextField fx:id="serialNumberField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </JFXTextField>
-                              <JFXTextField fx:id="partIDField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </JFXTextField>
+                              <Label id="nameLabel" font="$x1" text="Barcode:" GridPane.rowIndex="1" />
+                              <Label id="nameLabel" font="$x1" text="Serial Number:" GridPane.rowIndex="2" />
+                              <Label id="nameLabel" font="$x1" text="Part ID:" GridPane.rowIndex="3" />
+                              <JFXTextField fx:id="partNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                              <JFXTextField fx:id="barcodeField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <JFXTextField fx:id="serialNumberField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <JFXTextField fx:id="partIDField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                           </children>
                           <columnConstraints>
                               <ColumnConstraints halignment="RIGHT" />
@@ -106,46 +75,14 @@
                   </Label>
                       <GridPane fx:id="gridCheckedOut" hgap="3.0" vgap="15.0">
                           <children>
-                              <Label font="$x1" text="Student Name:">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                              </Label>
-                              <Label id="nameLabel" font="$x1" text="Student Email:" GridPane.rowIndex="1">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </Label>
-                              <Label id="nameLabel" font="$x1" text="Checked Out Date:" GridPane.rowIndex="2">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </Label>
-                              <Label id="nameLabel" font="$x1" text="Due Date:" GridPane.rowIndex="3">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </Label>
-                              <JFXTextField fx:id="studentNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </JFXTextField>
-                              <JFXTextField fx:id="studentEmailField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </JFXTextField>
-                              <JFXTextField fx:id="checkedOutDateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </JFXTextField>
-                              <JFXTextField fx:id="dueDateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                  <GridPane.margin>
-                                      <Insets />
-                                  </GridPane.margin>
-                        </JFXTextField>
+                              <Label font="$x1" text="Student Name:" />
+                              <Label id="nameLabel" font="$x1" text="Student Email:" GridPane.rowIndex="1" />
+                              <Label id="nameLabel" fx:id="checkoutActionDate" font="$x1" text="Date:" GridPane.rowIndex="2" />
+                              <Label id="nameLabel" fx:id="dueDatePrompt" font="$x1" text="Due Date:" GridPane.rowIndex="3" />
+                              <JFXTextField fx:id="studentNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                              <JFXTextField fx:id="studentEmailField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <JFXTextField fx:id="checkoutActionDateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <JFXTextField fx:id="dueDateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                           </children>
                           <columnConstraints>
                               <ColumnConstraints halignment="RIGHT" />
@@ -183,26 +120,10 @@
                         </Label>
                         <GridPane fx:id="gridFault" hgap="3.0" vgap="15.0">
                             <children>
-                                <Label id="nameLabel" font="$x1" text="Price:" GridPane.rowIndex="0">
-                                    <GridPane.margin>
-                                        <Insets />
-                                    </GridPane.margin>
-                                </Label>
-                                <Label id="nameLabel" font="$x1" text="Fault Description:" GridPane.rowIndex="1">
-                                    <GridPane.margin>
-                                        <Insets />
-                                    </GridPane.margin>
-                                </Label>
-                                <JFXTextField fx:id="priceField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                    <GridPane.margin>
-                                        <Insets />
-                                    </GridPane.margin>
-                                </JFXTextField>
-                                <JFXTextArea fx:id="faultField" editable="false" prefColumnCount="15" prefRowCount="3" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1">
-                                    <GridPane.margin>
-                                        <Insets />
-                                    </GridPane.margin>
-                                </JFXTextArea>
+                                <Label id="nameLabel" font="$x1" text="Price:" GridPane.rowIndex="0" />
+                                <Label id="nameLabel" font="$x1" text="Fault Description:" GridPane.rowIndex="1" />
+                                <JFXTextField fx:id="priceField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <JFXTextArea fx:id="faultField" editable="false" prefColumnCount="15" prefRowCount="3" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
                             </children>
                             <columnConstraints>
                                 <ColumnConstraints halignment="RIGHT" />

@@ -1,5 +1,6 @@
 package CheckItemsController;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class CheckoutObject {
@@ -7,6 +8,8 @@ public class CheckoutObject {
     private static String studentID, barcode, quantity, checkoutAt, dueAt, extendedCourseName, extendedProfessor, faultyDescription;
     private static boolean isExtended, isFaulty;
     private LocalDate extendedReturnDate;
+
+    private String checkoutAtDate, checkinAtDate;
 
     public CheckoutObject(String studentID, String barcode, String quantity, boolean isExtended, boolean isFaulty) {
         this.studentID = studentID;
@@ -16,12 +19,12 @@ public class CheckoutObject {
         this.isFaulty = isFaulty;
     }
 
-    public CheckoutObject(String studentID, String barcode, String checkoutAt, String dueAt) {
+    public CheckoutObject(String studentID, String barcode, String checkoutAt, String checkinAt, String dueAt) {
         this.studentID = studentID;
         this.barcode = barcode;
-        this.checkoutAt = checkoutAt;
+        this.checkoutAtDate = checkoutAt;
+        this.checkinAtDate = checkinAt;
         this.dueAt = dueAt;
-        this.isFaulty = isFaulty;
     }
 
     public void initExtendedInfo(String extendedCourseName, String extendedProfessor, LocalDate extendedReturnDate) {
@@ -52,6 +55,14 @@ public class CheckoutObject {
 
     public String getCheckoutAt() {
         return checkoutAt;
+    }
+
+    public String getCheckoutAtDate() {
+        return checkoutAtDate;
+    }
+
+    public String getCheckinAtDate() {
+        return checkinAtDate;
     }
 
     public String getDueAt() {

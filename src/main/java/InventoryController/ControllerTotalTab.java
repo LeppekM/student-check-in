@@ -109,9 +109,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         //add.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         //searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
 
-        Label emptytableLabel = new Label("No parts found.");
-        emptytableLabel.setFont(new Font(18));
-        totalTable.setPlaceholder(emptytableLabel);
+        Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setStyle("-fx-text-fill: white");
+        emptyTableLabel.setFont(new Font(18));
+        totalTable.setPlaceholder(emptyTableLabel);
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
@@ -494,7 +495,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                         data.get(i).getPartName(), "" + data.get(i).getPartID(),
                         "" + data.get(i).getBarcode(), data.get(i).getSerialNumber(),
                         data.get(i).getLocation(), database.isOverdue("" + checkoutObject.getDueAt()) ? "In" : "Out",
-                        checkoutObject.getCheckoutAt(), checkoutObject.getDueAt(),
+                        checkoutObject.getCheckoutAtDate(), checkoutObject.getCheckinAtDate(), checkoutObject.getDueAt(),
                         data.get(i).getFault());
                 if (database.isOverdue(checkoutObject.getDueAt())) {
                     row.initFee("" + data.get(i).getPrice());

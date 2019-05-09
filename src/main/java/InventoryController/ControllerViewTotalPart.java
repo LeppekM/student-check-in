@@ -31,7 +31,10 @@ public class ControllerViewTotalPart {
     private GridPane grid, gridCheckedOut, gridFaulty;
 
     @FXML
-    private JFXTextField studentNameField, studentEmailField, partNameField, barcodeField, serialNumberField, partIDField, checkedOutDateField, dueDateField, priceField;
+    private Label checkoutActionDate, dueDatePrompt;
+
+    @FXML
+    private JFXTextField studentNameField, studentEmailField, partNameField, barcodeField, serialNumberField, partIDField, checkoutActionDateField, dueDateField, priceField;
 
     @FXML
     private JFXTextArea faultField;
@@ -41,24 +44,31 @@ public class ControllerViewTotalPart {
         if (!row.getStudentEmail().get().equals("")) {
             studentNameField.setText(row.getStudentName().get());
             studentEmailField.setText(row.getStudentEmail().get());
-            checkedOutDateField.setText(row.getCheckedOutAt().get());
-            dueDateField.setText(row.getDueDate().get());
+            checkoutActionDate.setText(row.getActionType() + " Date:");
+            checkoutActionDateField.setText(row.getAction().toString());
+            if (row.getActionType().equals("Check Out")) {
+                dueDateField.setText(row.getDueDate().get());
+                Database database = new Database();
+                if (database.isOverdue(row.getDueDate().get())) {
+                    Label feeLabel = new Label("Fee:");
+                    feeLabel.setFont(x1);
+                    JFXTextField feeField = new JFXTextField("$" + df.format(Double.parseDouble(row.getFee().get())/100));
+                    gridCheckedOut.add(feeLabel, 0, 4);
+                    gridCheckedOut.add(feeField, 1, 4);
+                    dueDatePrompt.setStyle("-fx-text-fill: red;");
+                }
+            } else {
+                gridCheckedOut.getChildren().remove(7);
+                gridCheckedOut.getChildren().remove(3);
+            }
         } else {
-            gridContainer.getChildren().remove(2);
-            gridContainer.getChildren().remove(1);
+            gridContainer.getChildren().remove(2);  // removes the first separator (3rd element of the HBox)
+            gridContainer.getChildren().remove(1);  // removes the transaction history column (2nd element of the HBox)
         }
         partNameField.setText(row.getPartName().get());
         barcodeField.setText(row.getBarcode().get());
         serialNumberField.setText(row.getSerialNumber().get());
         partIDField.setText("" + row.getPartID().get());
-        Database database = new Database();
-        if (database.isOverdue(row.getDueDate().get())) {
-            Label feeLabel = new Label("Fee:");
-            feeLabel.setFont(x1);
-            JFXTextField feeField = new JFXTextField("$" + df.format(Double.parseDouble(row.getFee().get())/100));
-            gridCheckedOut.add(feeLabel, 0, 4);
-            gridCheckedOut.add(feeField, 1, 4);
-        }
         // if the row is faulty, set info
         // otherwise, remove the column for fault info
         if (row.sFaulty()) {

@@ -233,9 +233,10 @@ public class Database implements IController {
      */
     public CheckoutObject getLastCheckoutOf(int partID) {
         String query = "SELECT * FROM checkout WHERE partID = " + partID + ";";
-
         CheckoutObject checkoutObject = null;
-        String studentID = "", barcode= "", checkoutAt = "", dueAt = "";
+        String studentID = "", barcode= "", dueAt = "";
+        String checkoutAt = null, checkinAt = null;
+
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -243,9 +244,10 @@ public class Database implements IController {
                 studentID = "" + resultSet.getInt("studentID");
                 barcode = "" + resultSet.getLong("barcode");
                 checkoutAt = resultSet.getString("checkoutAt");
+                checkinAt = resultSet.getString("checkinAt");
                 dueAt = resultSet.getString("dueAt");
             }
-            checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, dueAt);
+            checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, checkinAt, dueAt);
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
@@ -271,7 +273,6 @@ public class Database implements IController {
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
             DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
             String formattedDate = target.format(getTwoYearsAgo());
-            System.out.println(formattedDate);
             preparedStatement.setString(1, formattedDate);
             preparedStatement.execute();
             preparedStatement.close();

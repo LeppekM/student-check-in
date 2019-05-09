@@ -66,6 +66,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setStyle("-fx-text-fill: white");
         emptyTableLabel.setFont(new Font(18));
         historyTable.setPlaceholder(emptyTableLabel);
 

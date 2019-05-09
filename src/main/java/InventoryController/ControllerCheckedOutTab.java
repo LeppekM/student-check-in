@@ -60,6 +60,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setStyle("-fx-text-fill: white");
         emptyTableLabel.setFont(new Font(18));
 //        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         checkedOutTable.setPlaceholder(emptyTableLabel);

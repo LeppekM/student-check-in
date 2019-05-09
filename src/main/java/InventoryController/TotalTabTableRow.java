@@ -2,23 +2,25 @@ package InventoryController;
 
 import Database.Database;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
+
+import java.sql.Date;
 
 public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     private StringProperty studentName, studentEmail, partName, partID, barcode, serialNumber, location,
-            status, checkedOutAt, dueDate, fee, faultDescription;
+            status, dueDate, fee, faultDescription;
+
+    private String actionType;
 
     private boolean fault;
 
+    private String action;
+
     public TotalTabTableRow(String studentName, String studentEmail, String partName, String partID,
                             String barcode, String serialNumber, String location, String status,
-                            String checkedOutAt, String dueDate, boolean fault) {
+                            String checkedOutAt, String checkedInAt, String dueDate, boolean fault) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
@@ -27,7 +29,13 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.location = new SimpleStringProperty(location);
         this.status = new SimpleStringProperty(status);
-        this.checkedOutAt = new SimpleStringProperty(checkedOutAt);
+        if (checkedInAt != null) {
+            action = checkedInAt;
+            actionType = "Check In";
+        } else {
+            action = checkedOutAt;
+            actionType = "Check Out";
+        }
         this.dueDate = new SimpleStringProperty(dueDate);
         this.fault = fault;
         if (this.fault) {
@@ -68,8 +76,8 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
         return status;
     }
 
-    public StringProperty getCheckedOutAt() {
-        return checkedOutAt;
+    public String getAction() {
+        return action;
     }
 
     public StringProperty getDueDate() {
@@ -90,5 +98,9 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     public boolean sFaulty() {
         return fault;
+    }
+
+    public String getActionType() {
+        return actionType;
     }
 }
