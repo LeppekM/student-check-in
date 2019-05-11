@@ -333,7 +333,6 @@ create table checkout (
   PRIMARY KEY (checkoutID)
 );
 
-call load_checkout();
 
 drop table if exists vendors;
 create table vendors (
