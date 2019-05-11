@@ -3,6 +3,9 @@ package InventoryController;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 
+/**
+ * Represents all of the info about parts on the faulty inventory tab
+ */
 public class FaultyPartTabTableRow extends RecursiveTreeObject<FaultyPartTabTableRow> {
 
     private final StringProperty studentName;

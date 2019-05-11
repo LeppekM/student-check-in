@@ -6,6 +6,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Represents all of the info about parts on the checked out parts inventory tab
+ */
 public class CheckedOutTabTableRow extends RecursiveTreeObject<CheckedOutTabTableRow> {
 
     private StringProperty studentName, studentEmail, partName, barcode, serialNumber, checkedOutAt, dueDate, fee;

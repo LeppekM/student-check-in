@@ -14,6 +14,9 @@ import javafx.stage.WindowEvent;
 
 import java.text.DecimalFormat;
 
+/**
+ * Sets the info for the view total part pop up and controls the back button
+ */
 public class ControllerViewTotalPart {
 
     DecimalFormat df = new DecimalFormat("#,###,##0.00");
@@ -39,6 +42,13 @@ public class ControllerViewTotalPart {
     @FXML
     private JFXTextArea faultField;
 
+    /**
+     * Adds a label and text field value to a specified row in the last transaction
+     * column of the view part pop up.
+     * @param row the row index to be added to
+     * @param prompt the text for the label
+     * @param value the text for the text field
+     */
     private void addField(int row, String prompt, String value) {
         Label label = new Label(prompt);
         label.setFont(x1);
@@ -48,6 +58,10 @@ public class ControllerViewTotalPart {
         gridCheckedOut.add(field, 1, row);
     }
 
+    /**
+     * Populates the 3 columns of the total inventory tab view part pop up
+     * @param row holds potentially necessary info about part used to populate the row
+     */
     public void populate(TotalTabTableRow row) {
         // Sets basic part info
         partNameField.setText(row.getPartName().get());
@@ -101,6 +115,9 @@ public class ControllerViewTotalPart {
         }
     }
 
+    /**
+     * Returns to the total inventory tab
+     */
     public void goBack() {
         sceneViewTotalPart.fireEvent(new WindowEvent(((Node) sceneViewTotalPart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }

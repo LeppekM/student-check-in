@@ -47,6 +47,11 @@ public class EditWorker implements IController {
     private static boolean work;
     private static boolean remove;
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (loggedWorker == null){

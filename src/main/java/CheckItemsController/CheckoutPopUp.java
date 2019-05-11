@@ -38,6 +38,11 @@ public class CheckoutPopUp extends StudentPage implements IController {
     private Database database;
     private Worker worker;
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker){
         if (this.worker == null){

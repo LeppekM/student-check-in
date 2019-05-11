@@ -1036,8 +1036,9 @@ public class Database implements IController {
     }
 
     /**
-     * This tells the Database class which worker is currently logged in.
-     * @param worker
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each class.
+     * @param worker the currently logged in worker
      */
     @Override
     public void initWorker(Worker worker) {

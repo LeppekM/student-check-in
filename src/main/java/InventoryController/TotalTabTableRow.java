@@ -5,8 +5,9 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.sql.Date;
-
+/**
+ * Represents all of the info about parts on the total inventory tab
+ */
 public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     private StringProperty studentName, studentEmail, partName, partID, barcode, serialNumber, location,

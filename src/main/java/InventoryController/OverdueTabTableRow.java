@@ -4,6 +4,9 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Represents all of the info about parts on the overdue inventory tab
+ */
 public class OverdueTabTableRow extends RecursiveTreeObject<OverdueTabTableRow> {
 
     private StringProperty studentID;

@@ -36,7 +36,6 @@ public class CheckedOutParts {
      * Queries the database for items that are checked out.
      */
     public ObservableList<CheckedOutItems> getCheckedOutItems(){
-
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
@@ -52,8 +51,6 @@ public class CheckedOutParts {
         }
         return data;
     }
-
-
 
     /**
      * Sets variables to the results of the query

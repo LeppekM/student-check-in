@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Acts as the controller for the main menu.
+ */
 public class ControllerMenu implements IController, Initializable {
 
     @FXML
@@ -41,7 +44,9 @@ public class ControllerMenu implements IController, Initializable {
     private List <String> studentIDArray = new ArrayList<>();
     private StageWrapper stageWrapper = new StageWrapper();
 
-
+    /**
+     * Initializes the buttons and sets the MSOE logo as the background image
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.worker = null;
@@ -62,6 +67,11 @@ public class ControllerMenu implements IController, Initializable {
         this.msoeBackgroundImage.toBack();
     }
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (this.worker == null) {
