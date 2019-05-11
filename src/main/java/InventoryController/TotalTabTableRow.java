@@ -20,7 +20,7 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     public TotalTabTableRow(String studentName, String studentEmail, String partName, String partID,
                             String barcode, String serialNumber, String location, String status,
-                            String checkedOutAt, String checkedInAt, String dueDate, boolean fault) {
+                            String checkedOutAt, String checkedInAt, String dueDate, String price, boolean fault) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
@@ -42,6 +42,7 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
             Database database = new Database();
             this.faultDescription = new SimpleStringProperty(database.getFaultDescription(Integer.parseInt(partID)));
         }
+        this.fee = new SimpleStringProperty(price);
     }
 
     public void initFee(String fee) {
