@@ -6,6 +6,8 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -50,15 +52,24 @@
       </children>
     </HBox>
     <JFXTreeTableView fx:id="totalTable" layoutX="0.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
-      <HBox alignment="CENTER_RIGHT">
+      <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="200.0">
          <children>
+            <JFXButton alignment="BASELINE_LEFT" contentDisplay="TOP" onAction="#exportParts" prefHeight="0.0" prefWidth="50.0" translateX="-20.0">
+               <graphic>
+                  <ImageView fitHeight="33.0" fitWidth="34.0">
+                     <image>
+                        <Image url="@../images/download.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
           <JFXButton fx:id="add" mnemonicParsing="false" onAction="#addPart" prefHeight="45.0" prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Add" />
          </children>
          <opaqueInsets>
             <Insets bottom="14.0" right="20.0" />
          </opaqueInsets>
          <VBox.margin>
-            <Insets bottom="14.0" left="20.0" right="20.0" top="14.0" />
+            <Insets top="5.0" />
          </VBox.margin>
       </HBox>
   </children>

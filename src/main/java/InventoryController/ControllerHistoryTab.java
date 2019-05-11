@@ -159,6 +159,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
     }
 
+    public void importTransaction(){
+        historyParts = new HistoryParts();
+        ObservableList<HistoryItems> list = historyParts.getHistoryItems();
+        export.exportTransactionHistory(list);
+    }
+
     /**
      * This method adds content to the table.
      */

@@ -6,6 +6,9 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -47,8 +50,22 @@
             <JFXTreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
          <VBox.margin>
-            <Insets bottom="63.0" />
+            <Insets />
          </VBox.margin>
         </JFXTreeTableView>
+      <HBox prefHeight="0.0" prefWidth="0.0">
+         <children>
+            <AnchorPane prefHeight="155.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <JFXButton alignment="CENTER_RIGHT" contentDisplay="TOP" onAction="#exportCheckedOut" prefHeight="68.0" prefWidth="72.0" HBox.hgrow="ALWAYS">
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="38.0">
+                     <image>
+                        <Image url="@../images/download.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </HBox>
     </children>
 </VBox>
