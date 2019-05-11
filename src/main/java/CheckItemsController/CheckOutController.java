@@ -128,11 +128,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
 
     /**
-     * If no movement is recorded on page for 15 minutes, item will submit automatically
+     * If no movement is recorded on page for 5 minutes, item will submit automatically
      */
     private void submitTimer() {
         int duration = 5;
-        delay = new PauseTransition(Duration.minutes(duration));
+        delay = new PauseTransition(Duration.seconds(duration));
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
         delay.setOnFinished(event -> submit());
         delay.play();
@@ -202,6 +202,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
      */
     public void submit() {
+        if(!fieldsFilled()){
+            return;
+        }
         Student thisStudent = null;
         if (containsNumber(getstudentID())) {
             thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
@@ -228,7 +231,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
             } else if (newStudentIsCheckingOutItem()) {
                 createNewStudent();
                 return;
-                //checkOut.addNewCheckoutItem(getBarcode(), thisStudent.getRFID());
             } else {
                 submitMultipleItems();
             }

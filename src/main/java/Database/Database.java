@@ -814,13 +814,13 @@ public class Database implements IController {
 //                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         }else if (ID == -1){
             query = "select * from students where email = '" + studentEmail + "';";
-            coList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
+            coList = "select students.studentName, students.email, students.studentID, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
                     "from students " +
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID" +
                     " where students.email = '" + studentEmail +
                     "' AND checkout.checkinAt is null;";
-            pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
+            pList = "select students.studentName, students.email, students.studentID, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
                     "from students " +
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail + "' and checkout.reservedAt != '';";

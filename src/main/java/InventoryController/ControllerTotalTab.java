@@ -375,6 +375,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         populateTable();
     }
 
+    public void exportParts(){
+        export.exportPartList(data);
+    }
+
     /**
      * Adds the current worker to the class, so that the class knows whether an administrator
      * or student worker is currently logged in.

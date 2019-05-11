@@ -144,6 +144,10 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         });
     }
 
+    public void exportFaulty(){
+        export.exportFaulty(data);
+    }
+
     private void viewPart(int index){
         Stage stage = new Stage();
         try {
