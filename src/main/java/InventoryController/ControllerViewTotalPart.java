@@ -31,46 +31,67 @@ public class ControllerViewTotalPart {
     private GridPane grid, gridCheckedOut, gridFaulty;
 
     @FXML
-    private Label checkoutActionDate, dueDatePrompt;
+    private Label checkoutActionDate, dueDatePrompt, professorNamePrompt, classNamePrompt;
 
     @FXML
-    private JFXTextField studentNameField, studentEmailField, partNameField, barcodeField, serialNumberField, partIDField, checkoutActionDateField, dueDateField, priceField;
+    private JFXTextField studentNameField, studentEmailField, professorNameField, classNameField, partNameField, barcodeField, serialNumberField, partIDField, checkoutActionDateField, dueDateField, priceField;
 
     @FXML
     private JFXTextArea faultField;
 
+    private void addField(int row, String prompt, String value) {
+        Label label = new Label(prompt);
+        label.setFont(x1);
+        JFXTextField field = new JFXTextField(value);
+        field.setEditable(false);
+        gridCheckedOut.add(label, 0, row);
+        gridCheckedOut.add(field, 1, row);
+    }
+
     public void populate(TotalTabTableRow row) {
-        // if the part has been checked out before, the student email associated with it will not be empty ("")
-        if (!row.getStudentEmail().get().equals("")) {
-            studentNameField.setText(row.getStudentName().get());
-            studentEmailField.setText(row.getStudentEmail().get());
-            checkoutActionDate.setText(row.getActionType() + " Date:");
-            checkoutActionDateField.setText(row.getAction().toString());
-            if (row.getActionType().equals("Check Out")) {
-                dueDateField.setText(row.getDueDate().get());
-                Database database = new Database();
-                if (database.isOverdue(row.getDueDate().get())) {
-                    Label feeLabel = new Label("Fee:");
-                    feeLabel.setFont(x1);
-                    JFXTextField feeField = new JFXTextField("$" + df.format(Double.parseDouble(row.getFee().get())/100));
-                    gridCheckedOut.add(feeLabel, 0, 4);
-                    gridCheckedOut.add(feeField, 1, 4);
-                    dueDatePrompt.setStyle("-fx-text-fill: red;");
-                }
-            } else {
-                gridCheckedOut.getChildren().remove(7);
-                gridCheckedOut.getChildren().remove(3);
-            }
-        } else {
-            gridContainer.getChildren().remove(2);  // removes the first separator (3rd element of the HBox)
-            gridContainer.getChildren().remove(1);  // removes the transaction history column (2nd element of the HBox)
-        }
+        // Sets basic part info
         partNameField.setText(row.getPartName().get());
         barcodeField.setText(row.getBarcode().get());
         serialNumberField.setText(row.getSerialNumber().get());
         partIDField.setText("" + row.getPartID().get());
-        // if the row is faulty, set info
-        // otherwise, remove the column for fault info
+
+        // Sets Last Transaction Info if it has ever been checked out
+        int rowNum = 0;
+        // if the part has been checked out before, the student email associated with it will not be empty ("")
+        if (!row.getStudentEmail().get().equals("")) {
+            addField(rowNum, "Student Name:", row.getStudentName().get());
+            rowNum++;
+            addField(rowNum, "Student Email:", row.getStudentEmail().get());
+            rowNum++;
+            boolean isOverdue = false;
+            if (row.getActionType().equals("Check Out")) {
+                Database database = new Database();
+                String className = row.getClassName().get();
+                if (className != null && !className.equals("")) {
+                    addField(rowNum, "Class Name:", className);
+                    rowNum++;
+                    addField(rowNum, "Professor Name:", row.getProfessorName().get());
+                    rowNum++;
+                }
+                isOverdue = database.isOverdue(row.getDueDate().get());
+                if (isOverdue) {
+                    addField(rowNum, "Fee:", "$" + df.format(Double.parseDouble(row.getFee().get())/100));
+                    rowNum++;
+                }
+            }
+            addField(rowNum, row.getActionType() + " Date:", row.getAction());
+            rowNum++;
+            addField(rowNum, "Due Date:", row.getDueDate().get());
+            if (isOverdue) {
+                ((Label) gridCheckedOut.getChildren().get(rowNum * 2)).setStyle("-fx-text-fill: red");
+            }
+            rowNum++;
+        } else {
+            gridContainer.getChildren().remove(2);
+            gridContainer.getChildren().remove(1);
+        }
+
+        // Sets faulty info (removes fee info column if not faulty)
         if (row.sFaulty()) {
             priceField.setText("$" + df.format(Double.parseDouble(row.getFee().get())/100));
             faultField.setText(row.getFaultDescription().get());

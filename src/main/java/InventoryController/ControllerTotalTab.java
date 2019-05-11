@@ -496,7 +496,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                         "" + data.get(i).getBarcode(), data.get(i).getSerialNumber(),
                         data.get(i).getLocation(), database.isOverdue("" + checkoutObject.getDueAt()) ? "In" : "Out",
                         checkoutObject.getCheckoutAtDate(), checkoutObject.getCheckinAtDate(), checkoutObject.getDueAt(),
-                        "" + data.get(i).getPrice(), data.get(i).getFault());
+                        "" + data.get(i).getPrice(), data.get(i).getFault(), checkoutObject.getExtendedCourseName(), checkoutObject.getExtendedProfessor());
                 if (database.isOverdue(checkoutObject.getDueAt())) {
                     row.initFee("" + data.get(i).getPrice());
                 }

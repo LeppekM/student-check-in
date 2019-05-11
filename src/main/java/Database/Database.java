@@ -273,6 +273,7 @@ public class Database implements IController {
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
             DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
             String formattedDate = target.format(getTwoYearsAgo());
+            System.out.println(formattedDate);
             preparedStatement.setString(1, formattedDate);
             preparedStatement.execute();
             preparedStatement.close();
