@@ -64,6 +64,9 @@ public class ControllerEditOnePart extends ControllerEditPart {
         part = null;
     }
 
+    /**
+     * This method sets some fields to not be editable
+     */
     private void disableFields() {
         nameField.setEditable(false);
         manufacturerField.setEditable(false);
@@ -71,6 +74,10 @@ public class ControllerEditOnePart extends ControllerEditPart {
         priceField.setEditable(false);
     }
 
+    /**
+     * This method requires that the editable fields not be editable, and it only allows
+     * the user to enter numbers into the barcode field.
+     */
     private void setFieldValidator() {
         stageWrapper.requiredInputValidator(serialField);
         stageWrapper.requiredInputValidator(barcodeField);
@@ -80,7 +87,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
 
     /**
      * This method is used to pass data into the tab to initialize the text representing the edited part
-     * @param part
+     * @param part the part being edited
      */
     @Override
     public void initPart(Part part) {
@@ -205,21 +212,22 @@ public class ControllerEditOnePart extends ControllerEditPart {
         return isValid;
     }
 
+    /**
+     * Ensures that the serial number inputted is not already used
+     * @return true if unique; false otherwise
+     */
     private boolean validateUniqueSerialNumber() {
         ArrayList<String> serialNumbers = database.getOtherSerialNumbersForPartName(nameField.getText(),"" + part.getPartID());
         return !serialNumbers.contains(serialField.getText());
     }
 
+    /**
+     * Ensures that the barcode inputted is not already used
+     * @return true if unique; false otherwise
+     */
     private boolean validateUniqueBarcode() {
         ArrayList<String> barcodes = database.getOtherBarcodesForPartName(nameField.getText(), "" + part.getPartID());
         return !barcodes.contains(barcodeField.getText());
-    }
-
-    private void uniquePartNameError() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("A part with that name already exists. Choose a different one.");
-        alert.showAndWait();
     }
 
     /**
@@ -267,6 +275,11 @@ public class ControllerEditOnePart extends ControllerEditPart {
         alert.showAndWait();
     }
 
+    /**
+     * This method throws an error that all of the parts that are the same type as the
+     * one being edited have the same barcode, so the user should not edit one.
+     * @param partName the name of the parts being edited
+     */
     private void commonBarcodeError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -274,6 +287,11 @@ public class ControllerEditOnePart extends ControllerEditPart {
         alert.showAndWait();
     }
 
+    /**
+     * This method throws an error that all of the parts that are the same type as the
+     * one being edited have the same serial number, so the user should not edit one.
+     * @param partName the name of the parts being edited
+     */
     private void commonSerialNumberError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -281,13 +299,11 @@ public class ControllerEditOnePart extends ControllerEditPart {
         alert.showAndWait();
     }
 
-    private void nullVendorAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Please select a vendor");
-        alert.showAndWait();
-    }
-
+    /**
+     * This method throws an error that the edited part has the same serial number as
+     * one of the ones with the same type.
+     * @param partName the name of the type of part being edited
+     */
     private void uniqueSerialNumberError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -295,21 +311,15 @@ public class ControllerEditOnePart extends ControllerEditPart {
         alert.showAndWait();
     }
 
+    /**
+     * This method throws an error that the edited part has the same barcode as
+     * one of the ones with the same type.
+     * @param partName the name of the type of part being edited
+     */
     private void uniqueBarcodeError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText(partName + " parts must have unique barcodes.");
-        alert.showAndWait();
-    }
-
-    /**
-     * Creates an alert informing user to enter non-negative numbers that are non-negative
-     */
-    private void numberOutOfRangeAlert(){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Please enter a non-negative number into the price field.");
-
         alert.showAndWait();
     }
 
