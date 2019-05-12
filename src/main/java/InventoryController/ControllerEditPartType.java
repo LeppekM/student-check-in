@@ -65,6 +65,9 @@ public class ControllerEditPartType extends ControllerEditPart {
         part = null;
     }
 
+    /**
+     * This method sets some of the fields to not be editable.
+     */
     private void disableFields() {
         serialField.setEditable(false);
         manufacturerField.setEditable(false);
