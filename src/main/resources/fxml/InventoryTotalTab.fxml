@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="totalTabPage" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerTotalTab">
+<VBox fx:id="totalTabPage" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerTotalTab">
   <children>
     <HBox>
       <children>
@@ -63,7 +63,10 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-          <JFXButton fx:id="add" mnemonicParsing="false" onAction="#addPart" prefHeight="45.0" prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Add" />
+          <JFXButton fx:id="add" mnemonicParsing="false" onAction="#addPart" prefHeight="45.0" prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Add">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin></JFXButton>
          </children>
          <opaqueInsets>
             <Insets bottom="14.0" right="20.0" />

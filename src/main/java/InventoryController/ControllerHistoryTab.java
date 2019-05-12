@@ -159,6 +159,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         });
     }
 
+    /**
+     *
+     */
     public void importTransaction(){
         historyParts = new HistoryParts();
         ObservableList<HistoryItems> list = historyParts.getHistoryItems();
@@ -216,13 +219,17 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
      * clear the checkout table to remove transactions older than 2 years old.
      */
     public void clearOldHistory() {
-        if (isAdmin()) {
+        if (confirmDeleteOldHistory()) {
             database.clearOldHistory();
             populateTable();
         }
     }
 
-    public boolean isAdmin() {
+    /**
+     * Asks whether the user really wants to clear the 2-year-old history.
+     * @return true if yes; false otherwise
+     */
+    public boolean confirmDeleteOldHistory() {
         if (this.worker != null && this.worker.isAdmin()) {
             return (JOptionPane.showConfirmDialog(null, "Are you sure you wish to clear the transaction " +
                     "history for non-faulty parts older than 2 years:") == JOptionPane.YES_OPTION);
