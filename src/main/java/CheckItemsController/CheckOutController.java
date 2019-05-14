@@ -13,7 +13,6 @@ import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -37,7 +35,6 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
@@ -226,14 +223,14 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     return;
                 }
                 if (newStudentIsCheckingOutItem()) {
-                    createNewStudent();
+                    noStudentError();
                     return;
                 }
                 extendedCheckoutHelper(thisStudent.getRFID());
             } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
                 faultyCheckinHelper();
             } else if (newStudentIsCheckingOutItem()) {
-                createNewStudent();
+                noStudentError();
                 return;
             } else {
                 submitMultipleItems();
@@ -256,14 +253,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return studentNameField.getText().isEmpty();
     }
 
-    private String faultyItem() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Faulty Description");
-        dialog.setHeaderText("Please enter description of faulty item");
-        dialog.setContentText("Please enter description of faulty item");
-        dialog.showAndWait();
-        return dialog.getResult();
-    }
 
     /**
      * If student has overdue items, system will ask for override to checkout more items.
@@ -514,19 +503,50 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 } else if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                     studentName = student.getStudentNameFromID(studentID.getText());
                 }
-                if (studentName.isEmpty()) { //If no student is found in database create new one
-                    //setNewStudentDropdown();
+                if (studentName.isEmpty()) { //If no student is found in database create new
+                    String studentEmail = newStudentEmail();
+                    studentName = student.getStudentNameFromEmail(studentEmail);
+                    if(studentName.isEmpty()){//Means student doesn't exist in database
+                        studentName = newStudentName();
+                        student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail, studentName);
+
+                    }
+                    updateStudent(studentEmail);
                 }
                 studentNameField.setText(studentName);
             }
         });
     }
 
+    private void updateStudent(String studentEmail){
+        student.updateStudent(studentEmail, Integer.parseInt(getstudentID()));
+    }
+
+    private String newStudentName(){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("New Student Creation");
+        dialog.setHeaderText("Student Name is not in system.\n Please enter name to continue ");
+        dialog.setContentText("Please enter Student Name");
+        dialog.showAndWait();
+        return dialog.getResult();
+
+    }
+
+    private String newStudentEmail(){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("New Student Creation");
+        dialog.setHeaderText("Student ID is not in system.\n Please enter email to continue ");
+        dialog.setContentText("Please enter Student Email");
+        dialog.showAndWait();
+        return dialog.getResult();
+    }
+
+
 
     /**
      * Adds new student to database
      */
-    private void createNewStudent() {
+    private void noStudentError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("No student found in the system with associated ID");

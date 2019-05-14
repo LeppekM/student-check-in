@@ -33,6 +33,23 @@ public class StudentInfo {
         return sName;
     }
 
+    public void updateStudent(String studentEmail, int studentID){
+        String query = " update students\n" +
+                "  set studentID = ?\n" +
+                " where email = ?";
+
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,studentID);
+            preparedStatement.setString(2, studentEmail);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
     private PreparedStatement createNewStudentHelper(int studentID, String email, String studentName, PreparedStatement preparedStatement){
         try {
             preparedStatement.setInt(1, studentID);
