@@ -699,7 +699,7 @@ public class Database implements IController {
                 pass = resultSet.getString("pass");
                 email = resultSet.getString("email");
                 pin = resultSet.getInt("pin");
-                admin = resultSet.getByte("confirmDeleteOldHistory") == 1;
+                admin = resultSet.getByte("isAdmin") == 1;
                 parts = resultSet.getByte("editParts") == 1;
                 over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;

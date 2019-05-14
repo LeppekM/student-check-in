@@ -24,14 +24,22 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -56,9 +64,6 @@ public class ControllerManageStudents implements IController, Initializable {
 
     @FXML
     private JFXTextField searchInput;
-
-    @FXML
-    private Button addStudent;
 
     private JFXTreeTableColumn<ManageStudentsTabTableRow, String> nameCol, idCol, emailCol;
 
@@ -274,6 +279,39 @@ public class ControllerManageStudents implements IController, Initializable {
             database.addStudent(new Student(name.toString(), Integer.parseInt(id), email));
         }
         populateTable();
+    }
+
+    @FXML
+    private void importStudents() {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Import Students");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
+//        fileChooser.setSelectedExtensionFilter();
+
+            File file = fileChooser.showOpenDialog(manageStudentsTable.getScene().getWindow());
+            FileInputStream fis = new FileInputStream(file);
+            XSSFWorkbook workbook = new XSSFWorkbook(fis);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIt = sheet.iterator();
+
+            while (rowIt.hasNext()) {
+                Row row = rowIt.next();
+//                Iterator<Cell> cellIterator = row.cellIterator();
+                if (row.getCell(1) != null && row.getCell(3) != null) {
+                    String name = row.getCell(1).toString();
+                    String email = row.getCell(3).toString();
+                } else {
+                    System.out.println("bad formatted row");
+                }
+//                while (cellIterator.hasNext()) {
+//                    Cell cell = cellIterator.next();
+//                    System.out.println(cell.toString());
+//                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
