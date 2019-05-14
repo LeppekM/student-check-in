@@ -1,11 +1,13 @@
 package InventoryController;
 
 import Database.FaultyPartLookup;
+import Database.ObjectClasses.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -222,5 +225,23 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                         || (faultDescription != null && faultDescription.toLowerCase().contains(input)));
             }
         });
+    }
+
+    public void resolveFault(ActionEvent actionEvent) {
+        if (faultyTable.getSelectionModel().getSelectedItems().size() == 1) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to remove fault?");
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+            alert.setTitle("Remove Faulty Part?");
+            alert.setHeaderText("Removing Faulty Part...");
+            alert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    int index = faultyTable.getSelectionModel().getFocusedIndex();
+                    FaultyPartTabTableRow part = faultyTable.getSelectionModel().getModelItem(index).getValue();
+                    database.resolveFault(Integer.parseInt(part.getBarcode().get()), part.getPartName().get());
+                } else if (buttonType == ButtonType.NO) {
+                    alert.close();
+                }
+            });
+        }
     }
 }
