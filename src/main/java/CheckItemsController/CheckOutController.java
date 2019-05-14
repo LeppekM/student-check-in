@@ -203,9 +203,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
      */
     public void submit() {
-        if(!fieldsFilled()){
-            return;
-        }
         Student thisStudent = null;
         if (containsNumber(getstudentID())) {
             thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
@@ -240,6 +237,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
     }
 
+    /**
+     * Helper method to check if extended fields are filled out
+     * @return True if any of the fields are left empty
+     */
     private boolean extendedFieldsNotFilled(){
         return (professor == null || course == null || dueDate ==null);
     }
@@ -277,6 +278,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return true;
     }
 
+    /**
+     * Request for admin pin.
+     * @param action Action required; pin to be entered
+     * @return True if pin is correct
+     */
     public boolean requestAdminPin(String action) {
         AtomicBoolean isValid = new AtomicBoolean(false);
         try {
@@ -391,8 +397,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return status.getText().equals("Out");
     }
 
+    /**
+     * Helper method to check if barcode is empty
+     * @param barcode Barcode field to be checked
+     * @return True if barcode is not empty
+     */
     private boolean barcodeIsNotEmpty(JFXTextField barcode) {
-        return !(barcode.getText().isEmpty() || barcode.getText().equals("Removed"));
+        return !(barcode.getText().isEmpty());
     }
 
 
@@ -487,7 +498,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
     /**
-     * Gets student name
+     * Gets student name. If no student name is found in database it will create a new student, or update student.
      */
     private void getStudentName() {
         studentID.focusedProperty().addListener((ov, oldV, newV) -> {
@@ -503,13 +514,12 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 } else if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                     studentName = student.getStudentNameFromID(studentID.getText());
                 }
-                if (studentName.isEmpty()) { //If no student is found in database create new
+                if (studentName.isEmpty()) { //If student ID isn't in DB, asks for email to attach the id to.
                     String studentEmail = newStudentEmail();
                     studentName = student.getStudentNameFromEmail(studentEmail);
-                    if(studentName.isEmpty()){//Means student doesn't exist in database
+                    if(studentName.isEmpty()){//Means student doesn't exist in database, so completely new one will be created
                         studentName = newStudentName();
                         student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail, studentName);
-
                     }
                     updateStudent(studentEmail);
                 }
@@ -518,20 +528,32 @@ public class CheckOutController extends ControllerMenu implements IController, I
         });
     }
 
+    /**
+     * Updates student info given an email, will add the student ID
+     * @param studentEmail Email to be checked for
+     */
     private void updateStudent(String studentEmail){
         student.updateStudent(studentEmail, Integer.parseInt(getstudentID()));
     }
 
+    /**
+     * Asks user for a student name
+     * @return Student name
+     */
     private String newStudentName(){
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Student Creation");
-        dialog.setHeaderText("Student Name is not in system.\n Please enter name to continue ");
-        dialog.setContentText("Please enter Student Name");
+        dialog.setHeaderText("Student Name is Not in System.\n Please Enter Name to Continue ");
+        dialog.setContentText("Please Enter Student Name");
         dialog.showAndWait();
         return dialog.getResult();
 
     }
 
+    /**
+     * Asks user for student email
+     * @return Student email
+     */
     private String newStudentEmail(){
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Student Creation");
@@ -607,9 +629,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return result.get() == ButtonType.OK;
     }
 
-    private boolean trus() {
-        return true;
-    }
+
 
     /**
      * Sets checkin information
@@ -965,6 +985,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
         });
     }
 
+    /**
+     * Checks if barcodes are same
+     * @param barcode to be checked
+     * @return true if barcodes are same
+     */
     private boolean barcodesSame(long barcode) {
         return checkOut.getAllBarcodes(barcode).get(0).equals(checkOut.getAllBarcodes(barcode).get(1));
     }
@@ -1005,11 +1030,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
             }
         });
         rfidFilter(studentID);
-
-    }
-
-    private void setStudentEmailSuggestionListener() {
-        ObservableList<Student> students = database.getStudents();
 
     }
 
@@ -1088,6 +1108,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
         });
     }
 
+    /**
+     * If new rfid is scanned, submits the checkout
+     * @param textField Textfield for change to be applied to
+     */
     private void acceptIntegerOnlyCheckout(JFXTextField textField) {
 
         UnaryOperator<TextFormatter.Change> filter = change -> {
@@ -1106,6 +1130,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
         textField.setTextFormatter(textFormatter);
     }
 
+    /**
+     * Filters for rfid
+     * @param textField Textfield to be filtered
+     */
     private void rfidFilter(JFXTextField textField){
         textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -1121,23 +1149,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
             }
         });
-//        String id = textField.getText();
-//        if(textField.getText().contains("rfid:")){
-//            textField.setText(id.substring(5));
-//        }
 
-//        UnaryOperator<TextFormatter.Change> filter = change -> {
-//            String text = change.getText();
-////            id.add(text);
-//            if(text.matches("[^rfid: ]")){
-//                return change;
-//            }
-//            return null;
-//        };
-//        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-//        textField.setTextFormatter(textFormatter);
     }
-
-
-
 }
