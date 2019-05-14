@@ -197,7 +197,7 @@ public class StudentPage implements IController {
 
     public void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/test.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckOutPage.fxml"));
             Parent root = loader.load();
             main.getScene().setRoot(root);
             ((CheckOutController) loader.getController()).initCheckoutObject(checkoutObject);

@@ -15,7 +15,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 import java.io.IOException;
 import java.net.URL;
@@ -91,7 +90,7 @@ public class ControllerMenu implements IController, Initializable {
     }
 
     public void openCheckItemsPage(){
-        newStage("/fxml/test.fxml");
+        newStage("/fxml/CheckOutPage.fxml");
     }
 
     private void openManageWorkers() {
@@ -139,7 +138,7 @@ public class ControllerMenu implements IController, Initializable {
     public void openCheckoutFromScanner(KeyEvent keyEvent){
         studentIDArray.add(keyEvent.getCharacter());
         if(stageWrapper.getStudentID(studentIDArray).matches("^(rfid)$")) {
-                newStage("/fxml/test.fxml");
+                newStage("/fxml/CheckOutPage.fxml");
             }
     }
 
