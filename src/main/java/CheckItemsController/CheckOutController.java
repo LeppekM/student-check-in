@@ -136,7 +136,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private void submitTimer() {
         int duration = 5;
-        delay = new PauseTransition(Duration.seconds(duration));
+        delay = new PauseTransition(Duration.minutes(duration));
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
         delay.setOnFinished(event -> submit());
         delay.play();
