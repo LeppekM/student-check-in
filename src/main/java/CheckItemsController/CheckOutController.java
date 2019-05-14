@@ -559,7 +559,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Resets all fields
      */
     public void reset() {
-        stageWrapper.newStage("/fxml/test.fxml", main, worker);
+        stageWrapper.newStage("/fxml/CheckOutPage.fxml", main, worker);
     }
 
     /**

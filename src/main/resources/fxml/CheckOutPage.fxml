@@ -61,7 +61,7 @@
                <children>
                   <StackPane fx:id="faultPane" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
-                        <TextArea fx:id="faultyArea" prefHeight="200.0" prefWidth="383.0" visible="false" />
+                        <TextArea fx:id="faultyArea" prefHeight="200.0" prefWidth="383.0" promptText="Please enter a description of the fault" visible="false" />
                      </children>
                   </StackPane>
                   <AutoCompleteTextField fx:id="studentID" focusColor="FIREBRICK" GridPane.columnIndex="1" />
