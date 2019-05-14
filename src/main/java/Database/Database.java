@@ -311,11 +311,13 @@ public class Database implements IController {
      */
     public void resolveFault(int barcode, String name){
         int partID = getPartID(barcode, name);
-        String query = "update fault set isFaulty = 0, description = null, updatedAt = date('" + gettoday() + "'), updatedBy = '" +
-                worker.getName() + "' where partID = " + partID + ";";
+        String query = "delete from fault where partID = " + partID + ";";
+        String pquery = "update parts set isFaulty = 0, updatedAt = date('" + gettoday() + "'), updatedBy = '" +
+                this.worker.getName() + "' where partID = " + partID + ";";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
+            statement.executeUpdate(pquery);
             statement.close();
         }catch (SQLException e){
             e.printStackTrace();

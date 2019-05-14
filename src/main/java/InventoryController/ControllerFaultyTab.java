@@ -1,7 +1,9 @@
 package InventoryController;
 
+import Database.Database;
 import Database.FaultyPartLookup;
 import Database.ObjectClasses.Part;
+import Database.ObjectClasses.Worker;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
@@ -57,6 +59,9 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     private static ObservableList<FaultyPartTabTableRow> data
             = FXCollections.observableArrayList();
 
+    private Worker worker;
+    private Database database;
+
     /**
      * This method sets the data in the faulty page.
      * @param location used to resolve relative paths for the root object, or null if the location is not known.
@@ -69,6 +74,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         emptyTableLabel.setFont(new Font(18));
 //        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         faultyTable.setPlaceholder(emptyTableLabel);
+        database = new Database();
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
@@ -238,10 +244,24 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                     int index = faultyTable.getSelectionModel().getFocusedIndex();
                     FaultyPartTabTableRow part = faultyTable.getSelectionModel().getModelItem(index).getValue();
                     database.resolveFault(Integer.parseInt(part.getBarcode().get()), part.getPartName().get());
+                    populateTable();
                 } else if (buttonType == ButtonType.NO) {
                     alert.close();
                 }
             });
+        }
+    }
+
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each class.
+     * @param worker the currently logged in worker
+     */
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null){
+            this.worker = worker;
+            database.initWorker(worker);
         }
     }
 }
