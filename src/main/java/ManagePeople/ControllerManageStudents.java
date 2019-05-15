@@ -405,25 +405,29 @@ public class ControllerManageStudents implements IController, Initializable {
                 Parent root = loader.load();
                 EditStudent sp = loader.getController();
                 sp.setStudent(s);
+                sp.initWorker(worker);
                 Scene scene = new Scene(root, 840, 630);
                 stage.setTitle("Edit " + s.getName());
                 stage.initOwner(manageStudentsScene.getScene().getWindow());
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.setScene(scene);
                 stage.getIcons().add(new Image("images/msoe.png"));
-                stage.setOnCloseRequest(event1 -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
-                    alert.setTitle("Confirm Close");
-                    alert.setHeaderText("If you leave now, unsaved changes could be lost.");
-                    alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-                    alert.showAndWait().ifPresent(buttonType -> {
-                        if (buttonType == ButtonType.YES){
-                            stage.close();
-                        }else if (buttonType == ButtonType.NO){
-                            event1.consume();
-                        }
+                stage.setOnHiding(event1 -> populateTable());
+                if (sp.changed()) {
+                    stage.setOnCloseRequest(event1 -> {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
+                        alert.setTitle("Confirm Close");
+                        alert.setHeaderText("If you leave now, unsaved changes could be lost.");
+                        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+                        alert.showAndWait().ifPresent(buttonType -> {
+                            if (buttonType == ButtonType.YES) {
+                                stage.close();
+                            } else if (buttonType == ButtonType.NO) {
+                                event1.consume();
+                            }
+                        });
                     });
-                });
+                }
                 stage.show();
                 populateTable();
             }catch (IOException e){

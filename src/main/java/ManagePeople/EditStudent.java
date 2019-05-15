@@ -213,8 +213,12 @@ public class EditStudent implements IController {
         return student;
     }
 
+    public boolean changed(){
+        return !name.equals(studentName.getText()) || id != Integer.parseInt(RFID.getText()) || !studentEmail.equals(email.getText());
+    }
+
     public void save(ActionEvent actionEvent) {
-        if (name.equals(studentName.getText()) && id == Integer.parseInt(RFID.getText()) && studentEmail.equals(email.getText())){
+        if (!changed()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
@@ -240,6 +244,7 @@ public class EditStudent implements IController {
                 database.updateStudent(student);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
                 alert1.showAndWait();
+                main.getScene().getWindow().hide();
             }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
                 studentName.setText(name);
                 RFID.setText(id + "");
@@ -256,6 +261,7 @@ public class EditStudent implements IController {
     public void initWorker(Worker worker) {
         if (this.worker == null){
             this.worker = worker;
+            database.initWorker(worker);
         }
     }
 }
