@@ -986,7 +986,7 @@ public class Database implements IController {
      * importing a bunch of students when the rfid is unknown.
      * @param s the student to be added
      */
-    public void importStudent(Student s) {
+    public boolean importStudent(Student s) {
         String query = "insert into students (email, studentName, createdAt, createdBy) values ('" +
                 s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), '" + this.worker.getName() + "');";
         try {
@@ -996,10 +996,17 @@ public class Database implements IController {
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
             StudentCheckIn.logger.error("Could not add student " + s.getName() + ", SQL Exception");
-            System.out.println("BOO: " + query);
             alert.showAndWait();
             e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
+            StudentCheckIn.logger.error("Could not add student " + s.getName() + ", SQL Exception");
+            alert.showAndWait();
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public void updateStudent(Student s){

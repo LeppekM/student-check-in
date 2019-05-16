@@ -21,7 +21,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
@@ -29,7 +28,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -39,9 +37,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -280,35 +279,48 @@ public class ControllerManageStudents implements IController, Initializable {
                 rowIt.next();
             }
 
+            List<Student> failedImports = new ArrayList<>();
             // parse the rest of the rows
             while (rowIt.hasNext()) {
                 Row row = rowIt.next();
-//                Iterator<Cell> cellIterator = row.cellIterator();
                 if (row.getCell(0) != null && row.getCell(3) != null) {
+                    String email = row.getCell(3).toString();
                     String name = row.getCell(0).toString();
-                    String lastName = name.substring(0, name.indexOf(", "));
-                    String restOfName = name.substring(name.indexOf(", ") + 2);
-                    String firstName;
-                    if (restOfName.contains(" ")) {
-                        firstName = restOfName.substring(0, restOfName.indexOf(" "));
-                    } else {
-                        firstName = restOfName;
-                    }
-                    if (restOfName.contains(", ")) {
-                        lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
-                    }
-                    String email = row.getCell(3).toString().replace("'", "\'");
-                    System.out.println(firstName + " " + lastName + ": " + email);
-                    if (!email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
-                        System.out.println("bad email");
-                    } else if (!database.getStudentEmails().contains(email)) {
-                        database.importStudent(new Student((firstName + " " + lastName).replace("'", "\""), email));
+                    try {
+                        String lastName = name.substring(0, name.indexOf(", "));
+                        String restOfName = name.substring(name.indexOf(", ") + 2);
+                        String firstName;
+                        if (restOfName.contains(" ")) {
+                            firstName = restOfName.substring(0, restOfName.indexOf(" "));
+                        } else {
+                            firstName = restOfName;
+                        }
+                        if (restOfName.contains(", ")) {
+                            lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
+                        }
+                        if (!email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                            failedImports.add(new Student(firstName + " " + lastName, email));
+                        } else {
+                            email = email.replace("'", "\\'");
+                            if (!database.getStudentEmails().contains(email)) {
+                                if (!database.importStudent(new Student((firstName + " " + lastName).replace("'", "\\'"), email))) {
+                                    failedImports.add(new Student(firstName + " " + lastName, email));
+                                }
+                            }
+                        }
+                    } catch (StringIndexOutOfBoundsException e) {
+                        failedImports.add(new Student(name, email));
                     }
                 } else {
-                    System.out.println("wrong number of columns");
+                    wrongNumRowsAlert();
                 }
+
             }
             populateTable();
+
+            if (failedImports.size() > 0) {
+                failedImportAlert(failedImports);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -462,4 +474,31 @@ public class ControllerManageStudents implements IController, Initializable {
         StudentCheckIn.logger.error("The pin entered is invalid.");
         alert.showAndWait();
     }
+
+    private void wrongNumRowsAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("The name must be in the first row and the email must be in the fourth row of the imported excel file.");
+        StudentCheckIn.logger.error("The name must be in the first row and the email must be in the fourth row of the imported excel file.");
+        alert.showAndWait();
+    }
+
+    private void failedImportAlert(List<Student> failedImports) {
+        List<String> lines = new ArrayList<>();
+        for (Student student : failedImports) {
+            lines.add(student.getName());
+        }
+        try {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            Path file = Paths.get("failed_students_import.txt");
+            alert.setContentText("The program failed to import the students listed in the text file: \"" + file.getFileName() + "\"");
+            StudentCheckIn.logger.error("The program failed to import the students listed in the text file: \"" + file.getFileName() + "\"");
+            Files.write(file, lines);
+            alert.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
