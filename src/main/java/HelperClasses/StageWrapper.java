@@ -105,9 +105,10 @@ public class StageWrapper {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
             invoke.printStackTrace();
-        } catch (NullPointerException e) {
-            StudentCheckIn.logger.error("Checkout page timer");
         }
+//        } catch (NullPointerException e) {
+//            StudentCheckIn.logger.error("Checkout page timer");
+//        }
     }
 
     public String getStudentID(List<String> list) {

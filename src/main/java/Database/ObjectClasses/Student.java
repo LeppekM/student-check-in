@@ -5,6 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import Database.OverdueItem;
 
+/**
+ * This class is a Java Object that represents a Student
+ */
 public class Student {
 
     private String name;
