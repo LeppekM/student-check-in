@@ -1,5 +1,6 @@
 USE student_check_in;
 
+# This loads all the initial parts to the database
 DROP PROCEDURE IF EXISTS load_parts;
 CREATE PROCEDURE load_parts()
   BEGIN
@@ -234,6 +235,7 @@ CREATE PROCEDURE load_parts()
     COMMIT;
   END;
 
+# This loads all the vendors
 DROP PROCEDURE IF EXISTS load_vendors;
 CREATE PROCEDURE load_vendors()
   BEGIN
@@ -250,7 +252,7 @@ CREATE PROCEDURE load_vendors()
     COMMIT;
   END;
 
-
+# Loads all the students
 DROP PROCEDURE IF EXISTS load_students;
 CREATE PROCEDURE load_students()
   BEGIN
@@ -264,6 +266,7 @@ CREATE PROCEDURE load_students()
     VALUE (22222, 'John@msoe.edu', 'John Johnson', '2018-1-14', 'Jim');
   END;
 
+# Loads all the workers
 DROP PROCEDURE IF EXISTS load_workers;
 CREATE PROCEDURE load_workers()
   BEGIN
@@ -287,6 +290,7 @@ CREATE PROCEDURE load_workers()
     VALUES ('test4@msoe.edu', 'Worker Admin', 'Sharks12', 0, 0, 0, 0, 0, 1, '2019-2-11', 'Jim');
   end;
 
+# Creates the parts table
 drop table if exists parts;
 create table parts (
   partID       int         NOT NULL AUTO_INCREMENT,
@@ -313,6 +317,7 @@ create table parts (
 
 CALL load_parts();
 
+# Creates the checkout table
 drop table if exists checkout;
 create table checkout (
   checkoutID int    NOT NULL AUTO_INCREMENT,
@@ -333,7 +338,7 @@ create table checkout (
   PRIMARY KEY (checkoutID)
 );
 
-
+# Creates the vendors table
 drop table if exists vendors;
 create table vendors (
   vendorID    int NOT NULL AUTO_INCREMENT,
@@ -344,6 +349,7 @@ create table vendors (
 
 call load_vendors();
 
+# Creates the students table
 drop table if exists students;
 create table students (
   uniqueID    int                NOT NULL AUTO_INCREMENT,
@@ -359,6 +365,7 @@ create table students (
 
 call load_students();
 
+# Creates the workers table
 drop table if exists workers;
 create table workers (
   workerID    int                NOT NULL AUTO_INCREMENT,
@@ -380,6 +387,7 @@ create table workers (
 
 call load_workers();
 
+# Creates the faults table
 drop table if exists fault;
 create table fault (
   checkoutID  int NOT NULL,

@@ -73,7 +73,6 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * This method sets the data in the Manage Students page.
-     *
      * @param location  used to resolve relative paths for the root object, or null if the location is not known.
      * @param resources used to localize the root object, or null if the root object was not localized.
      */
@@ -131,8 +130,8 @@ public class ControllerManageStudents implements IController, Initializable {
                         email = tableRow.getValue().getEmail().getValue();
 
                         return ((name != null && name.toLowerCase().contains(input))
-                                || (id != null && id.toLowerCase().contains(input))
-                                || (email != null && email.toLowerCase().contains(input)));
+                            || (id != null && id.toLowerCase().contains(input))
+                            || (email != null && email.toLowerCase().contains(input)));
                     }
                 });
             }
@@ -164,6 +163,10 @@ public class ControllerManageStudents implements IController, Initializable {
         populateTable();
     }
 
+    /**
+     * This method fills the table with the data, if there is any
+     *
+     */
     public void populateTable() {
         tableRows.clear();
         manageStudentsTable.getColumns().clear();
@@ -185,6 +188,10 @@ public class ControllerManageStudents implements IController, Initializable {
         manageStudentsTable.setShowRoot(false);
     }
 
+    /**
+     * This method uses JOptionpane pop ups to create a new student
+     *
+     */
     public void addStudent() {
         StringBuilder name = new StringBuilder();
         String id = "";
@@ -201,26 +208,26 @@ public class ControllerManageStudents implements IController, Initializable {
                 }
                 if (!id.matches("[a-zA-Z]*") && id.length() == 5) {
                     if (!database.selectStudent(Integer.parseInt(id), null).getName().equals("")) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database!");
-                        StudentCheckIn.logger.info("Manage Students: Student is already in the database!");
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database.");
+                        StudentCheckIn.logger.info("Manage Students: Student is already in the database.");
                         alert.showAndWait();
                         notIncluded = false;
                         break;
                     }
                     invalid = false;
                 } else {
-                    JOptionPane.showMessageDialog(null, "Students RFID is invalid.");
+                    JOptionPane.showMessageDialog(null, "Student's RFID is invalid.");
                     StudentCheckIn.logger.error("Manage Students: Student's RFID is invalid.");
                 }
-            } else {
+            }else {
                 break;
             }
         }
         invalid = true;
         Pattern p = Pattern.compile("[0-9]*");
         Matcher m;
-        while (invalid && notIncluded) {
-            String input = JOptionPane.showInputDialog(null, "Please enter the students first name.");
+        while (invalid && notIncluded){
+            String input = JOptionPane.showInputDialog(null, "Please enter the student's first name.");
             if (input != null) {
                 m = p.matcher(input);
                 name = new StringBuilder(input);
@@ -229,16 +236,16 @@ public class ControllerManageStudents implements IController, Initializable {
                     name = new StringBuilder(temp);
                     invalid = false;
                 } else {
-                    JOptionPane.showMessageDialog(null, "Students first name is invalid or blank.");
+                    JOptionPane.showMessageDialog(null, "Student's first name is invalid or blank.");
                     StudentCheckIn.logger.error("Manage Students: Student's first name is invalid or blank.");
                 }
-            } else {
+            }else {
                 break;
             }
         }
         invalid = true;
-        while (invalid && notIncluded) {
-            String input = JOptionPane.showInputDialog(null, "Please enter the students last name.");
+        while (invalid && notIncluded){
+            String input = JOptionPane.showInputDialog(null, "Please enter the student's last name.");
             if (input != null) {
                 m = p.matcher(input);
                 name.append(" ");
@@ -249,32 +256,32 @@ public class ControllerManageStudents implements IController, Initializable {
                     name = new StringBuilder(temp);
                     invalid = false;
                 } else {
-                    JOptionPane.showMessageDialog(null, "Students last name is invalid or blank.");
+                    JOptionPane.showMessageDialog(null, "Student's last name is invalid or blank.");
                     StudentCheckIn.logger.error("Manage Students: Student's last name is invalid or blank.");
                 }
-            } else {
+            }else {
                 break;
             }
         }
         invalid = true;
-        while (invalid && notIncluded) {
-            email = JOptionPane.showInputDialog(null, "Please enter the students MSOE email.");
+        while (invalid && notIncluded){
+            email = JOptionPane.showInputDialog(null, "Please enter the student's MSOE email.");
             if (email != null) {
                 ObservableList<Student> students = database.getStudents();
-                if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                if (email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                     invalid = false;
-                    for (Student s : students) {
+                    for (Student s: students){
                         if (s.getEmail().equals(email)) {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student email already in use try another");
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student email already in use. Try another.");
                             alert.showAndWait();
                             invalid = true;
                         }
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Students email must be their MSOE email.");
+                    JOptionPane.showMessageDialog(null, "Student's email must be their MSOE email.");
                     StudentCheckIn.logger.error("Manage Students: Student's email must be their MSOE email.");
                 }
-            } else {
+            }else {
                 break;
             }
         }
@@ -285,6 +292,10 @@ public class ControllerManageStudents implements IController, Initializable {
         populateTable();
     }
 
+    /**
+     * This method takes in an Excel file to import a list of students
+     *
+     */
     @FXML
     private void importStudents() {
         database.initWorker(worker);
@@ -371,6 +382,10 @@ public class ControllerManageStudents implements IController, Initializable {
         }
     }
 
+    /**
+     * Deletes a student
+     * @param actionEvent button event
+     */
     public void deleteStudent(ActionEvent actionEvent) {
         if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0) {
             if ((worker != null && worker.isAdmin())
@@ -388,6 +403,11 @@ public class ControllerManageStudents implements IController, Initializable {
         }
     }
 
+    /**
+     * Brings up the request pin pop up
+     * @param action reason for pop up
+     * @return true if the pin is valid
+     */
     public boolean requestAdminPin(String action) {
         AtomicBoolean isValid = new AtomicBoolean(false);
         try {
@@ -430,10 +450,14 @@ public class ControllerManageStudents implements IController, Initializable {
         return isValid.get();
     }
 
+    /**
+     * This brings up the edit student window
+     * @param row row in the table that the student is selected
+     */
     public void edit(int row) {
         Stage stage = new Stage();
         ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(row).getValue();
-        Student s = database.selectStudent(Integer.parseInt(r.getId().get()), null);
+        Student s = database.selectStudent(-1, r.getEmail().get());
         try {
             URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
@@ -477,7 +501,6 @@ public class ControllerManageStudents implements IController, Initializable {
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each necessary class
-     *
      * @param worker the currently logged in worker
      */
     @Override
@@ -498,6 +521,9 @@ public class ControllerManageStudents implements IController, Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * This is an error that shows up if there is a format error in the excel file
+     */
     private void wrongNumRowsAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -506,6 +532,10 @@ public class ControllerManageStudents implements IController, Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * This is an error that shows up if a student(s) can't be imported
+     * @param failedImports list of failed students
+     */
     private void failedImportAlert(List<Student> failedImports) {
         List<String> lines = new ArrayList<>();
         for (Student student : failedImports) {

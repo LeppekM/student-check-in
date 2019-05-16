@@ -967,8 +967,10 @@ public class Database implements IController {
      * @param s student to be added
      */
     public void addStudent(Student s){
+        String email = s.getEmail().replace("'", "\\'");
+        String name = s.getName().replace("'", "\\'");
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), '" + this.worker.getName() + "');";
+                + ", '" + email + "', '" + name + "', date('" + gettoday() + "'), '" + this.worker.getName() + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);

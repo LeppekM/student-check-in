@@ -73,6 +73,10 @@ public class EditStudent implements IController {
     private static int id;
     private static String studentEmail;
 
+    /**
+     * This method sets the student in this class and in the window
+     * @param s student
+     */
     public void setStudent(Student s) {
         student = s;
         database = new Database();
@@ -87,6 +91,9 @@ public class EditStudent implements IController {
         setTables();
     }
 
+    /**
+     * This method creates the tables and effects on the tables
+     */
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
         coTableCol.prefWidthProperty().bind(coTable.widthProperty());
@@ -124,6 +131,9 @@ public class EditStudent implements IController {
         populateTables();
     }
 
+    /**
+     * This method fills the tables with data if there is any
+     */
     private void populateTables() {
         final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
         final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
@@ -139,6 +149,10 @@ public class EditStudent implements IController {
         sTable.setShowRoot(false);
     }
 
+    /**
+     * This method opens the checkout pop up for a student
+     * @param event double click
+     */
     public void coPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
@@ -162,6 +176,10 @@ public class EditStudent implements IController {
         }
     }
 
+    /**
+     * This method opens the overdue pop up for a student
+     * @param event double click
+     */
     public void oPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
@@ -186,6 +204,10 @@ public class EditStudent implements IController {
         }
     }
 
+    /**
+     * This method opens the saved part pop up for a student
+     * @param event double click
+     */
     public void sPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
             Stage stage = new Stage();
@@ -209,14 +231,26 @@ public class EditStudent implements IController {
         }
     }
 
+    /**
+     * Gets the student being edited
+     * @return student
+     */
     public static Student getStudent() {
         return student;
     }
 
+    /**
+     * Helper method for saving a students info
+     * @return true if nothing changed
+     */
     public boolean changed(){
         return !name.equals(studentName.getText()) || id != Integer.parseInt(RFID.getText()) || !studentEmail.equals(email.getText());
     }
 
+    /**
+     * This method saves the changes made to a student and ensures the user wants to
+     * @param actionEvent button
+     */
     public void save(ActionEvent actionEvent) {
         if (!changed()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
