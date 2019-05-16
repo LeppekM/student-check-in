@@ -283,6 +283,48 @@ public class Database implements IController {
     }
 
     /**
+     * Helper method to remove a fault
+     * @param barcode barcode of faulty part
+     * @param name name of faulty part
+     * @return partID
+     */
+    private int getPartID(int barcode, String name){
+        String query = "select * from parts where partName = '" + name + "' and barcode = " + barcode + ";";
+        int ID = 0;
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                ID = resultSet.getInt("partID");
+            }
+            statement.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return ID;
+    }
+
+    /**
+     * Removes faulty part from table
+     * @param barcode barcode of faulty part
+     * @param name name of faulty part
+     */
+    public void resolveFault(int barcode, String name){
+        int partID = getPartID(barcode, name);
+        String query = "delete from fault where partID = " + partID + ";";
+        String pquery = "update parts set isFaulty = 0, updatedAt = date('" + gettoday() + "'), updatedBy = '" +
+                this.worker.getName() + "' where partID = " + partID + ";";
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            statement.executeUpdate(pquery);
+            statement.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Gets the fault description for the part with the matching part ID
      * @param partID the part ID for the part being checked
      * @return the fault description of the part

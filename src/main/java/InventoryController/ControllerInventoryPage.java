@@ -166,6 +166,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
             this.worker = worker;
             totalTabPageController.initWorker(worker);
             historyTabPageController.initWorker(worker);
+            faultyTabPageController.initWorker(worker);
         }
     }
 

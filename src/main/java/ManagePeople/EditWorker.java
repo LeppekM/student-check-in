@@ -97,11 +97,14 @@ public class EditWorker implements IController {
         vbox.setSpacing(5);
     }
 
+    public boolean changed(){
+        return !name.equals(workerName.getText()) || !password.equals(pass.getText()) || !workerEmail.equals(email.getText()) ||
+                priv != admin.isSelected() || edit != editParts.isSelected() || over != overdue.isSelected() ||
+                work != workers.isSelected() || remove != removeParts.isSelected();
+    }
 
     public void save(ActionEvent actionEvent) {
-        if (name.equals(workerName.getText()) && password.equals(pass.getText()) && workerEmail.equals(email.getText()) &&
-                priv == admin.isSelected() && edit == editParts.isSelected() && over == overdue.isSelected() &&
-                work == workers.isSelected() && remove == removeParts.isSelected()){
+        if (!changed()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
@@ -148,6 +151,7 @@ public class EditWorker implements IController {
                 database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
                 alert1.showAndWait();
+                main.getScene().getWindow().hide();
             }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
                 workerName.setText(name);
                 email.setText(workerEmail);

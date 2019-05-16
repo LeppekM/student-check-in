@@ -74,10 +74,13 @@ public class EditAdmin implements IController {
         vbox.setSpacing(5);
     }
 
+    public boolean changed(){
+        return !name.equals(workerName.getText()) || !password.equals(pass.getText()) || !workerEmail.equals(email.getText()) ||
+                adminPin != Integer.parseInt(pin.getText());
+    }
 
     public void save(ActionEvent actionEvent) {
-        if (name.equals(workerName.getText()) && password.equals(pass.getText()) && workerEmail.equals(email.getText()) &&
-                adminPin == Integer.parseInt(pin.getText())){
+        if (!changed()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
@@ -108,6 +111,7 @@ public class EditAdmin implements IController {
                 database.updateWorker(worker);
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
                 alert1.showAndWait();
+                main.getScene().getWindow().hide();
             }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
                 workerName.setText(name);
                 email.setText(workerEmail);
