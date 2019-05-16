@@ -61,7 +61,7 @@ public class ControllerAddWorker implements Initializable, IController {
                         break;
                     }
                 }
-            if (!email.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
+            if (!email.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Email must be an MSOE email.");
                 StudentCheckIn.logger.warn("Add Worker: Email isn't @msoe.edu");
                 alert.showAndWait();
