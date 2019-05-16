@@ -288,7 +288,7 @@ public class ControllerManageStudents implements IController, Initializable {
                     String name = row.getCell(0).toString();
                     String lastName = name.substring(0, name.indexOf(", "));
                     String restOfName = name.substring(name.indexOf(", ") + 2);
-                    String firstName = "";
+                    String firstName;
                     if (restOfName.contains(" ")) {
                         firstName = restOfName.substring(0, restOfName.indexOf(" "));
                     } else {
@@ -297,12 +297,12 @@ public class ControllerManageStudents implements IController, Initializable {
                     if (restOfName.contains(", ")) {
                         lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
                     }
-                    String email = row.getCell(3).toString();
+                    String email = row.getCell(3).toString().replace("'", "\'");
                     System.out.println(firstName + " " + lastName + ": " + email);
                     if (!email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
                         System.out.println("bad email");
                     } else if (!database.getStudentEmails().contains(email)) {
-                        database.importStudent(new Student(firstName + " " + lastName, email));
+                        database.importStudent(new Student((firstName + " " + lastName).replace("'", "\""), email));
                     }
                 } else {
                     System.out.println("wrong number of columns");
