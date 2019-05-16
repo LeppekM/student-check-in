@@ -46,7 +46,7 @@
             </JFXButton>
         </HBox>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-         <JFXButton fx:id="importStudents" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importStudents" prefHeight="35.0" prefWidth="175.0" text="Import Students" textAlignment="CENTER">
+         <JFXButton fx:id="importStudents" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importStudents" prefHeight="35.0" prefWidth="200.0" text="Import Students" textAlignment="CENTER">
             <stylesheets>
                <URL value="@../css/ButtonStyle.css" />
             </stylesheets>

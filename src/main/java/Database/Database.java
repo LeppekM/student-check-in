@@ -981,6 +981,34 @@ public class Database implements IController {
         }
     }
 
+    /**
+     * Adds a student to the database without the student's rfid. This is used for
+     * importing a bunch of students when the rfid is unknown.
+     * @param s the student to be added
+     */
+    public boolean importStudent(Student s) {
+        String query = "insert into students (email, studentName, createdAt, createdBy) values ('" +
+                s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), '" + this.worker.getName() + "');";
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
+            StudentCheckIn.logger.error("Could not add student " + s.getName() + ", SQL Exception");
+            alert.showAndWait();
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
+            StudentCheckIn.logger.error("Could not add student " + s.getName() + ", SQL Exception");
+            alert.showAndWait();
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public void updateStudent(Student s){
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
                 s.getName() + "', students.email = '" + s.getEmail() + "', students.updatedAt = date('" +
