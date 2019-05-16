@@ -137,26 +137,6 @@ public class ControllerManageStudents implements IController, Initializable {
             }
         });
 
-
-
-//        manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
-//            @Override
-//            public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
-//                final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
-//                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent event) {
-//                        final int index = row.getIndex();
-//                        if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
-//                            manageStudentsTable.getSelectionModel().clearSelection();
-//                            event.consume();
-//                        }
-//                    }
-//                });
-//                return row;
-//            }
-//        });
-
         populateTable();
     }
 
@@ -283,6 +263,7 @@ public class ControllerManageStudents implements IController, Initializable {
 
     @FXML
     private void importStudents() {
+        database.initWorker(worker);
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Import Students");
@@ -294,21 +275,40 @@ public class ControllerManageStudents implements IController, Initializable {
             XSSFWorkbook workbook = new XSSFWorkbook(fis);
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIt = sheet.iterator();
+            // skip the first row, which just has column labels
+            if (rowIt.hasNext()) {
+                rowIt.next();
+            }
 
+            // parse the rest of the rows
             while (rowIt.hasNext()) {
                 Row row = rowIt.next();
 //                Iterator<Cell> cellIterator = row.cellIterator();
-                if (row.getCell(1) != null && row.getCell(3) != null) {
-                    String name = row.getCell(1).toString();
+                if (row.getCell(0) != null && row.getCell(3) != null) {
+                    String name = row.getCell(0).toString();
+                    String lastName = name.substring(0, name.indexOf(", "));
+                    String restOfName = name.substring(name.indexOf(", ") + 2);
+                    String firstName = "";
+                    if (restOfName.contains(" ")) {
+                        firstName = restOfName.substring(0, restOfName.indexOf(" "));
+                    } else {
+                        firstName = restOfName;
+                    }
+                    if (restOfName.contains(", ")) {
+                        lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
+                    }
                     String email = row.getCell(3).toString();
+                    System.out.println(firstName + " " + lastName + ": " + email);
+                    if (!email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
+                        System.out.println("bad email");
+                    } else if (!database.getStudentEmails().contains(email)) {
+                        database.importStudent(new Student(firstName + " " + lastName, email));
+                    }
                 } else {
-                    System.out.println("bad formatted row");
+                    System.out.println("wrong number of columns");
                 }
-//                while (cellIterator.hasNext()) {
-//                    Cell cell = cellIterator.next();
-//                    System.out.println(cell.toString());
-//                }
             }
+            populateTable();
         } catch (IOException e) {
             e.printStackTrace();
         }
