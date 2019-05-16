@@ -433,7 +433,7 @@ public class ControllerManageStudents implements IController, Initializable {
     public void edit(int row) {
         Stage stage = new Stage();
         ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(row).getValue();
-        Student s = database.selectStudent(Integer.parseInt(r.getId().get()), null);
+        Student s = database.selectStudent(-1, r.getEmail().get());
         try {
             URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
