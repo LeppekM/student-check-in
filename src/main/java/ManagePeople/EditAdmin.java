@@ -101,23 +101,24 @@ public class EditAdmin implements IController {
             if (adminPin != Integer.parseInt(pin.getText())){
                 alert.setContentText(alert.getContentText() + "\t" + adminPin + " --> " + pin.getText() + "\n");
             }
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                worker.setName(workerName.getText());
-                worker.setEmail(email.getText());
-                worker.setPass(pass.getText());
-                worker.setPin(Integer.parseInt(pin.getText()));
-                database.initWorker(loggedWorker);
-                database.updateWorker(worker);
-                Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
-                alert1.showAndWait();
-                main.getScene().getWindow().hide();
-            }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
-                workerName.setText(name);
-                email.setText(workerEmail);
-                pass.setText(password);
-                pin.setText(adminPin + "");
-            }
+            alert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.OK){
+                    worker.setName(workerName.getText());
+                    worker.setEmail(email.getText());
+                    worker.setPass(pass.getText());
+                    worker.setPin(Integer.parseInt(pin.getText()));
+                    database.initWorker(loggedWorker);
+                    database.updateWorker(worker);
+                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
+                    alert1.showAndWait();
+                    main.getScene().getWindow().hide();
+                }else {
+                    workerName.setText(name);
+                    email.setText(workerEmail);
+                    pass.setText(password);
+                    pin.setText(adminPin + "");
+                }
+            });
         }
     }
 

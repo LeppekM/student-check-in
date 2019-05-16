@@ -13,6 +13,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -73,7 +74,8 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * This method sets the data in the Manage Students page.
-     * @param location used to resolve relative paths for the root object, or null if the location is not known.
+     *
+     * @param location  used to resolve relative paths for the root object, or null if the location is not known.
      * @param resources used to localize the root object, or null if the root object was not localized.
      */
     @Override
@@ -130,32 +132,35 @@ public class ControllerManageStudents implements IController, Initializable {
                         email = tableRow.getValue().getEmail().getValue();
 
                         return ((name != null && name.toLowerCase().contains(input))
-                            || (id != null && id.toLowerCase().contains(input))
-                            || (email != null && email.toLowerCase().contains(input)));
+                                || (id != null && id.toLowerCase().contains(input))
+                                || (email != null && email.toLowerCase().contains(input)));
                     }
                 });
             }
         });
 
 
-
-//        manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
-//            @Override
-//            public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
-//                final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
-//                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent event) {
-//                        final int index = row.getIndex();
-//                        if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
-//                            manageStudentsTable.getSelectionModel().clearSelection();
-//                            event.consume();
-//                        }
-//                    }
-//                });
-//                return row;
-//            }
-//        });
+        manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
+            @Override
+            public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
+                final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
+                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (event.getClickCount() == 2) {
+                            edit(row.getIndex());
+                        } else {
+                            final int index = row.getIndex();
+                            if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
+                                manageStudentsTable.getSelectionModel().clearSelection();
+                                event.consume();
+                            }
+                        }
+                    }
+                });
+                return row;
+            }
+        });
 
         populateTable();
     }
@@ -187,7 +192,7 @@ public class ControllerManageStudents implements IController, Initializable {
         String email = "";
         boolean notIncluded = true;
         boolean invalid = true;
-        while (invalid && notIncluded){
+        while (invalid && notIncluded) {
             id = JOptionPane.showInputDialog(null, "Please enter the student RFID.");
             if (id != null) {
                 Pattern p = Pattern.compile("^(rfid:)");
@@ -208,14 +213,14 @@ public class ControllerManageStudents implements IController, Initializable {
                     JOptionPane.showMessageDialog(null, "Students RFID is invalid.");
                     StudentCheckIn.logger.error("Manage Students: Student's RFID is invalid.");
                 }
-            }else {
+            } else {
                 break;
             }
         }
         invalid = true;
         Pattern p = Pattern.compile("[0-9]*");
         Matcher m;
-        while (invalid && notIncluded){
+        while (invalid && notIncluded) {
             String input = JOptionPane.showInputDialog(null, "Please enter the students first name.");
             if (input != null) {
                 m = p.matcher(input);
@@ -228,12 +233,12 @@ public class ControllerManageStudents implements IController, Initializable {
                     JOptionPane.showMessageDialog(null, "Students first name is invalid or blank.");
                     StudentCheckIn.logger.error("Manage Students: Student's first name is invalid or blank.");
                 }
-            }else {
+            } else {
                 break;
             }
         }
         invalid = true;
-        while (invalid && notIncluded){
+        while (invalid && notIncluded) {
             String input = JOptionPane.showInputDialog(null, "Please enter the students last name.");
             if (input != null) {
                 m = p.matcher(input);
@@ -248,18 +253,18 @@ public class ControllerManageStudents implements IController, Initializable {
                     JOptionPane.showMessageDialog(null, "Students last name is invalid or blank.");
                     StudentCheckIn.logger.error("Manage Students: Student's last name is invalid or blank.");
                 }
-            }else {
+            } else {
                 break;
             }
         }
         invalid = true;
-        while (invalid && notIncluded){
+        while (invalid && notIncluded) {
             email = JOptionPane.showInputDialog(null, "Please enter the students MSOE email.");
             if (email != null) {
                 ObservableList<Student> students = database.getStudents();
                 if (email.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
                     invalid = false;
-                    for (Student s: students){
+                    for (Student s : students) {
                         if (s.getEmail().equals(email)) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student email already in use try another");
                             alert.showAndWait();
@@ -270,7 +275,7 @@ public class ControllerManageStudents implements IController, Initializable {
                     JOptionPane.showMessageDialog(null, "Students email must be their MSOE email.");
                     StudentCheckIn.logger.error("Manage Students: Student's email must be their MSOE email.");
                 }
-            }else {
+            } else {
                 break;
             }
         }
@@ -315,10 +320,10 @@ public class ControllerManageStudents implements IController, Initializable {
     }
 
     /**
-     *Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
+     * Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
      */
     @FXML
-    public void goBack(){
+    public void goBack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
             Parent root = loader.load();
@@ -393,56 +398,54 @@ public class ControllerManageStudents implements IController, Initializable {
         return isValid.get();
     }
 
-    public void edit(MouseEvent event) {
-        if (event.getClickCount() == 2){
-            Stage stage = new Stage();
-            int f = manageStudentsTable.getSelectionModel().getSelectedIndex();
-            ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(f).getValue();
-            Student s = database.selectStudent(Integer.parseInt(r.getId().get()), null);
-            try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
-                FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                Parent root = loader.load();
-                EditStudent sp = loader.getController();
-                sp.setStudent(s);
-                sp.initWorker(worker);
-                Scene scene = new Scene(root, 840, 630);
-                stage.setTitle("Edit " + s.getName());
-                stage.initOwner(manageStudentsScene.getScene().getWindow());
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.setScene(scene);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.setOnHiding(event1 -> populateTable());
-                if (sp.changed()) {
-                    stage.setOnCloseRequest(event1 -> {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
-                        alert.setTitle("Confirm Close");
-                        alert.setHeaderText("If you leave now, unsaved changes could be lost.");
-                        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-                        alert.showAndWait().ifPresent(buttonType -> {
-                            if (buttonType == ButtonType.YES) {
-                                stage.close();
-                            } else if (buttonType == ButtonType.NO) {
-                                event1.consume();
-                            }
-                        });
+    public void edit(int row) {
+        Stage stage = new Stage();
+        ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(row).getValue();
+        Student s = database.selectStudent(Integer.parseInt(r.getId().get()), null);
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            EditStudent sp = loader.getController();
+            sp.setStudent(s);
+            sp.initWorker(worker);
+            Scene scene = new Scene(root, 840, 630);
+            stage.setTitle("Edit " + s.getName());
+            stage.initOwner(manageStudentsScene.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.setOnHiding(event1 -> populateTable());
+            if (sp.changed()) {
+                stage.setOnCloseRequest(event1 -> {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
+                    alert.setTitle("Confirm Close");
+                    alert.setHeaderText("If you leave now, unsaved changes could be lost.");
+                    alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+                    alert.showAndWait().ifPresent(buttonType -> {
+                        if (buttonType == ButtonType.YES) {
+                            stage.close();
+                        } else if (buttonType == ButtonType.NO) {
+                            event1.consume();
+                        }
                     });
-                }
-                stage.show();
-                populateTable();
-            }catch (IOException e){
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student info page");
-                alert.initStyle(StageStyle.UTILITY);
-                StudentCheckIn.logger.error("IOException: Couldn't load student info page.");
-                alert.showAndWait();
-                e.printStackTrace();
+                });
             }
+            stage.show();
+            populateTable();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student info page");
+            alert.initStyle(StageStyle.UTILITY);
+            StudentCheckIn.logger.error("IOException: Couldn't load student info page.");
+            alert.showAndWait();
+            e.printStackTrace();
         }
     }
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each necessary class
+     *
      * @param worker the currently logged in worker
      */
     @Override

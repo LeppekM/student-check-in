@@ -137,26 +137,27 @@ public class EditWorker implements IController {
             if (remove != removeParts.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Remove Parts: " + remove + " --> Remove Parts: " + removeParts.isSelected() + "\n");
             }
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                worker.setName(workerName.getText());
-                worker.setEmail(email.getText());
-                worker.setPass(pass.getText());
-                worker.setAdmin(false);
-                worker.setOver(overdue.isSelected());
-                worker.setEdit(editParts.isSelected());
-                worker.setRemove(removeParts.isSelected());
-                worker.setWorker(workers.isSelected());
-                database.initWorker(loggedWorker);
-                database.updateWorker(worker);
-                Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
-                alert1.showAndWait();
-                main.getScene().getWindow().hide();
-            }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
-                workerName.setText(name);
-                email.setText(workerEmail);
-                pass.setText(password);
-            }
+            alert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.OK){
+                    worker.setName(workerName.getText());
+                    worker.setEmail(email.getText());
+                    worker.setPass(pass.getText());
+                    worker.setAdmin(false);
+                    worker.setOver(overdue.isSelected());
+                    worker.setEdit(editParts.isSelected());
+                    worker.setRemove(removeParts.isSelected());
+                    worker.setWorker(workers.isSelected());
+                    database.initWorker(loggedWorker);
+                    database.updateWorker(worker);
+                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
+                    alert1.showAndWait();
+                    main.getScene().getWindow().hide();
+                }else {
+                    workerName.setText(name);
+                    email.setText(workerEmail);
+                    pass.setText(password);
+                }
+            });
         }
     }
 

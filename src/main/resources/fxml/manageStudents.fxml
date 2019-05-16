@@ -29,7 +29,7 @@
          <Insets left="10.0" right="10.0" top="10.0" />
       </VBox.margin>
     </HBox>
-    <JFXTreeTableView fx:id="manageStudentsTable" layoutX="0.0" layoutY="66.0" onMouseClicked="#edit" prefHeight="480.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
+    <JFXTreeTableView fx:id="manageStudentsTable" layoutX="0.0" layoutY="66.0" prefHeight="480.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
     <HBox VBox.vgrow="NEVER">
         <HBox alignment="CENTER_LEFT">
             <JFXButton fx:id="back" layoutX="10.0" layoutY="554.0" mnemonicParsing="false" onAction="#goBack">

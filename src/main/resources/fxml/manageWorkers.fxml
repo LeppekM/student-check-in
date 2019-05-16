@@ -41,7 +41,7 @@
             <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
         </HBox>
-        <JFXTreeTableView fx:id="manageWorkersTable" onMouseClicked="#edit" prefHeight="480.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
+        <JFXTreeTableView fx:id="manageWorkersTable" prefHeight="480.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
             <children>
                 <Button fx:id="back" mnemonicParsing="false" onAction="#goBack" HBox.hgrow="ALWAYS">

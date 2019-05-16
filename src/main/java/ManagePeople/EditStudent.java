@@ -236,19 +236,21 @@ public class EditStudent implements IController {
             if (!studentEmail.equals(email.getText())){
                 alert.setContentText(alert.getContentText() + "\t" + studentEmail + " --> " + email.getText() + "\n");
             }
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                student.setName(studentName.getText());
-                student.setRFID(Integer.parseInt(RFID.getText()));
-                database.initWorker(worker);
-                database.updateStudent(student);
-                Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
-                alert1.showAndWait();
-                main.getScene().getWindow().hide();
-            }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
-                studentName.setText(name);
-                RFID.setText(id + "");
-            }
+            alert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.OK){
+                    student.setName(studentName.getText());
+                    student.setRFID(Integer.parseInt(RFID.getText()));
+                    database.initWorker(worker);
+                    database.updateStudent(student);
+                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
+                    alert1.showAndWait();
+                    main.getScene().getWindow().hide();
+                }else {
+                    studentName.setText(name);
+                    RFID.setText(id + "");
+                    email.setText(studentEmail);
+                }
+            });
         }
     }
 
