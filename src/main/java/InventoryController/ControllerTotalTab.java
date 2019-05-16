@@ -706,13 +706,14 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     /**
      * This method calls the database method to soft delete an item from the inventory list
      * this then updates the gui table
-     *
-     * @author Bailey Terry
      */
     public void deletePart(String partID) {
+        database.initWorker(worker);
         try {
             if (database.selectPart(Integer.parseInt(partID)) != null) {
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete the part with ID = " + partID + "?", ButtonType.YES, ButtonType.NO);
+                alert.showAndWait();
+                if (alert.getResult() == ButtonType.YES) {
                     database.deleteItem(Integer.parseInt(partID));
                     populateTable();
                 }
@@ -726,9 +727,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
     public void deletePartType(String partName) {
+        database.initWorker(worker);
         try {
             if (database.hasPartName(partName)) {
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete all parts named: " + partName) == JOptionPane.YES_OPTION) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete all parts named: " + partName +"?", ButtonType.YES, ButtonType.NO);
+                alert.showAndWait();
+                if (alert.getResult() == ButtonType.YES) {
                     database.deleteParts(partName);
                     populateTable();
                 }

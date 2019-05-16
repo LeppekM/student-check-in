@@ -148,7 +148,7 @@ public class Database implements IController {
      */
     public void deleteItem(int partID) {
         try {
-            String delete = "update parts p set p.deletedBy = '" + this.worker.getName() + "', p.isDeleted = 1, p.deletedAt = date('"
+            String delete = "update parts p set p.deletedBy = '" + this.worker.getName().replace("'", "\\'") + "', p.isDeleted = 1, p.deletedAt = date('"
                     + gettoday() + "') where p.partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
@@ -167,7 +167,7 @@ public class Database implements IController {
      */
     public void deleteParts(String partName) {
         try {
-            String deleteQuery = "UPDATE parts p set p.deletedBy = '" + this.worker.getName() + "', p.isDeleted = 1, " +
+            String deleteQuery = "UPDATE parts p set p.deletedBy = '" + this.worker.getName().replace("'", "\\'") + "', p.isDeleted = 1, " +
                     "p.deletedAt = date('" + gettoday() + "') WHERE p.partName = '" + partName + "';";
             Statement statement = connection.createStatement();
             statement.executeUpdate(deleteQuery);
@@ -313,7 +313,7 @@ public class Database implements IController {
         int partID = getPartID(barcode, name);
         String query = "delete from fault where partID = " + partID + ";";
         String pquery = "update parts set isFaulty = 0, updatedAt = date('" + gettoday() + "'), updatedBy = '" +
-                this.worker.getName() + "' where partID = " + partID + ";";
+                this.worker.getName().replace("'", "\\'") + "' where partID = " + partID + ";";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -693,6 +693,31 @@ public class Database implements IController {
 
     /**
      * This method returns a list of all of the student emails in the system
+     * @return the list of all student rfids
+     */
+    public ObservableList<String> getStudentRFIDs() {
+        ObservableList<String> rfids = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT studentID FROM students");
+            String rfid;
+            while (resultSet.next()) {
+                rfid = resultSet.getString("studentID");
+                rfids.add(rfid);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of rfids");
+            StudentCheckIn.logger.error("Could not retrieve the list of rfids");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return rfids;
+    }
+
+    /**
+     * This method returns a list of all of the student emails in the system
      * @return the list of all student emails
      */
     public ObservableList<String> getStudentEmails() {
@@ -768,7 +793,8 @@ public class Database implements IController {
         Worker worker = null;
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + email + "';");
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + email.replace("'", "\\'") + "';");
             String name;
             String password;
             int ID;
@@ -855,17 +881,18 @@ public class Database implements IController {
                     "where checkout.checkinAt is null";
 //                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         }else if (ID == -1){
+            studentEmail = studentEmail.replace("'", "\\'");
             query = "select * from students where email = '" + studentEmail + "';";
             coList = "select students.studentName, students.email, students.studentID, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
                     "from students " +
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID" +
-                    " where students.email = '" + studentEmail +
+                    " where students.email = '" + studentEmail.replace("'", "\\'") +
                     "' AND checkout.checkinAt is null;";
             pList = "select students.studentName, students.email, students.studentID, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
                     "from students " +
                     "left join checkout on students.studentID = checkout.studentID " +
-                    "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail + "' and checkout.reservedAt != '';";
+                    "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail.replace("'", "\\'") + "' and checkout.reservedAt != '';";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
                     "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +
@@ -902,7 +929,8 @@ public class Database implements IController {
                         resultSet.getString("students.studentName"),
                         resultSet.getString("students.email"),
                         resultSet.getInt("students.studentID"),
-                        resultSet.getString("parts.partName"), resultSet.getString("parts.barcode"),
+                        resultSet.getString("parts.partName"),
+                        resultSet.getString("parts.barcode"),
                         resultSet.getString("parts.serialNumber"),
                         resultSet.getInt("parts.partID"),
                         resultSet.getString("checkout.checkoutAt"),
@@ -919,9 +947,12 @@ public class Database implements IController {
                 int studentID = resultSet.getInt("checkout.studentID");
                 if (isOverdue(dueAt) && (studentID==ID || email.equals(studentEmail))) {
                     overdueItems.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
-                            resultSet.getString("students.studentName"), resultSet.getString("students.email"),
-                            resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
-                            dueAt, resultSet.getString("parts.price/100"),
+                            resultSet.getString("students.studentName"),
+                            resultSet.getString("students.email"),
+                            resultSet.getString("parts.partName"),
+                            resultSet.getString("parts.serialNumber"),
+                            dueAt,
+                            resultSet.getString("parts.price/100"),
                             resultSet.getString("checkout.checkoutID")));
                 }
             }
@@ -932,10 +963,14 @@ public class Database implements IController {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()){
                 savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"), resultSet.getString("checkout.checkoutAt"),
-                        1, resultSet.getString("checkout.reservedAt"),
-                        resultSet.getString("checkout.dueAt"), resultSet.getString("checkout.checkoutID"),
-                        resultSet.getString("checkout.returnDate"), resultSet.getString("checkout.course")));
+                        resultSet.getString("parts.partName"),
+                        resultSet.getString("checkout.checkoutAt"),
+                        1,
+                        resultSet.getString("checkout.reservedAt"),
+                        resultSet.getString("checkout.dueAt"),
+                        resultSet.getString("checkout.checkoutID"),
+                        resultSet.getString("checkout.returnDate"),
+                        resultSet.getString("checkout.course")));
             }
             statement.close();
             resultSet.close();
@@ -970,7 +1005,7 @@ public class Database implements IController {
         String email = s.getEmail().replace("'", "\\'");
         String name = s.getName().replace("'", "\\'");
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + email + "', '" + name + "', date('" + gettoday() + "'), '" + this.worker.getName() + "');";
+                + ", '" + email + "', '" + name + "', date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -989,21 +1024,24 @@ public class Database implements IController {
      * @param s the student to be added
      */
     public boolean importStudent(Student s) {
+        // note: the controllermanagestudents class replaces "'" with "\\'" for this method,
+        // but other methods in this class need to replace "'" with "\\'" so that it does not
+        // mess up the database queries.
         String query = "insert into students (email, studentName, createdAt, createdBy) values ('" +
-                s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), '" + this.worker.getName() + "');";
+                s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
-            StudentCheckIn.logger.error("Could not add student " + s.getName() + ", SQL Exception");
+            StudentCheckIn.logger.error("Could not add student " + s.getName().replace("'", "\\'") + ", SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
             return false;
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
-            StudentCheckIn.logger.error("Could not add student " + s.getName() + ", SQL Exception");
+            StudentCheckIn.logger.error("Could not add student " + s.getName().replace("'", "\\'") + ", SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
             return false;
@@ -1013,8 +1051,8 @@ public class Database implements IController {
 
     public void updateStudent(Student s){
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
-                s.getName() + "', students.email = '" + s.getEmail() + "', students.updatedAt = date('" +
-                gettoday().toString() + "'), students.updatedBy = '" + this.worker.getName() + "' where students.uniqueID = " + s.getUniqueID() +";";
+                s.getName().replace("'", "\\'") + "', students.email = '" + s.getEmail().replace("'", "\\'") + "', students.updatedAt = date('" +
+                gettoday().toString() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() +";";
         try{
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -1032,7 +1070,7 @@ public class Database implements IController {
      * @param name students name
      */
     public void deleteStudent(String name){
-        String query = "delete from students where students.studentName = '" + name + "';";
+        String query = "delete from students where students.studentName = '" + name.replace("'", "\\'") + "';";
         try{
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1051,8 +1089,8 @@ public class Database implements IController {
      */
     public void addWorker(Worker w){
         int bit = w.isAdmin()? 1 : 0;
-        String query = "insert into workers (email, workerName, pin, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail() +
-                "', '" + w.getName() + "', " + w.getPin() + ", '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), '" + this.worker.getName() + "');";
+        String query = "insert into workers (email, workerName, pin, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail().replace("'", "\\'") +
+                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1070,7 +1108,7 @@ public class Database implements IController {
      * @param name workers name
      */
     public void deleteWorker(String name){
-        String query = "delete from workers where workers.workerName = '" + name + "';";
+        String query = "delete from workers where workers.workerName = '" + name.replace("'", "\\'") + "';";
         try{
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1089,11 +1127,11 @@ public class Database implements IController {
         int edit = w.isEdit() ? 1: 0;
         int remove = w.isRemove() ? 1 : 0;
         int work = w.isWorker() ? 1 : 0;
-        String query = "update workers set workers.workerName = '" + w.getName() + "', workers.pin = " +
+        String query = "update workers set workers.workerName = '" + w.getName().replace("'", "\\'") + "', workers.pin = " +
                 w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.isAdmin = " + admin + "," +
-                " workers.email = '" + w.getEmail() + "', workers.overdue = " + over + ", workers.editParts = " + edit +
+                " workers.email = '" + w.getEmail().replace("'", "\\'") + "', workers.overdue = " + over + ", workers.editParts = " + edit +
                 ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
-                gettoday().toString() + "'), workers.updatedBy = '" + this.worker.getName() + "' where workers.workerID = " +
+                gettoday().toString() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
                 w.getID() + ";";
         try{
             Statement statement = connection.createStatement();

@@ -179,7 +179,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
 
         // enable the switch to student info button iff the student ID field contains a student ID
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
@@ -509,7 +509,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 extended.setDisable(false);
                 resetButton.setDisable(false);
                 String studentName = "";
-                if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                     studentName = student.getStudentNameFromEmail(studentID.getText());
                     if (student.getStudentIDFromEmail(studentID.getText())){
                         stageWrapper.errorAlert("Student is checking out equipment for first time\n They must use their student ID to check out an item");
@@ -662,7 +662,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         Student s = null;
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
             s = database.selectStudent(Integer.parseInt(studentID.getText()), null);
-        } else if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+        } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             s = database.selectStudent(-1, studentID.getText());
         }
         if (s != null && !s.getName().equals("")) {
@@ -811,7 +811,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         String id = null;
         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
             id = studentID.getText();
-        } else if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+        } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             id = studentID.getText();
         }
         return id;
@@ -1004,7 +1004,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method to initialize student id field properties.
      */
     private void initialStudentFieldFunctions() {
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
@@ -1016,7 +1016,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                         if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                             studentInfo.setDisable(false);
-                        } else if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                        } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                             studentInfo.setDisable(false);
                             studentNameField.setText(student.getStudentNameFromEmail(studentID.getText()));
                         } else {
@@ -1030,7 +1030,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         studentID.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$") && !newValue.matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
+                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$") && !newValue.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                     studentID.setText(oldValue);
                 }
             }
