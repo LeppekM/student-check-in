@@ -13,10 +13,13 @@ import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,6 +39,10 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
 
@@ -79,7 +86,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     @FXML
     private HBox HBoxBarcode, HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
 
-    private PauseTransition delay;
+
     private CheckoutObject checkoutObject;
     private ExtendedCheckoutObject extendedCheckOutObject;
     private StageWrapper stageWrapper = new StageWrapper();
@@ -97,7 +104,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private static boolean fieldsFilled;
     private String faultyText;
     private List<String> id = new ArrayList<>();
-
+    private static final int PAUSE_DELAY = 5;
+    private static PauseTransition delay = new PauseTransition(Duration.minutes(PAUSE_DELAY));
     private Worker worker;
 
     @Override
@@ -132,12 +140,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * If no movement is recorded on page for 5 minutes, item will submit automatically
      */
     private void submitTimer() {
-        int duration = 5;
-        delay = new PauseTransition(Duration.minutes(duration));
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
         delay.setOnFinished(event -> submit());
-        delay.play();
     }
+
 
     /**
      * Initializes extended object
@@ -587,7 +593,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Resets all fields
      */
     public void reset() {
-        stageWrapper.newStage("/fxml/CheckOutPage.fxml", main, worker);
+        newStage("/fxml/CheckOutPage.fxml");
     }
 
     /**
@@ -1156,5 +1162,24 @@ public class CheckOutController extends ControllerMenu implements IController, I
             }
         });
 
+    }
+
+    public void newStage(String fxml){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            IController controller = loader.<IController>getController();
+            controller.initWorker(worker);
+            main.getScene().setRoot(root);
+            ((IController) loader.getController()).initWorker(worker);
+            // NEEDED?
+            //mainMenuScene.getChildren().clear();
+        }
+        catch(IOException invoke){
+            StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
+            alert.showAndWait();
+            invoke.printStackTrace();
+        }
     }
 }
