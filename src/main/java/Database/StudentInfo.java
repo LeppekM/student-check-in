@@ -33,6 +33,27 @@ public class StudentInfo {
         return sName;
     }
 
+    public boolean getStudentIDFromEmail(String email){
+        String sName = "";
+        String query = "select studentID from students where email = ?";
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                sName= rs.getString("studentID");
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        if (sName==null){
+            return true;
+        }
+        return false;
+
+    }
+
     public void updateStudent(String studentEmail, int studentID){
         String query = " update students\n" +
                 "  set studentID = ?\n" +

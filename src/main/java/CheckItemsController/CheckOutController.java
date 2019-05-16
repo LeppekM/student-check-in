@@ -511,6 +511,12 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 String studentName = "";
                 if (studentID.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")) {
                     studentName = student.getStudentNameFromEmail(studentID.getText());
+                    if (student.getStudentIDFromEmail(studentID.getText())){
+                        stageWrapper.errorAlert("Student is checking out equipment for first time\n They must use their student ID to check out an item");
+                        reset();
+                        return;
+                    }
+
                 } else if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
                     studentName = student.getStudentNameFromID(studentID.getText());
                 }
