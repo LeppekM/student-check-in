@@ -164,6 +164,10 @@ public class ControllerManageStudents implements IController, Initializable {
         populateTable();
     }
 
+    /**
+     * This method fills the table with the data, if there is any
+     *
+     */
     public void populateTable() {
         tableRows.clear();
         manageStudentsTable.getColumns().clear();
@@ -185,6 +189,10 @@ public class ControllerManageStudents implements IController, Initializable {
         manageStudentsTable.setShowRoot(false);
     }
 
+    /**
+     * This method uses JOptionpane pop ups to create a new student
+     *
+     */
     public void addStudent() {
         StringBuilder name = new StringBuilder();
         String id = "";
@@ -285,6 +293,10 @@ public class ControllerManageStudents implements IController, Initializable {
         populateTable();
     }
 
+    /**
+     * This method takes in an Excel file to import a list of students
+     *
+     */
     @FXML
     private void importStudents() {
         database.initWorker(worker);
@@ -371,6 +383,10 @@ public class ControllerManageStudents implements IController, Initializable {
         }
     }
 
+    /**
+     * Deletes a student
+     * @param actionEvent button event
+     */
     public void deleteStudent(ActionEvent actionEvent) {
         if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0) {
             if ((worker != null && worker.isAdmin())
@@ -388,6 +404,11 @@ public class ControllerManageStudents implements IController, Initializable {
         }
     }
 
+    /**
+     * Brings up the request pin pop up
+     * @param action reason for pop up
+     * @return true if the pin is valid
+     */
     public boolean requestAdminPin(String action) {
         AtomicBoolean isValid = new AtomicBoolean(false);
         try {
@@ -430,6 +451,10 @@ public class ControllerManageStudents implements IController, Initializable {
         return isValid.get();
     }
 
+    /**
+     * This brings up the edit student window
+     * @param row row in the table that the student is selected
+     */
     public void edit(int row) {
         Stage stage = new Stage();
         ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(row).getValue();
@@ -498,6 +523,9 @@ public class ControllerManageStudents implements IController, Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * This is an error that shows up if there is a format error in the excel file
+     */
     private void wrongNumRowsAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -506,6 +534,10 @@ public class ControllerManageStudents implements IController, Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * This is an error that shows up if a student(s) can't be imported
+     * @param failedImports list of failed students
+     */
     private void failedImportAlert(List<Student> failedImports) {
         List<String> lines = new ArrayList<>();
         for (Student student : failedImports) {
