@@ -252,13 +252,20 @@ public class EditStudent implements IController {
      * @param actionEvent button
      */
     public void save(ActionEvent actionEvent) {
+        Alert alert;
         if (!changed()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
+            alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
             alert.showAndWait();
+        }else if (!RFID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+            alert = new Alert(Alert.AlertType.ERROR, "RFID must be 5 digits.");
+            alert.setTitle("Edit Failure.");
+            alert.setHeaderText("Student RFID is not 5 numbers.");
+            alert.showAndWait();
+            RFID.setText(id + "");
         }else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to make the following changes?\n");
+            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to make the following changes?\n");
             alert.setTitle("Edit Success");
             alert.setHeaderText("Student info changing...");
             if (!name.equals(studentName.getText())) {
