@@ -235,10 +235,10 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
 
     public void resolveFault(ActionEvent actionEvent) {
         if (faultyTable.getSelectionModel().getSelectedItems().size() == 1) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to remove fault?");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to resolve this fault?");
             alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-            alert.setTitle("Remove Faulty Part?");
-            alert.setHeaderText("Removing Faulty Part...");
+            alert.setTitle("Resolve Faulty Part?");
+            alert.setHeaderText("Resolving Faulty Part...");
             alert.showAndWait().ifPresent(buttonType -> {
                 if (buttonType == ButtonType.YES) {
                     int index = faultyTable.getSelectionModel().getFocusedIndex();

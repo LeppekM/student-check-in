@@ -495,7 +495,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             for (int i = 0; i < data.size(); i++) {
                 student = database.getStudentToLastCheckout(data.get(i).getPartID());
                 checkoutObject = database.getLastCheckoutOf(data.get(i).getPartID());
-                TotalTabTableRow row = new TotalTabTableRow(student.getName(), student.getEmail(),
+                TotalTabTableRow row = new TotalTabTableRow(student.getName(), student.getEmail().replace("\\", ""),
                         data.get(i).getPartName(), "" + data.get(i).getPartID(),
                         "" + data.get(i).getBarcode(), data.get(i).getSerialNumber(),
                         data.get(i).getLocation(), database.isOverdue("" + checkoutObject.getDueAt()) ? "In" : "Out",

@@ -208,16 +208,21 @@ public class Database implements IController {
      * @return a Student object that represents the student who last checked the part in or out
      */
     public Student getStudentToLastCheckout(int partID) {
-        String query = "SELECT * FROM checkout WHERE partID = " + partID + ";";
+        String query = "SELECT * FROM checkout INNER JOIN students ON checkout.studentID = students.studentID WHERE partID = " + partID + ";";
         int studentID = -1;
         Student student = null;
+        String studentName = "";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 studentID = resultSet.getInt("studentID");
+                studentName = resultSet.getString("studentName");
             }
             student = selectStudent(studentID, null);
+            if (student.getName().equals("")) {
+                student.setName(studentName);
+            }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
