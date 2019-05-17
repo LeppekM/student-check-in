@@ -517,7 +517,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 String studentName = "";
                 if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                     studentName = student.getStudentNameFromEmail(studentID.getText());
-                    if (student.getStudentIDFromEmail(studentID.getText())){
+                    if (student.getStudentIDFromEmail(studentID.getText().replace("'", "\\'"))){
                         stageWrapper.errorAlert("Student is checking out equipment for first time\n They must use their student ID to check out an item");
                         reset();
                         return;
@@ -531,9 +531,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     studentName = student.getStudentNameFromEmail(studentEmail);
                     if(studentName.isEmpty()){//Means student doesn't exist in database, so completely new one will be created
                         studentName = newStudentName();
-                        student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail, studentName);
+                        if (studentName != null) {
+                            student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail.replace("'", "\\'"), studentName.replace("'", "\\'"));
+                        }
                     }
-                    updateStudent(studentEmail);
+                    if (studentEmail != null) {
+                        updateStudent(studentEmail);
+                    }
                 }
                 studentNameField.setText(studentName);
             }
@@ -545,7 +549,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @param studentEmail Email to be checked for
      */
     private void updateStudent(String studentEmail){
-        student.updateStudent(studentEmail, Integer.parseInt(getstudentID()));
+        student.updateStudent(studentEmail.replace("'", "\\'"), Integer.parseInt(getstudentID()));
     }
 
     /**
@@ -555,7 +559,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private String newStudentName(){
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Student Creation");
-        dialog.setHeaderText("Student Name is Not in System.\n Please Enter Name to Continue ");
+        dialog.setHeaderText("Student Name is not in System.\n Please Enter Name to Continue ");
         dialog.setContentText("Please Enter Student Name");
         dialog.showAndWait();
         return dialog.getResult();
@@ -1024,7 +1028,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             studentInfo.setDisable(false);
                         } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                             studentInfo.setDisable(false);
-                            studentNameField.setText(student.getStudentNameFromEmail(studentID.getText()));
+                            studentNameField.setText(student.getStudentNameFromEmail(studentID.getText().replace("'", "\\'")));
                         } else {
                             studentInfo.setDisable(true);
                         }
