@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="manageStudentsScene" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerManageStudents">
+<VBox fx:id="manageStudentsScene" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerManageStudents">
     <HBox>
         <Label layoutX="20.0" layoutY="14.0" text="Manage Students">
             <stylesheets>
@@ -20,7 +20,7 @@
             </stylesheets>
         </Label>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-            <JFXTextField fx:id="searchInput" layoutX="627.0" layoutY="25.0" promptText="search">
+            <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" layoutX="627.0" layoutY="25.0" promptText="search">
             <font>
                <Font size="18.0" />
             </font></JFXTextField>
@@ -32,7 +32,7 @@
     <JFXTreeTableView fx:id="manageStudentsTable" layoutX="0.0" layoutY="66.0" prefHeight="480.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
     <HBox VBox.vgrow="NEVER">
         <HBox alignment="CENTER_LEFT">
-            <JFXButton fx:id="back" layoutX="10.0" layoutY="554.0" mnemonicParsing="false" onAction="#goBack">
+            <JFXButton fx:id="back" layoutX="10.0" layoutY="554.0" mnemonicParsing="false" onAction="#goBack" stylesheets="@../css/CheckButton.css">
                 <graphic>
                     <ImageView fitHeight="35.0" fitWidth="39.0">
                         <image>
@@ -40,33 +40,20 @@
                         </image>
                     </ImageView>
                 </graphic>
-                <stylesheets>
-                    <URL value="@../css/ButtonStyle.css" />
-                </stylesheets>
             </JFXButton>
         </HBox>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-         <JFXButton fx:id="importStudents" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importStudents" prefHeight="35.0" prefWidth="200.0" text="Import Students" textAlignment="CENTER">
-            <stylesheets>
-               <URL value="@../css/ButtonStyle.css" />
-            </stylesheets>
+         <JFXButton fx:id="importStudents" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importStudents" prefHeight="35.0" prefWidth="200.0" stylesheets="@../css/CheckButton.css" text="Import Students" textAlignment="CENTER">
             <HBox.margin>
                <Insets right="20.0" />
             </HBox.margin>
          </JFXButton>
-            <JFXButton fx:id="addStudent" alignment="CENTER" contentDisplay="CENTER" layoutX="426.0" layoutY="554.0" mnemonicParsing="false" onAction="#addStudent" prefHeight="35.0" prefWidth="160.0" text="Add Student" textAlignment="CENTER">
-                <stylesheets>
-                    <URL value="@../css/ButtonStyle.css" />
-                </stylesheets>
+            <JFXButton fx:id="addStudent" alignment="CENTER" contentDisplay="CENTER" layoutX="426.0" layoutY="554.0" mnemonicParsing="false" onAction="#addStudent" prefHeight="35.0" prefWidth="160.0" stylesheets="@../css/CheckButton.css" text="Add Student" textAlignment="CENTER">
             <HBox.margin>
                <Insets right="20.0" />
             </HBox.margin>
             </JFXButton>
-           <JFXButton fx:id="deleteStudent" mnemonicParsing="false" onAction="#deleteStudent" prefHeight="35.0" prefWidth="160.0" text="Delete" textAlignment="CENTER">
-               <stylesheets>
-                   <URL value="@../css/ButtonStyle.css" />
-               </stylesheets>
-           </JFXButton>
+           <JFXButton fx:id="deleteStudent" mnemonicParsing="false" onAction="#deleteStudent" prefHeight="35.0" prefWidth="160.0" stylesheets="@../css/CheckButton.css" text="Delete" textAlignment="CENTER" />
         </HBox>
       <VBox.margin>
          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

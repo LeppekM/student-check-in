@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="840.0" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.EditStudent">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="840.0" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.EditStudent">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="840.0">
          <children>
@@ -33,21 +33,21 @@
             </Button>
             <VBox fx:id="vbox" layoutX="63.0" layoutY="16.0" prefHeight="240.0" prefWidth="668.0">
                <children>
-                  <JFXTextField fx:id="studentName" alignment="CENTER" prefHeight="80.0" promptText="Name (First and Last)" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="studentName" alignment="CENTER" focusColor="FIREBRICK" prefHeight="80.0" promptText="Name (First and Last)">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <font>
                         <Font name="Arial Black" size="32.0" />
                      </font></JFXTextField>
-                  <JFXTextField fx:id="email" alignment="CENTER" prefHeight="80.0" promptText="MSOE Email" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="email" alignment="CENTER" focusColor="FIREBRICK" prefHeight="80.0" promptText="MSOE Email">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <font>
                         <Font name="Arial Black" size="32.0" />
                      </font></JFXTextField>
-                  <JFXTextField fx:id="RFID" alignment="CENTER" prefHeight="80.0" promptText="RFID" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="RFID" alignment="CENTER" focusColor="FIREBRICK" prefHeight="80.0" promptText="RFID">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>

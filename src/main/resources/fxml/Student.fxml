@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="main" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="800" prefWidth="1150" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.StudentPage">
+<VBox fx:id="main" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="800" prefWidth="1150" stylesheets="@../css/PageStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.StudentPage">
    <children>
       <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <children>
-            <Button mnemonicParsing="false" onAction="#goBack" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" HBox.hgrow="ALWAYS">
+            <Button mnemonicParsing="false" onAction="#goBack" prefHeight="50.0" prefWidth="100.0" stylesheets="@../css/CheckButton.css" HBox.hgrow="ALWAYS">
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="39.0" nodeOrientation="INHERIT" pickOnBounds="true">
                      <image>
@@ -33,9 +33,9 @@
                <HBox.margin>
                   <Insets />
                </HBox.margin></VBox>
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#goHome" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;" HBox.hgrow="ALWAYS">
+            <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#goHome" prefHeight="50.0" prefWidth="100.0" stylesheets="@../css/CheckButton.css" HBox.hgrow="ALWAYS">
                <graphic>
-                  <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/home.png" />
                      </image>
