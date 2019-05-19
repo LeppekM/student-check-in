@@ -17,6 +17,10 @@ import java.io.IOException;
 public class ExportToExcel {
     StageWrapper helper = new StageWrapper();
 
+    /**
+     * Exports faulty parts to excel file
+     * @param list List of faulty parts
+     */
     public void exportFaulty(ObservableList<FaultyPartTabTableRow> list){
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
@@ -66,14 +70,17 @@ public class ExportToExcel {
             fileOut.close();
             // Closing the workbook
             workbook.close();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
+        } catch (NullPointerException | IOException e) {
+            return;
         }
         helper.slidingAlert("Success", "File created successfully!");
 
     }
 
+    /**
+     * Exports checked out items to a excel file
+     * @param list List of checked out items and their information
+     */
     public void exportCheckedOut(ObservableList<CheckedOutItems> list){
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
@@ -120,13 +127,16 @@ public class ExportToExcel {
             fileOut.close();
             // Closing the workbook
             workbook.close();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
+        } catch (NullPointerException | IOException e) {
+            return;
         }
         helper.slidingAlert("Success", "File created successfully!");
     }
 
+    /**
+     * Exports overdue items to excel sheet
+     * @param list List of overdue items
+     */
     public void exportOverdue(ObservableList<OverdueItem> list) {
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
@@ -173,13 +183,16 @@ public class ExportToExcel {
             fileOut.close();
             // Closing the workbook
             workbook.close();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
+        } catch (NullPointerException | IOException e) {
+            return;
         }
         helper.slidingAlert("Success", "File created successfully!");
     }
 
+    /**
+     * Exports the list of parts to excel
+     * @param list List of parts to export
+     */
     public void exportPartList(ObservableList<Part> list){
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
@@ -225,14 +238,16 @@ public class ExportToExcel {
             fileOut.close();
             // Closing the workbook
             workbook.close();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
+        } catch (NullPointerException | IOException e) {
+            return;
         }
         helper.slidingAlert("Success", "File created successfully!");
     }
 
-
+    /**
+     * Exports transaction history to excel
+     * @param list List of transactions
+     */
     public void exportTransactionHistory(ObservableList<HistoryItems> list) {
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
@@ -279,10 +294,10 @@ public class ExportToExcel {
             fileOut.close();
             // Closing the workbook
             workbook.close();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
+        } catch (NullPointerException | IOException e) {
+            return;
         }
+
         helper.slidingAlert("Success", "File created successfully!");
     }
 

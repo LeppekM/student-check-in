@@ -17,6 +17,14 @@ public class AddPart {
 
     VendorInformation vendorInformation = new VendorInformation();
 
+    /**
+     * Adds items to DB
+     * @param part Part to be added
+     * @param database  Database
+     * @param quantity Number of items to be added
+     * @return
+     */
+
     public long[] addCommonItems(Part part, Database database, int quantity) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             Part existing = database.selectPartByPartName(part.getPartName());

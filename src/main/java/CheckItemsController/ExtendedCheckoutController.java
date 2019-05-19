@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DateCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.StageStyle;
 
@@ -49,8 +50,12 @@ public class ExtendedCheckoutController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         unlockFields();
+        setDatePickerValues();
     }
 
+    /**
+     * Submits fields to checkout page
+     */
     public void submit(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/CheckOutPage.fxml"));
@@ -69,11 +74,27 @@ public class ExtendedCheckoutController implements Initializable {
     }
 
 
-
+    /**
+     * Resets fields
+     */
     public void reset(){
         courseName.clear();
         profName.clear();
         returnDate.setValue(null);
+    }
+
+    /**
+     * Disables previous day values to be picked
+     */
+    private void setDatePickerValues(){
+        returnDate.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) < 0 );
+            }
+        });
     }
 
     /**

@@ -24,12 +24,20 @@ public class FaultyCheckIn {
     private CheckingOutPart checkingOutPart = new CheckingOutPart();
     private DatabaseHelper helper = new DatabaseHelper();
 
-
+    /**
+     * sets part to faulty status
+     * @param barcode Barcode of part
+     */
     public void setPartToFaultyStatus(long barcode){
         int partID = checkingOutPart.getPartIDFromBarcode(barcode, getPartIDtoCheckin);
         checkingOutPart.setPartStatus(partID, setPartsTableFaulty);
     }
 
+    /**
+     * Adds part to faulty table
+     * @param barcode Barcode of part
+     * @param description Description of fault
+     */
     public void addToFaultyTable(long barcode, String description){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(addToFaulty);
@@ -41,6 +49,13 @@ public class FaultyCheckIn {
 
     }
 
+    /**
+     * Helper method to add part to faulty table
+     * @param barcode Barcode of part
+     * @param description Description of fault
+     * @param preparedStatement Statement to be executed
+     * @return Statement to execute
+     */
     private PreparedStatement addToFaultyHelper(long barcode, String description, PreparedStatement preparedStatement){
         int partID = checkingOutPart.getPartIDFromBarcode(barcode, getPartIDtoCheckin);
         int checkoutID = checkingOutPart.getCheckoutIDfromPartID(partID);

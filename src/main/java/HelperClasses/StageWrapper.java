@@ -37,7 +37,11 @@ import java.util.function.UnaryOperator;
 public class StageWrapper {
 
 
-
+    /**
+     * Helper method to make a popup
+     * @param fxml Name of FXML page
+     * @param node The root scene to use
+     */
     public void popupPage(String fxml, Node node) {
         Stage stage = new Stage();
         try {
@@ -56,40 +60,13 @@ public class StageWrapper {
         }
     }
 
-    public void extendedPopup(String fxml, Node node){
-        Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource(fxml);
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load();
-            Scene scene = new Scene(root, 550, 400);
-            stage.setTitle("Part Information");
-            stage.initOwner(node.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setOnCloseRequest((event -> event.consume()));
-            stage.setScene(scene);
-            stage.showAndWait();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Show Part.");
-            e.printStackTrace();
-        }
-    }
 
-
-    public void newStage(String fxml, Node node) {
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource(fxml);
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            node.getScene().setRoot(loader.load(myFxmlURL));
-
-        } catch (IOException invoke) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-            invoke.printStackTrace();
-        }
-    }
-
+    /**
+     * Helper method to make popup with worker initialized
+     * @param fxml Name of FXML
+     * @param node The root scene to use
+     * @param worker Worker name
+     */
     public void newStage(String fxml, Node node, Worker worker) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
@@ -111,6 +88,12 @@ public class StageWrapper {
 //        }
     }
 
+    /**
+     * Gets student ID
+     * @param list List of characters
+     * @return Student ID
+     */
+
     public String getStudentID(List<String> list) {
         StringBuilder studentID = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
@@ -119,6 +102,11 @@ public class StageWrapper {
         return studentID.toString();
     }
 
+    /**
+     * Sliding alert maker
+     * @param title Title of alert
+     * @param content Content
+     */
     public void slidingAlert(String title, String content) {
         new Thread(new Runnable() {
             @Override
@@ -142,6 +130,10 @@ public class StageWrapper {
         }).start();
     }
 
+    /**
+     * Makes textfield a required value
+     * @param textField Textfield to make required
+     */
     public void requiredInputValidator(JFXTextField textField) {
         RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
         textField.getValidators().addAll(requiredFieldValidator);
@@ -157,21 +149,11 @@ public class StageWrapper {
         });
     }
 
-    public void requiredInputValidator(JFXComboBox comboBox) {
-        RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
-        comboBox.getValidators().add(requiredFieldValidator);
-        requiredFieldValidator.setMessage("This field is required");
-        requiredFieldValidator.autosize();
-        comboBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (!newValue) {
-                    comboBox.validate();
-                }
-            }
-        });
-    }
 
+    /**
+     * Makes autocompletetextfield a required value
+     * @param textField Textfield to make required
+     */
     public void requiredInputValidator(AutoCompleteTextField textField) {
         RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
         textField.getValidators().addAll(requiredFieldValidator);
@@ -187,19 +169,11 @@ public class StageWrapper {
         });
     }
 
-    public void rfidFilter(JFXTextField textField){
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getText();
-            if (text.matches("[0-9]*")) {
-                return change;
-            }
-            return null;
-        };
-        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-        textField.setTextFormatter(textFormatter);
 
-    }
-
+    /**
+     * Only allows integers to be entered
+     * @param textField Textfield for change to be applied to
+     */
     public void acceptIntegerOnly(JFXTextField textField){
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
@@ -212,6 +186,10 @@ public class StageWrapper {
         textField.setTextFormatter(textFormatter);
     }
 
+    /**
+     * Only allows integers to be entered
+     * @param passwordField Textfield for change to be applied to
+     */
     public void acceptIntegerOnly(JFXPasswordField passwordField) {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
@@ -224,6 +202,10 @@ public class StageWrapper {
         passwordField.setTextFormatter(textFormatter);
     }
 
+    /**
+     * Error poup
+     * @param errorText Error text
+     */
     public void errorAlert(String errorText){
         Alert errorAlert2 = new Alert(Alert.AlertType.ERROR);
         errorAlert2.setHeaderText("Error");

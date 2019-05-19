@@ -66,6 +66,12 @@ public class CheckingOutPart {
         }
     }
 
+    /**
+     * Checks out multiple items
+     * @param barcode Barcode of item
+     * @param studentID Student ID of student
+     * @param quantity Number of items
+     */
     public void addMultipleCheckouts(long barcode, int studentID, int quantity){
         List<Long> barcodes = getNonCheckedOutBarcodes(barcode);
         if(quantity ==1){
@@ -85,6 +91,11 @@ public class CheckingOutPart {
         barcodes.clear();
     }
 
+    /**
+     * Gets a list of all barcodes
+     * @param barcode
+     * @return A list of barcodes
+     */
     public List<Long> getAllBarcodes(long barcode){
         List<Long> barcodes = new LinkedList<>();
         if(!barcodeExists(barcode)){
@@ -109,6 +120,11 @@ public class CheckingOutPart {
         return barcodes;
     }
 
+    /**
+     * Gets list of barcodes not checked out
+     * @param barcode
+     * @return List of barcodes not checked out
+     */
     public List<Long> getNonCheckedOutBarcodes(long barcode){
         List<Long> barcodes = new LinkedList<>();
         if(!barcodeExists(barcode)){//Always return a case where barcodes will be different for method to checkout multiple barcodes.
@@ -133,6 +149,11 @@ public class CheckingOutPart {
         return barcodes;
     }
 
+    /**
+     * Gets partName from a barcode
+     * @param barcode Barcode to get partname from
+     * @return Part name
+     */
      private String getListofBarcodes(long barcode){
         String getPartName = "select partName from parts where barcode = ?";
         String partName = null;
@@ -200,6 +221,11 @@ public class CheckingOutPart {
         return partID;
     }
 
+    /**
+     * Checks if barcode exists
+     * @param barcode Barcode to be checked
+     * @return True if barcode exists
+     */
     private boolean barcodeExists(long barcode){
         List<Long> barcodes = new LinkedList<>();
         final String getAllBarcodes = "select barcode from parts";
