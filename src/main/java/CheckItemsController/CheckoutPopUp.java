@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
 
@@ -23,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 public class CheckoutPopUp extends StudentPage implements IController {
 
@@ -78,13 +80,22 @@ public class CheckoutPopUp extends StudentPage implements IController {
             String returnDate = "";
             String course = "";
             while (dataCheck) {
-                returnDate = JOptionPane.showInputDialog(null, "Please enter a date on which the item will \nbe taken back out (in the form yyyy-mm-dd)");
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Date Input");
+                dialog.setHeaderText("Please enter a date on which the item will \nbe taken back out (in the form yyyy-mm-dd)");
+                Optional<String> dateResult = dialog.showAndWait();
+                if (dateResult.isPresent()) {
+                    returnDate = dateResult.get();
+                }
                 if (returnDate != null && !returnDate.matches("\\s*")) {
                     if (returnDate.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
                         dataCheck = false;
                         date = true;
                     } else {
-                        JOptionPane.showMessageDialog(null, "Date must be of the form: yyyy-mm-dd");
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Date must be of the form: yyyy-mm-dd");
+                        alert.showAndWait();
                         date = false;
                     }
                 }else {
@@ -94,13 +105,22 @@ public class CheckoutPopUp extends StudentPage implements IController {
             }
             dataCheck = true;
             while (dataCheck) {
-                course = JOptionPane.showInputDialog(null, "Please enter a course code (i.e. CS3840)");
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Course Code Input");
+                dialog.setHeaderText("Please enter a course code (i.e. CS3840)");
+                Optional<String> courseCodeResult = dialog.showAndWait();
+                if (courseCodeResult.isPresent()) {
+                    course = courseCodeResult.get();
+                }
                 if (course != null && !course.matches("\\s*")) {
                     if (course.matches("^[A-Za-z]{2}\\d{3,4}$")) {
                         dataCheck = false;
                         curse = true;
                     } else {
-                        JOptionPane.showMessageDialog(null, "Please enter a valid course code.");
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Please enter a valid course code.");
+                        alert.showAndWait();
                         curse = false;
                     }
                 }else {

@@ -26,6 +26,7 @@ import javafx.util.Callback;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -231,8 +232,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
      */
     public boolean confirmDeleteOldHistory() {
         if (this.worker != null && this.worker.isAdmin()) {
-            return (JOptionPane.showConfirmDialog(null, "Are you sure you wish to clear the transaction " +
-                    "history for non-faulty parts older than 2 years:") == JOptionPane.YES_OPTION);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete Old History");
+            alert.setContentText("Are you sure you want to clear the transaction history for non-faulty parts older than 2 years?");
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+            return result.get() == ButtonType.YES;
         }
         return false;
     }
