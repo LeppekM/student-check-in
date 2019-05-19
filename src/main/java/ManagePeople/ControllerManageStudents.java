@@ -189,106 +189,10 @@ public class ControllerManageStudents implements IController, Initializable {
     }
 
     /**
-     * This method uses JOptionpane pop ups to create a new student
+     * This method creates a new student
      *
      */
     public void addStudent() {
-//        StringBuilder name = new StringBuilder();
-//        String id = "";
-//        String email = "";
-//        boolean notIncluded = true;
-//        boolean invalid = true;
-//        while (invalid && notIncluded) {
-//            id = JOptionPane.showInputDialog(null, "Please enter the student RFID.");
-//            if (id != null) {
-//                Pattern p = Pattern.compile("^(rfid:)");
-//                Matcher m = p.matcher(id);
-//                if (m.find()) {
-//                    id = id.substring(5);
-//                }
-//                if (!id.matches("[a-zA-Z]*") && id.length() == 5) {
-//                    if (!database.selectStudent(Integer.parseInt(id), null).getName().equals("")) {
-//                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student is already in the database.");
-//                        StudentCheckIn.logger.info("Manage Students: Student is already in the database.");
-//                        alert.showAndWait();
-//                        notIncluded = false;
-//                        break;
-//                    }
-//                    invalid = false;
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Student's RFID is invalid.");
-//                    StudentCheckIn.logger.error("Manage Students: Student's RFID is invalid.");
-//                }
-//            }else {
-//                break;
-//            }
-//        }
-//        invalid = true;
-//        Pattern p = Pattern.compile("[0-9]*");
-//        Matcher m;
-//        while (invalid && notIncluded){
-//            String input = JOptionPane.showInputDialog(null, "Please enter the student's first name.");
-//            if (input != null) {
-//                m = p.matcher(input);
-//                name = new StringBuilder(input);
-//                if (!m.matches() && !name.toString().matches("\\s*")) {
-//                    String temp = name.substring(0, 1).toUpperCase() + name.substring(1);
-//                    name = new StringBuilder(temp);
-//                    invalid = false;
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Student's first name is invalid or blank.");
-//                    StudentCheckIn.logger.error("Manage Students: Student's first name is invalid or blank.");
-//                }
-//            }else {
-//                break;
-//            }
-//        }
-//        invalid = true;
-//        while (invalid && notIncluded){
-//            String input = JOptionPane.showInputDialog(null, "Please enter the student's last name.");
-//            if (input != null) {
-//                m = p.matcher(input);
-//                name.append(" ");
-//                name.append(input);
-//                if (!m.matches() && !name.toString().matches("\\s+")) {
-//                    int space = name.indexOf(" ");
-//                    String temp = name.substring(0, space + 1) + name.substring(space + 1, space + 2).toUpperCase() + name.substring(space + 2);
-//                    name = new StringBuilder(temp);
-//                    invalid = false;
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Student's last name is invalid or blank.");
-//                    StudentCheckIn.logger.error("Manage Students: Student's last name is invalid or blank.");
-//                }
-//            }else {
-//                break;
-//            }
-//        }
-//        invalid = true;
-//        while (invalid && notIncluded){
-//            email = JOptionPane.showInputDialog(null, "Please enter the student's MSOE email.");
-//            if (email != null) {
-//                ObservableList<Student> students = database.getStudents();
-//                if (email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-//                    invalid = false;
-//                    for (Student s: students){
-//                        if (s.getEmail().equals(email)) {
-//                            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Student email already in use. Try another.");
-//                            alert.showAndWait();
-//                            invalid = true;
-//                        }
-//                    }
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Student's email must be their MSOE email.");
-//                    StudentCheckIn.logger.error("Manage Students: Student's email must be their MSOE email.");
-//                }
-//            }else {
-//                break;
-//            }
-//        }
-//        if (notIncluded && name != null && id != null && email != null) {
-//            database.initWorker(worker);
-//            database.addStudent(new Student(name.toString(), Integer.parseInt(id), email));
-//        }
         Stage stage = new Stage();
         try {
             URL myFxmlURL = ClassLoader.getSystemResource("fxml/addStudent.fxml");
@@ -315,7 +219,6 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * This method takes in an Excel file to import a list of students
-     *
      */
     @FXML
     private void importStudents() {
