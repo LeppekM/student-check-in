@@ -43,6 +43,10 @@ public class EditAdmin implements IController {
     private static String password;
     private static int adminPin;
 
+    /**
+     * Initializes the window and copies initial values
+     * @param w worker to edit
+     */
     public void setAdmin(Worker w) {
         worker = w;
         database = new Database();
@@ -74,11 +78,19 @@ public class EditAdmin implements IController {
         vbox.setSpacing(5);
     }
 
+    /**
+     * Helper method for saving
+     * @return true if nothing changed
+     */
     public boolean changed(){
         return !name.equals(workerName.getText()) || !password.equals(pass.getText()) || !workerEmail.equals(email.getText()) ||
                 adminPin != Integer.parseInt(pin.getText());
     }
 
+    /**
+     * Saves the edits to a worker
+     * @param actionEvent button
+     */
     public void save(ActionEvent actionEvent) {
         if (!changed()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");

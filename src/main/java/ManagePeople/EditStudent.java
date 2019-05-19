@@ -281,6 +281,7 @@ public class EditStudent implements IController {
                 if (buttonType == ButtonType.OK){
                     student.setName(studentName.getText());
                     student.setRFID(Integer.parseInt(RFID.getText()));
+                    student.setEmail(email.getText());
                     database.initWorker(worker);
                     database.updateStudent(student);
                     Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
