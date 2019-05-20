@@ -8,6 +8,7 @@ import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -121,6 +122,14 @@ public class ControllerManageStudents implements IController, Initializable {
         searchInput.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                Pattern p = Pattern.compile("^(rfid:)");
+                Matcher m = p.matcher(searchInput.getText());
+                if (m.find()) {
+                    Platform.runLater(() -> {
+                        searchInput.setText(searchInput.getText().substring(5));
+                    });
+                }
+
                 manageStudentsTable.setPredicate(new Predicate<TreeItem<ManageStudentsTabTableRow>>() {
                     @Override
                     public boolean test(TreeItem<ManageStudentsTabTableRow> tableRow) {
