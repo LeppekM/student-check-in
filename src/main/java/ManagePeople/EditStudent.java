@@ -7,6 +7,7 @@ import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
 import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
+import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import InventoryController.OverduePopUpController;
@@ -15,10 +16,13 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,12 +31,16 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditStudent implements IController {
 
@@ -49,13 +57,7 @@ public class EditStudent implements IController {
     private Label fees, date;
 
     @FXML
-    private JFXTreeTableView coTable;
-
-    @FXML
-    private JFXTreeTableView oTable;
-
-    @FXML
-    private JFXTreeTableView sTable;
+    private JFXTreeTableView coTable, oTable, sTable;
 
     @FXML
     private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
@@ -83,6 +85,24 @@ public class EditStudent implements IController {
         studentName.setText(student.getName());
         email.setText(student.getEmail());
         RFID.setText(student.getRFID() + "");
+        StageWrapper stageWrapper = new StageWrapper();
+        stageWrapper.acceptIntegerOnly(RFID);
+        RFID.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$")) {
+                    RFID.setText(oldValue);
+                }
+                Pattern p = Pattern.compile("^(rfid:)");
+                Matcher m = p.matcher(RFID.getText());
+                if (m.find()) {
+                    Platform.runLater(() -> {
+                        RFID.setText(RFID.getText().substring(5));
+                    });
+                }
+            }
+        });
+
         name = studentName.getText();
         id = Integer.parseInt(RFID.getText());
         studentEmail = email.getText();
@@ -96,6 +116,10 @@ public class EditStudent implements IController {
      */
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
+        Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setStyle("-fx-text-fill: white");
+        emptyTableLabel.setFont(new Font(18));
+        coTable.setPlaceholder(emptyTableLabel);
         coTableCol.prefWidthProperty().bind(coTable.widthProperty());
         coTableCol.setStyle("-fx-font-size: 18px");
         coTableCol.setResizable(false);
@@ -107,6 +131,10 @@ public class EditStudent implements IController {
         });
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
+        Label emptyTableLabel2 = new Label("No parts found.");
+        emptyTableLabel2.setStyle("-fx-text-fill: white");
+        emptyTableLabel2.setFont(new Font(18));
+        oTable.setPlaceholder(emptyTableLabel);
         oTableCol.prefWidthProperty().bind(oTable.widthProperty());
         oTableCol.setStyle("-fx-font-size: 18px");
         oTableCol.setResizable(false);
@@ -118,6 +146,10 @@ public class EditStudent implements IController {
         });
 
         sTableCol = new JFXTreeTableColumn<>("Part Name");
+        Label emptyTableLabel3 = new Label("No parts found.");
+        emptyTableLabel3.setStyle("-fx-text-fill: white");
+        emptyTableLabel3.setFont(new Font(18));
+        sTable.setPlaceholder(emptyTableLabel);
         sTableCol.prefWidthProperty().bind(sTable.widthProperty());
         sTableCol.setStyle("-fx-font-size: 18px");
         sTableCol.setResizable(false);

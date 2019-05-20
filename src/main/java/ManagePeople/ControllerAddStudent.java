@@ -3,6 +3,7 @@ package ManagePeople;
 import Database.*;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
+import HelperClasses.StageWrapper;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
@@ -34,6 +35,8 @@ public class ControllerAddStudent implements Initializable, IController {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         database = new Database();
+        StageWrapper sw = new StageWrapper();
+        sw.acceptIntegerOnly(rfid);
         // only allows user to enter 5 digits for rfid
         rfid.textProperty().addListener(new ChangeListener<String>() {
             @Override

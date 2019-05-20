@@ -395,6 +395,7 @@ public class ControllerManageStudents implements IController, Initializable {
             stage.setScene(scene);
             stage.getIcons().add(new Image("images/msoe.png"));
             stage.setOnHiding(event1 -> populateTable());
+            stage.setResizable(false);
             if (sp.changed()) {
                 stage.setOnCloseRequest(event1 -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
