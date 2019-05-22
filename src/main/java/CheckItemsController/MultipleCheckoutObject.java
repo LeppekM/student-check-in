@@ -1,5 +1,9 @@
 package CheckItemsController;
 
+/**
+ * This class stores info for parts with a multiple quantity option
+ */
+
 public class MultipleCheckoutObject {
     private long barcode;
     private int studentID, quantity;

@@ -1,8 +1,10 @@
 package CheckItemsController;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
+/**
+ * Stores info about a part that is checked out
+ */
 public class CheckoutObject {
 
     private static String studentID, barcode, quantity, checkoutAt, dueAt, extendedCourseName, extendedProfessor, faultyDescription;
@@ -11,6 +13,9 @@ public class CheckoutObject {
 
     private String checkoutAtDate, checkinAtDate;
 
+    /**
+     * Constructor
+     */
     public CheckoutObject(String studentID, String barcode, String quantity, boolean isExtended, boolean isFaulty) {
         this.studentID = studentID;
         this.barcode = barcode;
@@ -19,6 +24,9 @@ public class CheckoutObject {
         this.isFaulty = isFaulty;
     }
 
+    /**
+     * Constructor
+     */
     public CheckoutObject(String studentID, String barcode, String checkoutAt, String checkinAt, String dueAt) {
         this.studentID = studentID;
         this.barcode = barcode;
@@ -27,15 +35,19 @@ public class CheckoutObject {
         this.dueAt = dueAt;
     }
 
-    public void initExtendedInfo(String extendedCourseName, String extendedProfessor, LocalDate extendedReturnDate) {
-        this.extendedCourseName = extendedCourseName;
-        this.extendedProfessor = extendedProfessor;
-        this.extendedReturnDate = extendedReturnDate;
-    }
-
+    /**
+     * Passes in the faulty description. This is called only if the part is faulty
+     * @param faultyDescription
+     */
     public void initFaultyInfo(String faultyDescription) {
         this.faultyDescription = faultyDescription;
     }
+
+    /*************************
+     *
+     * Below are methods to get the stored info about the checked out part
+     *
+     ************************/
 
     public String getStudentID() {
         return studentID;

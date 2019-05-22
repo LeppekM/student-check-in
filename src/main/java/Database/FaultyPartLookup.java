@@ -18,6 +18,10 @@ public class FaultyPartLookup {
             "inner join parts on fault.partID = parts.partID";
     private String studentName, studentEmail, partName, barcode, description, price, location, date;
 
+    /**
+     * Method to return detailed faulty part info
+     * @return Return detailed faulty part info
+     */
     public ObservableList<FaultyPartTabTableRow> getDetailedFaultyInfo(){
         ObservableList<FaultyPartTabTableRow> data = FXCollections.observableArrayList();
         String query = " select students.studentName, students.email,  parts.partName, parts.barcode, fault.description, parts.price, parts.location, checkout.checkinAt\n" +

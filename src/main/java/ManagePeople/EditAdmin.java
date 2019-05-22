@@ -43,6 +43,10 @@ public class EditAdmin implements IController {
     private static String password;
     private static int adminPin;
 
+    /**
+     * Initializes the window and copies initial values
+     * @param w worker to edit
+     */
     public void setAdmin(Worker w) {
         worker = w;
         database = new Database();
@@ -74,10 +78,21 @@ public class EditAdmin implements IController {
         vbox.setSpacing(5);
     }
 
+    /**
+     * Helper method for saving
+     * @return true if nothing changed
+     */
+    public boolean changed(){
+        return !name.equals(workerName.getText()) || !password.equals(pass.getText()) || !workerEmail.equals(email.getText()) ||
+                adminPin != Integer.parseInt(pin.getText());
+    }
 
+    /**
+     * Saves the edits to a worker
+     * @param actionEvent button
+     */
     public void save(ActionEvent actionEvent) {
-        if (name.equals(workerName.getText()) && password.equals(pass.getText()) && workerEmail.equals(email.getText()) &&
-                adminPin == Integer.parseInt(pin.getText())){
+        if (!changed()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
@@ -98,25 +113,32 @@ public class EditAdmin implements IController {
             if (adminPin != Integer.parseInt(pin.getText())){
                 alert.setContentText(alert.getContentText() + "\t" + adminPin + " --> " + pin.getText() + "\n");
             }
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                worker.setName(workerName.getText());
-                worker.setEmail(email.getText());
-                worker.setPass(pass.getText());
-                worker.setPin(Integer.parseInt(pin.getText()));
-                database.initWorker(loggedWorker);
-                database.updateWorker(worker);
-                Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
-                alert1.showAndWait();
-            }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
-                workerName.setText(name);
-                email.setText(workerEmail);
-                pass.setText(password);
-                pin.setText(adminPin + "");
-            }
+            alert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.OK){
+                    worker.setName(workerName.getText());
+                    worker.setEmail(email.getText());
+                    worker.setPass(pass.getText());
+                    worker.setPin(Integer.parseInt(pin.getText()));
+                    database.initWorker(loggedWorker);
+                    database.updateWorker(worker);
+                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
+                    alert1.showAndWait();
+                    main.getScene().getWindow().hide();
+                }else {
+                    workerName.setText(name);
+                    email.setText(workerEmail);
+                    pass.setText(password);
+                    pin.setText(adminPin + "");
+                }
+            });
         }
     }
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (loggedWorker == null){

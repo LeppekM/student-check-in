@@ -1,11 +1,15 @@
 package InventoryController;
 
+import Database.Database;
 import Database.FaultyPartLookup;
+import Database.ObjectClasses.Part;
+import Database.ObjectClasses.Worker;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -54,6 +59,9 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     private static ObservableList<FaultyPartTabTableRow> data
             = FXCollections.observableArrayList();
 
+    private Worker worker;
+    private Database database;
+
     /**
      * This method sets the data in the faulty page.
      * @param location used to resolve relative paths for the root object, or null if the location is not known.
@@ -66,6 +74,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         emptyTableLabel.setFont(new Font(18));
 //        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         faultyTable.setPlaceholder(emptyTableLabel);
+        database = new Database();
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
@@ -144,6 +153,10 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         });
     }
 
+    public void exportFaulty(){
+        export.exportFaulty(data);
+    }
+
     private void viewPart(int index){
         Stage stage = new Stage();
         try {
@@ -218,5 +231,37 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                         || (faultDescription != null && faultDescription.toLowerCase().contains(input)));
             }
         });
+    }
+
+    public void resolveFault(ActionEvent actionEvent) {
+        if (faultyTable.getSelectionModel().getSelectedItems().size() == 1) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to resolve this fault?");
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+            alert.setTitle("Resolve Faulty Part?");
+            alert.setHeaderText("Resolving Faulty Part...");
+            alert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.YES) {
+                    int index = faultyTable.getSelectionModel().getFocusedIndex();
+                    FaultyPartTabTableRow part = faultyTable.getSelectionModel().getModelItem(index).getValue();
+                    database.resolveFault(Integer.parseInt(part.getBarcode().get()), part.getPartName().get());
+                    populateTable();
+                } else if (buttonType == ButtonType.NO) {
+                    alert.close();
+                }
+            });
+        }
+    }
+
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each class.
+     * @param worker the currently logged in worker
+     */
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null){
+            this.worker = worker;
+            database.initWorker(worker);
+        }
     }
 }

@@ -26,6 +26,7 @@ import javafx.util.Callback;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -160,6 +161,15 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     }
 
     /**
+     *
+     */
+    public void importTransaction(){
+        historyParts = new HistoryParts();
+        ObservableList<HistoryItems> list = historyParts.getHistoryItems();
+        export.exportTransactionHistory(list);
+    }
+
+    /**
      * This method adds content to the table.
      */
     public void populateTable() {
@@ -210,16 +220,24 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
      * clear the checkout table to remove transactions older than 2 years old.
      */
     public void clearOldHistory() {
-        if (isAdmin()) {
+        if (confirmDeleteOldHistory()) {
             database.clearOldHistory();
             populateTable();
         }
     }
 
-    public boolean isAdmin() {
+    /**
+     * Asks whether the user really wants to clear the 2-year-old history.
+     * @return true if yes; false otherwise
+     */
+    public boolean confirmDeleteOldHistory() {
         if (this.worker != null && this.worker.isAdmin()) {
-            return (JOptionPane.showConfirmDialog(null, "Are you sure you wish to clear the transaction " +
-                    "history for non-faulty parts older than 2 years:") == JOptionPane.YES_OPTION);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete Old History");
+            alert.setContentText("Are you sure you want to clear the transaction history for non-faulty parts older than 2 years?");
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+            return result.get() == ButtonType.YES;
         }
         return false;
     }

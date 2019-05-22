@@ -17,8 +17,14 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper class to transition items
+ */
 public class TransitionHelper {
-
+    /**
+     * Initializes the increment/decremnt buttons on spinners. 1-10 is the default value
+     * @param spinner Spinner to be initialized
+     */
     void spinnerInit(Spinner<Integer> spinner){
         final int initialValue = 1;
         SpinnerValueFactory<Integer> valueFactory = //
@@ -27,32 +33,10 @@ public class TransitionHelper {
     }
 
 
-
-    void barcodeItemsFadeTransition(Spinner spinner, JFXTextField textField){
-        int initial = 0;
-        int end = 1;
-        int duration = 500;
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(duration), spinner);
-        FadeTransition fadeTransition2 = new FadeTransition(Duration.millis(duration), textField);
-        fadeTransition2.setFromValue(initial);
-        fadeTransition.setFromValue(initial);
-        fadeTransition.setToValue(end);
-        fadeTransition2.setToValue(end);
-        fadeTransition.play();
-        fadeTransition2.play();
-    }
-
-
-    void translateButtons(JFXButton but1, JFXButton but2, int direction){
-        int duration = 500;
-        TranslateTransition transition = new TranslateTransition(Duration.millis(duration), but1);
-        TranslateTransition transition2 = new TranslateTransition(Duration.millis(duration), but2);
-        transition.setByY(direction);
-        transition2.setByY(direction);
-        transition.play();
-        transition2.play();
-    }
-
+    /**
+     * A fade transition for a generic object
+     * @param object Object to be transitioned
+     */
     void fadeTransition(Object object){
         int initial = 0;
         int end = 1;
@@ -63,22 +47,12 @@ public class TransitionHelper {
         fadeTransition.play();
     }
 
-    void fadeTransitionNewStudentObjects(Label email, JFXTextField emailField){
-        fadeTransition(email);
-        fadeTransition(emailField);
-    }
 
-    void translateExtendedStudentItems(Label course, Label prof, Label due, JFXTextField courseT, JFXTextField profT, JFXDatePicker dueT, JFXCheckBox box, JFXButton butt, JFXButton butt2){
-        int direction = 35;
-        int direction2 = 10;
-        course.setTranslateY(direction);
-        prof.setTranslateY(direction);
-        due.setTranslateY(direction);
-        courseT.setTranslateY(direction);
-        profT.setTranslateY(direction);
-        dueT.setTranslateY(direction);
-    }
-
+    /**
+     * A fade transition for the faulty textbox
+     * @param faulty The textarea
+     * @param direction The direction to be moved in
+     */
     void faultyBoxFadeTransition(TextArea faulty, int direction){
         int initial = 0;
         int end = 1;
@@ -93,7 +67,9 @@ public class TransitionHelper {
     }
 
 
-
+    /**
+     * A transition for faulty items
+     */
     void faultyTransition(JFXCheckBox faulty, JFXButton submit, JFXButton reset, int direction){
         List<TranslateTransition> transitions = new ArrayList<>();
         int duration = 500;
@@ -103,20 +79,10 @@ public class TransitionHelper {
         translateList(transitions, direction);
     }
 
-    void translateNewStudentItems(Label barcode, Label quantity, JFXTextField barcodeField, JFXTextField quantityField, JFXCheckBox box, JFXButton submit, JFXButton reset){
-        List<TranslateTransition> transitions = new ArrayList<>();
-        int duration = 500;
-        int direction = 50;
-        transitions.add(new TranslateTransition(Duration.millis(duration), barcode));
-        transitions.add(new TranslateTransition(Duration.millis(duration), quantity));
-        transitions.add(new TranslateTransition(Duration.millis(duration), barcodeField));
-        transitions.add(new TranslateTransition(Duration.millis(duration), quantityField));
-        transitions.add(new TranslateTransition(Duration.millis(duration), box));
-        transitions.add(new TranslateTransition(Duration.millis(duration), submit));
-        transitions.add(new TranslateTransition(Duration.millis(duration), reset));
-        translateList(transitions, direction);
-    }
 
+    /**
+     * Helper method for making new barcode
+     */
     void translateBarcodeItems(JFXButton button1, JFXButton button2, JFXCheckBox box1, JFXCheckBox box2, int direction){
         List<TranslateTransition> transitions = new ArrayList<>();
         int duration = 1;
@@ -127,6 +93,11 @@ public class TransitionHelper {
         translateList(transitions, direction);
     }
 
+    /**
+     * Helper method to easily transition multiple items
+     * @param items Items to be moved
+     * @param direction Direction to be moved in
+     */
     private void translateList(List<TranslateTransition> items, int direction){
         for (TranslateTransition transition : items) {
             transition.setByY(direction);

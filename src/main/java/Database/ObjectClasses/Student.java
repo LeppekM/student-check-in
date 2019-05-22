@@ -5,6 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import Database.OverdueItem;
 
+/**
+ * This class is a Java Object that represents a Student
+ */
 public class Student {
 
     private String name;
@@ -31,6 +34,11 @@ public class Student {
     public Student(String name, int RFID, String email) {
         this.name = name;
         this.RFID = RFID;
+        this.email = email;
+    }
+
+    public Student(String name, String email) {
+        this.name = name;
         this.email = email;
     }
 

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="325.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerAddWorker">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="325.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerAddWorker">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="325.0" prefWidth="350.0">
          <children>
@@ -27,7 +27,7 @@
                               <Insets left="10.0" right="5.0" top="20.0" />
                            </padding>
                         </Label>
-                        <JFXTextField fx:id="email" prefWidth="175.0">
+                        <JFXTextField fx:id="email" focusColor="FIREBRICK" prefWidth="175.0">
                            <padding>
                               <Insets top="23.0" />
                            </padding>
@@ -47,7 +47,7 @@
                               <Insets left="10.0" right="5.0" top="20.0" />
                            </padding>
                         </Label>
-                        <JFXTextField fx:id="first" prefWidth="187.0">
+                        <JFXTextField fx:id="first" focusColor="FIREBRICK" prefWidth="187.0">
                            <padding>
                               <Insets top="23.0" />
                            </padding>
@@ -67,7 +67,7 @@
                               <Insets left="10.0" right="5.0" top="20.0" />
                            </padding>
                         </Label>
-                        <JFXTextField fx:id="last" prefWidth="187.0">
+                        <JFXTextField fx:id="last" focusColor="FIREBRICK" prefWidth="187.0">
                            <padding>
                               <Insets top="23.0" />
                            </padding>
@@ -87,7 +87,7 @@
                               <Insets left="10.0" right="5.0" top="20.0" />
                            </padding>
                         </Label>
-                        <JFXPasswordField fx:id="pass" prefWidth="194.0">
+                        <JFXPasswordField fx:id="pass" focusColor="FIREBRICK" prefWidth="194.0">
                            <padding>
                               <Insets top="23.0" />
                            </padding>
@@ -99,7 +99,7 @@
                   </HBox>
                </children>
             </VBox>
-            <JFXButton fx:id="submit" layoutX="120.0" layoutY="250.0" mnemonicParsing="false" onAction="#submit" stylesheets="@../css/ButtonStyle.css" text="Submit" />
+            <JFXButton fx:id="submit" layoutX="120.0" layoutY="250.0" mnemonicParsing="false" onAction="#submit" stylesheets="@../css/CheckButton.css" text="Submit" />
          </children>
       </Pane>
    </children>

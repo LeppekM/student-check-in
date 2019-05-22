@@ -3,6 +3,8 @@ package InventoryController;
 import Database.*;
 import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Worker;
+import HelperClasses.ExportToExcel;
+import HelperClasses.StageWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -59,6 +61,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
 
     protected static Database database = new Database();
     private Worker worker;
+    ExportToExcel export = new ExportToExcel();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -152,12 +155,18 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
         return data;
     }
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (this.worker == null) {
             this.worker = worker;
             totalTabPageController.initWorker(worker);
             historyTabPageController.initWorker(worker);
+            faultyTabPageController.initWorker(worker);
         }
     }
 

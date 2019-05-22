@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -14,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="root" fx:id="sceneViewTotalPart" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerViewTotalPart">
+<VBox id="root" fx:id="sceneViewTotalPart" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerViewTotalPart">
     <children>
         <HBox fx:id="gridContainer">
             <children>
@@ -34,10 +33,10 @@
                               <Label id="nameLabel" font="$x1" text="Barcode:" GridPane.rowIndex="1" />
                               <Label id="nameLabel" font="$x1" text="Serial Number:" GridPane.rowIndex="2" />
                               <Label id="nameLabel" font="$x1" text="Part ID:" GridPane.rowIndex="3" />
-                              <JFXTextField fx:id="partNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                              <JFXTextField fx:id="barcodeField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <JFXTextField fx:id="serialNumberField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <JFXTextField fx:id="partIDField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <JFXTextField fx:id="partNameField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                              <JFXTextField fx:id="barcodeField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <JFXTextField fx:id="serialNumberField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <JFXTextField fx:id="partIDField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                           </children>
                           <columnConstraints>
                               <ColumnConstraints halignment="RIGHT" />
@@ -74,16 +73,6 @@
                      </font>
                   </Label>
                       <GridPane fx:id="gridCheckedOut" hgap="3.0" vgap="15.0">
-                          <children>
-                              <Label font="$x1" text="Student Name:" />
-                              <Label id="nameLabel" font="$x1" text="Student Email:" GridPane.rowIndex="1" />
-                              <Label id="nameLabel" fx:id="checkoutActionDate" font="$x1" text="Date:" GridPane.rowIndex="2" />
-                              <Label id="nameLabel" fx:id="dueDatePrompt" font="$x1" text="Due Date:" GridPane.rowIndex="3" />
-                              <JFXTextField fx:id="studentNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                              <JFXTextField fx:id="studentEmailField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <JFXTextField fx:id="checkoutActionDateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <JFXTextField fx:id="dueDateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                          </children>
                           <columnConstraints>
                               <ColumnConstraints halignment="RIGHT" />
                               <ColumnConstraints />
@@ -122,7 +111,7 @@
                             <children>
                                 <Label id="nameLabel" font="$x1" text="Price:" GridPane.rowIndex="0" />
                                 <Label id="nameLabel" font="$x1" text="Fault Description:" GridPane.rowIndex="1" />
-                                <JFXTextField fx:id="priceField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <JFXTextField fx:id="priceField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                                 <JFXTextArea fx:id="faultField" editable="false" prefColumnCount="15" prefRowCount="3" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
                             </children>
                             <columnConstraints>
@@ -151,10 +140,7 @@
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0">
             <children>
-                <JFXButton onAction="#goBack" style="-fx-border-color: #6e6e6e;" text="Close">
-                    <stylesheets>
-                        <URL value="@../css/ButtonStyle.css" />
-                    </stylesheets></JFXButton>
+                <JFXButton onAction="#goBack" stylesheets="@../css/CheckButton.css" text="Close" />
             </children>
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

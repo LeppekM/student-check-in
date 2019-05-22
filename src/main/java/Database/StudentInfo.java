@@ -33,6 +33,44 @@ public class StudentInfo {
         return sName;
     }
 
+    public boolean getStudentIDFromEmail(String email){
+        String sName = "";
+        String query = "select studentID from students where email = ?";
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                sName= rs.getString("studentID");
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        if (sName==null){
+            return true;
+        }
+        return false;
+
+    }
+
+    public void updateStudent(String studentEmail, int studentID){
+        String query = " update students\n" +
+                "  set studentID = ?\n" +
+                " where email = ?";
+
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,studentID);
+            preparedStatement.setString(2, studentEmail);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
     private PreparedStatement createNewStudentHelper(int studentID, String email, String studentName, PreparedStatement preparedStatement){
         try {
             preparedStatement.setInt(1, studentID);

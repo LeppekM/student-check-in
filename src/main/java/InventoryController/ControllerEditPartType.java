@@ -65,12 +65,19 @@ public class ControllerEditPartType extends ControllerEditPart {
         part = null;
     }
 
+    /**
+     * This method sets some of the fields to not be editable.
+     */
     private void disableFields() {
         serialField.setEditable(false);
         manufacturerField.setEditable(false);
         vendorField.setEditable(false);
     }
 
+    /**
+     * Only allows the user to enter digits to the barcode field, only allows the price
+     * input to look like a price, and requires that the editable fields not be blank.
+     */
     private void setFieldValidator() {
         stageWrapper.requiredInputValidator(nameField);
         stageWrapper.acceptIntegerOnly(barcodeField);
@@ -218,34 +225,13 @@ public class ControllerEditPartType extends ControllerEditPart {
                 && barcode != null && !barcode.trim().equals("");
     }
 
-    /**
-     * This method ensures that the inputs supposed to contain numbers do
-     * @return true if the input fields supposed to contain numbers do, false otherwise
-     */
-    protected boolean validateNumberInputsContainNumber(String number) {
-        boolean containsNumber = true;
-        try {
-            Double.parseDouble(number.replace(",", ""));
-        } catch (Exception e) {
-            containsNumber = false;
-        }
-        return containsNumber;
-    }
-
     private boolean validateUnusedBarcode(int barcode) {
         return database.getPartNameFromBarcode(barcode).equals("");
     }
 
     /**
-     * This method ensures that the inputs with numbers are non-negative and
-     * less than the max value for Doubles.
-     * @return true if the number inputs are within this range, false otherwise
+     * This method throws an error that a part with the inputted name already exists.
      */
-    protected boolean validateNumberInputsWithinRange(String price) {
-        return Double.parseDouble(price.replace(",", "").replace("$", "")) >= 0
-                && Double.parseDouble(price.replace(",", "").replace("$", "")) < Double.MAX_VALUE;
-    }
-
     private void uniquePartNameError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -253,6 +239,11 @@ public class ControllerEditPartType extends ControllerEditPart {
         alert.showAndWait();
     }
 
+    /**
+     * This method throws an error that the edited part type has unique barcodes, so the
+     * barcode cannot be edited.
+     * @param partName the name of the type of part being edited
+     */
     private void uniqueBarcodeError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -260,6 +251,9 @@ public class ControllerEditPartType extends ControllerEditPart {
         alert.showAndWait();
     }
 
+    /**
+     * This method throws an error that there already exists a part with the given barcode
+     */
     private void unusedBarcodeError(int barcode) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -274,27 +268,6 @@ public class ControllerEditPartType extends ControllerEditPart {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("Please fill out all fields");
-
-        alert.showAndWait();
-    }
-    /**
-     * Creates an alert informing user to enter digits
-     */
-    private void invalidNumberAlert(){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Please make sure you are entering a number into the price field");
-
-        alert.showAndWait();
-    }
-
-    /**
-     * Creates an alert informing user to enter non-negative numbers that are non-negative
-     */
-    private void numberOutOfRangeAlert(){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Please enter a non-negative number into the price field.");
 
         alert.showAndWait();
     }

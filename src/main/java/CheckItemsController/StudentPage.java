@@ -197,7 +197,7 @@ public class StudentPage implements IController {
 
     public void goBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/test.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckOutPage.fxml"));
             Parent root = loader.load();
             main.getScene().setRoot(root);
             ((CheckOutController) loader.getController()).initCheckoutObject(checkoutObject);
@@ -286,6 +286,11 @@ public class StudentPage implements IController {
         }
     }
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (this.worker == null) {

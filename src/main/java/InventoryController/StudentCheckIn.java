@@ -15,6 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
+/**
+ * Starts the program
+ */
 public class StudentCheckIn extends Application  {
     private static final String logLocation = System.getProperty("user.dir");
     public final static Logger logger = LogManager.getLogger(StudentCheckIn.class.getName());
@@ -25,22 +28,16 @@ public class StudentCheckIn extends Application  {
         System.setProperty("current.date", dateFormat.format(new Date()));
     }
 
+    /**
+     * Basic constructor
+     */
     public StudentCheckIn(){}
-//
-//    @Override
-//    public void start(Stage primaryStage) throws Exception{
-//        URL myFxmlURL = ClassLoader.getSystemResource("fxml/Menu.fxml");
-//        FXMLLoader loader = new FXMLLoader(myFxmlURL);
-//        Parent root = loader.load(myFxmlURL);
-//        Scene scene = new Scene(root, 789, 620);
-//        primaryStage.setResizable(false);
-//        primaryStage.setTitle("Barcode Scanner");
-//        primaryStage.setScene(scene);
-//        primaryStage.getIcons().add(new Image("images/msoe.png"));
-////        scene.getStylesheets().add(ControllerMenu.class.getResource("MenuStyle.css").toExternalForm());
-//        primaryStage.show();
-//    }
-//
+
+    /**
+     * Loads the window with the login page
+     * @param primaryStage stage that the window is loaded on
+     * @throws Exception general exception caught
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         URL myFxmlURL = ClassLoader.getSystemResource("fxml/Login.fxml");

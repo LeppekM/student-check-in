@@ -2,6 +2,9 @@ package CheckItemsController;
 
 import java.time.LocalDate;
 
+/**
+ * Stores info about an extended checkout object
+ */
 public class ExtendedCheckoutObject {
 
     private static String barcode, barcode2, barcode3, barcode4, barcode5, course, prof, extendedDate;
@@ -13,7 +16,11 @@ public class ExtendedCheckoutObject {
         this.prof = prof;
         this.extendedDate = extendedDate;
     }
-
+    /*************************
+     *
+     * Below are methods to get the stored info about the checked out part
+     *
+     ************************/
     public static boolean isFieldsFilled() {
         return fieldsFilled;
     }

@@ -16,9 +16,9 @@
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="840.0">
          <children>
-            <Label layoutY="279.0" stylesheets="@../css/HeaderStyle.css" text="Checked Out" />
-            <Label layoutX="338.0" layoutY="279.0" stylesheets="@../css/HeaderStyle.css" text="Overdue" />
-            <Label layoutX="642.0" layoutY="279.0" stylesheets="@../css/HeaderStyle.css" text="Saved" />
+            <Label layoutX="38.0" layoutY="279.0" stylesheets="@../css/HeaderStyleSmall.css" text="Checked Out" />
+            <Label layoutX="367.0" layoutY="279.0" stylesheets="@../css/HeaderStyleSmall.css" text="Overdue" />
+            <Label layoutX="657.0" layoutY="279.0" stylesheets="@../css/HeaderStyleSmall.css" text="Saved" />
             <JFXTreeTableView fx:id="coTable" layoutX="50.0" layoutY="337.0" onMouseClicked="#coPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@../css/TableStyle.css" />
             <JFXTreeTableView fx:id="oTable" layoutX="341.0" layoutY="337.0" onMouseClicked="#oPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@../css/TableStyle.css" />
             <JFXTreeTableView fx:id="sTable" layoutX="617.0" layoutY="337.0" onMouseClicked="#sPopUp" prefHeight="272.0" prefWidth="200.0" stylesheets="@../css/TableStyle.css" />
@@ -33,21 +33,21 @@
             </Button>
             <VBox fx:id="vbox" layoutX="63.0" layoutY="16.0" prefHeight="240.0" prefWidth="668.0">
                <children>
-                  <JFXTextField fx:id="studentName" alignment="CENTER" prefHeight="80.0" promptText="Name (First and Last)" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="studentName" alignment="CENTER" focusColor="FIREBRICK" prefHeight="80.0" promptText="Name (First and Last)">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <font>
                         <Font name="Arial Black" size="32.0" />
                      </font></JFXTextField>
-                  <JFXTextField fx:id="email" alignment="CENTER" prefHeight="80.0" promptText="MSOE Email" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="email" alignment="CENTER" focusColor="FIREBRICK" prefHeight="80.0" promptText="MSOE Email">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <font>
                         <Font name="Arial Black" size="32.0" />
                      </font></JFXTextField>
-                  <JFXTextField fx:id="RFID" alignment="CENTER" prefHeight="80.0" promptText="RFID" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+                  <JFXTextField fx:id="RFID" alignment="CENTER" focusColor="FIREBRICK" prefHeight="80.0" promptText="RFID">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>

@@ -147,6 +147,12 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         });
     }
 
+    public void exportCheckedOut(){
+        checkedOutParts = new CheckedOutParts();
+        ObservableList<CheckedOutItems> list = checkedOutParts.getCheckedOutItems();
+        export.exportCheckedOut(list);
+    }
+
     /**
      * This sets each column table to the corresponding field in the CheckedOutItems class, and then populates it.
      */

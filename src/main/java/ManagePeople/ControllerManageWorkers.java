@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -124,8 +125,8 @@ public class ControllerManageWorkers implements IController, Initializable {
 
         adminCol.setCellFactory(new Callback<TreeTableColumn<ManageWorkersTabTableRow, Boolean>, TreeTableCell<ManageWorkersTabTableRow, Boolean>>() {
             @Override
-            public TreeTableCell<ManageWorkersTabTableRow, Boolean> call( TreeTableColumn<ManageWorkersTabTableRow, Boolean> p ) {
-                CheckBoxTreeTableCell<ManageWorkersTabTableRow,Boolean> cell = new CheckBoxTreeTableCell<>();
+            public TreeTableCell<ManageWorkersTabTableRow, Boolean> call(TreeTableColumn<ManageWorkersTabTableRow, Boolean> p) {
+                CheckBoxTreeTableCell<ManageWorkersTabTableRow, Boolean> cell = new CheckBoxTreeTableCell<>();
                 cell.setAlignment(Pos.CENTER);
                 return cell;
             }
@@ -149,35 +150,38 @@ public class ControllerManageWorkers implements IController, Initializable {
             }
         });
 
-//        manageWorkersTable.setRowFactory(new Callback<TreeTableView<ManageWorkersTabTableRow>, TreeTableRow<ManageWorkersTabTableRow>>() {
-//            @Override
-//            public TreeTableRow<ManageWorkersTabTableRow> call(TreeTableView<ManageWorkersTabTableRow> param) {
-//                final TreeTableRow<ManageWorkersTabTableRow> row = new TreeTableRow<>();
-//                row.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent event) {
-//                        final int index = row.getIndex();
-//                        if (index >= 0 && index < manageWorkersTable.getCurrentItemsCount() && manageWorkersTable.getSelectionModel().isSelected(index)) {
-//                            manageWorkersTable.getSelectionModel().clearSelection();
-//                            event.consume();
-//                        }
-//                    }
-//                });
-//                return row;
-//            }
-//        });
-
+        manageWorkersTable.setRowFactory(new Callback<TreeTableView<ManageWorkersTabTableRow>, TreeTableRow<ManageWorkersTabTableRow>>() {
+            @Override
+            public TreeTableRow<ManageWorkersTabTableRow> call(TreeTableView<ManageWorkersTabTableRow> param) {
+                final TreeTableRow<ManageWorkersTabTableRow> row = new TreeTableRow<>();
+                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (event.getClickCount() == 2) {
+                            edit(row.getIndex());
+                        } else {
+                            final int index = row.getIndex();
+                            if (index >= 0 && index < manageWorkersTable.getCurrentItemsCount() && manageWorkersTable.getSelectionModel().isSelected(index)) {
+                                manageWorkersTable.getSelectionModel().clearSelection();
+                                event.consume();
+                            }
+                        }
+                    }
+                });
+                return row;
+            }
+        });
         populateTable();
     }
 
-    private void populateTable(){
+    private void populateTable() {
         tableRows.clear();
         manageWorkersTable.getColumns().clear();
         data.clear();
         database = new Database();
         data = database.getWorkers();
 
-        for (int i = 0; i < data.size(); i++){
+        for (int i = 0; i < data.size(); i++) {
             tableRows.add(new ManageWorkersTabTableRow(data.get(i).getName(), data.get(i).getEmail(),
                     data.get(i).isAdmin()));
         }
@@ -207,7 +211,7 @@ public class ControllerManageWorkers implements IController, Initializable {
             stage.setScene(scene);
             stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
-        }catch (IOException e){
+        } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add worker page");
             alert.initStyle(StageStyle.UTILITY);
             StudentCheckIn.logger.error("IOException: Couldn't load add worker page.");
@@ -232,7 +236,7 @@ public class ControllerManageWorkers implements IController, Initializable {
             stage.setScene(scene);
             stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
-        }catch (IOException e){
+        } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add admin page");
             alert.initStyle(StageStyle.UTILITY);
             StudentCheckIn.logger.error("IOException: Couldn't load add admin page.");
@@ -251,20 +255,20 @@ public class ControllerManageWorkers implements IController, Initializable {
         int admins = 0;
         boolean lastOne = false;
         boolean self = false;
-        for (Worker w : data){
-            if (w.isAdmin()){
+        for (Worker w : data) {
+            if (w.isAdmin()) {
                 admins++;
             }
         }
-        if (manageWorkersTable.getSelectionModel().getSelectedCells().size() != 0){
+        if (manageWorkersTable.getSelectionModel().getSelectedCells().size() != 0) {
             int row = manageWorkersTable.getSelectionModel().getFocusedIndex();
-            if (admins == 1 && data.get(row).isAdmin()){
+            if (admins == 1 && data.get(row).isAdmin()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot delete the last admin.");
                 StudentCheckIn.logger.error("Manage Workers: Unable to delete last admin.");
                 alert.showAndWait();
                 lastOne = true;
             }
-            if (worker.getID() == data.get(row).getID()){
+            if (worker.getID() == data.get(row).getID()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot delete your own account.");
                 StudentCheckIn.logger.error("Manage Workers: Cannot delete own account.");
                 alert.showAndWait();
@@ -274,7 +278,7 @@ public class ControllerManageWorkers implements IController, Initializable {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this worker?");
                 alert.setTitle("Delete This Worker?");
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK){
+                if (result.isPresent() && result.get() == ButtonType.OK) {
                     database.deleteWorker(data.get(row).getName());
                     data.remove(row);
                 }
@@ -283,7 +287,7 @@ public class ControllerManageWorkers implements IController, Initializable {
         populateTable();
     }
 
-    public void goBack(){
+    public void goBack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
             Parent root = loader.load();
@@ -299,88 +303,97 @@ public class ControllerManageWorkers implements IController, Initializable {
         }
     }
 
-    public void edit(MouseEvent event) {
-        if (event.getClickCount() == 2){
-            Stage stage = new Stage();
-            int f = manageWorkersTable.getSelectionModel().getSelectedIndex();
-            ManageWorkersTabTableRow r = manageWorkersTable.getSelectionModel().getModelItem(f).getValue();
-            Worker w = database.getWorker(r.getEmail().get());
-            if (w.isAdmin()){
-                try {
-                    URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditAdmin.fxml");
-                    FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                    Parent root = loader.load();
-                    EditAdmin ea = loader.getController();
-                    ea.setAdmin(w);
-                    ea.initWorker(worker);
-                    Scene scene = new Scene(root, 790, 500);
-                    stage.setTitle("Edit " + w.getName());
-                    stage.initOwner(manageWorkersScene.getScene().getWindow());
-                    stage.initModality(Modality.WINDOW_MODAL);
-                    stage.setScene(scene);
-                    stage.getIcons().add(new Image("images/msoe.png"));
+    public void edit(int row) {
+        Stage stage = new Stage();
+        ManageWorkersTabTableRow r = manageWorkersTable.getSelectionModel().getModelItem(row).getValue();
+        Worker w = database.getWorker(r.getEmail().get());
+        if (w.isAdmin()) {
+            try {
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditAdmin.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                Parent root = loader.load();
+                EditAdmin ea = loader.getController();
+                ea.setAdmin(w);
+                ea.initWorker(worker);
+                Scene scene = new Scene(root, 790, 500);
+                stage.setTitle("Edit " + w.getName());
+                stage.initOwner(manageWorkersScene.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.setScene(scene);
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.setOnHiding(event1 -> populateTable());
+                if (ea.changed()) {
                     stage.setOnCloseRequest(event1 -> {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
                         alert.setTitle("Confirm Close");
                         alert.setHeaderText("If you leave now, unsaved changes could be lost.");
                         alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
                         alert.showAndWait().ifPresent(buttonType -> {
-                            if (buttonType == ButtonType.YES){
+                            if (buttonType == ButtonType.YES) {
                                 stage.close();
-                            }else if (buttonType == ButtonType.NO){
+                            } else if (buttonType == ButtonType.NO) {
                                 event1.consume();
                             }
                         });
                     });
-                    stage.show();
-                    populateTable();
-                }catch (IOException e){
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load admin info page");
-                    alert.initStyle(StageStyle.UTILITY);
-                    StudentCheckIn.logger.error("IOException: Couldn't load admin info page.");
-                    alert.showAndWait();
-                    e.printStackTrace();
                 }
-            }else {
-                try {
-                    URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditWorker.fxml");
-                    FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                    Parent root = loader.load();
-                    EditWorker ew = loader.getController();
-                    ew.setWorker(w);
-                    ew.initWorker(worker);
-                    Scene scene = new Scene(root, 790, 620);
-                    stage.setTitle("Edit " + w.getName());
-                    stage.initOwner(manageWorkersScene.getScene().getWindow());
-                    stage.initModality(Modality.WINDOW_MODAL);
-                    stage.setScene(scene);
-                    stage.getIcons().add(new Image("images/msoe.png"));
+                stage.show();
+                populateTable();
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load admin info page");
+                alert.initStyle(StageStyle.UTILITY);
+                StudentCheckIn.logger.error("IOException: Couldn't load admin info page.");
+                alert.showAndWait();
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditWorker.fxml");
+                FXMLLoader loader = new FXMLLoader(myFxmlURL);
+                Parent root = loader.load();
+                EditWorker ew = loader.getController();
+                ew.setWorker(w);
+                ew.initWorker(worker);
+                Scene scene = new Scene(root, 790, 620);
+                stage.setTitle("Edit " + w.getName());
+                stage.initOwner(manageWorkersScene.getScene().getWindow());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.setScene(scene);
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.setOnHiding(event1 -> populateTable());
+                if (ew.changed()) {
                     stage.setOnCloseRequest(event1 -> {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
                         alert.setTitle("Confirm Close");
                         alert.setHeaderText("If you leave now, unsaved changes could be lost.");
                         alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
                         alert.showAndWait().ifPresent(buttonType -> {
-                            if (buttonType == ButtonType.YES){
+                            if (buttonType == ButtonType.YES) {
                                 stage.close();
-                            }else if (buttonType == ButtonType.NO){
+                            } else if (buttonType == ButtonType.NO) {
                                 event1.consume();
                             }
                         });
                     });
-                    stage.show();
-                    populateTable();
-                } catch (IOException e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load worker info page");
-                    alert.initStyle(StageStyle.UTILITY);
-                    StudentCheckIn.logger.error("IOException: Couldn't load worker info page.");
-                    alert.showAndWait();
-                    e.printStackTrace();
                 }
+                stage.show();
+                populateTable();
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load worker info page");
+                alert.initStyle(StageStyle.UTILITY);
+                StudentCheckIn.logger.error("IOException: Couldn't load worker info page.");
+                alert.showAndWait();
+                e.printStackTrace();
             }
         }
     }
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     *
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (this.worker == null) {

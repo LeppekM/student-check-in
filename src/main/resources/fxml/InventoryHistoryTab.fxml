@@ -6,11 +6,13 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
+<VBox fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
     <children>
       <HBox>
          <children>
@@ -41,14 +43,23 @@
         <JFXTreeTableView fx:id="historyTable" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
         <HBox alignment="CENTER_RIGHT" VBox.vgrow="NEVER">
             <children>
+            <JFXButton alignment="CENTER" contentDisplay="TOP" onAction="#importTransaction" prefHeight="68.0" prefWidth="53.0" translateX="-20.0">
+               <graphic>
+                  <ImageView fitHeight="36.0" fitWidth="38.0">
+                     <image>
+                        <Image url="@../images/download.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
                 <JFXButton fx:id="clearOldHistory" disable="true" mnemonicParsing="false" onAction="#clearOldHistory" prefHeight="45.0" prefWidth="175.0" stylesheets="@../css/CheckButton.css" text="Clear Old History">
                     <HBox.margin>
-                        <Insets right="20.0" top="14.0" />
+                        <Insets right="20.0" />
                     </HBox.margin>
                 </JFXButton>
             </children>
             <VBox.margin>
-                <Insets bottom="14.0" />
+                <Insets />
             </VBox.margin>
         </HBox>
     </children>

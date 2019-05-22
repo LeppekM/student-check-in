@@ -5,12 +5,13 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.sql.Date;
-
+/**
+ * Represents all of the info about parts on the total inventory tab
+ */
 public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     private StringProperty studentName, studentEmail, partName, partID, barcode, serialNumber, location,
-            status, dueDate, fee, faultDescription;
+            status, dueDate, fee, faultDescription, className, professorName;
 
     private String actionType;
 
@@ -20,7 +21,7 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     public TotalTabTableRow(String studentName, String studentEmail, String partName, String partID,
                             String barcode, String serialNumber, String location, String status,
-                            String checkedOutAt, String checkedInAt, String dueDate, String price, boolean fault) {
+                            String checkedOutAt, String checkedInAt, String dueDate, String price, boolean fault, String className, String professorName) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
@@ -43,6 +44,8 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
             this.faultDescription = new SimpleStringProperty(database.getFaultDescription(Integer.parseInt(partID)));
         }
         this.fee = new SimpleStringProperty(price);
+        this.className = new SimpleStringProperty(className);
+        this.professorName = new SimpleStringProperty(professorName);
     }
 
     public void initFee(String fee) {
@@ -104,4 +107,13 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
     public String getActionType() {
         return actionType;
     }
+
+    public StringProperty getClassName() {
+        return className;
+    }
+
+    public StringProperty getProfessorName() {
+        return professorName;
+    }
+
 }

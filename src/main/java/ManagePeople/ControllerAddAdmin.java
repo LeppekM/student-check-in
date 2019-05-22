@@ -62,7 +62,7 @@ public class ControllerAddAdmin implements Initializable, IController {
                     break;
                 }
             }
-            if (!email.getText().matches("^\\w+[+.\\w-]*@msoe\\.edu$")){
+            if (!email.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Email must be an MSOE email.");
                 StudentCheckIn.logger.warn("Add Admin: Email isn't @msoe.edu");
                 alert.showAndWait();
@@ -121,6 +121,11 @@ public class ControllerAddAdmin implements Initializable, IController {
         }
     }
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (this.worker == null){

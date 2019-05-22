@@ -1,0 +1,7 @@
+.label {
+    -fx-font-size: 32px;
+    -fx-font-family: "Arial Black";
+    -fx-font-weight: bold;
+    -fx-text-fill: derive(#B22222, 30%);
+
+}

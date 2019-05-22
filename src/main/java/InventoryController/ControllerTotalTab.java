@@ -375,6 +375,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         populateTable();
     }
 
+    public void exportParts(){
+        export.exportPartList(data);
+    }
+
     /**
      * Adds the current worker to the class, so that the class knows whether an administrator
      * or student worker is currently logged in.
@@ -491,12 +495,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             for (int i = 0; i < data.size(); i++) {
                 student = database.getStudentToLastCheckout(data.get(i).getPartID());
                 checkoutObject = database.getLastCheckoutOf(data.get(i).getPartID());
-                TotalTabTableRow row = new TotalTabTableRow(student.getName(), student.getEmail(),
+                TotalTabTableRow row = new TotalTabTableRow(student.getName(), student.getEmail().replace("\\", ""),
                         data.get(i).getPartName(), "" + data.get(i).getPartID(),
                         "" + data.get(i).getBarcode(), data.get(i).getSerialNumber(),
                         data.get(i).getLocation(), database.isOverdue("" + checkoutObject.getDueAt()) ? "In" : "Out",
                         checkoutObject.getCheckoutAtDate(), checkoutObject.getCheckinAtDate(), checkoutObject.getDueAt(),
-                        "" + data.get(i).getPrice(), data.get(i).getFault());
+                        "" + data.get(i).getPrice(), data.get(i).getFault(), checkoutObject.getExtendedCourseName(), checkoutObject.getExtendedProfessor());
                 if (database.isOverdue(checkoutObject.getDueAt())) {
                     row.initFee("" + data.get(i).getPrice());
                 }
@@ -702,13 +706,14 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     /**
      * This method calls the database method to soft delete an item from the inventory list
      * this then updates the gui table
-     *
-     * @author Bailey Terry
      */
     public void deletePart(String partID) {
+        database.initWorker(worker);
         try {
             if (database.selectPart(Integer.parseInt(partID)) != null) {
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete the part with ID = " + partID + "?") == JOptionPane.YES_OPTION) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete the part with ID = " + partID + "?", ButtonType.YES, ButtonType.NO);
+                alert.showAndWait();
+                if (alert.getResult() == ButtonType.YES) {
                     database.deleteItem(Integer.parseInt(partID));
                     populateTable();
                 }
@@ -722,9 +727,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
     }
     public void deletePartType(String partName) {
+        database.initWorker(worker);
         try {
             if (database.hasPartName(partName)) {
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete all parts named: " + partName) == JOptionPane.YES_OPTION) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete all parts named: " + partName +"?", ButtonType.YES, ButtonType.NO);
+                alert.showAndWait();
+                if (alert.getResult() == ButtonType.YES) {
                     database.deleteParts(partName);
                     populateTable();
                 }

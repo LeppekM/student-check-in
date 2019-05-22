@@ -47,6 +47,11 @@ public class EditWorker implements IController {
     private static boolean work;
     private static boolean remove;
 
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     * @param worker the currently logged in worker
+     */
     @Override
     public void initWorker(Worker worker) {
         if (loggedWorker == null){
@@ -92,11 +97,14 @@ public class EditWorker implements IController {
         vbox.setSpacing(5);
     }
 
+    public boolean changed(){
+        return !name.equals(workerName.getText()) || !password.equals(pass.getText()) || !workerEmail.equals(email.getText()) ||
+                priv != admin.isSelected() || edit != editParts.isSelected() || over != overdue.isSelected() ||
+                work != workers.isSelected() || remove != removeParts.isSelected();
+    }
 
     public void save(ActionEvent actionEvent) {
-        if (name.equals(workerName.getText()) && password.equals(pass.getText()) && workerEmail.equals(email.getText()) &&
-                priv == admin.isSelected() && edit == editParts.isSelected() && over == overdue.isSelected() &&
-                work == workers.isSelected() && remove == removeParts.isSelected()){
+        if (!changed()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
@@ -129,25 +137,27 @@ public class EditWorker implements IController {
             if (remove != removeParts.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Remove Parts: " + remove + " --> Remove Parts: " + removeParts.isSelected() + "\n");
             }
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                worker.setName(workerName.getText());
-                worker.setEmail(email.getText());
-                worker.setPass(pass.getText());
-                worker.setAdmin(false);
-                worker.setOver(overdue.isSelected());
-                worker.setEdit(editParts.isSelected());
-                worker.setRemove(removeParts.isSelected());
-                worker.setWorker(workers.isSelected());
-                database.initWorker(loggedWorker);
-                database.updateWorker(worker);
-                Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
-                alert1.showAndWait();
-            }else if (result.isPresent() && result.get() == ButtonType.CANCEL){
-                workerName.setText(name);
-                email.setText(workerEmail);
-                pass.setText(password);
-            }
+            alert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.OK){
+                    worker.setName(workerName.getText());
+                    worker.setEmail(email.getText());
+                    worker.setPass(pass.getText());
+                    worker.setAdmin(false);
+                    worker.setOver(overdue.isSelected());
+                    worker.setEdit(editParts.isSelected());
+                    worker.setRemove(removeParts.isSelected());
+                    worker.setWorker(workers.isSelected());
+                    database.initWorker(loggedWorker);
+                    database.updateWorker(worker);
+                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
+                    alert1.showAndWait();
+                    main.getScene().getWindow().hide();
+                }else {
+                    workerName.setText(name);
+                    email.setText(workerEmail);
+                    pass.setText(password);
+                }
+            });
         }
     }
 
