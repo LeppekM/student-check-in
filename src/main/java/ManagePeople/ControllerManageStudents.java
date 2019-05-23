@@ -269,8 +269,8 @@ public class ControllerManageStudents implements IController, Initializable {
                         if (!email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                             failedImports.add(new Student(firstName + " " + lastName, email));
                         } else {
-                            email = email.replace("'", "\\'");
                             if (!database.getStudentEmails().contains(email)) {
+                                email = email.replace("'", "\\'");
                                 if (!database.importStudent(new Student((firstName + " " + lastName).replace("'", "\\'"), email))) {
                                     failedImports.add(new Student(firstName + " " + lastName, email));
                                 }
