@@ -679,6 +679,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 loader = new FXMLLoader(getClass().getResource("/fxml/EditPartType.fxml"));
             } else {
                 loader = new FXMLLoader(getClass().getResource("/fxml/EditOnePart.fxml"));
+
             }
             Parent root = loader.load();
             ((ControllerEditPart) loader.getController()).initPart(part);
