@@ -148,7 +148,7 @@ public class Database implements IController {
      */
     public void deleteItem(int partID) {
         try {
-            String delete = "update parts p set p.deletedBy = '" + this.worker.getName().replace("'", "\\'") + "', p.isDeleted = 1, p.deletedAt = date('"
+            String delete = "update parts p set p.deletedBy = '" + this.worker.getName().replace("'", "\\'") + "', p.deletedAt = date('"
                     + gettoday() + "') where p.partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
@@ -167,7 +167,7 @@ public class Database implements IController {
      */
     public void deleteParts(String partName) {
         try {
-            String deleteQuery = "UPDATE parts p set p.deletedBy = '" + this.worker.getName().replace("'", "\\'") + "', p.isDeleted = 1, " +
+            String deleteQuery = "UPDATE parts p set p.deletedBy = '" + this.worker.getName().replace("'", "\\'") + "', " +
                     "p.deletedAt = date('" + gettoday() + "') WHERE p.partName = '" + partName + "';";
             Statement statement = connection.createStatement();
             statement.executeUpdate(deleteQuery);
@@ -192,7 +192,7 @@ public class Database implements IController {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getBoolean("isFaulty"),
-                        resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
+                        resultSet.getInt("partID"));
             }
             resultSet.close();
             statement.close();
@@ -364,7 +364,7 @@ public class Database implements IController {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getLong("barcode"), false,
-                        resultSet.getInt("partID"), resultSet.getInt("isDeleted"));
+                        resultSet.getInt("partID"));
             }
             resultSet.close();
             statement.close();
@@ -426,7 +426,7 @@ public class Database implements IController {
      * @return the list of serial numbers
      */
     public ArrayList<String> getOtherSerialNumbersForPartName(String partName, String partID) {
-        String query = "SELECT serialNumber FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "' AND partID != " + partID + ";";
+        String query = "SELECT serialNumber FROM parts WHERE partName = '" + partName + "' AND partID != " + partID + ";";
         ArrayList<String> serialNumbers = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -449,7 +449,7 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getOtherBarcodesForPartName(String partName, String partID) {
-        String query = "SELECT barcode FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "' AND partID != " + partID + ";";
+        String query = "SELECT barcode FROM parts WHERE partName = '" + partName + "' AND partID != " + partID + ";";
         ArrayList<String> barcodes = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -471,7 +471,7 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getAllBarcodesForPartName(String partName) {
-        String query = "SELECT barcode FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
+        String query = "SELECT barcode FROM parts WHERE partName = '" + partName + "';";
         ArrayList<String> barcodes = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -493,7 +493,7 @@ public class Database implements IController {
      * @return the list of part IDs
      */
     public ArrayList<String> getAllPartIDsForPartName(String partName) {
-        String query = "SELECT partID FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
+        String query = "SELECT partID FROM parts WHERE partName = '" + partName + "';";
         ArrayList<String> partIDs = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -515,7 +515,7 @@ public class Database implements IController {
      * @return the list of serial numbers
      */
     public ArrayList<String> getAllSerialNumbersForPartName(String partName) {
-        String query = "SELECT serialNumber FROM parts WHERE parts.isDeleted = 0 AND partName = '" + partName + "';";
+        String query = "SELECT serialNumber FROM parts WHERE partName = '" + partName + "';";
         ArrayList<String> serialNumbers = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -575,7 +575,7 @@ public class Database implements IController {
      * @return the number of parts
      */
     public int countPartsOfType(String partName) {
-        String query = "SELECT COUNT(*) FROM parts WHERE isDeleted = 0 AND partName = '" + partName + "';";
+        String query = "SELECT COUNT(*) FROM parts WHERE partName = '" + partName + "';";
         ResultSet resultSet;
         try {
             Statement statement = connection.createStatement();

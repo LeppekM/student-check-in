@@ -132,10 +132,9 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
                 long barcode = rs.getLong("barcode");
                 boolean fault = (rs.getInt("isFaulty") == 1) ? true : false;
                 int partID = rs.getInt("partID");
-                int isDeleted = rs.getInt("isDeleted");
                 int isCheckedOut = rs.getInt("isCheckedOut");
 //                String faultDesc = rs.getString("faultDesc");
-                Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID, isDeleted);
+                Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID);
                 part.setCheckedOut(isCheckedOut);
                 data.add(part);
             }

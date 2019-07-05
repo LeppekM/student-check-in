@@ -22,9 +22,8 @@ CREATE PROCEDURE load_parts()
                            isFaulty,
                            isCheckedOut,
                            createdAt,
-                           createdBy,
-                           isDeleted)
-        values ('Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', i, 0, 0, current_date, 'root', 0);
+                           createdBy)
+        values ('Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', i, 0, 0, current_date, 'root');
       ELSEIF i < 208
         THEN
           set j = i - 103;
@@ -38,9 +37,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', i, 0, 0, current_date, 'root');
       ELSEIF i < 298
         THEN
           set j = i - 207;
@@ -54,9 +52,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', i, 0, 0, current_date, 'root');
       ELSEIF i < 379
         THEN
           set j = i - 297;
@@ -70,9 +67,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9843, 3, 'S350 D1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9843, 3, 'S350 D1', i, 0, 0, current_date, 'root');
       ELSEIF i < 440
         THEN
           set j = i - 378;
@@ -86,9 +82,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', i, 0, 0, current_date, 'root');
       ELSEIF i < 467
         THEN
           set j = i - 439;
@@ -102,9 +97,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', i, 0, 0, current_date, 'root');
       ELSEIF i < 480
         THEN
           set j = i - 466;
@@ -118,9 +112,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Olimex ECG/EMG', j, 'MSOE', 2453, 1, 'S350 G1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('Olimex ECG/EMG', j, 'MSOE', 2453, 1, 'S350 G1', i, 0, 0, current_date, 'root');
       ELSEIF i < 494
         THEN
           set j = i - 479;
@@ -134,9 +127,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('TENS Unit', j, 'TENS', 4999, 4, 'S350 H1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('TENS Unit', j, 'TENS', 4999, 4, 'S350 H1', i, 0, 0, current_date, 'root');
       ELSEIF i < 580
         THEN
           set j = i - 493;
@@ -150,9 +142,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Analog Discovery 2', j, 'Digilent', 27900, 5, 'S350 I1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('Analog Discovery 2', j, 'Digilent', 27900, 5, 'S350 I1', i, 0, 0, current_date, 'root');
       ELSEIF i < 592
         THEN
           set j = i - 579;
@@ -166,9 +157,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Fluke 123 Scopemeter', j, 'Fluke', 189900, 6, 'S350 J1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('Fluke 123 Scopemeter', j, 'Fluke', 189900, 6, 'S350 J1', i, 0, 0, current_date, 'root');
       ELSEIF i < 611
         THEN
           set j = i - 591;
@@ -182,20 +172,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('Fluke 43 & 43B Power Quality Analyzer',
-                  j,
-                  'Fluke',
-                  346900,
-                  6,
-                  'S350 K1',
-                  i,
-                  0,
-                  0,
-                  current_date,
-                  'root',
-                  0);
+                             createdBy)
+          values ('Fluke 43 & 43B Power Quality Analyzer', j, 'Fluke', 346900, 6, 'S350 K1', i, 0, 0, current_date, 'root');
       ELSEIF i < 632
         THEN
           set j = i - 610;
@@ -209,9 +187,8 @@ CREATE PROCEDURE load_parts()
                              isFaulty,
                              isCheckedOut,
                              createdAt,
-                             createdBy,
-                             isDeleted)
-          values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', i, 0, 0, current_date, 'root', 0);
+                             createdBy)
+          values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', i, 0, 0, current_date, 'root');
 
       ELSE
         #        set j = i - 675;
@@ -226,9 +203,8 @@ CREATE PROCEDURE load_parts()
                            isFaulty,
                            isCheckedOut,
                            createdAt,
-                           createdBy,
-                           isDeleted)
-        values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', 15900, 8, 'S350 M1', i, 0, 0, current_date, 'root', 0);
+                           createdBy)
+        values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', 15900, 8, 'S350 M1', i, 0, 0, current_date, 'root');
       END IF;
       set i = i + 1;
     END WHILE;
@@ -272,33 +248,113 @@ CREATE PROCEDURE load_workers()
   BEGIN
     TRUNCATE TABLE workers;
     START TRANSACTION;
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    INSERT INTO workers (email,
+                         workerName,
+                         pass,
+                         pin,
+                         isAdmin,
+                         editParts,
+                         overdue,
+                         removeParts,
+                         workers,
+                         createdAt,
+                         createdBy)
     VALUES ('terrybc@msoe.edu', 'Bailey Terry', 'Sharks12', 1234, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    INSERT INTO workers (email,
+                         workerName,
+                         pass,
+                         pin,
+                         isAdmin,
+                         editParts,
+                         overdue,
+                         removeParts,
+                         workers,
+                         createdAt,
+                         createdBy)
     VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 'Sharks12', 4123, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    INSERT INTO workers (email,
+                         workerName,
+                         pass,
+                         pin,
+                         isAdmin,
+                         editParts,
+                         overdue,
+                         removeParts,
+                         workers,
+                         createdAt,
+                         createdBy)
     VALUES ('langdk@msoe.edu', 'Daniel Lang', 'Sharks12', 3412, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    INSERT INTO workers (email,
+                         workerName,
+                         pass,
+                         pin,
+                         isAdmin,
+                         editParts,
+                         overdue,
+                         removeParts,
+                         workers,
+                         createdAt,
+                         createdBy)
     VALUES ('karczma@msoe.edu', 'Matthew Karcz', 'Sharks12', 0, 0, 1, 1, 1, 1, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    INSERT INTO workers (email,
+                         workerName,
+                         pass,
+                         pin,
+                         isAdmin,
+                         editParts,
+                         overdue,
+                         removeParts,
+                         workers,
+                         createdAt,
+                         createdBy)
     VALUES ('test1@msoe.edu', 'Edit Parts Admin', 'Sharks12', 0, 0, 1, 0, 0, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    INSERT INTO workers (email,
+                         workerName,
+                         pass,
+                         pin,
+                         isAdmin,
+                         editParts,
+                         overdue,
+                         removeParts,
+                         workers,
+                         createdAt,
+                         createdBy)
     VALUES ('test2@msoe.edu', 'Overdue Admin', 'Sharks12', 0, 0, 0, 1, 0, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    INSERT INTO workers (email,
+                         workerName,
+                         pass,
+                         pin,
+                         isAdmin,
+                         editParts,
+                         overdue,
+                         removeParts,
+                         workers,
+                         createdAt,
+                         createdBy)
     VALUES ('test3@msoe.edu', 'Remove Parts Admin', 'Sharks12', 0, 0, 0, 0, 1, 0, '2019-2-11', 'Jim');
-    INSERT INTO workers (email, workerName, pass, pin, isAdmin, editParts, overdue, removeParts, workers, createdAt, createdBy)
+    INSERT INTO workers (email,
+                         workerName,
+                         pass,
+                         pin,
+                         isAdmin,
+                         editParts,
+                         overdue,
+                         removeParts,
+                         workers,
+                         createdAt,
+                         createdBy)
     VALUES ('test4@msoe.edu', 'Worker Admin', 'Sharks12', 0, 0, 0, 0, 0, 1, '2019-2-11', 'Jim');
   end;
 
 # Creates the parts table
 drop table if exists parts;
 create table parts (
-  partID       int         NOT NULL AUTO_INCREMENT,
+  partID       int          NOT NULL AUTO_INCREMENT,
   partName     varchar(255) NOT NULL,
   serialNumber varchar(255),
   manufacturer varchar(255),
   price        int,
-  vendorID     int         NOT NULL,
+  vendorID     int          NOT NULL,
   location     varchar(255),
   barcode      bigint,
   isFaulty     bit,
@@ -309,7 +365,6 @@ create table parts (
   createdBy    varchar(50),
   updatedBy    varchar(50),
   deletedBy    varchar(50),
-  isDeleted    bit,
   PRIMARY KEY (partID)
 );
 -- #FOREIGN KEY (partID) REFERENCES checkout_parts (partID),
@@ -327,7 +382,7 @@ create table checkout (
   checkoutAt varchar(55),
   reservedAt date,
   returnDate varchar(25),
-  prof varchar(256),
+  prof       varchar(256),
   course     varchar(256),
   checkinAt  varchar(55),
   dueAt      varchar(55),
@@ -353,7 +408,7 @@ call load_vendors();
 drop table if exists students;
 create table students (
   uniqueID    int                NOT NULL AUTO_INCREMENT,
-  studentID   int         UNIQUE,
+  studentID   int UNIQUE,
   email       varchar(50) UNIQUE NOT NULL,
   studentName varchar(50)        NOT NULL,
   createdAt   varchar(50),

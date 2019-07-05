@@ -8,13 +8,13 @@ public class Part {
     private final SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, faultDesc;
     private final SimpleLongProperty barcode;
     private final SimpleDoubleProperty price;
-    private final SimpleIntegerProperty partID, quantity, isDeleted;
+    private final SimpleIntegerProperty partID, quantity;
     private final SimpleBooleanProperty fault, checkedOut = new SimpleBooleanProperty(false);
     AddPart addPart = new AddPart();
 
 
     //TODO Combine all these constructors I mean my god why do we have three that do the same thing
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, boolean fault, int partID, int isDeleted){
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, boolean fault, int partID){
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
@@ -25,11 +25,10 @@ public class Part {
         this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
         this.quantity = new SimpleIntegerProperty(0);
-        this.isDeleted = new SimpleIntegerProperty(isDeleted);
         this.faultDesc = new SimpleStringProperty("");
     }
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, int quantity, int isDeleted){
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, int quantity){
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.manufacturer = new SimpleStringProperty(manufacturer);
@@ -41,7 +40,6 @@ public class Part {
         //Returns the next part id
         this.partID = new SimpleIntegerProperty(addPart.getPartID());
         this.fault = new SimpleBooleanProperty(false);
-        this.isDeleted =new SimpleIntegerProperty(isDeleted);
         this.faultDesc = new SimpleStringProperty("");
     }
 
@@ -117,13 +115,6 @@ public class Part {
         this.partID.set(partId);
     }
 
-    public int getIsDeleted() {
-        return isDeleted.get();
-    }
-    public void setIsDeleted(int deleted) {
-        this.isDeleted.set(deleted);
-    }
-
     public int getQuantity() {
         return quantity.get();
     }
@@ -157,6 +148,6 @@ public class Part {
                 "\tPrice: " + getPrice() + "\tVendor: " + getVendor() +
                 "\tLocation: " + getLocation() + "\tBarcode: " + getBarcode() + "\tFault: " + getFault() +
                 "\tFault Description: " + getFaultDesc() + "\tPart ID: " + getPartID() + "\tIs Deleted: "
-                + getIsDeleted() + "\tIs Checked Out: " + getCheckedOut() + "\n";
+                + "\tIs Checked Out: " + getCheckedOut() + "\n";
     }
 }
