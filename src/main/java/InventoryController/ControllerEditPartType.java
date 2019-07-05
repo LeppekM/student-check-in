@@ -204,7 +204,7 @@ public class ControllerEditPartType extends ControllerEditPart {
                 if (database.hasUniqueBarcodes(part.getPartName())) {
                     isValid = false;
                     uniqueBarcodeError(part.getPartName());
-                } else if (!validateUnusedBarcode(Integer.parseInt(barcodeField.getText()))) {
+                } else if (validateUnusedBarcode(Integer.parseInt(barcodeField.getText()))) {
                     isValid = false;
                     unusedBarcodeError(Integer.parseInt(barcodeField.getText()));
                 }

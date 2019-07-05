@@ -162,11 +162,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editAllButton.setOnAction(event -> {
                                     if (worker != null && worker.isEdit()){
-                                        editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                        editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
                                     }else {
                                         if ((worker != null && worker.isAdmin())
                                                 || requestAdminPin("edit parts")) {
-                                            editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                            editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
                                         }
                                     }
                                 });
@@ -684,7 +684,15 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             ((ControllerEditPart) loader.getController()).initPart(part);
             Scene scene = new Scene(root, 400, 500);
             Stage stage = new Stage();
-            stage.setTitle("Edit a Part");
+            if (isBatchEdit) {
+                stage.setTitle("Edit all " + part.getPartName());
+            }else {
+                String partName = part.getPartName();
+                if (part.getPartName().substring(part.getPartName().length() - 1).equals("s")) {
+                    partName = part.getPartName().substring(0,part.getPartName().length() - 1);
+                }
+                stage.setTitle("Edit a " + partName);
+            }
             stage.initOwner(totalTabPage.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
