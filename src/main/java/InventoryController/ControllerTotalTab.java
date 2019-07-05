@@ -196,6 +196,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                             }
                                         }
                                     }
+                                    populateTable();
                                 });
                                 Tooltip deleteOneTip = new Tooltip("Delete this part");
                                 deleteOneButton.setTooltip(deleteOneTip);
@@ -237,6 +238,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                             }
                                         }
                                     }
+                                    populateTable();
                                 });
                                 Tooltip deleteAllTip = new Tooltip("Delete all parts named: " + partName.getText());
                                 deleteAllButton.setTooltip(deleteAllTip);
@@ -525,24 +527,23 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         String result = "";
         if(!selectedFilters.isEmpty()) {
             if (types.contains("All")) {
-                result = "WHERE p.isDeleted = 0";
                 return result;
             }
             if (types.contains("Overdue") && !types.contains("Checked Out")) {
                 long longDate = System.currentTimeMillis();
                 Date date = new java.sql.Date(longDate);
                 if (result.isEmpty())
-                    result = result + ", checkout AS c WHERE p.isDeleted = 0 AND (p.partID=c.partID AND c.dueAt < date('" + date.toString() + "'))";
+                    result = result + ", checkout AS c WHERE (p.partID=c.partID AND c.dueAt < date('" + date.toString() + "'))";
             }
             if (types.contains("Checked Out")) {
                 if (result.isEmpty())
-                    result = result + "WHERE p.isDeleted = 0 AND isCheckedOut = 1";
+                    result = result + "WHERE isCheckedOut = 1";
                 else
                     result = result + " OR p.isCheckedOut = 1";
             }
             if (types.contains("Faulty")) {
                 if (result.isEmpty())
-                    result = result + "WHERE p.isDeleted = 0 AND isFaulty = 1";
+                    result = result + "WHERE isFaulty = 1";
                 else
                     result = result + " OR p.isFaulty = 1";
             }
@@ -551,7 +552,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 currentFilter = selectedFilters.get(i);
                 if (!currentFilter.equals("Overdue") && !currentFilter.equals("Checked Out") && !currentFilter.equals("Faulty")) {
                     if (result.isEmpty())
-                        result = result + "WHERE p.isDeleted = 0 AND partName = '" + currentFilter + "'";
+                        result = result + "WHERE partName = '" + currentFilter + "'";
                     else
                         result = result + " OR p.partName = '" + currentFilter + "'";
                 }

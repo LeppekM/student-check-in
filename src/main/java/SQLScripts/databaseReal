@@ -361,10 +361,8 @@ create table parts (
   isCheckedOut bit,
   createdAt    date,
   updatedAt    date,
-  deletedAt    date,
   createdBy    varchar(50),
   updatedBy    varchar(50),
-  deletedBy    varchar(50),
   PRIMARY KEY (partID)
 );
 -- #FOREIGN KEY (partID) REFERENCES checkout_parts (partID),
@@ -451,10 +449,8 @@ create table fault (
   price       int,
   createdAt   date,
   updatedAt   date,
-  deletedAt   date,
   createdBy   varchar(50),
   updatedBy   varchar(50),
-  deletedBy   varchar(50),
   PRIMARY KEY (checkoutID, partID)
 );
 

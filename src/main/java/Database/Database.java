@@ -148,8 +148,7 @@ public class Database implements IController {
      */
     public void deleteItem(int partID) {
         try {
-            String delete = "update parts p set p.deletedBy = '" + this.worker.getName().replace("'", "\\'") + "', p.deletedAt = date('"
-                    + gettoday() + "') where p.partID = " + partID + ";";
+            String delete = "delete from parts where partID = " + partID + ";";
             Statement statement = connection.createStatement();
             statement.executeUpdate(delete);
             statement.close();
@@ -167,8 +166,7 @@ public class Database implements IController {
      */
     public void deleteParts(String partName) {
         try {
-            String deleteQuery = "UPDATE parts p set p.deletedBy = '" + this.worker.getName().replace("'", "\\'") + "', " +
-                    "p.deletedAt = date('" + gettoday() + "') WHERE p.partName = '" + partName + "';";
+            String deleteQuery = "delete from parts WHERE partName = '" + partName + "';";
             Statement statement = connection.createStatement();
             statement.executeUpdate(deleteQuery);
             statement.close();
