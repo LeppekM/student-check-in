@@ -878,7 +878,7 @@ public class Database implements IController {
             pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
                     "from students " +
                     "left join checkout on students.studentID = checkout.studentID " +
-                    "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != '';";
+                    "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != date('');";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
                     "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +
@@ -897,7 +897,7 @@ public class Database implements IController {
             pList = "select students.studentName, students.email, students.studentID, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
                     "from students " +
                     "left join checkout on students.studentID = checkout.studentID " +
-                    "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail + "' and checkout.reservedAt != '';";
+                    "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail + "' and checkout.reservedAt != date('');";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
                     "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +

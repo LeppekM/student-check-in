@@ -1007,7 +1007,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @return true if barcodes are same
      */
     private boolean barcodesSame(long barcode) {
-        return checkOut.getAllBarcodes(barcode).get(0).equals(checkOut.getAllBarcodes(barcode).get(1));
+        try {
+            return checkOut.getAllBarcodes(barcode).get(0).equals(checkOut.getAllBarcodes(barcode).get(1));
+        }catch(IndexOutOfBoundsException e){
+            return false;
+        }
     }
 
     /**

@@ -338,7 +338,7 @@ create table checkout (
   PRIMARY KEY (checkoutID)
 );
 
-# Creates the vendors table
+
 drop table if exists vendors;
 create table vendors (
   vendorID    int NOT NULL AUTO_INCREMENT,
