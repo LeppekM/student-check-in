@@ -107,7 +107,7 @@ public class ControllerViewTotalPart {
 
         // Sets faulty info (removes fee info column if not faulty)
         if (row.sFaulty()) {
-            priceField.setText("$" + df.format(Double.parseDouble(row.getFee().get())/100));
+            priceField.setText("$" + df.format(Double.parseDouble(row.getFee().get())));
             faultField.setText(row.getFaultDescription().get());
         } else {
             gridContainer.getChildren().remove(gridContainer.getChildren().size()-1);

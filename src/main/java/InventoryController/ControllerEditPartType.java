@@ -110,7 +110,7 @@ public class ControllerEditPartType extends ControllerEditPart {
 
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
-            priceField.setText("$" + df.format(part.getPrice()/100));
+            priceField.setText("$" + df.format(part.getPrice()));
             ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
                 //vendorList.getItems().addAll(vendors);

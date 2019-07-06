@@ -100,7 +100,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
 
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
-            priceField.setText("$" + df.format(part.getPrice()/100));
+            priceField.setText("$" + df.format(part.getPrice()));
             ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
 //                vendorList.getItems().addAll(vendors);
@@ -145,7 +145,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
         // Note: price multiplied by 100, because it is stored in the database as an integer 100 times
         // larger than actual value.
         if (priceField.getText() != null) {
-            price = 100 * Double.parseDouble(priceField.getText().replaceAll(",", "").replace("$", "").trim());
+            price = Double.parseDouble(priceField.getText().replaceAll(",", "").replace("$", "").trim());
         }
         String vendor = "";
         if (vendorField.getText() != null) {

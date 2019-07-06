@@ -23,7 +23,7 @@ CREATE PROCEDURE load_parts()
                            isCheckedOut,
                            createdAt,
                            createdBy)
-        values ('Circuit Designers', j, 'MSOE', 9800, 1, 'S350 A1', i, 0, 0, current_date, 'root');
+        values ('Circuit Designers', j, 'MSOE', '98.00', 1, 'S350 A1', i, 0, 0, current_date, 'root');
       ELSEIF i < 208
         THEN
           set j = i - 103;
@@ -38,7 +38,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Wire Kits', j, 'RSR', 1195, 2, 'S350 B1', i, 0, 0, current_date, 'root');
+          values ('Wire Kits', j, 'RSR', '11.95', 2, 'S350 B1', i, 0, 0, current_date, 'root');
       ELSEIF i < 298
         THEN
           set j = i - 207;
@@ -53,7 +53,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Parts Boxes', j, 'MSOE', 5000, 1, 'S350 C1', i, 0, 0, current_date, 'root');
+          values ('Parts Boxes', j, 'MSOE', '50.00', 1, 'S350 C1', i, 0, 0, current_date, 'root');
       ELSEIF i < 379
         THEN
           set j = i - 297;
@@ -68,7 +68,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', 9843, 3, 'S350 D1', i, 0, 0, current_date, 'root');
+          values ('Cypress PSOC5LP Dev. Bds.', j, 'Cypress', '98.43', 3, 'S350 D1', i, 0, 0, current_date, 'root');
       ELSEIF i < 440
         THEN
           set j = i - 378;
@@ -83,7 +83,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Cypress FM4 Kit', j, 'Cypress', 6945, 3, 'S350 E1', i, 0, 0, current_date, 'root');
+          values ('Cypress FM4 Kit', j, 'Cypress', '69.45', 3, 'S350 E1', i, 0, 0, current_date, 'root');
       ELSEIF i < 467
         THEN
           set j = i - 439;
@@ -98,7 +98,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Basic Stamp Kit', j, 'MSOE', 16700, 1, 'S350 F1', i, 0, 0, current_date, 'root');
+          values ('Basic Stamp Kit', j, 'MSOE', '167.00', 1, 'S350 F1', i, 0, 0, current_date, 'root');
       ELSEIF i < 480
         THEN
           set j = i - 466;
@@ -113,7 +113,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Olimex ECG/EMG', j, 'MSOE', 2453, 1, 'S350 G1', i, 0, 0, current_date, 'root');
+          values ('Olimex ECG/EMG', j, 'MSOE', '24.53', 1, 'S350 G1', i, 0, 0, current_date, 'root');
       ELSEIF i < 494
         THEN
           set j = i - 479;
@@ -128,7 +128,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('TENS Unit', j, 'TENS', 4999, 4, 'S350 H1', i, 0, 0, current_date, 'root');
+          values ('TENS Unit', j, 'TENS', '49.99', 4, 'S350 H1', i, 0, 0, current_date, 'root');
       ELSEIF i < 580
         THEN
           set j = i - 493;
@@ -143,7 +143,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Analog Discovery 2', j, 'Digilent', 27900, 5, 'S350 I1', i, 0, 0, current_date, 'root');
+          values ('Analog Discovery 2', j, 'Digilent', '279.00', 5, 'S350 I1', i, 0, 0, current_date, 'root');
       ELSEIF i < 592
         THEN
           set j = i - 579;
@@ -158,7 +158,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Fluke 123 Scopemeter', j, 'Fluke', 189900, 6, 'S350 J1', i, 0, 0, current_date, 'root');
+          values ('Fluke 123 Scopemeter', j, 'Fluke', '1899.00', 6, 'S350 J1', i, 0, 0, current_date, 'root');
       ELSEIF i < 611
         THEN
           set j = i - 591;
@@ -173,7 +173,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('Fluke 43 & 43B Power Quality Analyzer', j, 'Fluke', 346900, 6, 'S350 K1', i, 0, 0, current_date, 'root');
+          values ('Fluke 43 & 43B Power Quality Analyzer', j, 'Fluke', '3469.00', 6, 'S350 K1', i, 0, 0, current_date, 'root');
       ELSEIF i < 632
         THEN
           set j = i - 610;
@@ -188,7 +188,7 @@ CREATE PROCEDURE load_parts()
                              isCheckedOut,
                              createdAt,
                              createdBy)
-          values ('SE1021 Nexus Kits', j, 'Nexus', 8200, 7, 'S350 L1', i, 0, 0, current_date, 'root');
+          values ('SE1021 Nexus Kits', j, 'Nexus', '82.00', 7, 'S350 L1', i, 0, 0, current_date, 'root');
 
       ELSE
         #        set j = i - 675;
@@ -204,7 +204,7 @@ CREATE PROCEDURE load_parts()
                            isCheckedOut,
                            createdAt,
                            createdBy)
-        values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', 15900, 8, 'S350 M1', i, 0, 0, current_date, 'root');
+        values ('Milwaukee Tool DMM', j, 'Milwaukee Tool', '159.00', 8, 'S350 M1', i, 0, 0, current_date, 'root');
       END IF;
       set i = i + 1;
     END WHILE;
@@ -353,7 +353,7 @@ create table parts (
   partName     varchar(255) NOT NULL,
   serialNumber varchar(255),
   manufacturer varchar(255),
-  price        int,
+  price        varchar(10),
   vendorID     int          NOT NULL,
   location     varchar(255),
   barcode      bigint,
@@ -446,7 +446,7 @@ create table fault (
   checkoutID  int NOT NULL,
   partID      int NOT NULL,
   description varchar(500),
-  price       int,
+  price       varchar(10),
   createdAt   date,
   updatedAt   date,
   createdBy   varchar(50),
