@@ -686,6 +686,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             ((ControllerEditPart) loader.getController()).initPart(part);
             Scene scene = new Scene(root, 400, 500);
             Stage stage = new Stage();
+            stage.setMinWidth(400);
+            stage.setMaxWidth(400);
+            stage.setMaxHeight(550);
+            stage.setMinHeight(550);
             if (isBatchEdit) {
                 stage.setTitle("Edit all " + part.getPartName());
             }else {

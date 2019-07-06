@@ -23,7 +23,7 @@ CREATE PROCEDURE load_parts()
                            isCheckedOut,
                            createdAt,
                            createdBy)
-        values ('Circuit Designers', j, 'MSOE', '98.00', 1, 'S350 A1', i, 0, 0, current_date, 'root');
+        values ('Circuit Designers', j, 'MSOE', '98.00', 1, 'S350 A1', 1, 0, 0, current_date, 'root');
       ELSEIF i < 208
         THEN
           set j = i - 103;
