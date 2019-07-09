@@ -181,12 +181,16 @@ public class ControllerEditOnePart extends ControllerEditPart {
 
             // if parts with the given name do not have a unique barcode
             if (!database.hasUniqueBarcodes(originalPartName)) {
-
-                // if the user tried to edit the parts' barcode
-                if (!barcodeField.getText().equals(originalBarcode)) {
+                if(editPart.barcodeUsed(Long.parseLong(barcodeField.getText()))){
                     isValid = false;
-                    commonBarcodeError(part.getPartName());
+                    barcodeExistsError();
                 }
+
+//                // if the user tried to edit the parts' barcode
+//                if (!barcodeField.getText().equals(originalBarcode)) {
+//                    isValid = false;
+//                    commonBarcodeError(part.getPartName());
+//                }
 
             // if the input barcode is not still unique
             } else if (!validateUniqueBarcode()) {
@@ -284,6 +288,13 @@ public class ControllerEditOnePart extends ControllerEditPart {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText(partName + " parts have the same barcode, so you cannot change one.");
+        alert.showAndWait();
+    }
+
+    private void barcodeExistsError(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("The barcode entered is already used by another part. Please use a different number");
         alert.showAndWait();
     }
 
