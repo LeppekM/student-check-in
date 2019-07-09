@@ -69,7 +69,7 @@ public class ControllerEditPartType extends ControllerEditPart {
      * This method sets some of the fields to not be editable.
      */
     private void disableFields() {
-        serialField.setEditable(false);
+
         manufacturerField.setEditable(false);
         vendorField.setEditable(false);
     }
@@ -81,6 +81,7 @@ public class ControllerEditPartType extends ControllerEditPart {
     private void setFieldValidator() {
         stageWrapper.requiredInputValidator(nameField);
         stageWrapper.acceptIntegerOnly(barcodeField);
+        stageWrapper.acceptIntegerOnly(serialField);
         stageWrapper.requiredInputValidator(barcodeField);
         stageWrapper.requiredInputValidator(priceField);
         stageWrapper.requiredInputValidator(locationField);

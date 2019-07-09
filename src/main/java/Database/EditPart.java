@@ -1,9 +1,12 @@
 package Database;
 
 import Database.ObjectClasses.Part;
+import InventoryController.StudentCheckIn;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class uses a query to edit a part in the database
@@ -20,6 +23,22 @@ public class EditPart {
             "updatedAt = ? WHERE partName = ?;";
 
     VendorInformation vendorInformation = new VendorInformation();
+
+    public boolean barcodeUsed(long barcode){
+        String query = "SELECT barcode from parts";
+        List<Long> barcodes = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                barcodes.add(rs.getLong("barcode"));
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return barcodes.contains(barcode);
+    }
 
     /**
      * This method edits an item in the database
