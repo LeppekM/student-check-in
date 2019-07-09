@@ -69,7 +69,7 @@ public class ControllerEditPartType extends ControllerEditPart {
      * This method sets some of the fields to not be editable.
      */
     private void disableFields() {
-        serialField.setEditable(false);
+
         manufacturerField.setEditable(false);
         vendorField.setEditable(false);
     }
@@ -81,6 +81,7 @@ public class ControllerEditPartType extends ControllerEditPart {
     private void setFieldValidator() {
         stageWrapper.requiredInputValidator(nameField);
         stageWrapper.acceptIntegerOnly(barcodeField);
+        stageWrapper.acceptIntegerOnly(serialField);
         stageWrapper.requiredInputValidator(barcodeField);
         stageWrapper.requiredInputValidator(priceField);
         stageWrapper.requiredInputValidator(locationField);
@@ -131,9 +132,10 @@ public class ControllerEditPartType extends ControllerEditPart {
             String originalPartName = part.getPartName();
             long originalBarcode = part.getBarcode();
             Part inputPart = updatePartFromInput();
-            if (!database.hasUniqueBarcodes(originalPartName)) {
+            if (!database.hasUniqueBarcodes(originalPartName)) { //If item doesn't have an unique barcode
                 if (!barcodeField.getText().equals(originalBarcode)) {
-                    editPart.editAllOfType(originalPartName, inputPart);
+                    //editPart.editAllOfType(originalPartName, inputPart);
+                    editPart.editAllOfTypeCommonBarcode(originalPartName, inputPart);
                 } else {
                     uniqueBarcodeError(originalPartName);
                 }
@@ -205,8 +207,8 @@ public class ControllerEditPartType extends ControllerEditPart {
                     isValid = false;
                     uniqueBarcodeError(part.getPartName());
                 } else if (validateUnusedBarcode(Integer.parseInt(barcodeField.getText()))) {
-                    isValid = false;
-                    unusedBarcodeError(Integer.parseInt(barcodeField.getText()));
+                    //isValid = false;
+                    //unusedBarcodeError(Integer.parseInt(barcodeField.getText()));
                 }
             }
         }
