@@ -71,7 +71,7 @@ public class EditPart {
      * @param preparedStatement The statement that has items being set to it
      * @return the statement that has items being set to it
      */
-    private PreparedStatement editAllQuery(String originalPartName, Part part, PreparedStatement preparedStatement){
+    private PreparedStatement editAllQuery(String originalPartName, Part part, Part OGPart, PreparedStatement preparedStatement){
         try {
             preparedStatement.setString(1, part.getPartName());
             preparedStatement.setDouble(2, part.getPrice());
@@ -90,8 +90,9 @@ public class EditPart {
      * @param preparedStatement The statement that has items being set to it
      * @return the statement that has items being set to it
      */
-    private PreparedStatement editAllCommonBarcodeQuery(String originalPartName, Part part, PreparedStatement preparedStatement){
+    private PreparedStatement editAllCommonBarcodeQuery(String originalPartName, Part part, Part OGPart, PreparedStatement preparedStatement){
         try {
+
             preparedStatement.setString(1, part.getPartName());
             preparedStatement.setDouble(2, part.getPrice());
             preparedStatement.setString(3, part.getLocation());
@@ -104,11 +105,12 @@ public class EditPart {
         return preparedStatement;
     }
 
-    public void editAllOfType(String originalPartName, Part updatedPart) {
+    public void editAllOfType(Part OGPart, Part updatedPart) {
+
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
 
             PreparedStatement preparedStatement = connection.prepareStatement(editAllQuery);
-            preparedStatement = editAllQuery(originalPartName, updatedPart, preparedStatement);
+            preparedStatement = editAllQuery(OGPart.getPartName(), updatedPart, OGPart, preparedStatement);
             preparedStatement.execute();
             preparedStatement.close();
             vendorInformation.getVendorList(); //NEEDED?
@@ -117,11 +119,11 @@ public class EditPart {
         }
     }
 
-    public void editAllOfTypeCommonBarcode(String originalPartName, Part updatedPart) {
+    public void editAllOfTypeCommonBarcode(Part OGPart, Part updatedPart) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
 
             PreparedStatement preparedStatement = connection.prepareStatement(editAllCommonBarcodeQuery);
-            preparedStatement = editAllCommonBarcodeQuery(originalPartName, updatedPart, preparedStatement);
+            preparedStatement = editAllCommonBarcodeQuery(OGPart.getPartName(), updatedPart, OGPart, preparedStatement);
             preparedStatement.execute();
             preparedStatement.close();
             vendorInformation.getVendorList(); //NEEDED?

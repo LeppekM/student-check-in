@@ -131,14 +131,14 @@ public class ControllerEditPartType extends ControllerEditPart {
             String originalPartName = part.getPartName();
             long originalBarcode = part.getBarcode();
             Part inputPart = updatePartFromInput();
-            if (!database.hasUniqueBarcodes(originalPartName)) {
+            if (database.hasUniqueBarcodes(originalPartName)) {
                 if (!barcodeField.getText().equals(originalBarcode)) {
-                    editPart.editAllOfType(originalPartName, inputPart);
+                    editPart.editAllOfType(part, inputPart);
                 } else {
                     uniqueBarcodeError(originalPartName);
                 }
             } else {
-                editPart.editAllOfTypeCommonBarcode(originalPartName, inputPart);
+                editPart.editAllOfTypeCommonBarcode(part, inputPart);
             }
             close();
             partEditedSuccess();
@@ -200,11 +200,13 @@ public class ControllerEditPartType extends ControllerEditPart {
             if (!nameField.getText().equals(part.getPartName()) && partNames.contains(nameField.getText())) {
                 isValid = false;
                 uniquePartNameError();
-            } else if (!barcodeField.getText().equals(part.getBarcode())) {
+                nameField.setText(part.getPartName());
+            } else if (!barcodeField.getText().equals(part.getBarcode().toString())) {
                 if (database.hasUniqueBarcodes(part.getPartName())) {
                     isValid = false;
                     uniqueBarcodeError(part.getPartName());
-                } else if (validateUnusedBarcode(Integer.parseInt(barcodeField.getText()))) {
+                    barcodeField.setText(part.getBarcode().toString());
+                } else if (!validateUnusedBarcode(Integer.parseInt(barcodeField.getText()))) {
                     isValid = false;
                     unusedBarcodeError(Integer.parseInt(barcodeField.getText()));
                 }
@@ -226,7 +228,16 @@ public class ControllerEditPartType extends ControllerEditPart {
     }
 
     private boolean validateUnusedBarcode(int barcode) {
-        return database.getPartNameFromBarcode(barcode).equals("");
+        boolean unique = true;
+            ArrayList<Integer> barcodes = database.getAllBarcodes(barcode);
+            if (barcodes.size() > 0) {
+                for (Integer barcd: barcodes) {
+                    if (barcd == barcode) {
+                        unique = false;
+                    }
+                }
+            }
+        return unique;
     }
 
     /**
@@ -257,7 +268,7 @@ public class ControllerEditPartType extends ControllerEditPart {
     private void unusedBarcodeError(int barcode) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("A part with that barcode already exists.");
+        alert.setContentText("A part with that barcode -" + barcode + "- already exists.");
         alert.showAndWait();
     }
 

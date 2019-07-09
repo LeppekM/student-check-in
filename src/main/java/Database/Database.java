@@ -1149,6 +1149,29 @@ public class Database implements IController {
     }
 
     /**
+     * This it to verify if the barcode is unused
+     * @param barcode to check against
+     * @return list of barcodes that match
+     */
+    public ArrayList<Integer> getAllBarcodes(int barcode) {
+        String query = "select * from parts where barcode = " + barcode + ";";
+        ArrayList<Integer> barcodes = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                barcodes.add(resultSet.getInt("barcode"));
+            }
+            statement.close();
+        }catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't retrieve the list of barcodes");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return barcodes;
+    }
+
+    /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each class.
      * @param worker the currently logged in worker
