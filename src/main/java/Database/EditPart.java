@@ -17,10 +17,10 @@ public class EditPart {
             "updatedAt = ? WHERE partID = ?;";
 
     private String editAllCommonBarcodeQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, " +
-            "barcode = ?, manufacturer = ?, vendorID = ?, updatedAt = ? WHERE partName = ? AND partID = ?;";
+            "barcode = ?, manufacturer = ?, vendorID = ?, updatedAt = ? WHERE partName = ?;";
 
     private String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, vendorID = ?, " +
-            "updatedAt = ? WHERE partName = ? AND PartID = ?;";
+            "updatedAt = ? WHERE partName = ?;";
 
     VendorInformation vendorInformation = new VendorInformation();
 
@@ -90,7 +90,7 @@ public class EditPart {
      * @param preparedStatement The statement that has items being set to it
      * @return the statement that has items being set to it
      */
-    private PreparedStatement editAllQuery(String originalPartName, Part part, Part OGPart, PreparedStatement preparedStatement){
+    private PreparedStatement editAllQuery(String originalPartName, Part part,PreparedStatement preparedStatement){
         try {
             preparedStatement.setString(1, part.getPartName());
             preparedStatement.setDouble(2, part.getPrice());
@@ -99,7 +99,6 @@ public class EditPart {
             preparedStatement.setInt(5, new VendorInformation().getVendorIDFromVendor(part.getVendor()));
             preparedStatement.setString(6, getCurrentDate());
             preparedStatement.setString(7, originalPartName);
-            preparedStatement.setInt(8, OGPart.getPartID());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -112,7 +111,7 @@ public class EditPart {
      * @param preparedStatement The statement that has items being set to it
      * @return the statement that has items being set to it
      */
-    private PreparedStatement editAllCommonBarcodeQuery(String originalPartName, Part part, Part OGPart, PreparedStatement preparedStatement){
+    private PreparedStatement editAllCommonBarcodeQuery(String originalPartName, Part part, PreparedStatement preparedStatement){
         try {
 
             preparedStatement.setString(1, part.getPartName());
@@ -123,7 +122,6 @@ public class EditPart {
             preparedStatement.setInt(6, new VendorInformation().getVendorIDFromVendor(part.getVendor()));
             preparedStatement.setString(7, getCurrentDate());
             preparedStatement.setString(8, originalPartName);
-            preparedStatement.setInt(9, OGPart.getPartID());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -135,7 +133,7 @@ public class EditPart {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
 
             PreparedStatement preparedStatement = connection.prepareStatement(editAllQuery);
-            preparedStatement = editAllQuery(OGPart.getPartName(), updatedPart, OGPart, preparedStatement);
+            preparedStatement = editAllQuery(OGPart.getPartName(), updatedPart, preparedStatement);
             preparedStatement.execute();
             preparedStatement.close();
             vendorInformation.getVendorList(); //NEEDED?
@@ -148,7 +146,7 @@ public class EditPart {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
 
             PreparedStatement preparedStatement = connection.prepareStatement(editAllCommonBarcodeQuery);
-            preparedStatement = editAllCommonBarcodeQuery(OGPart.getPartName(), updatedPart, OGPart, preparedStatement);
+            preparedStatement = editAllCommonBarcodeQuery(OGPart.getPartName(), updatedPart, preparedStatement);
             preparedStatement.execute();
             preparedStatement.close();
             vendorInformation.getVendorList(); //NEEDED?
