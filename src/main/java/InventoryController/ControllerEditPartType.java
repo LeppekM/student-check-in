@@ -133,12 +133,12 @@ public class ControllerEditPartType extends ControllerEditPart {
             Part inputPart = updatePartFromInput();
             if (database.hasUniqueBarcodes(originalPartName)) {
                 if (!barcodeField.getText().equals(originalBarcode)) {
-                    editPart.editAllOfType(part, inputPart);
+                    editPart.editAllOfType(originalPartName, inputPart);
                 } else {
                     uniqueBarcodeError(originalPartName);
                 }
             } else {
-                editPart.editAllOfTypeCommonBarcode(part, inputPart);
+                editPart.editAllOfTypeCommonBarcode(originalPartName, inputPart);
             }
             close();
             partEditedSuccess();

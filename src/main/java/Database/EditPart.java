@@ -17,18 +17,19 @@ public class EditPart {
             "updatedAt = ? WHERE partID = ?;";
 
     private String editAllCommonBarcodeQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, " +
-            "barcode = ?, manufacturer = ?, vendorID = ?, updatedAt = ? WHERE partName = ?;";
+            "barcode = ?, manufacturer = ?, vendorID = ?, updatedAt = ? WHERE partID = ?;";
 
     private String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, vendorID = ?, " +
             "updatedAt = ? WHERE partName = ?;";
 
-    VendorInformation vendorInformation = new VendorInformation();
+    private VendorInformation vendorInformation = new VendorInformation();
+    private Database database = new Database();
 
     public boolean barcodeUsed(long barcode){
         String query = "SELECT barcode from parts";
         List<Long> barcodes = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            PreparedStatement statement = database.getConnection().prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
                 barcodes.add(rs.getLong("barcode"));
@@ -45,8 +46,8 @@ public class EditPart {
      * @param part The part to be edited
      */
     public void editItem(Part part){
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement preparedStatement = connection.prepareStatement(editQuery);
+        try {
+            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editQuery);
             preparedStatement = editQuery(part, preparedStatement);
             preparedStatement.execute();
             preparedStatement.close();
@@ -111,9 +112,9 @@ public class EditPart {
      * @param preparedStatement The statement that has items being set to it
      * @return the statement that has items being set to it
      */
-    private PreparedStatement editAllCommonBarcodeQuery(String originalPartName, Part part, PreparedStatement preparedStatement){
+    private PreparedStatement editAllCommonBarcodeQuery(String originalPartName, Part part, String partID, PreparedStatement preparedStatement){
         try {
-
+//            ArrayList<String> partIDsForPart = new Database().getAllPartIDsForPartName(originalPartName);
             preparedStatement.setString(1, part.getPartName());
             preparedStatement.setDouble(2, part.getPrice());
             preparedStatement.setString(3, part.getLocation());
@@ -121,20 +122,21 @@ public class EditPart {
             preparedStatement.setString(5, part.getManufacturer());
             preparedStatement.setInt(6, new VendorInformation().getVendorIDFromVendor(part.getVendor()));
             preparedStatement.setString(7, getCurrentDate());
-            preparedStatement.setString(8, originalPartName);
+            preparedStatement.setString(8, partID);
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return preparedStatement;
     }
 
-    public void editAllOfType(Part OGPart, Part updatedPart) {
-
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(editAllQuery);
-            preparedStatement = editAllQuery(OGPart.getPartName(), updatedPart, preparedStatement);
-            preparedStatement.execute();
+    public void editAllOfType(String originalPartName, Part updatedPart) {
+        try {
+            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllQuery);
+            ArrayList<String> partIDsForPart = database.getAllPartIDsForPartName(originalPartName);
+            for (String id: partIDsForPart) {
+                preparedStatement = editAllQuery(originalPartName, updatedPart, preparedStatement);
+                preparedStatement.execute();
+            }
             preparedStatement.close();
             vendorInformation.getVendorList(); //NEEDED?
         } catch (SQLException e) {
@@ -142,12 +144,14 @@ public class EditPart {
         }
     }
 
-    public void editAllOfTypeCommonBarcode(Part OGPart, Part updatedPart) {
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(editAllCommonBarcodeQuery);
-            preparedStatement = editAllCommonBarcodeQuery(OGPart.getPartName(), updatedPart, preparedStatement);
-            preparedStatement.execute();
+    public void editAllOfTypeCommonBarcode(String originalPartName, Part updatedPart) {
+        try {
+            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllCommonBarcodeQuery);
+            ArrayList<String> partIDsForPart = database.getAllPartIDsForPartName(originalPartName);
+            for (String id: partIDsForPart) {
+                preparedStatement = editAllCommonBarcodeQuery(originalPartName, updatedPart, id, preparedStatement);
+                preparedStatement.execute();
+            }
             preparedStatement.close();
             vendorInformation.getVendorList(); //NEEDED?
         } catch (SQLException e) {
