@@ -17,10 +17,10 @@ public class EditPart {
             "updatedAt = ? WHERE partID = ?;";
 
     private String editAllCommonBarcodeQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, " +
-            "barcode = ?, updatedAt = ? WHERE partName = ?;";
+            "barcode = ?, manufacturer = ?, vendorID = ?, updatedAt = ? WHERE partName = ? AND partID = ?;";
 
-    private String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, " +
-            "updatedAt = ? WHERE partName = ?;";
+    private String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, vendorID = ?, " +
+            "updatedAt = ? WHERE partName = ? AND PartID = ?;";
 
     VendorInformation vendorInformation = new VendorInformation();
 
@@ -95,8 +95,11 @@ public class EditPart {
             preparedStatement.setString(1, part.getPartName());
             preparedStatement.setDouble(2, part.getPrice());
             preparedStatement.setString(3, part.getLocation());
-            preparedStatement.setString(4, getCurrentDate());
-            preparedStatement.setString(5, originalPartName);
+            preparedStatement.setString(4, part.getManufacturer());
+            preparedStatement.setInt(5, new VendorInformation().getVendorIDFromVendor(part.getVendor()));
+            preparedStatement.setString(6, getCurrentDate());
+            preparedStatement.setString(7, originalPartName);
+            preparedStatement.setInt(8, OGPart.getPartID());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -116,8 +119,11 @@ public class EditPart {
             preparedStatement.setDouble(2, part.getPrice());
             preparedStatement.setString(3, part.getLocation());
             preparedStatement.setLong(4, part.getBarcode());
-            preparedStatement.setString(5, getCurrentDate());
-            preparedStatement.setString(6, originalPartName);
+            preparedStatement.setString(5, part.getManufacturer());
+            preparedStatement.setInt(6, new VendorInformation().getVendorIDFromVendor(part.getVendor()));
+            preparedStatement.setString(7, getCurrentDate());
+            preparedStatement.setString(8, originalPartName);
+            preparedStatement.setInt(9, OGPart.getPartID());
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }

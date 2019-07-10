@@ -5,16 +5,19 @@ import Database.ObjectClasses.Part;
 import Database.VendorInformation;
 import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import com.jfoenix.controls.JFXSpinner;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -36,8 +39,11 @@ public class ControllerEditPartType extends ControllerEditPart {
     private VBox sceneEditPartType;
 
     @FXML
-    private JFXTextField nameField, serialField, manufacturerField, priceField, vendorField,
+    private JFXTextField nameField, serialField, manufacturerField, priceField,
             locationField, barcodeField;
+
+    @FXML
+    private JFXComboBox editVendorField;
 
     @FXML
     private JFXSpinner loader;
@@ -51,6 +57,8 @@ public class ControllerEditPartType extends ControllerEditPart {
 
     private VendorInformation vendorInformation = new VendorInformation();
 
+//    private ObservableList<String> vendors = FXCollections.observableList(vendorInformation.getVendorList());
+
     StageWrapper stageWrapper = new StageWrapper();
 
     /**
@@ -60,18 +68,9 @@ public class ControllerEditPartType extends ControllerEditPart {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        disableFields();
+        serialField.setEditable(false);
         setFieldValidator();
         part = null;
-    }
-
-    /**
-     * This method sets some of the fields to not be editable.
-     */
-    private void disableFields() {
-
-        manufacturerField.setEditable(false);
-        vendorField.setEditable(false);
     }
 
     /**
@@ -114,9 +113,9 @@ public class ControllerEditPartType extends ControllerEditPart {
             priceField.setText("$" + df.format(part.getPrice()));
             ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
-                //vendorList.getItems().addAll(vendors);
+                editVendorField.setItems(FXCollections.observableList(vendors));
+                editVendorField.getSelectionModel().select(vendorInformation.getVendorFromID(part.getVendor()));
             }
-            vendorField.setText(vendorInformation.getVendorFromID(part.getVendor()));
             locationField.setText(part.getLocation());
             barcodeField.setText(part.getBarcode().toString());
         }
@@ -169,8 +168,8 @@ public class ControllerEditPartType extends ControllerEditPart {
             price = Double.parseDouble(priceField.getText().replaceAll(",", "").replace("$", "").trim());
         }
         String vendor = "";
-        if (vendorField.getText() != null) {
-            vendor = vendorField.getText();
+        if (editVendorField.getSelectionModel().getSelectedItem() != null) {
+            vendor = editVendorField.getSelectionModel().getSelectedItem().toString();
         }
         String location = "";
         if (locationField.getText() != null) {
@@ -190,18 +189,23 @@ public class ControllerEditPartType extends ControllerEditPart {
      */
     private boolean validateInput() {
         boolean isValid = true;
+        String vendor = editVendorField.getSelectionModel().getSelectedItem().toString();
         if (!validateAllFieldsFilledIn(nameField.getText(),
                 priceField.getText().replaceAll(",", ""),
                 locationField.getText(),
-                barcodeField.getText())) {
+                barcodeField.getText(), manufacturerField.getText(), vendor)) {
             isValid = false;
             fieldErrorAlert();
         } else {
             ArrayList<String> partNames = database.getUniquePartNames();
-            if (!nameField.getText().equals(part.getPartName()) && partNames.contains(nameField.getText())) {
-                isValid = false;
-                uniquePartNameError();
-                nameField.setText(part.getPartName());
+            if (!nameField.getText().equals(part.getPartName())) {
+                for (String name: partNames){
+                    if (name.equals(nameField.getText())){
+                        isValid = false;
+                        uniquePartNameError();
+                        nameField.setText(part.getPartName());
+                    }
+                }
             } else if (!barcodeField.getText().equals(part.getBarcode().toString())) {
                 if (database.hasUniqueBarcodes(part.getPartName())) {
                     isValid = false;
@@ -212,8 +216,30 @@ public class ControllerEditPartType extends ControllerEditPart {
                     unusedBarcodeError(Integer.parseInt(barcodeField.getText()));
                 }
             }
+            boolean newVendor = true;
+            for (String vendors : vendorInformation.getVendorList()) {
+                if (vendors.equals(vendor)) {
+                    newVendor = false;
+                }
+            }
+            if (newVendor){
+                vendorInformation.createNewVendor(vendor, vendorInformation());
+            }
         }
         return isValid;
+    }
+
+    /**
+     * If new vendor is created, this popup asks for vendor information
+     * Currently nothing is done with the result of the text
+     */
+    private String vendorInformation(){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Vendor Information");
+        dialog.setHeaderText("New vendor created, please enter vendor information");
+        dialog.setContentText("Please enter vendor information");
+        dialog.showAndWait();
+        return dialog.getResult();
     }
 
     /**
@@ -221,11 +247,13 @@ public class ControllerEditPartType extends ControllerEditPart {
      * @return true if the fields are not empty, false otherwise
      */
     protected boolean validateAllFieldsFilledIn(String partName, String price,
-                                                String location, String barcode) {
+                                                String location, String barcode, String manufacturer, String vendor) {
         return partName != null && !partName.trim().equals("")
                 && price != null && !price.trim().equals("")
                 && location != null && !location.trim().equals("")
-                && barcode != null && !barcode.trim().equals("");
+                && barcode != null && !barcode.trim().equals("")
+                && manufacturer != null && !manufacturer.trim().equals("")
+                && vendor != null && !vendor.trim().equals("");
     }
 
     private boolean validateUnusedBarcode(int barcode) {

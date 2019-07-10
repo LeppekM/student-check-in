@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Hyperlink?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="sceneEditPartType" prefHeight="500.0" prefWidth="400.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerEditPartType">
+<VBox fx:id="sceneEditPartType" prefHeight="500.0" prefWidth="400.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerEditPartType">
     <children>
         <AnchorPane prefHeight="534.0" prefWidth="410.0">
             <children>
@@ -27,7 +28,7 @@
                         <Label id="nameLabel" layoutX="119.0" layoutY="257.0" styleClass="prompt" text="Price:" />
                         <JFXTextField id="priceField" fx:id="priceField" alignment="CENTER" focusColor="FIREBRICK" layoutX="175.0" layoutY="257.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="nameLabel" layoutX="100.0" layoutY="315.0" styleClass="prompt" text="Vendor:" />
-                        <JFXTextField id="vendorField" fx:id="vendorField" alignment="CENTER" focusColor="FIREBRICK" layoutX="175.0" layoutY="315.0" prefHeight="24.0" prefWidth="153.5" />
+                        <JFXComboBox id="vendorField" fx:id="editVendorField" editable="true" focusColor="FIREBRICK" layoutX="175.0" layoutY="315.0" prefHeight="24.0" prefWidth="153.5" style="-jfx-font-weight: bold;" />
                         <Label id="nameLabel" layoutX="94.0" layoutY="375.0" styleClass="prompt" text="Location:" />
                         <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" focusColor="FIREBRICK" layoutX="176.0" layoutY="375.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Hyperlink layoutX="194.0" layoutY="438.0" onAction="#goBack" text="Cancel" />
