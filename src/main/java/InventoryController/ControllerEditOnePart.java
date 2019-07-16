@@ -179,36 +179,16 @@ public class ControllerEditOnePart extends ControllerEditPart {
             fieldErrorAlert();
         } else {
 
-            // if parts with the given name do not have a unique barcode
-            if (!database.hasUniqueBarcodes(originalPartName)) {
-                if(editPart.barcodeUsed(Long.parseLong(barcodeField.getText()))){
+            // if parts with the given name do not have a unique barcode, error occurs.
+            if (originalBarcode!= Long.parseLong(barcodeField.getText()) &&!database.hasUniqueBarcodes(originalPartName)) {
+                if (editPart.barcodeUsed(Long.parseLong(barcodeField.getText()))) {
                     isValid = false;
                     barcodeExistsError();
                 }
-
-//                // if the user tried to edit the parts' barcode
-//                if (!barcodeField.getText().equals(originalBarcode)) {
-//                    isValid = false;
-//                    commonBarcodeError(part.getPartName());
-//                }
-
-            // if the input barcode is not still unique
-            } else if (!validateUniqueBarcode()) {
-                isValid = false;
-                uniqueBarcodeError(originalPartName);
             }
 
-            // if parts with the given name do not have a unique serial number
-            if (!database.hasUniqueSerialNumbers(originalPartName)) {
-
-                // if the user tried to edit the parts' serial number
-                if (!serialField.getText().equals(originalSerialNumber)) {
-                    isValid = false;
-                    commonSerialNumberError(part.getPartName());
-                }
-
-            // if the input serial number is not still unique
-            } else if (!validateUniqueSerialNumber()) {
+            //If a serial number is changed to one already present, an error occurs.
+            if(!originalSerialNumber.equals(serialField.getText()) && validateUniqueSerialNumber()){
                 isValid = false;
                 uniqueSerialNumberError(originalPartName);
             }
@@ -222,7 +202,10 @@ public class ControllerEditOnePart extends ControllerEditPart {
      */
     private boolean validateUniqueSerialNumber() {
         ArrayList<String> serialNumbers = database.getOtherSerialNumbersForPartName(nameField.getText(),"" + part.getPartID());
-        return !serialNumbers.contains(serialField.getText());
+        for (String x : serialNumbers){
+            System.out.println(x);
+        }
+        return serialNumbers.contains(serialField.getText());
     }
 
     /**
