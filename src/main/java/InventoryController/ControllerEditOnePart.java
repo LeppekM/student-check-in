@@ -172,6 +172,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
         String originalPartName = part.getPartName();
         long originalBarcode = part.getBarcode();
         String originalSerialNumber = part.getSerialNumber();
+        System.out.println(originalBarcode);
 
         // make sure all fields are filled in
         if (!validateAllFieldsFilledIn(serialField.getText(), barcodeField.getText(), locationField.getText())) {
@@ -180,12 +181,13 @@ public class ControllerEditOnePart extends ControllerEditPart {
         } else {
 
             // if parts with the given name do not have a unique barcode, error occurs.
-            if (originalBarcode!= Long.parseLong(barcodeField.getText()) &&!database.hasUniqueBarcodes(originalPartName)) {
+            if (originalBarcode!= Long.parseLong(barcodeField.getText())) {
                 if (editPart.barcodeUsed(Long.parseLong(barcodeField.getText()))) {
                     isValid = false;
                     barcodeExistsError();
                 }
             }
+
 
             //If a serial number is changed to one already present, an error occurs.
             if(!originalSerialNumber.equals(serialField.getText()) && validateUniqueSerialNumber()){
