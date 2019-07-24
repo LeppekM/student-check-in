@@ -9,13 +9,14 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="loginScene" minHeight="525.0" minWidth="1030.0" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerLogin">
+<StackPane fx:id="loginScene" minHeight="525.0" minWidth="1030.0" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerLogin">
     <children>
         <VBox alignment="CENTER">
             <StackPane>
@@ -41,6 +42,26 @@
                         <effect>
                             <DropShadow />
                         </effect></Rectangle>
+               <Pane prefHeight="279.0" prefWidth="764.0">
+                  <children>
+                     <HBox fx:id="RFIDLogin" alignment="CENTER" layoutX="-1.0" layoutY="110.0" prefHeight="59.0" prefWidth="1030.0">
+                        <children>
+                           <Label text="RFID:">
+                              <font>
+                                 <Font name="System Bold" size="18.0" />
+                              </font>
+                              <HBox.margin>
+                                 <Insets left="125.0" />
+                              </HBox.margin>
+                           </Label>
+                           <JFXTextField fx:id="RFID" focusColor="FIREBRICK">
+                              <font>
+                                 <Font size="16.0" />
+                              </font>
+                           </JFXTextField>
+                        </children></HBox>
+                  </children>
+               </Pane>
                     <VBox alignment="CENTER">
                         <children>
                             <Label style="-fx-font-weight: bold" text="Login">
@@ -51,7 +72,7 @@
                                     <Insets bottom="10.0" />
                                 </VBox.margin>
                             </Label>
-                            <GridPane alignment="CENTER" hgap="2.0" vgap="30.0">
+                            <GridPane fx:id="emailLogin" alignment="CENTER" hgap="2.0" vgap="30.0" visible="false">
                                 <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" style="-fx-font-weight: bold" text="email:">
                                     <font>
                                         <Font size="18.0" />
@@ -116,5 +137,10 @@
                 <Insets />
             </StackPane.margin>
         </VBox>
+      <JFXButton fx:id="switchButton" mnemonicParsing="false" onAction="#switchToOther" prefHeight="45.0" prefWidth="193.0" stylesheets="@../css/CheckButton.css" text="Login Using Email" textFill="FIREBRICK">
+         <StackPane.margin>
+            <Insets top="450.0" />
+         </StackPane.margin>
+      </JFXButton>
     </children>
 </StackPane>

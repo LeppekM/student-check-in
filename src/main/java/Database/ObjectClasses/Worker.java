@@ -4,6 +4,7 @@ public class Worker {
 
     private String name;
     private int ID;
+    private int RIFD;
     private String email;
     private String pass;
     private int pin;
@@ -13,13 +14,14 @@ public class Worker {
     private boolean remove;
     private boolean over;
 
-    public Worker(String name, int ID, String email, String pass, int pin, boolean isAdmin, boolean edit, boolean worker,
+    public Worker(String name, int ID, String email, String pass, int pin, int RFID, boolean isAdmin, boolean edit, boolean worker,
                   boolean remove, boolean over){
         this.name = name;
         this.ID = ID;
         this.email = email;
         this.pass = pass;
         this.pin = pin;
+        this.RIFD = RFID;
         this.isAdmin = isAdmin;
         if (isAdmin){
             edit = true;
@@ -34,10 +36,11 @@ public class Worker {
         }
     }
 
-    public Worker(String name, String email, String pass){
+    public Worker(String name, String email, String pass, int RFID){
         this.name = name;
         this.email = email;
         this.pass = pass;
+        this.RIFD = RFID;
         this.pin = 0;
         this.isAdmin = false;
         edit = false;
@@ -80,6 +83,14 @@ public class Worker {
 
     public void setPin(int pin){
         this.pin = pin;
+    }
+
+    public int getRIFD() {
+        return RIFD;
+    }
+
+    public void setRIFD(int RIFD) {
+        this.RIFD = RIFD;
     }
 
     public boolean isAdmin() {

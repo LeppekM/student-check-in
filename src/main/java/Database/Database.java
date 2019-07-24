@@ -757,6 +757,7 @@ public class Database implements IController {
             String email;
             String pass;
             int ID;
+            int RFID;
             int pin;
             boolean admin;
             boolean parts;
@@ -767,6 +768,7 @@ public class Database implements IController {
                 name = resultSet.getString("workerName");
                 ID = resultSet.getInt("workerID");
                 pass = resultSet.getString("pass");
+                RFID = resultSet.getInt("ID");
                 email = resultSet.getString("email");
                 pin = resultSet.getInt("pin");
                 admin = resultSet.getByte("isAdmin") == 1;
@@ -774,7 +776,7 @@ public class Database implements IController {
                 over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;
                 students = resultSet.getByte("removeParts") == 1;
-                workerList.add(new Worker(name, ID, email, pass, pin, admin, parts, workers, students, over));
+                workerList.add(new Worker(name, ID, email, pass, pin, RFID, admin, parts, workers, students, over));
             }
             resultSet.close();
             statement.close();
@@ -802,6 +804,7 @@ public class Database implements IController {
             String password;
             int ID;
             int pin;
+            int RFID;
             boolean isAdmin;
             boolean parts;
             boolean over;
@@ -810,6 +813,7 @@ public class Database implements IController {
             if (resultSet.next()) {
                 name = resultSet.getString("workerName");
                 ID = resultSet.getInt("workerID");
+                RFID = resultSet.getInt("ID");
                 password = resultSet.getString("pass");
                 isAdmin = resultSet.getByte("isAdmin") == 1;
                 parts = resultSet.getByte("editParts") == 1;
@@ -817,7 +821,47 @@ public class Database implements IController {
                 workers = resultSet.getByte("workers") == 1;
                 students = resultSet.getByte("removeParts") == 1;
                 pin = resultSet.getInt("pin");
-                worker = new Worker(name, ID, email, password, pin, isAdmin, parts, workers, students, over);
+                worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students, over);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
+            StudentCheckIn.logger.error("Could not retrieve the list of workers");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return worker;
+    }
+
+    public Worker getWorker(int RFID) {
+        Worker worker = null;
+        String query = "Select * from workers where ID = " + RFID + ";";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            String name;
+            String password;
+            int ID;
+            String email;
+            int pin;
+            boolean isAdmin;
+            boolean parts;
+            boolean over;
+            boolean workers;
+            boolean students;
+            if (resultSet.next()) {
+                name = resultSet.getString("workerName");
+                ID = resultSet.getInt("workerID");
+                email = resultSet.getString("email");
+                password = resultSet.getString("pass");
+                isAdmin = resultSet.getByte("isAdmin") == 1;
+                parts = resultSet.getByte("editParts") == 1;
+                over = resultSet.getByte("overdue") == 1;
+                workers = resultSet.getByte("workers") == 1;
+                students = resultSet.getByte("removeParts") == 1;
+                pin = resultSet.getInt("pin");
+                worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students, over);
             }
             resultSet.close();
             statement.close();

@@ -25,7 +25,7 @@ public class ControllerAddWorker implements Initializable, IController {
     private AnchorPane main;
 
     @FXML
-    private JFXTextField email, first, last;
+    private JFXTextField email, first, last, RFIDW;
 
     @FXML
     private JFXPasswordField pass;
@@ -50,6 +50,7 @@ public class ControllerAddWorker implements Initializable, IController {
         boolean fValid = false;
         boolean lValid = false;
         boolean passValid = false;
+        boolean IDValid = false;
         if (!email.getText().equals("") && !first.getText().equals("") && !last.getText().equals("") && !pass.getText().equals("")){
             ObservableList<Worker> workers = database.getWorkers();
                 for (Worker w : workers) {
@@ -99,14 +100,21 @@ public class ControllerAddWorker implements Initializable, IController {
             }else {
                 passValid = true;
             }
+            if (RFIDW.getText().matches("^\\D*(?:\\d\\D*){5}$")){
+                IDValid = true;
+            }else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "RFID must be 5 digits long.");
+                alert.showAndWait();
+                IDValid = false;
+            }
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "All fields must be filled in.");
             StudentCheckIn.logger.warn("Add Worker: All fields not filled.");
             alert.showAndWait();
         }
-        if (emailValid && fValid && lValid && passValid){
+        if (emailValid && fValid && lValid && passValid && IDValid){
             database.initWorker(worker);
-            database.addWorker(new Worker(n.toString(), email.getText(), pass.getText()));
+            database.addWorker(new Worker(n.toString(), email.getText(), pass.getText(), Integer.parseInt(RFIDW.getText())));
             main.getScene().getWindow().hide();
         }
     }

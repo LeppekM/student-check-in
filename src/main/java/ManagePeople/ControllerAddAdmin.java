@@ -25,7 +25,7 @@ public class ControllerAddAdmin implements Initializable, IController {
     private AnchorPane main;
 
     @FXML
-    private JFXTextField email, first, last;
+    private JFXTextField email, first, last, RFIDA;
 
     @FXML
     private JFXPasswordField pass, pin;
@@ -50,6 +50,7 @@ public class ControllerAddAdmin implements Initializable, IController {
         boolean lValid = false;
         boolean passValid = false;
         boolean pinValid = false;
+        boolean IDValid = false;
         if (!email.getText().equals("") && !first.getText().equals("") && !last.getText().equals("") &&
                 !pass.getText().equals("") && !pin.getText().equals("")){
             ObservableList<Worker> workers = database.getWorkers();
@@ -107,16 +108,24 @@ public class ControllerAddAdmin implements Initializable, IController {
                 StudentCheckIn.logger.warn("Add Admin: Pin isn't 4 digits.");
                 alert.showAndWait();
             }
+            if (RFIDA.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+                IDValid = true;
+            }else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "RFID must be 5 digits long.");
+                alert.showAndWait();
+                IDValid = false;
+            }
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "All fields must be filled in.");
             StudentCheckIn.logger.warn("Add Admin: All fields not filled.");
             alert.showAndWait();
         }
-        if (emailValid && fValid && lValid && passValid && pinValid){
+        if (emailValid && fValid && lValid && passValid && pinValid && IDValid){
             ObservableList<Worker> w = database.getWorkers();
             database.initWorker(worker);
             database.addWorker(new Worker(n.toString(), w.get(w.size() - 1).getID() + 1, email.getText(), pass.getText(),
-                    Integer.parseInt(pin.getText()), true, true, true, true, true));
+                    Integer.parseInt(pin.getText()), Integer.parseInt(RFIDA.getText()), true, true, true,
+                    true, true));
             main.getScene().getWindow().hide();
         }
     }

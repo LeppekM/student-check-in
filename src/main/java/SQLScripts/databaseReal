@@ -251,6 +251,7 @@ CREATE PROCEDURE load_workers()
     INSERT INTO workers (email,
                          workerName,
                          pass,
+                         ID,
                          pin,
                          isAdmin,
                          editParts,
@@ -259,10 +260,11 @@ CREATE PROCEDURE load_workers()
                          workers,
                          createdAt,
                          createdBy)
-    VALUES ('terrybc@msoe.edu', 'Bailey Terry', 'Sharks12', 1234, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
+    VALUES ('terrybc@msoe.edu', 'Bailey Terry', 'Sharks12', 12345, 1234, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
     INSERT INTO workers (email,
                          workerName,
                          pass,
+                         ID,
                          pin,
                          isAdmin,
                          editParts,
@@ -271,10 +273,11 @@ CREATE PROCEDURE load_workers()
                          workers,
                          createdAt,
                          createdBy)
-    VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 'Sharks12', 4123, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
+    VALUES ('gilpinj@msoe.edu', 'Joseph Gilpin', 'Sharks12', 22222, 4123, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
     INSERT INTO workers (email,
                          workerName,
                          pass,
+                         ID,
                          pin,
                          isAdmin,
                          editParts,
@@ -283,10 +286,11 @@ CREATE PROCEDURE load_workers()
                          workers,
                          createdAt,
                          createdBy)
-    VALUES ('langdk@msoe.edu', 'Daniel Lang', 'Sharks12', 3412, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
+    VALUES ('langdk@msoe.edu', 'Daniel Lang', 'Sharks12', 11111, 3412, 1, 1, 1, 1, 1, '2019-2-11', 'Jim');
     INSERT INTO workers (email,
                          workerName,
                          pass,
+                         ID,
                          pin,
                          isAdmin,
                          editParts,
@@ -295,7 +299,7 @@ CREATE PROCEDURE load_workers()
                          workers,
                          createdAt,
                          createdBy)
-    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 'Sharks12', 0, 0, 1, 1, 1, 1, '2019-2-11', 'Jim');
+    VALUES ('karczma@msoe.edu', 'Matthew Karcz', 'Sharks12', 33333, 0, 0, 1, 1, 1, 1, '2019-2-11', 'Jim');
     INSERT INTO workers (email,
                          workerName,
                          pass,
@@ -426,6 +430,7 @@ create table workers (
   workerName  varchar(50)        NOT NULL,
   pin         int,
   pass        varchar(20)        NOT NULL,
+  ID          int         UNIQUE,
   isAdmin     bit                NOT NULL,
   overdue     bit,
   editParts   bit,
