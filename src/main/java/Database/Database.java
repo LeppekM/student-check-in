@@ -78,7 +78,7 @@ public class Database implements IController {
 
             databaseHelper.getCurrentDateTimeStamp();
             String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
-                    " parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID from checkout " +
+                    " parts.serialNumber, checkout.dueAt, parts.price, checkout.checkoutID from checkout " +
                     "left join parts on checkout.partID = parts.partID " +
                     "left join students on checkout.studentID = students.studentID " +
                     "where checkout.checkinAt is null";
@@ -91,7 +91,7 @@ public class Database implements IController {
                         data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
                                 resultSet.getString("students.email"), resultSet.getString("parts.partName"),
                                 resultSet.getString("parts.serialNumber"), dueAt,
-                                resultSet.getString("parts.price/100"), resultSet.getString("checkout.checkoutID")));
+                                resultSet.getString("parts.price"), resultSet.getString("checkout.checkoutID")));
                     }
                 }
                 resultSet.close();
@@ -188,7 +188,7 @@ public class Database implements IController {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
-                        resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
+                        resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getBoolean("isFaulty"),
                         resultSet.getInt("partID"));
             }
@@ -360,7 +360,7 @@ public class Database implements IController {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
-                        resultSet.getString("manufacturer"), resultSet.getDouble("price"), resultSet.getString("vendorID"),
+                        resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getLong("barcode"), false,
                         resultSet.getInt("partID"));
             }
@@ -878,7 +878,7 @@ public class Database implements IController {
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != date('');";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                    "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
+                    "parts.serialNumber, checkout.dueAt, parts.price, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +
                     "inner join students on checkout.studentID = students.studentID " +
                     "where checkout.checkinAt is null";
@@ -897,7 +897,7 @@ public class Database implements IController {
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail + "' and checkout.reservedAt != date('');";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                    "parts.serialNumber, checkout.dueAt, parts.price/100, checkout.checkoutID, checkout.checkinAt from checkout " +
+                    "parts.serialNumber, checkout.dueAt, parts.price, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +
                     "inner join students on checkout.studentID = students.studentID " +
                     "where checkout.checkinAt is null";
@@ -955,7 +955,7 @@ public class Database implements IController {
                             resultSet.getString("parts.partName"),
                             resultSet.getString("parts.serialNumber"),
                             dueAt,
-                            resultSet.getString("parts.price/100"),
+                            resultSet.getString("parts.price"),
                             resultSet.getString("checkout.checkoutID")));
                 }
             }

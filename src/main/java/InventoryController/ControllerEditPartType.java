@@ -57,8 +57,6 @@ public class ControllerEditPartType extends ControllerEditPart {
 
     private VendorInformation vendorInformation = new VendorInformation();
 
-//    private ObservableList<String> vendors = FXCollections.observableList(vendorInformation.getVendorList());
-
     StageWrapper stageWrapper = new StageWrapper();
 
     /**
@@ -107,10 +105,9 @@ public class ControllerEditPartType extends ControllerEditPart {
             nameField.setText(part.getPartName());
             serialField.setText(part.getSerialNumber());
             manufacturerField.setText(part.getManufacturer());
-
-            // Note: price divided by 100, because it is stored in the database as an integer 100 times
-            // larger than actual value.
-            priceField.setText("$" + df.format(part.getPrice()));
+            String price = "$" + df.format(part.getPrice());
+            priceField.setPromptText(price);
+            priceField.setText(priceField.getPromptText());
             ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
                 editVendorField.setItems(FXCollections.observableList(vendors));
