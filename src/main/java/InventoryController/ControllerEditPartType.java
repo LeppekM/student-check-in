@@ -112,11 +112,6 @@ public class ControllerEditPartType extends ControllerEditPart {
             serialField.setText(part.getSerialNumber());
             manufacturerField.setText(part.getManufacturer());
             priceField.setText(price);
-
-
-
-
-            System.out.println(price);
             ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
                 editVendorField.setItems(FXCollections.observableList(vendors));
