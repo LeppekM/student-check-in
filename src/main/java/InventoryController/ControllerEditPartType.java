@@ -83,14 +83,19 @@ public class ControllerEditPartType extends ControllerEditPart {
         stageWrapper.requiredInputValidator(priceField);
         stageWrapper.requiredInputValidator(locationField);
 
-        priceField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("^\\$?[0-9]*\\.?[0-9]{0,2}$")) {
-                    priceField.setText(oldValue);
-                }
-            }
-        });
+        //Not sure exactly what this is for. If to make sure price field entering is only integer, could just
+        //do a acceptIntegerOnly on the lines above for the price textfield.
+        //Otherwise could change regex so that numbers > 1000 aren't rejected.
+        //For now I commented it out.
+
+//        priceField.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if (!newValue.matches("^\\$?[0-9]*\\.?[0-9]{0,2}$")) {
+//                    priceField.setText(oldValue);
+//                }
+//            }
+//        });
     }
 
     /**
@@ -100,14 +105,18 @@ public class ControllerEditPartType extends ControllerEditPart {
     @Override
     public void initPart(Part part) {
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
+        String price = "$" + df.format(part.getPrice());
         if (this.part == null) {
             this.part = part;
             nameField.setText(part.getPartName());
             serialField.setText(part.getSerialNumber());
             manufacturerField.setText(part.getManufacturer());
-            String price = "$" + df.format(part.getPrice());
-            priceField.setPromptText(price);
-            priceField.setText(priceField.getPromptText());
+            priceField.setText(price);
+
+
+
+
+            System.out.println(price);
             ArrayList<String> vendors = vendorInformation.getVendorList();
             if (vendors != null) {
                 editVendorField.setItems(FXCollections.observableList(vendors));

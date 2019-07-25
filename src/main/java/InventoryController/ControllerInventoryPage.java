@@ -130,7 +130,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
                 String manufacturer = rs.getString("manufacturer");
                 String location = rs.getString("location");
                 long barcode = rs.getLong("barcode");
-                boolean fault = (rs.getInt("isFaulty") == 1) ? true : false;
+                boolean fault = rs.getInt("isFaulty") == 1;
                 int partID = rs.getInt("partID");
                 int isCheckedOut = rs.getInt("isCheckedOut");
 //                String faultDesc = rs.getString("faultDesc");
