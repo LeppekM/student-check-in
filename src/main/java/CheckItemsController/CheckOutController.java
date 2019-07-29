@@ -121,7 +121,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         unlockFields();
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
-        setExtendedTrigger();
     }
 
     /**
@@ -1086,14 +1085,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     }
 
-    private void setExtendedTrigger(){
-//        if(statusLabel.getText().equals("In") || statusLabel2.getText().equals("In")  || statusLabel3.getText().equals("In")
-//                || statusLabel4.getText().equals("In")  || statusLabel5.getText().equals("In")){
-//            extended.setDisable(true);
-//        }else{
-//            extended.setDisable(false);
-//        }
-    }
     /**
      * Helper method to set items in or out
      */

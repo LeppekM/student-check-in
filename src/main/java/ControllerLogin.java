@@ -5,6 +5,8 @@ import InventoryController.ControllerMenu;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +54,7 @@ public class ControllerLogin implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        rfidFilter(RFID);
         database = new Database();
         Image image = new Image("images/msoeBackgroundImage.png");
         ImageView imageView = new ImageView();
@@ -77,6 +80,23 @@ public class ControllerLogin implements Initializable {
                 login();
             }
         });
+    }
+
+    private void rfidFilter(JFXTextField textField) {
+        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    //in focus
+                } else {
+                    String id = textField.getText();
+                    if (textField.getText().contains("rfid:")) {
+                        textField.setText(id.substring(5));
+                    }
+                }
+            }
+        });
+
     }
 
     public void login() {
