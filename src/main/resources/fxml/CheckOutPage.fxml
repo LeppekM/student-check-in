@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import HelperClasses.AutoCompleteTextField?>
-<VBox fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.CheckOutController">
+<VBox fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.CheckOutController">
    <children>
       <HBox prefHeight="106.0" prefWidth="1150.0" VBox.vgrow="NEVER">
          <children>
@@ -75,7 +75,7 @@
                      <children>
                         <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
                         <Label fx:id="statusLabel" text="--" translateX="8.0" translateY="10.0" />
-                        <JFXCheckBox text="Extended" translateX="20.0" translateY="7.0" />
+                        <JFXCheckBox fx:id="extended1" checkedColor="FIREBRICK" text="Extended" translateX="20.0" translateY="7.0" visible="false" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
@@ -110,28 +110,28 @@
                      <children>
                         <Spinner fx:id="newQuantity2" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
                         <Label fx:id="statusLabel2" text="--" translateX="8.0" translateY="10.0" />
-                        <JFXCheckBox text="Extended" translateX="20.0" translateY="7.0" />
+                        <JFXCheckBox fx:id="extended2" checkedColor="FIREBRICK" text="Extended" translateX="20.0" translateY="7.0" visible="false" />
                      </children>
                   </HBox>
                   <HBox fx:id="HBoxBarcode3" alignment="CENTER_LEFT" layoutX="777.0" layoutY="272.0" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <children>
                         <Spinner fx:id="newQuantity3" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
                         <Label fx:id="statusLabel3" text="--" translateX="8.0" translateY="10.0" />
-                        <JFXCheckBox text="Extended" translateX="20.0" translateY="7.0" />
+                        <JFXCheckBox fx:id="extended3" checkedColor="FIREBRICK" text="Extended" translateX="20.0" translateY="7.0" visible="false" />
                      </children>
                   </HBox>
                   <HBox fx:id="HBoxBarcode4" alignment="CENTER_LEFT" layoutX="777.0" layoutY="359.0" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="5">
                      <children>
                         <Spinner fx:id="newQuantity4" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
                         <Label fx:id="statusLabel4" text="--" translateX="8.0" translateY="10.0" />
-                        <JFXCheckBox text="Extended" translateX="20.0" translateY="7.0" />
+                        <JFXCheckBox fx:id="extended4" checkedColor="FIREBRICK" text="Extended" translateX="20.0" translateY="7.0" visible="false" />
                      </children>
                   </HBox>
                   <HBox fx:id="HBoxBarcode5" alignment="CENTER_LEFT" layoutX="777.0" layoutY="446.0" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="6">
                      <children>
                         <Spinner fx:id="newQuantity5" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
                         <Label fx:id="statusLabel5" text="--" translateX="8.0" translateY="10.0" />
-                        <JFXCheckBox text="Extended" translateX="20.0" translateY="7.0" />
+                        <JFXCheckBox fx:id="extended5" checkedColor="FIREBRICK" text="Extended" translateX="20.0" translateY="7.0" visible="false" />
                      </children>
                   </HBox>
                   <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
