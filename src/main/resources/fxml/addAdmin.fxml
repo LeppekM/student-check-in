@@ -127,14 +127,14 @@
                               <Insets left="10.0" right="5.0" top="20.0" />
                            </padding>
                         </Label>
-                        <JFXPasswordField fx:id="RFIDA" focusColor="FIREBRICK" prefWidth="185.0">
+                        <JFXTextField fx:id="RFIDA" focusColor="FIREBRICK" prefWidth="185.0">
                            <padding>
                               <Insets top="23.0" />
                            </padding>
                            <font>
                               <Font size="22.0" />
                            </font>
-                        </JFXPasswordField>
+                        </JFXTextField>
                      </children>
                   </HBox>
                </children>
