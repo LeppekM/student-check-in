@@ -1136,8 +1136,8 @@ public class Database implements IController {
      */
     public void addWorker(Worker w){
         int bit = w.isAdmin()? 1 : 0;
-        String query = "insert into workers (email, workerName, pin, pass, isAdmin, createdAt, createdBy) values ('" + w.getEmail().replace("'", "\\'") +
-                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " + bit + ", date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+        String query = "insert into workers (email, workerName, pin, pass, ID, isAdmin, createdAt, createdBy) values ('" + w.getEmail().replace("'", "\\'") +
+                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " +w.getRIFD()+ ","+ bit + ", date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
