@@ -7,6 +7,8 @@ import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,7 +40,9 @@ public class ControllerAddAdmin implements Initializable, IController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         database = new Database();
+        rfidFilter(RFIDA);
     }
 
     public void submit(ActionEvent actionEvent) {
@@ -140,5 +144,22 @@ public class ControllerAddAdmin implements Initializable, IController {
         if (this.worker == null){
             this.worker = worker;
         }
+    }
+
+    private void rfidFilter(JFXTextField textField) {
+        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    //in focus
+                } else {
+                    String id = textField.getText();
+                    if (textField.getText().contains("rfid:")) {
+                        textField.setText(id.substring(5));
+                    }
+                }
+            }
+        });
+
     }
 }
