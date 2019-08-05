@@ -315,7 +315,7 @@ public class ControllerManageWorkers implements IController, Initializable {
                 EditAdmin ea = loader.getController();
                 ea.setAdmin(w);
                 ea.initWorker(worker);
-                Scene scene = new Scene(root, 790, 500);
+                Scene scene = new Scene(root, 790, 600);
                 stage.setTitle("Edit " + w.getName());
                 stage.initOwner(manageWorkersScene.getScene().getWindow());
                 stage.initModality(Modality.WINDOW_MODAL);
@@ -354,7 +354,7 @@ public class ControllerManageWorkers implements IController, Initializable {
                 EditWorker ew = loader.getController();
                 ew.setWorker(w);
                 ew.initWorker(worker);
-                Scene scene = new Scene(root, 790, 620);
+                Scene scene = new Scene(root, 790, 700);
                 stage.setTitle("Edit " + w.getName());
                 stage.initOwner(manageWorkersScene.getScene().getWindow());
                 stage.initModality(Modality.WINDOW_MODAL);

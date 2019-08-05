@@ -1175,7 +1175,7 @@ public class Database implements IController {
         int remove = w.isRemove() ? 1 : 0;
         int work = w.isWorker() ? 1 : 0;
         String query = "update workers set workers.workerName = '" + w.getName().replace("'", "\\'") + "', workers.pin = " +
-                w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.isAdmin = " + admin + "," +
+                w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.ID = " + w.getRIFD() + ", workers.isAdmin = " + admin + "," +
                 " workers.email = '" + w.getEmail().replace("'", "\\'") + "', workers.overdue = " + over + ", workers.editParts = " + edit +
                 ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
                 gettoday().toString() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
