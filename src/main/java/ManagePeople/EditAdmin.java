@@ -25,7 +25,7 @@ public class EditAdmin implements IController {
     private VBox vbox = new VBox();
 
     @FXML
-    private JFXTextField email, workerName;
+    private JFXTextField email, workerName, eRFIDa;
 
     @FXML
     private JFXTextField unmasked, unmaskedPin;
@@ -38,10 +38,8 @@ public class EditAdmin implements IController {
 
     private static Worker worker, loggedWorker;
     private Database database;
-    private static String name;
-    private static String workerEmail;
-    private static String password;
-    private static int adminPin;
+    private static String name, workerEmail, password;
+    private static int adminPin, RFID;
 
     /**
      * Initializes the window and copies initial values
@@ -54,9 +52,11 @@ public class EditAdmin implements IController {
         email.setText(w.getEmail());
         pass.setText(w.getPass());
         pin.setText(w.getPin() + "");
+        eRFIDa.setText(w.getRIFD() + "");
         name = workerName.getText();
         workerEmail = email.getText();
         password = pass.getText();
+        RFID = Integer.parseInt(eRFIDa.getText());
         adminPin = Integer.parseInt(pin.getText());
         unmasked.setManaged(false);
         unmaskedPin.setManaged(false);
@@ -84,7 +84,7 @@ public class EditAdmin implements IController {
      */
     public boolean changed(){
         return !name.equals(workerName.getText()) || !password.equals(pass.getText()) || !workerEmail.equals(email.getText()) ||
-                adminPin != Integer.parseInt(pin.getText());
+                adminPin != Integer.parseInt(pin.getText()) || RFID != Integer.parseInt(eRFIDa.getText());
     }
 
     /**
@@ -113,12 +113,16 @@ public class EditAdmin implements IController {
             if (adminPin != Integer.parseInt(pin.getText())){
                 alert.setContentText(alert.getContentText() + "\t" + adminPin + " --> " + pin.getText() + "\n");
             }
+            if (RFID!= Integer.parseInt(eRFIDa.getText())) {
+                alert.setContentText(alert.getContentText() + "\t" + RFID + " --> " + eRFIDa.getText() + "\n");
+            }
             alert.showAndWait().ifPresent(buttonType -> {
                 if (buttonType == ButtonType.OK){
                     worker.setName(workerName.getText());
                     worker.setEmail(email.getText());
                     worker.setPass(pass.getText());
                     worker.setPin(Integer.parseInt(pin.getText()));
+                    worker.setRIFD(Integer.parseInt(eRFIDa.getText()));
                     database.initWorker(loggedWorker);
                     database.updateWorker(worker);
                     Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
@@ -129,6 +133,7 @@ public class EditAdmin implements IController {
                     email.setText(workerEmail);
                     pass.setText(password);
                     pin.setText(adminPin + "");
+                    eRFIDa.setText(RFID + "");
                 }
             });
         }

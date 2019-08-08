@@ -22,7 +22,7 @@ public class EditWorker implements IController {
     private VBox vbox = new VBox();
 
     @FXML
-    private JFXTextField email, workerName;
+    private JFXTextField email, workerName, eRFIDw;
 
     @FXML
     private JFXTextField unmasked;
@@ -38,14 +38,9 @@ public class EditWorker implements IController {
 
     private static Worker worker, loggedWorker;
     private Database database;
-    private static String name;
-    private static String workerEmail;
-    private static String password;
-    private static boolean priv;
-    private static boolean edit;
-    private static boolean over;
-    private static boolean work;
-    private static boolean remove;
+    private static String name, workerEmail, password;
+    private static int RFID;
+    private static boolean priv, edit, over, work, remove;
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
@@ -65,6 +60,7 @@ public class EditWorker implements IController {
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());
+        eRFIDw.setText(w.getRIFD() + "");
         editParts.selectedProperty().setValue(w.isEdit());
         overdue.selectedProperty().setValue(w.isOver());
         removeParts.selectedProperty().setValue(w.isRemove());
@@ -80,6 +76,7 @@ public class EditWorker implements IController {
         name = workerName.getText();
         workerEmail = email.getText();
         password = pass.getText();
+        RFID = Integer.parseInt(eRFIDw.getText());
         priv = admin.isSelected();
         edit = w.isEdit();
         over = w.isOver();
@@ -100,7 +97,7 @@ public class EditWorker implements IController {
     public boolean changed(){
         return !name.equals(workerName.getText()) || !password.equals(pass.getText()) || !workerEmail.equals(email.getText()) ||
                 priv != admin.isSelected() || edit != editParts.isSelected() || over != overdue.isSelected() ||
-                work != workers.isSelected() || remove != removeParts.isSelected();
+                work != workers.isSelected() || remove != removeParts.isSelected() || RFID != Integer.parseInt(eRFIDw.getText());
     }
 
     public void save(ActionEvent actionEvent) {
@@ -137,12 +134,16 @@ public class EditWorker implements IController {
             if (remove != removeParts.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Remove Parts: " + remove + " --> Remove Parts: " + removeParts.isSelected() + "\n");
             }
+            if (RFID!= Integer.parseInt(eRFIDw.getText())) {
+                alert.setContentText(alert.getContentText() + "\t" + RFID + " --> " + eRFIDw.getText() + "\n");
+            }
             alert.showAndWait().ifPresent(buttonType -> {
                 if (buttonType == ButtonType.OK){
                     worker.setName(workerName.getText());
                     worker.setEmail(email.getText());
                     worker.setPass(pass.getText());
                     worker.setAdmin(false);
+                    worker.setRIFD(Integer.parseInt(eRFIDw.getText()));
                     worker.setOver(overdue.isSelected());
                     worker.setEdit(editParts.isSelected());
                     worker.setRemove(removeParts.isSelected());
@@ -156,6 +157,7 @@ public class EditWorker implements IController {
                     workerName.setText(name);
                     email.setText(workerEmail);
                     pass.setText(password);
+                    eRFIDw.setText(RFID + "");
                 }
             });
         }
