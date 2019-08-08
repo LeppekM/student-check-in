@@ -107,6 +107,34 @@ public class StageWrapper {
      * @param title Title of alert
      * @param content Content
      */
+    public void checkoutAlert(String title, String content) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    Stage owner = new Stage(StageStyle.TRANSPARENT);
+                    StackPane root = new StackPane();
+                    root.setStyle("-fx-background-color: TRANSPARENT");
+                    Scene scene = new Scene(root, 1, 1);
+                    owner.setScene(scene);
+                    owner.setWidth(1);
+                    owner.setHeight(1);
+                    owner.toBack();
+                    owner.show();
+                    Notifications.create().title(title).text(content).hideAfter(new Duration(2000)).show();
+                    PauseTransition delay = new PauseTransition(Duration.seconds(2));
+                    delay.setOnFinished(event -> owner.close());
+                    delay.play();
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * Sliding alert maker
+     * @param title Title of alert
+     * @param content Content
+     */
     public void slidingAlert(String title, String content) {
         new Thread(new Runnable() {
             @Override

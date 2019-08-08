@@ -110,6 +110,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Platform.runLater(()->studentID.requestFocus());
         this.worker = null;
         setFieldValidator();
         setItemStatus();
@@ -239,8 +240,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
             } else {
                 submitMultipleItems();
             }
-            stageWrapper.slidingAlert("Success", "Part(s) Checked in/out successfully");
+            stageWrapper.checkoutAlert("Success", "Part(s) Checked in/out successfully");
             reset();
+
         }
     }
 
@@ -614,6 +616,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     public void reset() {
         newStage("/fxml/CheckOutPage.fxml");
     }
+
 
     /**
      * Checks if fields are filled
