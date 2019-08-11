@@ -25,26 +25,25 @@ public class AddPart {
      * @return
      */
 
-    public long[] addCommonItems(Part part, Database database, int quantity) {
+    public void addCommonItems(Part part, Database database, int quantity) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             Part existing = database.selectPartByPartName(part.getPartName());
-            if (existing == null || (part.getBarcode().equals(existing.getBarcode())
-                    && part.getSerialNumber().equals(existing.getSerialNumber())
-                    && part.getManufacturer().equals(existing.getManufacturer())
-                    && part.getPrice() == existing.getPrice()
-                    && part.getVendor().equals(existing.getVendor()))) {
+            //Too restrictive via Jim; they can just edit parts later that arne't right
+//            if (existing == null || (part.getBarcode().equals(existing.getBarcode())
+//                    && part.getSerialNumber().equals(existing.getSerialNumber())
+//                    && part.getManufacturer().equals(existing.getManufacturer())
+//                    && part.getPrice() == existing.getPrice()
+//                    && part.getVendor().equals(existing.getVendor()))) {
                 for (int i = 0; i < quantity; i++) {
                     PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
                     insertQuery(part, preparedStatement).execute();
                     vendorInformation.getVendorList();
                     preparedStatement.close();
-                }
-                return new long[]{part.getBarcode(), Integer.parseInt(part.getSerialNumber())};
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new long[]{-1, -1};
+
     }
 
     /**

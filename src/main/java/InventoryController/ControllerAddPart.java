@@ -96,17 +96,18 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         if (database.hasPartName(partName)) {
             Part existing = database.selectPartByPartName(setPartFields().getPartName());
             if (quantity > 1) {
-                if (!barcodeField.getText().equals(existing.getBarcode())) {
+                if (barcodeField.getText().equals(existing.getBarcode())) {
                     mustBeCommonBarcodeError(partName);
                 } else if (duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
                     barcodeAlreadyExistsError();
-                } else if (!serialField.getText().equals(existing.getSerialNumber())) {
+                } else if (serialField.getText().equals(existing.getSerialNumber())) {
                     mustBeCommonSerialNumberError(partName);
                 }/* else if (!manufacturerField.getText().equals(existing.getManufacturer())
                             || !priceField.getText().equals(existing.getPrice())
                             || !vendorField.getValue().toString().equals(existing.getVendor())) {
                     commonFieldsError(partName);
                 }*/ else {
+                    System.out.println("Reached here");
                     addPart.addCommonItems(setPartFields(), database, quantity);
                     partAddedSuccess();
                     close();

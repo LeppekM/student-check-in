@@ -633,7 +633,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private void unlockFields() {
         BooleanBinding binding;
         binding = studentID.textProperty().isEmpty()
-                .or(barcode.textProperty().isEmpty());
+                .or(barcode.textProperty().isEmpty())
+        .or(studentNameField.textProperty().isEmpty());
         submitButton.disableProperty().bind(binding);
     }
 
