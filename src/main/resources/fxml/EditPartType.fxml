@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="sceneEditPartType" prefHeight="500.0" prefWidth="400.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerEditPartType">
+<VBox fx:id="sceneEditPartType" prefHeight="500.0" prefWidth="400.0" stylesheets="@../css/PopupStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerEditPartType">
     <children>
         <AnchorPane prefHeight="534.0" prefWidth="410.0">
             <children>
@@ -20,9 +20,9 @@
                         </Label>
                         <JFXTextField id="nameField" fx:id="nameField" alignment="CENTER" focusColor="FIREBRICK" layoutX="175.0" layoutY="14.0" prefHeight="24" prefWidth="153.5078125" />
                         <Label id="nameLabel" layoutX="45.0" layoutY="76.0" styleClass="prompt" text="Serial Number:" />
-                        <JFXTextField id="serialField" fx:id="serialField" alignment="CENTER" focusColor="FIREBRICK" layoutX="175.0" layoutY="76.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <JFXTextField id="serialField" fx:id="serialField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="76.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="nameLabel" layoutX="92.0" layoutY="138.0" styleClass="prompt" text="Barcode:" />
-                        <JFXTextField id="barcodeField" fx:id="barcodeField" alignment="CENTER" focusColor="FIREBRICK" layoutX="175.0" layoutY="138.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <JFXTextField id="barcodeField" fx:id="barcodeField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="138.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="nameLabel" layoutX="52.0" layoutY="204.0" styleClass="prompt" text="Manufacturer:" />
                         <JFXTextField id="manufacturerField" fx:id="manufacturerField" alignment="CENTER" focusColor="FIREBRICK" layoutX="175.0" layoutY="204.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Label id="nameLabel" layoutX="119.0" layoutY="257.0" styleClass="prompt" text="Price:" />
@@ -30,7 +30,7 @@
                         <Label id="nameLabel" layoutX="100.0" layoutY="315.0" styleClass="prompt" text="Vendor:" />
                         <JFXComboBox id="vendorField" fx:id="editVendorField" editable="true" focusColor="FIREBRICK" layoutX="175.0" layoutY="315.0" prefHeight="24.0" prefWidth="153.5" style="-jfx-font-weight: bold;" />
                         <Label id="nameLabel" layoutX="94.0" layoutY="375.0" styleClass="prompt" text="Location:" />
-                        <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" focusColor="FIREBRICK" layoutX="176.0" layoutY="375.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="176.0" layoutY="375.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Hyperlink layoutX="194.0" layoutY="438.0" onAction="#goBack" text="Cancel" />
                         <JFXButton fx:id="saveButton" layoutX="272.0" layoutY="430.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="43.0" prefWidth="81.0" stylesheets="@../css/CheckButton.css" text="Save" />
                         <JFXSpinner fx:id="loader" layoutX="367.0" layoutY="332.0" prefHeight="28.0" prefWidth="33.0" visible="false" />
