@@ -30,7 +30,7 @@
                         <Label id="nameLabel" layoutX="100.0" layoutY="315.0" styleClass="prompt" text="Vendor:" />
                         <JFXComboBox id="vendorField" fx:id="editVendorField" editable="true" focusColor="FIREBRICK" layoutX="175.0" layoutY="315.0" prefHeight="24.0" prefWidth="153.5" style="-jfx-font-weight: bold;" />
                         <Label id="nameLabel" layoutX="94.0" layoutY="375.0" styleClass="prompt" text="Location:" />
-                        <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="176.0" layoutY="375.0" prefHeight="23.94140625" prefWidth="153.5078125" />
+                        <JFXTextField id="locationField" fx:id="locationField" alignment="CENTER" focusColor="FIREBRICK" layoutX="176.0" layoutY="375.0" prefHeight="23.94140625" prefWidth="153.5078125" />
                         <Hyperlink layoutX="194.0" layoutY="438.0" onAction="#goBack" text="Cancel" />
                         <JFXButton fx:id="saveButton" layoutX="272.0" layoutY="430.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="43.0" prefWidth="81.0" stylesheets="@../css/CheckButton.css" text="Save" />
                         <JFXSpinner fx:id="loader" layoutX="367.0" layoutY="332.0" prefHeight="28.0" prefWidth="33.0" visible="false" />
