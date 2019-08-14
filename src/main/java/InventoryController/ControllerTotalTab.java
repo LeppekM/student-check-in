@@ -463,9 +463,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     populateTable();
                 } else {
                     filter(root, f, filteredRoot);
-//                totalTable.setRoot(filteredRoot);
+                    totalTable.setRoot(filteredRoot);
                 }
-                totalTable.setRoot(filteredRoot);//todo: need to move this somewhere else because it is overriding and clearing the general searches (not parts)
             }
         }
     }
