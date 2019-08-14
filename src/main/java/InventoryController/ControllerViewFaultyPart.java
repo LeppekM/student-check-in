@@ -18,7 +18,7 @@ public class ControllerViewFaultyPart {
         studentNameField.setText(row.getStudentName().get());
         studentEmailField.setText(row.getStudentEmail().get());
         partNameField.setText(row.getPartName().get());
-        barcodeField.setText(row.getBarcode().get());
+        barcodeField.setText(row.getBarcode().getValue().toString());
         descriptionField.setText(row.getDescription().get());
         priceField.setText(row.getPrice().get());
         locationField.setText(row.getLocation().get());

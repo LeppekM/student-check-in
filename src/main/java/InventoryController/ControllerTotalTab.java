@@ -65,8 +65,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private TreeItem<TotalTabTableRow> root;
 
     @FXML
-    private JFXTreeTableColumn<TotalTabTableRow, String> partNameCol, serialNumberCol, locationCol,
-            barcodeCol, partIDCol;
+    private JFXTreeTableColumn<TotalTabTableRow, String> partNameCol, locationCol;
+
+    @FXML
+    private JFXTreeTableColumn<TotalTabTableRow, Integer> serialNumberCol, partIDCol;
+
+    @FXML
+    private JFXTreeTableColumn<TotalTabTableRow, Long> barcodeCol;
 
     @FXML
     private JFXTreeTableColumn<TotalTabTableRow, Boolean> faultCol;
@@ -144,11 +149,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editOneButton.setOnAction(event -> {
                                     if (worker != null && worker.isEdit()){
-                                        editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                        editPart(getTreeTableRow().getItem().getPartID().getValue().toString(), false);
                                     }else {
                                         if (worker != null && worker.isAdmin()
                                                 || requestAdminPin("edit a part")) {
-                                            editPart(getTreeTableRow().getItem().getPartID().getValue(), false);
+                                            editPart(getTreeTableRow().getItem().getPartID().getValue().toString(), false);
                                         }
                                     }
                                 });
@@ -162,11 +167,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
                                 editAllButton.setOnAction(event -> {
                                     if (worker != null && worker.isEdit()){
-                                        editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
+                                        editPart(getTreeTableRow().getItem().getPartID().getValue().toString(), true);
                                     }else {
                                         if ((worker != null && worker.isAdmin())
                                                 || requestAdminPin("edit parts")) {
-                                            editPart(getTreeTableRow().getItem().getPartID().getValue(), true);
+                                            editPart(getTreeTableRow().getItem().getPartID().getValue().toString(), true);
                                         }
                                     }
                                 });
@@ -182,7 +187,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 deleteOneButton.setOnAction(event -> {
                                     if (worker != null && worker.isRemove()){
                                         if (!database.getIsCheckedOut("" + getTreeTableRow().getItem().getPartID().getValue())) {
-                                            deletePart(getTreeTableRow().getItem().getPartID().getValue());
+                                            deletePart(getTreeTableRow().getItem().getPartID().getValue().toString());
                                         } else {
                                             deleteCheckedOutPartAlert();
                                         }
@@ -190,7 +195,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                         if ((worker != null && worker.isAdmin())
                                                 || requestAdminPin("Delete a Part")) {
                                             if (!database.getIsCheckedOut("" + getTreeTableRow().getItem().getPartID().getValue())) {
-                                                deletePart(getTreeTableRow().getItem().getPartID().getValue());
+                                                deletePart(getTreeTableRow().getItem().getPartID().getValue().toString());
                                             } else {
                                                 deleteCheckedOutPartAlert();
                                             }
@@ -276,7 +281,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         serialNumberCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
-        serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
+        serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber().asObject());
+
 
         locationCol = new JFXTreeTableColumn<>("Location");
         locationCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
@@ -288,7 +294,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         barcodeCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
-        barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode());
+        barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
 
         faultCol = new JFXTreeTableColumn<>("Fault?");
         faultCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
@@ -306,7 +312,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         partIDCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         partIDCol.setStyle("-fx-font-size: 18px");
         partIDCol.setResizable(false);
-        partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID());
+        partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID().asObject());
 
         tableRows = FXCollections.observableArrayList();
 
@@ -463,10 +469,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private boolean isMatch(TotalTabTableRow value, String filter) {
         String input = filter.toLowerCase();
         partName = value.getPartName().getValue();
-        serialNumber = value.getSerialNumber().getValue();
+        serialNumber = value.getSerialNumber().getValue().toString();
         loc = value.getLocation().getValue();
-        barcode = value.getBarcode().getValue();
-        partID = value.getPartID().getValue();
+        barcode = value.getBarcode().getValue().toString();
+        partID = value.getPartID().getValue().toString();
 
         return ((partName != null && partName.toLowerCase().contains(input))
                 || (serialNumber != null && serialNumber.toLowerCase().contains(input))
@@ -498,8 +504,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 student = database.getStudentToLastCheckout(data.get(i).getPartID());
                 checkoutObject = database.getLastCheckoutOf(data.get(i).getPartID());
                 TotalTabTableRow row = new TotalTabTableRow(student.getName(), student.getEmail().replace("\\", ""),
-                        data.get(i).getPartName(), "" + data.get(i).getPartID(),
-                        "" + data.get(i).getBarcode(), data.get(i).getSerialNumber(),
+                        data.get(i).getPartName(),  data.get(i).getPartID()
+                        ,data.get(i).getBarcode(), Integer.valueOf(data.get(i).getSerialNumber()),
                         data.get(i).getLocation(), database.isOverdue("" + checkoutObject.getDueAt()) ? "In" : "Out",
                         checkoutObject.getCheckoutAtDate(), checkoutObject.getCheckinAtDate(), checkoutObject.getDueAt(),
                         "" + data.get(i).getPrice(), data.get(i).getFault(), checkoutObject.getExtendedCourseName(), checkoutObject.getExtendedProfessor());

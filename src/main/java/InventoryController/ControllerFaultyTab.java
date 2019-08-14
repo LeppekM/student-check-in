@@ -46,7 +46,10 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
     private TreeItem<FaultyPartTabTableRow> root;
 
     private JFXTreeTableColumn<FaultyPartTabTableRow,String> partNameCol, locationCol,
-            barcodeCol, faultDescCol;
+             faultDescCol;
+
+    @FXML
+    private JFXTreeTableColumn<FaultyPartTabTableRow, Long> barcodeCol;
 
     private String partName, loc, barcode, faultDescription;
 
@@ -102,10 +105,10 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
         barcodeCol.prefWidthProperty().bind(faultyTable.widthProperty().divide(4));
         barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
-        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String>, ObservableValue<String>>() {
+        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, Long>, ObservableValue<Long>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, String> param) {
-                return param.getValue().getValue().getBarcode();
+            public ObservableValue<Long> call(TreeTableColumn.CellDataFeatures<FaultyPartTabTableRow, Long> param) {
+                return param.getValue().getValue().getBarcode().asObject();
 //                return new ReadOnlyStringWrapper(param.getValue().getValue().getBarcode().toString());
             }
         });
@@ -243,7 +246,7 @@ public class ControllerFaultyTab  extends ControllerInventoryPage implements Ini
                 if (buttonType == ButtonType.YES) {
                     int index = faultyTable.getSelectionModel().getFocusedIndex();
                     FaultyPartTabTableRow part = faultyTable.getSelectionModel().getModelItem(index).getValue();
-                    database.resolveFault(Integer.parseInt(part.getBarcode().get()), part.getPartName().get());
+                    database.resolveFault(part.getBarcode().getValue(), part.getPartName().get());
                     populateTable();
                 } else if (buttonType == ButtonType.NO) {
                     alert.close();

@@ -4,6 +4,7 @@ import Database.*;
 import Database.ObjectClasses.Worker;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,9 +24,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -52,12 +53,15 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     private HistoryParts historyParts;
 
     private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
-    serialNumberCol, actionCol, dateCol;
+     actionCol, dateCol;
+
+    private JFXTreeTableColumn<HistoryTabTableRow, Integer> serialNumberCol;
 
     @FXML
     private JFXButton searchButton, clearOldHistory;
 
     private String student, partName, serialNumber, action, date;
+    private Comparator<String> IntegerComparator;
 
     /**
      * This method sets the data in the history page.
@@ -98,12 +102,15 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         serialNumberCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
-        serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
+        serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, Integer>, ObservableValue<Integer>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
-                return param.getValue().getValue().getSerialNumber();
+            public ObservableValue<Integer> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, Integer> param) {
+
+                return param.getValue().getValue().getSerialNumber().asObject();
             }
         });
+        serialNumberCol.setComparator(Integer::compareTo);
+
 
         actionCol = new JFXTreeTableColumn<>("Action");
         actionCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
@@ -180,7 +187,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new HistoryTabTableRow(list.get(i).getStudentName(),
                     list.get(i).getStudentEmail(), list.get(i).getPartName(),
-                    list.get(i).getSerialNumber(), list.get(i).getAction(),
+                    Integer.valueOf(list.get(i).getSerialNumber()), list.get(i).getAction(),
                     list.get(i).getDate()));
         }
 
@@ -202,7 +209,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                 String input = searchInput.getText().toLowerCase();
                 student = tableRow.getValue().getStudentName().getValue();
                 partName = tableRow.getValue().getPartName().getValue();
-                serialNumber = tableRow.getValue().getSerialNumber().getValue();
+                serialNumber = tableRow.getValue().getSerialNumber().getValue().toString();
                 action = tableRow.getValue().getAction().getValue();
                 date = tableRow.getValue().getDate().getValue().toLowerCase();
 

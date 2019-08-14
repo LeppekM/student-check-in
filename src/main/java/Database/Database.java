@@ -291,7 +291,7 @@ public class Database implements IController {
      * @param name name of faulty part
      * @return partID
      */
-    private int getPartID(int barcode, String name){
+    private int getPartID(long barcode, String name){
         String query = "select * from parts where partName = '" + name + "' and barcode = " + barcode + ";";
         int ID = 0;
         try{
@@ -312,7 +312,7 @@ public class Database implements IController {
      * @param barcode barcode of faulty part
      * @param name name of faulty part
      */
-    public void resolveFault(int barcode, String name){
+    public void resolveFault(long barcode, String name){
         int partID = getPartID(barcode, name);
         String query = "delete from fault where partID = " + partID + ";";
         String pquery = "update parts set isFaulty = 0, updatedAt = date('" + gettoday() + "'), updatedBy = '" +

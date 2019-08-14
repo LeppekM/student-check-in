@@ -11,17 +11,17 @@ public class FaultyPartTabTableRow extends RecursiveTreeObject<FaultyPartTabTabl
     private final StringProperty studentName;
     private final StringProperty studentEmail;
     private final StringProperty partName;
-    private final StringProperty barcode;
+    private final LongProperty barcode;
     private final StringProperty description;
     private final StringProperty price;
     private final StringProperty location;
     private final StringProperty date;
 
-    public FaultyPartTabTableRow(String studentName, String studentEmail, String partName, String barcode, String description, String price, String location, String date) {
+    public FaultyPartTabTableRow(String studentName, String studentEmail, String partName, long barcode, String description, String price, String location, String date) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
-        this.barcode = new SimpleStringProperty(barcode);
+        this.barcode = new SimpleLongProperty(barcode);
         this.description = new SimpleStringProperty(description);
         this.price = new SimpleStringProperty(price);
         this.location = new SimpleStringProperty(location);
@@ -65,14 +65,10 @@ public class FaultyPartTabTableRow extends RecursiveTreeObject<FaultyPartTabTabl
         this.partName.set(partName);
     }
 
-    public StringProperty getBarcode() {
+    public LongProperty getBarcode() {
         return barcode;
     }
 
-
-    public void setBarcode(String barcode) {
-        this.barcode.set(barcode);
-    }
 
     public StringProperty getDescription() {
         return description;

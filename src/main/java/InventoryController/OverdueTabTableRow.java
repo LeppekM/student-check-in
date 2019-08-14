@@ -1,6 +1,8 @@
 package InventoryController;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -11,15 +13,15 @@ public class OverdueTabTableRow extends RecursiveTreeObject<OverdueTabTableRow> 
 
     private StringProperty studentID;
     private StringProperty partName;
-    private StringProperty serialNumber;
+    private IntegerProperty serialNumber;
     private StringProperty dueDate;
     private StringProperty fee;
 
-    public OverdueTabTableRow(String studentID, String partName, String serialNumber,
+    public OverdueTabTableRow(String studentID, String partName, int serialNumber,
                               String dueDate, String fee) {
         this.studentID = new SimpleStringProperty(studentID);
         this.partName = new SimpleStringProperty(partName);
-        this.serialNumber = new SimpleStringProperty(serialNumber);
+        this.serialNumber = new SimpleIntegerProperty(serialNumber);
         this.dueDate = new SimpleStringProperty(dueDate);
         this.fee = new SimpleStringProperty(fee);
     }
@@ -32,7 +34,7 @@ public class OverdueTabTableRow extends RecursiveTreeObject<OverdueTabTableRow> 
         return partName;
     }
 
-    public StringProperty getSerialNumber() {
+    public IntegerProperty getSerialNumber() {
         return serialNumber;
     }
 

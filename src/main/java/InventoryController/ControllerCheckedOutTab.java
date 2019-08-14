@@ -48,7 +48,10 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
 
     @FXML
     private JFXTreeTableColumn<CheckedOutTabTableRow, String> studentNameCol, partNameCol,
-            barcodeCol, checkedOutAtCol, dueDateCol;
+            checkedOutAtCol, dueDateCol;
+
+    @FXML
+    private JFXTreeTableColumn<CheckedOutTabTableRow, Long> barcodeCol;
 
     @FXML
     private JFXButton searchButton;
@@ -91,10 +94,10 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         barcodeCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
-        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
+        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, Long>, ObservableValue<Long>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
-                return param.getValue().getValue().getBarcode();
+            public ObservableValue<Long> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, Long> param) {
+                return param.getValue().getValue().getBarcode().asObject();
             }
         });
 
@@ -165,7 +168,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new CheckedOutTabTableRow(list.get(i).getStudentName().getValue(),
                     list.get(i).getStudentEmail().get(), list.get(i).getPartName().getValue(),
-                    list.get(i).getBarcode().getValue(), list.get(i).getSerialNumber().get(),
+                    Long.valueOf(list.get(i).getBarcode().getValue()), list.get(i).getSerialNumber().get(),
                     list.get(i).getPartID().get(), list.get(i).getCheckedOutDate().getValue(),
                     list.get(i).getDueDate().getValue(), list.get(i).getFee().getValue()));
         }
@@ -214,7 +217,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
                 String input = searchInput.getText().toLowerCase();
                 studentName = tableRow.getValue().getStudentName().getValue();
                 partName = tableRow.getValue().getPartName().getValue();
-                barcode = tableRow.getValue().getBarcode().getValue();
+                barcode = tableRow.getValue().getBarcode().getValue().toString();
                 checkedOutAt = tableRow.getValue().getCheckedOutAt().getValue();
                 dueDate = tableRow.getValue().getDueDate().getValue();
 

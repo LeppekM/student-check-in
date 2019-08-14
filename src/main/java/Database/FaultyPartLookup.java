@@ -35,7 +35,7 @@ public class FaultyPartLookup {
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next()){
                 setVariables(resultSet);
-                FaultyPartTabTableRow faultyItems = new FaultyPartTabTableRow(studentName, studentEmail, partName, barcode, description, price, location, date);
+                FaultyPartTabTableRow faultyItems = new FaultyPartTabTableRow(studentName, studentEmail, partName, Long.valueOf(barcode), description, price, location, date);
                 data.add(faultyItems);
             }
         } catch (SQLException e) {

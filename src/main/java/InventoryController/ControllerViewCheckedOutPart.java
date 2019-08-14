@@ -35,7 +35,7 @@ public class ControllerViewCheckedOutPart {
         studentNameField.setText(row.getStudentName().get());
         studentEmailField.setText(row.getStudentEmail().get());
         partNameField.setText(row.getPartName().get());
-        barcodeField.setText(row.getBarcode().get());
+        barcodeField.setText(row.getBarcode().getValue().toString());
         serialNumberField.setText(row.getSerialNumber().get());
         partIDField.setText("" + row.getPartID().get());
         checkedOutDateField.setText(row.getCheckedOutAt().get());

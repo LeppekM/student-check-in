@@ -39,7 +39,7 @@ public class OverduePopUpController {
             fee.setText("$" + df.format(Double.parseDouble(overdueItems.getPrice().get())));
         }else if (overdueItems == null && overdueTabTableRow != null){
             partName.setText(overdueTabTableRow.getPartName().get());
-            serialNumber.setText(overdueTabTableRow.getSerialNumber().get());
+            serialNumber.setText(overdueTabTableRow.getSerialNumber().getValue().toString());
             dueDate.setText(overdueTabTableRow.getDueDate().get());
             overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll("\\$", ""));
             overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll(",", ""));

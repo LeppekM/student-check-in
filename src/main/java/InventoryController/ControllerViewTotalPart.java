@@ -64,9 +64,9 @@ public class ControllerViewTotalPart {
      */
     public void populate(TotalTabTableRow row) {
         // Sets basic part info
-        partNameField.setText(row.getPartName().get());
-        barcodeField.setText(row.getBarcode().get());
-        serialNumberField.setText(row.getSerialNumber().get());
+        partNameField.setText(row.getPartName().getValue());
+        barcodeField.setText(row.getBarcode().getValue().toString());
+        serialNumberField.setText(row.getSerialNumber().getValue().toString());
         partIDField.setText("" + row.getPartID().get());
 
         // Sets Last Transaction Info if it has ever been checked out
