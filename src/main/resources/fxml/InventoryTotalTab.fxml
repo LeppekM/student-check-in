@@ -29,9 +29,9 @@
                   <Insets left="20.0" right="14.0" top="14.0" />
                </HBox.margin>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" prefWidth="200.0" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_RIGHT" prefHeight="68.0" prefWidth="306.0" HBox.hgrow="ALWAYS">
                <children>
-              <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" promptText="search">
+              <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" prefHeight="39.0" prefWidth="230.0" promptText="Filter i.e. &quot;Wire Kits&quot;, &quot;Faulty&quot;">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
