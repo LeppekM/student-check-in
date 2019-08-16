@@ -157,10 +157,6 @@ public class ControllerLogin implements Initializable {
             RFID.setVisible(false);
             RFIDLabel.setVisible(false);
             switchButton.setText("Login Using RFID");
-//            RFID.setText("");
-//            RFID.setVisible(false);
-//            emailLogin.setVisible(true);
-
             switchButton.setText("Login Using RFID");
         }else if (switchButton.getText().equals("Login Using RFID")) {
             invalidLoginCredentialsError.setVisible(false);
@@ -170,10 +166,6 @@ public class ControllerLogin implements Initializable {
             passLabel.setVisible(false);
             emailInputLoginPage.setVisible(false);
             passwordInputLoginPage.setVisible(false);
-//            emailInputLoginPage.setText("");
-//            passwordInputLoginPage.setText("");
-//            emailLogin.setVisible(false);
-//
             switchButton.setText("Login Using Email");
         }
 
