@@ -11,17 +11,14 @@ import javafx.beans.property.StringProperty;
  */
 public class OverdueTabTableRow extends RecursiveTreeObject<OverdueTabTableRow> {
 
-    private StringProperty studentID;
-    private StringProperty partName;
-    private IntegerProperty serialNumber;
-    private StringProperty dueDate;
-    private StringProperty fee;
+    private StringProperty studentID, partName, dueDate, fee, serialNumber;
 
-    public OverdueTabTableRow(String studentID, String partName, int serialNumber,
+
+    public OverdueTabTableRow(String studentID, String partName, String serialNumber,
                               String dueDate, String fee) {
         this.studentID = new SimpleStringProperty(studentID);
         this.partName = new SimpleStringProperty(partName);
-        this.serialNumber = new SimpleIntegerProperty(serialNumber);
+        this.serialNumber = new SimpleStringProperty(serialNumber);
         this.dueDate = new SimpleStringProperty(dueDate);
         this.fee = new SimpleStringProperty(fee);
     }
@@ -34,7 +31,7 @@ public class OverdueTabTableRow extends RecursiveTreeObject<OverdueTabTableRow> 
         return partName;
     }
 
-    public IntegerProperty getSerialNumber() {
+    public StringProperty getSerialNumber() {
         return serialNumber;
     }
 

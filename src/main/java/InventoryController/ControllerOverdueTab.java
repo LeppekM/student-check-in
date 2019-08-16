@@ -48,10 +48,9 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
     @FXML
     private JFXTreeTableColumn<OverdueTabTableRow, String> studentIDCol, partNameCol,
-            dueDateCol, feeCol;
+            dueDateCol, feeCol, serialNumberCol;
 
-    @FXML
-    private JFXTreeTableColumn<OverdueTabTableRow, Integer> serialNumberCol;
+
 
     @FXML
     private JFXButton searchButton;
@@ -90,23 +89,14 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         partNameCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
         partNameCol.setStyle("-fx-font-size: 18px");
         partNameCol.setResizable(false);
-        partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
-                return param.getValue().getValue().getPartName();
-            }
-        });
+        partNameCol.setCellValueFactory(col-> col.getValue().getValue().getPartName());
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
         serialNumberCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
         serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
-        serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, Integer>, ObservableValue<Integer>>() {
-            @Override
-            public ObservableValue<Integer> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, Integer> param) {
-                return param.getValue().getValue().getSerialNumber().asObject();
-            }
-        });
+        serialNumberCol.setCellValueFactory(col-> col.getValue().getValue().getSerialNumber());
+
 
         dueDateCol = new JFXTreeTableColumn<>("Due Date");
         dueDateCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
@@ -182,7 +172,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
 
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new OverdueTabTableRow("" + list.get(i).getID().getValue(),
-                    list.get(i).getPart().getValue(), Integer.parseInt(list.get(i).getSerial().getValue()),
+                    list.get(i).getPart().getValue(), list.get(i).getSerial().getValue(),
                     list.get(i).getDate().getValue(), "$" +
                     df.format(Double.parseDouble(list.get(i).getPrice().getValue()))));
         }

@@ -53,9 +53,8 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     private HistoryParts historyParts;
 
     private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
-     actionCol, dateCol;
+     actionCol, dateCol, serialNumberCol;
 
-    private JFXTreeTableColumn<HistoryTabTableRow, Integer> serialNumberCol;
 
     @FXML
     private JFXButton searchButton, clearOldHistory;
@@ -102,14 +101,8 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         serialNumberCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
-        serialNumberCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, Integer>, ObservableValue<Integer>>() {
-            @Override
-            public ObservableValue<Integer> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, Integer> param) {
+        serialNumberCol.setCellValueFactory(col-> col.getValue().getValue().getSerialNumber());
 
-                return param.getValue().getValue().getSerialNumber().asObject();
-            }
-        });
-        serialNumberCol.setComparator(Integer::compareTo);
 
 
         actionCol = new JFXTreeTableColumn<>("Action");
@@ -187,7 +180,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new HistoryTabTableRow(list.get(i).getStudentName(),
                     list.get(i).getStudentEmail(), list.get(i).getPartName(),
-                    Integer.valueOf(list.get(i).getSerialNumber()), list.get(i).getAction(),
+                    list.get(i).getSerialNumber(), list.get(i).getAction(),
                     list.get(i).getDate()));
         }
 
