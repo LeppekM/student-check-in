@@ -342,43 +342,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         getNames();
 
-        sortCheckBox = new CheckComboBox<>(types);
-        sortCheckBox.getCheckModel().checkIndices(0);
         selectedFilters.add("All");
-        sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
-        totalTabPage.getChildren().add(sortCheckBox);
-        filterDropDown.getChildren().add(sortCheckBox);
 
         // Updates the search if the user presses enter with the cursor in the search field
         searchInput.setOnKeyReleased(event -> {
                 if (event.getCode() == KeyCode.ENTER) {
                     search();
                 }
-        });
-
-        sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-            public void onChanged(ListChangeListener.Change<? extends String> s) {
-                while (s.next()) {
-                    if (s.wasAdded()) {
-                        if (s.toString().contains("All")) {
-                            //manually clear other selections when "All" is chosen
-                            for (int i = 1; i < types.size(); i++) {
-                                sortCheckBox.getCheckModel().clearCheck(i);
-                                selectedFilters.clear();
-                            }
-                        } else {
-                            // check if the "All" option is selected and if so remove it
-                            if (sortCheckBox.getCheckModel().isChecked(0)) {
-                                sortCheckBox.getCheckModel().clearCheck(0);
-                            }
-
-                        }
-                    }
-                }
-                selectedFilters.clear();
-                selectedFilters.addAll(sortCheckBox.getCheckModel().getCheckedItems());
-                populateTable();
-            }
         });
         populateTable();
     }
@@ -450,13 +420,28 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private void search() {
         String filter = searchInput.getText();
+        String[] filters = filter.split(",");
         if (filter.isEmpty()) {
             totalTable.setRoot(root);
         }
         else {
             TreeItem<TotalTabTableRow> filteredRoot = new TreeItem<>();
-            filter(root, filter, filteredRoot);
-            totalTable.setRoot(filteredRoot);
+            selectedFilters.removeAll(selectedFilters.subList(0, selectedFilters.size()));
+            for (String f : filters) {
+                f = f.trim();
+                if (f.equalsIgnoreCase("faulty") || f.equalsIgnoreCase("overdue") ||
+                        f.equalsIgnoreCase("checked out") || f.equalsIgnoreCase("all")) {
+                    f = f.substring(0, 1).toUpperCase() + f.substring(1);
+                    if (f.length() > 7) {
+                        f = f.substring(0, 8) + f.substring(8, 9).toUpperCase() + f.substring(9);
+                    }
+                    selectedFilters.add(f);
+                    populateTable();
+                } else {
+                    filter(root, f, filteredRoot);
+                    totalTable.setRoot(filteredRoot);
+                }
+            }
         }
     }
 
@@ -539,7 +524,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 long longDate = System.currentTimeMillis();
                 Date date = new java.sql.Date(longDate);
                 if (result.isEmpty())
-                    result = result + ", checkout AS c WHERE (p.partID=c.partID AND c.dueAt < date('" + date.toString() + "'))";
+                    result = result + ", checkout AS c WHERE (p.partID = c.partID AND p.isCheckedOut = 1 AND c.dueAt" +
+                            " < date('" + date.toString() + "'))";
             }
             if (types.contains("Checked Out")) {
                 if (result.isEmpty())
