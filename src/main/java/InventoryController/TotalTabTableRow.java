@@ -10,9 +10,9 @@ import javafx.beans.property.*;
 public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     private StringProperty studentName, studentEmail, partName,  location,
-            status, dueDate, fee, faultDescription, className, professorName;
+            status, dueDate, fee, faultDescription, className, professorName, serialNumber;
 
-    private IntegerProperty partID, serialNumber;
+    private IntegerProperty partID;
     private LongProperty barcode;
 
     private String actionType;
@@ -22,14 +22,14 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
     private String action;
 
     public TotalTabTableRow(String studentName, String studentEmail, String partName, int partID,
-                            long barcode, int serialNumber, String location, String status,
+                            long barcode, String serialNumber, String location, String status,
                             String checkedOutAt, String checkedInAt, String dueDate, String price, boolean fault, String className, String professorName) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
         this.partID = new SimpleIntegerProperty(partID);
         this.barcode = new SimpleLongProperty(barcode);
-        this.serialNumber = new SimpleIntegerProperty(serialNumber);
+        this.serialNumber = new SimpleStringProperty(serialNumber);
         this.location = new SimpleStringProperty(location);
         this.status = new SimpleStringProperty(status);
         if (checkedInAt != null) {
@@ -70,7 +70,7 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
         return barcode;
     }
 
-    public IntegerProperty getSerialNumber() {
+    public StringProperty getSerialNumber() {
         return serialNumber;
     }
 

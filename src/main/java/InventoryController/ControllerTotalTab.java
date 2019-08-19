@@ -65,10 +65,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     private TreeItem<TotalTabTableRow> root;
 
     @FXML
-    private JFXTreeTableColumn<TotalTabTableRow, String> partNameCol, locationCol;
+    private JFXTreeTableColumn<TotalTabTableRow, String> partNameCol, locationCol, serialNumberCol;
 
     @FXML
-    private JFXTreeTableColumn<TotalTabTableRow, Integer> serialNumberCol, partIDCol;
+    private JFXTreeTableColumn<TotalTabTableRow, Integer>  partIDCol;
 
     @FXML
     private JFXTreeTableColumn<TotalTabTableRow, Long> barcodeCol;
@@ -281,7 +281,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         serialNumberCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
         serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
-        serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber().asObject());
+        serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
 
 
         locationCol = new JFXTreeTableColumn<>("Location");
@@ -490,7 +490,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 checkoutObject = database.getLastCheckoutOf(data.get(i).getPartID());
                 TotalTabTableRow row = new TotalTabTableRow(student.getName(), student.getEmail().replace("\\", ""),
                         data.get(i).getPartName(),  data.get(i).getPartID()
-                        ,data.get(i).getBarcode(), Integer.valueOf(data.get(i).getSerialNumber()),
+                        ,data.get(i).getBarcode(),data.get(i).getSerialNumber(),
                         data.get(i).getLocation(), database.isOverdue("" + checkoutObject.getDueAt()) ? "In" : "Out",
                         checkoutObject.getCheckoutAtDate(), checkoutObject.getCheckinAtDate(), checkoutObject.getDueAt(),
                         "" + data.get(i).getPrice(), data.get(i).getFault(), checkoutObject.getExtendedCourseName(), checkoutObject.getExtendedProfessor());

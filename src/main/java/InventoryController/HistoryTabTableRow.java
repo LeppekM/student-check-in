@@ -15,17 +15,17 @@ public class HistoryTabTableRow extends RecursiveTreeObject<HistoryTabTableRow>{
 
     private StringProperty studentName;
     private StringProperty studentEmail;
-    private StringProperty partName;
-    private IntegerProperty serialNumber;
+    private StringProperty partName, serialNumber;
+
     private StringProperty action;
     private StringProperty date;
 
-    public HistoryTabTableRow(String studentName, String studentEmail, String partName, int serialNumber,
+    public HistoryTabTableRow(String studentName, String studentEmail, String partName, String serialNumber,
                               String action, String date) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
-        this.serialNumber = new SimpleIntegerProperty(serialNumber);
+        this.serialNumber = new SimpleStringProperty(serialNumber);
         this.action = new SimpleStringProperty(action);
         this.date = new SimpleStringProperty(date);
     }
@@ -42,7 +42,7 @@ public class HistoryTabTableRow extends RecursiveTreeObject<HistoryTabTableRow>{
         return partName;
     }
 
-    public IntegerProperty getSerialNumber() {
+    public StringProperty getSerialNumber() {
         return serialNumber;
     }
 

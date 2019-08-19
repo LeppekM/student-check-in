@@ -42,10 +42,8 @@ public class ControllerLogin implements Initializable {
     private JFXButton loginButtonLoginPage, switchButton;
 
     @FXML
-    private Label invalidLoginCredentialsError;
+    private Label invalidLoginCredentialsError, RFIDLabel, passLabel, emailLabel;
 
-    @FXML
-    HBox RFIDLogin;
 
     @FXML
     GridPane emailLogin;
@@ -152,15 +150,22 @@ public class ControllerLogin implements Initializable {
 
     public void switchToOther(ActionEvent actionEvent) {
         if (switchButton.getText().equals("Login Using Email")) {
-            RFID.setText("");
-            RFIDLogin.setVisible(false);
-            emailLogin.setVisible(true);
+            emailLabel.setVisible(true);
+            passLabel.setVisible(true);
+            emailInputLoginPage.setVisible(true);
+            passwordInputLoginPage.setVisible(true);
+            RFID.setVisible(false);
+            RFIDLabel.setVisible(false);
+            switchButton.setText("Login Using RFID");
             switchButton.setText("Login Using RFID");
         }else if (switchButton.getText().equals("Login Using RFID")) {
-            emailInputLoginPage.setText("");
-            passwordInputLoginPage.setText("");
-            emailLogin.setVisible(false);
-            RFIDLogin.setVisible(true);
+            invalidLoginCredentialsError.setVisible(false);
+            RFID.setVisible(true);
+            RFIDLabel.setVisible(true);
+            emailLabel.setVisible(false);
+            passLabel.setVisible(false);
+            emailInputLoginPage.setVisible(false);
+            passwordInputLoginPage.setVisible(false);
             switchButton.setText("Login Using Email");
         }
 
