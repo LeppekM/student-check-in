@@ -342,12 +342,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
         getNames();
 
-//        sortCheckBox = new CheckComboBox<>(types);
-//        sortCheckBox.getCheckModel().checkIndices(0);
         selectedFilters.add("All");
-//        sortCheckBox.setPrefSize(CHECKBOX_PREF_WIDTH, CHECKBOX_PREF_HEIGHT);
-//        totalTabPage.getChildren().add(sortCheckBox);
-//        filterDropDown.getChildren().add(sortCheckBox);
 
         // Updates the search if the user presses enter with the cursor in the search field
         searchInput.setOnKeyReleased(event -> {
@@ -355,31 +350,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     search();
                 }
         });
-
-//        sortCheckBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-//            public void onChanged(ListChangeListener.Change<? extends String> s) {
-//                while (s.next()) {
-//                    if (s.wasAdded()) {
-//                        if (s.toString().contains("All")) {
-//                            //manually clear other selections when "All" is chosen
-//                            for (int i = 1; i < types.size(); i++) {
-//                                sortCheckBox.getCheckModel().clearCheck(i);
-//                                selectedFilters.clear();
-//                            }
-//                        } else {
-//                            // check if the "All" option is selected and if so remove it
-//                            if (sortCheckBox.getCheckModel().isChecked(0)) {
-//                                sortCheckBox.getCheckModel().clearCheck(0);
-//                            }
-//
-//                        }
-//                    }
-//                }
-//                selectedFilters.clear();
-//                selectedFilters.addAll(sortCheckBox.getCheckModel().getCheckedItems());
-//                populateTable();
-//            }
-//        });
         populateTable();
     }
 
