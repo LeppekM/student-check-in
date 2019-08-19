@@ -456,13 +456,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         }
         else {
             TreeItem<TotalTabTableRow> filteredRoot = new TreeItem<>();
-            selectedFilters.remove("All");
+            selectedFilters.removeAll(selectedFilters.subList(0, selectedFilters.size()));
             for (String f : filters) {
                 f = f.trim();
                 if (f.equalsIgnoreCase("faulty") || f.equalsIgnoreCase("overdue") ||
                         f.equalsIgnoreCase("checked out") || f.equalsIgnoreCase("all")) {
                     f = f.substring(0, 1).toUpperCase() + f.substring(1);
-                    if (f.length() > 6) {
+                    if (f.length() > 7) {
                         f = f.substring(0, 8) + f.substring(8, 9).toUpperCase() + f.substring(9);
                     }
                     selectedFilters.add(f);
@@ -554,7 +554,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 long longDate = System.currentTimeMillis();
                 Date date = new java.sql.Date(longDate);
                 if (result.isEmpty())
-                    result = result + ", checkout AS c WHERE (p.partID=c.partID AND c.dueAt < date('" + date.toString() + "'))";
+                    result = result + ", checkout AS c WHERE (p.partID = c.partID AND p.isCheckedOut = 1 AND c.dueAt" +
+                            " < date('" + date.toString() + "'))";
             }
             if (types.contains("Checked Out")) {
                 if (result.isEmpty())
