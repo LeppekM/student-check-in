@@ -18,7 +18,7 @@ public class ControllerViewHistoryPart {
         studentNameField.setText(row.getStudentName().get());
         studentEmailField.setText(row.getStudentEmail().get());
         partNameField.setText(row.getPartName().get());
-        serialNumberField.setText(row.getSerialNumber().toString());
+        serialNumberField.setText(row.getSerialNumber().get());
         actionField.setText(row.getAction().get());
         dateField.setText(row.getDate().get());
     }

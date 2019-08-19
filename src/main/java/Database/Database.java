@@ -353,11 +353,12 @@ public class Database implements IController {
      * @return the part with the matching part name
      */
     public Part selectPartByPartName(String partName) {
-        String query = "select * from parts where partName = '" + partName + "';";
+        String query = "select * from parts where partName = ?";
         Part part = null;
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, partName);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
@@ -469,11 +470,14 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getAllBarcodesForPartName(String partName) {
-        String query = "SELECT barcode FROM parts WHERE partName = '" + partName + "';";
+        //String query = "SELECT barcode FROM parts WHERE partName = '" + partName + "';";
+        String query = "SELECT barcode FROM parts WHERE partName = ?";
         ArrayList<String> barcodes = new ArrayList<>();
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, partName);
+//            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 barcodes.add(resultSet.getString("barcode"));
             }
@@ -573,11 +577,12 @@ public class Database implements IController {
      * @return the number of parts
      */
     public int countPartsOfType(String partName) {
-        String query = "SELECT COUNT(*) FROM parts WHERE partName = '" + partName + "';";
+        String query = "SELECT COUNT(*) FROM parts WHERE partName =?";
         ResultSet resultSet;
         try {
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, partName);
+            resultSet = statement.executeQuery();
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
@@ -634,11 +639,12 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getUniqueBarcodesBesidesPart(String partName) {
-        String query = "SELECT DISTINCT barcode FROM parts WHERE partName != '" + partName + "';";
+        String query = "SELECT DISTINCT barcode FROM parts WHERE partName != ?";
         ArrayList<String> barcodes = new ArrayList<>();
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, partName);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 barcodes.add(resultSet.getString("barcode"));
             }
@@ -654,10 +660,11 @@ public class Database implements IController {
      * @return true if the database contains a part with part name that equals partName; false otherwise
      */
     public boolean hasPartName(String partName) {
-        String query = "SELECT * from parts where partName = '" + partName + "';";
+        String query = "SELECT * from parts where partName = ?";
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, partName);
+            ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
             e.printStackTrace();
