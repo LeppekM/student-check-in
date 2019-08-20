@@ -19,12 +19,12 @@ public class CheckingOutPart {
     private final String getPartIDtoAdd = "SELECT partID \n" +
             "FROM parts \n" +
             "WHERE barcode = ? \n" +
-            "    AND isCheckedout = 0\n" +
+            "    AND isCheckedOut = 0\n" +
             "    LIMIT 1";
     private final String getPartIDtoCheckin = "SELECT partID \n" +
             "FROM parts \n" +
             "WHERE barcode = ? \n" +
-            "    AND isCheckedout = 1\n" +
+            "    AND isCheckedOut = 1\n" +
             "    LIMIT 1";
 
     private final String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
@@ -113,6 +113,8 @@ public class CheckingOutPart {
             while(rs.next()){
                 barcodes.add(rs.getLong("barcode"));
             }
+            statement.close();
+            rs.close();
         } catch (SQLException e) {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
             throw new IllegalStateException("Cannot connect the database", e);
@@ -142,6 +144,8 @@ public class CheckingOutPart {
             while(rs.next()){
                 barcodes.add(rs.getLong("barcode"));
             }
+            statement.close();
+            rs.close();
         } catch (SQLException e) {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
             throw new IllegalStateException("Cannot connect the database", e);
@@ -165,6 +169,7 @@ public class CheckingOutPart {
                 partName = rs.getString("partName");
             }
             statement.close();
+            rs.close();
         } catch (SQLException e) {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
             throw new IllegalStateException("Cannot connect to the database", e);
@@ -213,6 +218,7 @@ public class CheckingOutPart {
             if(rs.next()){
                 partID = rs.getInt("partID");
             }
+            rs.close();
             statement.close();
         } catch (SQLException e) {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting part ID from barcode.");

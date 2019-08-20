@@ -1,27 +1,17 @@
 package Database;
 
 import HelperClasses.DatabaseHelper;
+import HelperClasses.StageWrapper;
+import InventoryController.StudentCheckIn;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ExtendedCheckOut {
 
     private final String url = Database.host + "/student_check_in";
-    private final String extendedCheckout = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, prof, course, dueAt)\n" +
-            "VALUE(?,?,?,?,?,?,?);";
-    private final String getPartIDtoAdd = "SELECT partID \n" +
-            "FROM parts \n" +
-            "WHERE barcode = ? \n" +
-            "    AND isCheckedout = 0\n" +
-            "    LIMIT 1";
-    private final String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
-
-
     private CheckingOutPart checkHelper = new CheckingOutPart();
     private DatabaseHelper helper = new DatabaseHelper();
+    private StageWrapper stageWrapper = new StageWrapper();
 
     /**
      * Adds a new checkout item to the database
@@ -30,12 +20,41 @@ public class ExtendedCheckOut {
      */
     public void addExtendedCheckout(long barcode, int studentID,  String profName, String courseName, String dueDate){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            String extendedCheckout = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, prof, course, dueAt)\n" +
+                    "VALUE(?,?,?,?,?,?,?);";
             PreparedStatement statement = connection.prepareStatement(extendedCheckout);
             addExtendedCheckoutHelper(barcode, studentID, profName, courseName, dueDate, statement).execute();
             statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
+        catch (NullPointerException e){
+            stageWrapper.errorAlert("Barcode " + barcode +" was not found in system, so was not checked out");
+        }
+
+    }
+
+
+    private int getPartIDViaBarcode(long barcode){
+        String query = "select partID from parts\n" +
+                "where barcode = ?\n" +
+                "and isCheckedOut = 0\n"+
+                "LIMIT 1";
+        int partID = 0;
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setLong(1, barcode);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()) {
+                partID = rs.getInt("partID");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting part ID from barcode.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+
+        return partID;
     }
 
     /**
@@ -45,8 +64,12 @@ public class ExtendedCheckOut {
      * @param preparedStatement Statement to be executed
      * @return
      */
-    private PreparedStatement addExtendedCheckoutHelper(long barcode, int studentID, String profName, String courseName, String dueDate,PreparedStatement preparedStatement){
-        int partID = checkHelper.getPartIDFromBarcode(barcode, getPartIDtoAdd);
+    private PreparedStatement addExtendedCheckoutHelper(long barcode, int studentID, String profName, String courseName, String dueDate, PreparedStatement preparedStatement){
+        int partID = getPartIDViaBarcode(barcode);
+        if (partID == 0){
+            return null;
+        }
+
         try {
             preparedStatement.setInt(1, partID);
             preparedStatement.setInt(2, studentID);
@@ -58,6 +81,7 @@ public class ExtendedCheckOut {
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
+        String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
         checkHelper.setPartStatus(partID, setPartStatusCheckedOut); //This will set the partID found above to a checked out status
         return preparedStatement;
     }
