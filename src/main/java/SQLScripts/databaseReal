@@ -459,7 +459,5 @@ create table fault (
   PRIMARY KEY (checkoutID, partID)
 );
 
-delete
-from checkout
-where checkoutID > 0;
+
 -- #FOREIGN KEY (checkoutID, partID) REFERENCES checkout_parts (checkoutID, partID));
