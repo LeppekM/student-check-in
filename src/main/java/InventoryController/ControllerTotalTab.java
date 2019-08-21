@@ -698,6 +698,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
+                    selectedFilters.add("All");
                     populateTable();
                     stage.close();
                 }
