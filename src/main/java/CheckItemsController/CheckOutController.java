@@ -187,7 +187,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
 
         // enable the switch to student info button iff the student ID field contains a student ID
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
@@ -538,7 +538,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                         return;
                     }
 
-                } else if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+                } else if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
                     studentName = student.getStudentNameFromID(studentID.getText());
                 }
                 if (studentName.isEmpty()) { //If student ID isn't in DB, asks for email to attach the id to.
@@ -688,7 +688,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     public void goToStudent() {
         Student s = null;
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
             s = database.selectStudent(Integer.parseInt(studentID.getText()), null);
         } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             s = database.selectStudent(-1, studentID.getText());
@@ -837,7 +837,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private String getstudentID() {
         String id = null;
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
             id = studentID.getText();
         } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             id = studentID.getText();
@@ -1054,7 +1054,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method to initialize student id field properties.
      */
     private void initialStudentFieldFunctions() {
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
@@ -1064,7 +1064,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (studentID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+                        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
                             studentInfo.setDisable(false);
                         } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                             studentInfo.setDisable(false);

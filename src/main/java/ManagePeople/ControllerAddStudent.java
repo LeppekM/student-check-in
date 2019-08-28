@@ -38,21 +38,7 @@ public class ControllerAddStudent implements Initializable, IController {
         StageWrapper sw = new StageWrapper();
         sw.acceptIntegerOnly(rfid);
         // only allows user to enter 5 digits for rfid
-        rfid.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$")) {
-                    rfid.setText(oldValue);
-                }
-                Pattern p = Pattern.compile("^(rfid:)");
-                Matcher m = p.matcher(rfid.getText());
-                if (m.find()) {
-                    Platform.runLater(() -> {
-                        rfid.setText(rfid.getText().substring(5));
-                    });
-                }
-            }
-        });
+        rfidFilter(rfid);
     }
 
     /**
@@ -64,7 +50,7 @@ public class ControllerAddStudent implements Initializable, IController {
         boolean isValid = true;
         if (!first.getText().equals("") && !last.getText().equals("") &&
                 !email.getText().equals("") && !rfid.getText().equals("")) {
-            if (rfid.getText().matches("[0-9]{5}")) {
+            if (rfid.getText().matches("[0-9]{4,}")) {
                 if (email.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                     if (database.getStudentEmails().contains(email.getText())) {
                         isValid = false;
@@ -108,6 +94,28 @@ public class ControllerAddStudent implements Initializable, IController {
         if (this.worker == null){
             this.worker = worker;
         }
+    }
+
+    /**
+     * Filters for rfid
+     *
+     * @param textField Textfield to be filtered
+     */
+    private void rfidFilter(JFXTextField textField) {
+        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    //in focus
+                } else {
+                    String id = textField.getText();
+                    if (textField.getText().contains("rfid:")) {
+                        textField.setText(id.substring(5));
+                    }
+                }
+            }
+        });
+
     }
 
 

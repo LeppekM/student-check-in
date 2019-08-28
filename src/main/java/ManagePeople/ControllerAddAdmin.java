@@ -112,7 +112,7 @@ public class ControllerAddAdmin implements Initializable, IController {
                 StudentCheckIn.logger.warn("Add Admin: Pin isn't 4 digits.");
                 alert.showAndWait();
             }
-            if (RFIDA.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+            if (RFIDA.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
                 IDValid = true;
             }else {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "RFID must be 5 digits long.");

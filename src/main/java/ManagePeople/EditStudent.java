@@ -290,7 +290,7 @@ public class EditStudent implements IController {
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
             alert.showAndWait();
-        }else if (!RFID.getText().matches("^\\D*(?:\\d\\D*){5}$")) {
+        }else if (!RFID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
             alert = new Alert(Alert.AlertType.ERROR, "RFID must be 5 digits.");
             alert.setTitle("Edit Failure.");
             alert.setHeaderText("Student RFID is not 5 numbers.");

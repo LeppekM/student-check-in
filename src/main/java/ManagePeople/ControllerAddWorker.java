@@ -104,7 +104,7 @@ public class ControllerAddWorker implements Initializable, IController {
             }else {
                 passValid = true;
             }
-            if (RFIDW.getText().matches("^\\D*(?:\\d\\D*){5}$")){
+            if (RFIDW.getText().matches("^\\D*(?:\\d\\D*){4,}$")){
                 IDValid = true;
             }else {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "RFID must be 5 digits long.");
