@@ -682,13 +682,16 @@ public class Database implements IController {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students");
             String name;
+            String firstName;
+            String lastName;
             int id;
             String email;
             while (resultSet.next()) {
                 name = resultSet.getString("studentName");
                 id = resultSet.getInt("studentID");
                 email = resultSet.getString("email");
-                studentsList.add(new Student(name, id, email));
+                String[] names = name.split(" ");
+                studentsList.add(new Student(names[0], names[1], id, email));
             }
             resultSet.close();
             statement.close();

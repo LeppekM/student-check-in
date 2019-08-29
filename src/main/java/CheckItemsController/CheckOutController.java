@@ -543,18 +543,19 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
                 if (studentName.isEmpty()) { //If student ID isn't in DB, asks for email to attach the id to.
                     String studentEmail = newStudentEmail();
-//                    if (studentEmail == null){
-//                        return;
-//                    }
                     studentName = student.getStudentNameFromEmail(studentEmail);
-//                    if (studentName == null){
-//                        return;
-//                    }
+
                     if (studentName.isEmpty()) {//Means student doesn't exist in database, so completely new one will be created
                         studentName = newStudentName();
                         if (studentName != null) {
-                            student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail.replace("'", "\\'"), studentName.replace("'", "\\'"));
+                            if (studentName.contains(" ")) {
+                                student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail.replace("'", "\\'"), studentName.replace("'", "\\'"));
+                            }
+                            else {
+                                stageWrapper.errorAlert("Error, student name must contain first and last name separated by a space");
+                            }
                         }
+
                     }
                     if (studentEmail != null) {
                         updateStudent(studentEmail);
@@ -583,7 +584,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Student Creation");
         dialog.setHeaderText("Student Name is not in System.\n Please Enter Name to Continue ");
-        dialog.setContentText("Please Enter Student Name");
+        dialog.setContentText("First and last name\n Separate by space");
         dialog.showAndWait();
         return dialog.getResult();
 

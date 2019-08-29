@@ -13,7 +13,7 @@ public class Student {
     private String name;
     private int uniqueID;
     private int RFID;
-    private String email;
+    private String email, firstName, lastName;
     private String date;
     private ObservableList<CheckedOutItems> checkedOut;
     private ObservableList<OverdueItem> overdueItems;
@@ -37,6 +37,13 @@ public class Student {
         this.email = email;
     }
 
+    public Student(String firstName, String lastName, int RFID, String email){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.RFID = RFID;
+        this.email = email;
+    }
+
     public Student(String name, String email) {
         this.name = name;
         this.email = email;
@@ -44,6 +51,14 @@ public class Student {
 
     public String getName() {
         return name;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public void setName(String name) {

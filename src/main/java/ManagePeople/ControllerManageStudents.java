@@ -66,9 +66,9 @@ public class ControllerManageStudents implements IController, Initializable {
     @FXML
     private JFXTextField searchInput;
 
-    private JFXTreeTableColumn<ManageStudentsTabTableRow, String> nameCol, idCol, emailCol;
+    private JFXTreeTableColumn<ManageStudentsTabTableRow, String> firstNameCol, lastNameCol, idCol, emailCol;
 
-    private String name, id, email;
+    private String name, id, email, firstName, lastName;
 
     private static ObservableList<Student> data = FXCollections.observableArrayList();
 
@@ -85,19 +85,30 @@ public class ControllerManageStudents implements IController, Initializable {
         emptyTableLabel.setFont(new Font(18));
         manageStudentsTable.setPlaceholder(emptyTableLabel);
 
-        nameCol = new JFXTreeTableColumn<>("Name");
-        nameCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
-        nameCol.setStyle("-fx-font-size: 18px");
-        nameCol.setResizable(false);
-        nameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
+        firstNameCol = new JFXTreeTableColumn<>("First Name");
+        firstNameCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(4));
+        firstNameCol.setStyle("-fx-font-size: 18px");
+        firstNameCol.setResizable(false);
+        firstNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
-                return param.getValue().getValue().getName();
+                return param.getValue().getValue().getFirstName();
+            }
+        });
+
+        lastNameCol = new JFXTreeTableColumn<>("Last Name");
+        lastNameCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(4));
+        lastNameCol.setStyle("-fx-font-size: 18px");
+        lastNameCol.setResizable(false);
+        lastNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
+                return param.getValue().getValue().getLastName();
             }
         });
 
         idCol = new JFXTreeTableColumn<>("ID");
-        idCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
+        idCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(4));
         idCol.setStyle("-fx-font-size: 18px");
         idCol.setResizable(false);
         idCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
@@ -108,7 +119,7 @@ public class ControllerManageStudents implements IController, Initializable {
         });
 
         emailCol = new JFXTreeTableColumn<>("Email");
-        emailCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(3));
+        emailCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(4));
         emailCol.setStyle("-fx-font-size: 18px");
         emailCol.setResizable(false);
         emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
@@ -134,13 +145,15 @@ public class ControllerManageStudents implements IController, Initializable {
                     @Override
                     public boolean test(TreeItem<ManageStudentsTabTableRow> tableRow) {
                         String input = newValue.toLowerCase();
-                        name = tableRow.getValue().getName().getValue();
+                        firstName = tableRow.getValue().getFirstName().getValue();
+                        lastName = tableRow.getValue().getLastName().getValue();
                         id = tableRow.getValue().getId().getValue();
                         email = tableRow.getValue().getEmail().getValue();
 
-                        return ((name != null && name.toLowerCase().contains(input))
+                        return ((firstName != null && firstName.toLowerCase().contains(input))
                             || (id != null && id.toLowerCase().contains(input))
-                            || (email != null && email.toLowerCase().contains(input)));
+                            || (email != null && email.toLowerCase().contains(input)))
+                        || (lastName != null && lastName.toLowerCase().contains(input));
                     }
                 });
             }
@@ -184,7 +197,7 @@ public class ControllerManageStudents implements IController, Initializable {
         this.data = database.getStudents();
 
         for (int i = 0; i < data.size(); i++) {
-            tableRows.add(new ManageStudentsTabTableRow(data.get(i).getName(),
+            tableRows.add(new ManageStudentsTabTableRow(data.get(i).getFirstName(), data.get(i).getLastName(),
                     "" + data.get(i).getRFID(), data.get(i).getEmail()));
         }
 
@@ -192,7 +205,7 @@ public class ControllerManageStudents implements IController, Initializable {
                 tableRows, RecursiveTreeObject::getChildren
         );
 
-        manageStudentsTable.getColumns().setAll(nameCol, idCol, emailCol);
+        manageStudentsTable.getColumns().setAll(firstNameCol, lastNameCol, idCol, emailCol);
         manageStudentsTable.setRoot(root);
         manageStudentsTable.setShowRoot(false);
     }
