@@ -87,22 +87,6 @@ public class EditStudent implements IController {
         RFID.setText(student.getRFID() + "");
         StageWrapper stageWrapper = new StageWrapper();
         stageWrapper.acceptIntegerOnly(RFID);
-        RFID.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$")) {
-                    RFID.setText(oldValue);
-                }
-                Pattern p = Pattern.compile("^(rfid:)");
-                Matcher m = p.matcher(RFID.getText());
-                if (m.find()) {
-                    Platform.runLater(() -> {
-                        RFID.setText(RFID.getText().substring(5));
-                    });
-                }
-            }
-        });
-
         name = studentName.getText();
         id = Integer.parseInt(RFID.getText());
         studentEmail = email.getText();

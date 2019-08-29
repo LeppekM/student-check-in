@@ -543,7 +543,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
                 if (studentName.isEmpty()) { //If student ID isn't in DB, asks for email to attach the id to.
                     String studentEmail = newStudentEmail();
+//                    if (studentEmail == null){
+//                        return;
+//                    }
                     studentName = student.getStudentNameFromEmail(studentEmail);
+//                    if (studentName == null){
+//                        return;
+//                    }
                     if (studentName.isEmpty()) {//Means student doesn't exist in database, so completely new one will be created
                         studentName = newStudentName();
                         if (studentName != null) {
@@ -1076,15 +1082,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
         );
 
-        // only allows user to enter 5 digits
-        studentID.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("^\\D*(?:\\d\\D*){0,5}$") && !newValue.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-                    studentID.setText(oldValue);
-                }
-            }
-        });
         rfidFilter(studentID);
 
     }
