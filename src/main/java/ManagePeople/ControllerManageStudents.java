@@ -340,7 +340,7 @@ public class ControllerManageStudents implements IController, Initializable {
                 alert.setTitle("Delete This Student?");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    database.deleteStudent(data.get(row).getName());
+                    database.deleteStudent(data.get(row).getEmail());
                     data.remove(row);
                     populateTable();
                 }

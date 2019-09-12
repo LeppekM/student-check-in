@@ -1124,13 +1124,15 @@ public class Database implements IController {
 
     /**
      * Deletes a student from the database
-     * @param name students name
+     * @param email students email
      */
-    public void deleteStudent(String name){
-        String query = "delete from students where students.studentName = '" + name.replace("'", "\\'") + "';";
+    public void deleteStudent(String email){
+        //String query = "delete from students where students.studentName = '" + name.replace("'", "\\'") + "';";
+        String query = "delete from students where email = ?";
         try{
-            Statement statement = connection.createStatement();
-            statement.execute(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            statement.execute();
             statement.close();
         }catch (SQLException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete student.");

@@ -116,6 +116,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         setItemStatus();
         initialBarodeFieldFunctions();
         initialStudentFieldFunctions();
+        dropBarcode();
         studentID.initEntrySet(new TreeSet(database.getStudentEmails()));
         setLabelStatuses();
         getStudentName();
@@ -207,44 +208,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
 
-    /**
-     * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
-     */
-    public void submit() {
-        Student thisStudent = null;
-        if (containsNumber(getstudentID())) {
-            thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
-        } else {
-            thisStudent = database.selectStudent(-1, getstudentID());
-        }
-        database.initWorker(worker);
-        if (ensureNotOverdue(thisStudent)) {
-            if (!fieldsFilled()) {
-                return;
-            }
-            if (extendedCheckoutIsSelected(getBarcode())) {
-                if (extendedFieldsNotFilled()) {
-                    stageWrapper.errorAlert("Some fields were not filled out for extended checkout");
-                    return;
-                }
-                if (newStudentIsCheckingOutItem()) {
-                    noStudentError();
-                    return;
-                }
-                extendedCheckoutHelper(thisStudent.getRFID());
-            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
-                faultyCheckinHelper();
-            } else if (newStudentIsCheckingOutItem()) {
-                noStudentError();
-                return;
-            } else {
-                submitMultipleItems();
-            }
-            stageWrapper.checkoutAlert("Success", "Part(s) Checked in/out successfully");
-            reset();
 
-        }
-    }
 
     /**
      * Helper method to check if extended fields are filled out
@@ -359,6 +323,45 @@ public class CheckOutController extends ControllerMenu implements IController, I
             addBarcodes(getQuantitySpinner5(), barcodeInfo, statusLabel5, getBarcode5(),checkboxSelected(extended5));
         }
         return barcodeInfo;
+    }
+
+    /**
+     * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
+     */
+    public void submit() {
+        Student thisStudent = null;
+        if (containsNumber(getstudentID())) {
+            thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
+        } else {
+            thisStudent = database.selectStudent(-1, getstudentID());
+        }
+        database.initWorker(worker);
+        if (ensureNotOverdue(thisStudent)) {
+            if (!fieldsFilled()) {
+                return;
+            }
+            if (extendedCheckoutIsSelected(getBarcode())) {
+                if (extendedFieldsNotFilled()) {
+                    stageWrapper.errorAlert("Some fields were not filled out for extended checkout");
+                    return;
+                }
+                if (newStudentIsCheckingOutItem()) {
+                    noStudentError();
+                    return;
+                }
+                extendedCheckoutHelper(thisStudent.getRFID());
+            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
+                faultyCheckinHelper();
+            } else if (newStudentIsCheckingOutItem()) {
+                noStudentError();
+                return;
+            } else {
+                submitMultipleItems();
+            }
+            stageWrapper.checkoutAlert("Success", "Part(s) Checked in/out successfully");
+            reset();
+
+        }
     }
 
     /**
@@ -1086,6 +1089,50 @@ public class CheckOutController extends ControllerMenu implements IController, I
         rfidFilter(studentID);
 
     }
+
+    /**
+     * Helper method to tab down after a barcode is scanned
+     */
+    private void dropBarcode(){
+        barcode.textProperty().addListener(
+                new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if(newValue.length()==6){
+                            barcode2.requestFocus();
+                        }
+                    }
+                });
+        barcode2.textProperty().addListener(
+                new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if(newValue.length()==6){
+                            barcode3.requestFocus();
+                        }
+                    }
+                });
+        barcode3.textProperty().addListener(
+                new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if(newValue.length()==6){
+                            barcode4.requestFocus();
+                        }
+                    }
+                });
+        barcode4.textProperty().addListener(
+                new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if(newValue.length()==6){
+                            barcode5.requestFocus();
+                        }
+                    }
+                });
+
+    }
+
 
     /**
      * Helper method to set items in or out
