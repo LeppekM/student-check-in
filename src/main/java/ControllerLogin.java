@@ -78,6 +78,11 @@ public class ControllerLogin implements Initializable {
                 login();
             }
         });
+        RFID.setOnKeyReleased(event ->{
+            if (event.getCode() == KeyCode.ENTER){
+                login();
+            }
+        });
     }
 
     private void rfidFilter(JFXTextField textField) {
