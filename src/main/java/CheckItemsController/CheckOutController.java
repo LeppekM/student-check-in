@@ -116,13 +116,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
         setItemStatus();
         initialBarodeFieldFunctions();
         initialStudentFieldFunctions();
-        dropBarcode();
         studentID.initEntrySet(new TreeSet(database.getStudentEmails()));
         setLabelStatuses();
         getStudentName();
         unlockFields();
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
+       //dropBarcode();
     }
 
     /**

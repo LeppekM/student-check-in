@@ -58,7 +58,7 @@ public class CheckingOutPart {
                 StudentCheckIn.logger.error("SQLException: Can't connect to the database when adding new checkout item.");
                 throw new IllegalStateException("Cannot connect to the database", e);
             } catch (NullPointerException e){
-                stageWrapper.errorAlert("Part with barcode of "+ partID +" is already checked out");
+                stageWrapper.errorAlert("Part with barcode of "+ barcode +" is already checked out");
             }
         }
         else {
