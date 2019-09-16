@@ -102,6 +102,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private DatabaseHelper dbHelp = new DatabaseHelper();
     private static String professor, course, dueDate;
     private static boolean fieldsFilled;
+    private String faulty1, faulty2, faulty3, faulty4, faulty5;
     private String faultyText;
     private List<String> id = new ArrayList<>();
     private static final int PAUSE_DELAY = 5;
@@ -123,6 +124,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
         dropBarcode();
+        faultyItems();
     }
 
     /**
@@ -298,6 +300,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return isValid.get();
     }
 
+    private boolean isFaultyCheck(JFXCheckBox box) {
+        return box.getText().equals("Faulty?") && box.isSelected();
+    }
+
     /**
      * Collects barcodes and pertinent information about them
      *
@@ -306,19 +312,19 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private List<MultipleCheckoutObject> collectMultipleBarcodes() {
         List<MultipleCheckoutObject> barcodeInfo = new LinkedList<>();
         if (barcodeIsNotEmpty(barcode)) {
-            addBarcodes(getQuantitySpinner(), barcodeInfo, statusLabel, getBarcode(), checkboxSelected(extended1));
+            addBarcodes(getQuantitySpinner(), barcodeInfo, statusLabel, getBarcode(), checkboxSelected(extended1), isFaultyCheck(extended1), faulty1);
         }
         if (barcodeIsNotEmpty(barcode2)) {
-            addBarcodes(getQuantitySpinner2(), barcodeInfo, statusLabel2, getBarcode2(), checkboxSelected(extended2));
+            addBarcodes(getQuantitySpinner2(), barcodeInfo, statusLabel2, getBarcode2(), checkboxSelected(extended2), isFaultyCheck(extended2), faulty2);
         }
         if (barcodeIsNotEmpty(barcode3)) {
-            addBarcodes(getQuantitySpinner3(), barcodeInfo, statusLabel3, getBarcode3(), checkboxSelected(extended3));
+            addBarcodes(getQuantitySpinner3(), barcodeInfo, statusLabel3, getBarcode3(), checkboxSelected(extended3), isFaultyCheck(extended3), faulty3);
         }
         if (barcodeIsNotEmpty(barcode4)) {
-            addBarcodes(getQuantitySpinner4(), barcodeInfo, statusLabel4, getBarcode4(), checkboxSelected(extended4));
+            addBarcodes(getQuantitySpinner4(), barcodeInfo, statusLabel4, getBarcode4(), checkboxSelected(extended4), isFaultyCheck(extended4), faulty4);
         }
         if (barcodeIsNotEmpty(barcode5)) {
-            addBarcodes(getQuantitySpinner5(), barcodeInfo, statusLabel5, getBarcode5(), checkboxSelected(extended5));
+            addBarcodes(getQuantitySpinner5(), barcodeInfo, statusLabel5, getBarcode5(), checkboxSelected(extended5), isFaultyCheck(extended5), faulty5);
         }
         return barcodeInfo;
     }
@@ -348,8 +354,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     return;
                 }
                 extendedCheckoutHelper(thisStudent.getRFID());
-            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
-                faultyCheckinHelper();
+//            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
+//                faultyCheckinHelper(faultyArea.getText());
             } else if (newStudentIsCheckingOutItem()) {
                 noStudentError();
                 return;
@@ -378,16 +384,20 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
             } else {
                 for (int i = 0; i < barcode.getQuantity(); i++) {
+                    if (barcode.isFaulty()) {
+                        faultyCheckinHelper(barcode.getFaultyText(), barcode.getBarcode());
+                    }
                     checkOut.setItemtoCheckedin(barcode.getBarcode());
                 }
             }
         }
     }
 
+
     /**
      * Helper method to add barcodes
      */
-    private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode, boolean extendedStatus) {
+    private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode, boolean extendedStatus, boolean isFaulty, String faultyText) {
         Student thisStudent = null;
         if (containsNumber(getstudentID())) {
             thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
@@ -396,8 +406,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
         database.initWorker(worker);
         boolean checkStatus = statusIsOut(status);
-        barcodes.add(new MultipleCheckoutObject(barcode, thisStudent.getRFID(), checkStatus, quantity, extendedStatus));
+
+        barcodes.add(new MultipleCheckoutObject(barcode, thisStudent.getRFID(), checkStatus, quantity, extendedStatus, isFaulty, faultyText));
     }
+
 
     /**
      * Helper to check if item is being checked in or out
@@ -441,15 +453,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
 
     /**
-     * Helper method to checkin an item
-     */
-    private void faultyCheckinHelper() {
-        faultyCheckIn.setPartToFaultyStatus(getBarcode());
-        faultyCheckIn.addToFaultyTable(getBarcode(), faultyArea.getText());
-        checkOut.setItemtoCheckedin(getBarcode());
-    }
-
-    /**
      * Checks if item is being checked in
      *
      * @return True if item is being checked in
@@ -489,8 +492,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
      *
      * @return True if item is faulty
      */
-    private boolean itemBeingCheckedBackInIsFaulty(long barcode) {
-        return itemIsBeingCheckedIn(barcode) && faulty.isSelected();
+    private boolean itemBeingCheckedBackInIsFaulty(long barcode, boolean isFaulty) {
+        return itemIsBeingCheckedIn(barcode) && isFaulty;
     }
 
 
@@ -756,87 +759,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
 
     /**
-     * Gets barcode as text, returns as int
-     *
-     * @return barcode as integer
-     */
-    private long getBarcode() {
-        if (!barcode.getText().isEmpty()) {
-            return Long.parseLong(barcode.getText());
-        }
-        return 0;
-    }
-
-    /**
-     * Gets barcode as text, returns as int
-     *
-     * @return barcode as integer
-     */
-    private long getBarcode2() {
-        if (!barcode2.getText().isEmpty()) {
-            return Long.parseLong(barcode2.getText());
-        }
-        return 0;
-    }
-
-    /**
-     * Gets barcode as text, returns as int
-     *
-     * @return barcode as integer
-     */
-    private long getBarcode3() {
-        if (!barcode3.getText().isEmpty()) {
-            return Long.parseLong(barcode3.getText());
-        }
-        return 0;
-    }
-
-    /**
-     * Gets barcode as text, returns as int
-     *
-     * @return barcode as integer
-     */
-    private long getBarcode4() {
-        if (!barcode4.getText().isEmpty()) {
-            return Long.parseLong(barcode4.getText());
-        }
-        return 0;
-    }
-
-    /**
-     * Gets barcode as text, returns as int
-     *
-     * @return barcode as integer
-     */
-    private long getBarcode5() {
-        if (!barcode5.getText().isEmpty()) {
-            return Long.parseLong(barcode5.getText());
-        }
-        return 0;
-    }
-
-
-    private int getQuantitySpinner() {
-        return Integer.parseInt(newQuantity.getValue().toString());
-    }
-
-    private int getQuantitySpinner2() {
-        return Integer.parseInt(newQuantity2.getValue().toString());
-    }
-
-    private int getQuantitySpinner3() {
-        return Integer.parseInt(newQuantity3.getValue().toString());
-    }
-
-    private int getQuantitySpinner4() {
-        return Integer.parseInt(newQuantity4.getValue().toString());
-    }
-
-    private int getQuantitySpinner5() {
-        return Integer.parseInt(newQuantity5.getValue().toString());
-    }
-
-    /**
      * Gets studentID as text, returns as int
      *
      * @return StudentID as integer
@@ -990,28 +912,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         barcode4.setVisible(true);
     }
 
-    /**
-     * Checks if input contains number
-     *
-     * @param input Input string entered
-     * @return True if it input contains number
-     */
-    private static boolean containsNumber(String input) {
-        boolean parsable = true;
-        try {
-            Integer.parseInt(input);
-        } catch (Exception e) {
-            parsable = false;
-        }
-        return parsable;
-    }
-
-    /**
-     * Alert that the pin entered does not match one of the admin pins.
-     */
-    private void invalidAdminPinAlert() {
-        stageWrapper.errorAlert("The entered pin is invalid");
-    }
 
     /**
      * Helper method to initialize barcode field properties.
@@ -1096,6 +996,85 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     }
 
+
+    /**
+     * Helper method to checkin an item
+     */
+    private void faultyCheckinHelper(String text, long barcode) {
+        faultyCheckIn.setPartToFaultyStatus(barcode);
+        faultyCheckIn.addToFaultyTable(barcode, text);
+        checkOut.setItemtoCheckedin(barcode);
+    }
+
+
+    private String faultyHelper() {
+        TextInputDialog dialog = new TextInputDialog("\r\n\r\n");
+        dialog.setTitle("Faulty Item Checkin ");
+        dialog.setHeaderText("Faulty Checkin Description");
+        dialog.setContentText("Please enter description \nof what is wrong with the item:");
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse(null);
+    }
+
+    private void faultyItems(){
+        faultyHelper2();
+        faultyHelper3();
+        faultyHelper4();
+        faultyHelper5();
+    }
+
+    private void faultyHelper2() {
+        extended2.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    if (extended2.isSelected() && isFaultyCheck(extended2)) {
+                        faulty2 = faultyHelper();
+                    }
+                }
+            }
+        });
+    }
+
+    private void faultyHelper3() {
+        extended3.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    if (extended3.isSelected() && isFaultyCheck(extended3)) {
+                        faulty3 = faultyHelper();
+                    }
+                }
+            }
+        });
+    }
+
+    private void faultyHelper4() {
+        extended4.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    if (extended4.isSelected() && isFaultyCheck(extended4)) {
+                        faulty4 = faultyHelper();
+                    }
+                }
+            }
+        });
+    }
+
+    private void faultyHelper5() {
+        extended5.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    if (extended5.isSelected() && isFaultyCheck(extended5)) {
+                        faulty5 = faultyHelper();
+                    }
+                }
+            }
+        });
+    }
+
     /**
      * Helper method to tab down after a barcode is scanned
      */
@@ -1109,8 +1088,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             if (itemIsBeingCheckedIn(getBarcode2())) {
                                 statusLabel2.setText("In");
                                 extended.setDisable(true);
+                                extended2.setText("Faulty?");
+                                extended2.setVisible(true);
                             } else {
                                 statusLabel2.setText("Out");
+                                extended2.setText("Extended?");
                                 extended.setDisable(false);
                             }
                             if (barcodesSame(getBarcode2())) {
@@ -1131,8 +1113,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             if (itemIsBeingCheckedIn(getBarcode3())) {
                                 statusLabel3.setText("In");
                                 extended.setDisable(true);
+                                extended3.setText("Faulty?");
+                                extended3.setVisible(true);
                             } else {
                                 statusLabel3.setText("Out");
+                                extended3.setText("Extended?");
                                 extended.setDisable(false);
                             }
                             if (barcodesSame(getBarcode3())) {
@@ -1153,8 +1138,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             if (itemIsBeingCheckedIn(getBarcode4())) {
                                 statusLabel4.setText("In");
                                 extended.setDisable(true);
+                                extended4.setText("Faulty?");
+                                extended4.setVisible(true);
                             } else {
                                 statusLabel4.setText("Out");
+                                extended4.setText("Extended?");
                                 extended.setDisable(false);
                             }
                             if (barcodesSame(getBarcode4())) {
@@ -1164,6 +1152,32 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 transitionHelper.spinnerInit(newQuantity4);
                             }
                             barcode5.requestFocus();
+                        }
+                    }
+                });
+
+        barcode5.textProperty().addListener(
+                new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if (newValue.length() == 6) {
+                            if (itemIsBeingCheckedIn(getBarcode5())) {
+                                statusLabel5.setText("In");
+                                extended.setDisable(true);
+                                extended5.setText("Faulty?");
+                                extended5.setVisible(true);
+                            } else {
+                                statusLabel5.setText("Out");
+                                extended5.setText("Extended?");
+                                extended.setDisable(false);
+                            }
+                            if (barcodesSame(getBarcode5())) {
+                                newQuantity5.setDisable(false);
+                            } else {
+                                newQuantity5.setDisable(true);
+                                transitionHelper.spinnerInit(newQuantity5);
+                            }
+
                         }
                     }
                 });
@@ -1275,5 +1289,109 @@ public class CheckOutController extends ControllerMenu implements IController, I
             alert.showAndWait();
             invoke.printStackTrace();
         }
+    }
+
+    /**
+     * Gets barcode as text, returns as int
+     *
+     * @return barcode as integer
+     */
+    private long getBarcode() {
+        if (!barcode.getText().isEmpty()) {
+            return Long.parseLong(barcode.getText());
+        }
+        return 0;
+    }
+
+    /**
+     * Gets barcode as text, returns as int
+     *
+     * @return barcode as integer
+     */
+    private long getBarcode2() {
+        if (!barcode2.getText().isEmpty()) {
+            return Long.parseLong(barcode2.getText());
+        }
+        return 0;
+    }
+
+    /**
+     * Gets barcode as text, returns as int
+     *
+     * @return barcode as integer
+     */
+    private long getBarcode3() {
+        if (!barcode3.getText().isEmpty()) {
+            return Long.parseLong(barcode3.getText());
+        }
+        return 0;
+    }
+
+    /**
+     * Gets barcode as text, returns as int
+     *
+     * @return barcode as integer
+     */
+    private long getBarcode4() {
+        if (!barcode4.getText().isEmpty()) {
+            return Long.parseLong(barcode4.getText());
+        }
+        return 0;
+    }
+
+    /**
+     * Gets barcode as text, returns as int
+     *
+     * @return barcode as integer
+     */
+    private long getBarcode5() {
+        if (!barcode5.getText().isEmpty()) {
+            return Long.parseLong(barcode5.getText());
+        }
+        return 0;
+    }
+
+
+    private int getQuantitySpinner() {
+        return Integer.parseInt(newQuantity.getValue().toString());
+    }
+
+    private int getQuantitySpinner2() {
+        return Integer.parseInt(newQuantity2.getValue().toString());
+    }
+
+    private int getQuantitySpinner3() {
+        return Integer.parseInt(newQuantity3.getValue().toString());
+    }
+
+    private int getQuantitySpinner4() {
+        return Integer.parseInt(newQuantity4.getValue().toString());
+    }
+
+    private int getQuantitySpinner5() {
+        return Integer.parseInt(newQuantity5.getValue().toString());
+    }
+
+    /**
+     * Checks if input contains number
+     *
+     * @param input Input string entered
+     * @return True if it input contains number
+     */
+    private static boolean containsNumber(String input) {
+        boolean parsable = true;
+        try {
+            Integer.parseInt(input);
+        } catch (Exception e) {
+            parsable = false;
+        }
+        return parsable;
+    }
+
+    /**
+     * Alert that the pin entered does not match one of the admin pins.
+     */
+    private void invalidAdminPinAlert() {
+        stageWrapper.errorAlert("The entered pin is invalid");
     }
 }

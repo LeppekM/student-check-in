@@ -8,15 +8,18 @@ public class MultipleCheckoutObject {
     private long barcode;
     private int studentID, quantity;
     private boolean status;
-    private boolean extended;
+    private boolean extended, faulty;
+    private String faultyText;
 
 
-    public MultipleCheckoutObject(long barcode, int studentID, boolean status, int quantity, boolean extended) {
+    public MultipleCheckoutObject(long barcode, int studentID, boolean status, int quantity, boolean extended, boolean faulty, String faultyText) {
         this.barcode = barcode;
         this.studentID = studentID;
         this.status = status;
         this.quantity = quantity;
         this.extended = extended;
+        this.faulty = faulty;
+        this.faultyText = faultyText;
     }
 
     public long getBarcode() {
@@ -48,6 +51,10 @@ public class MultipleCheckoutObject {
     }
 
     public boolean isExtended(){return extended;}
+
+    public boolean isFaulty(){return faulty;}
+
+    public String getFaultyText(){return faultyText;}
 
     public void setExtended(boolean extended) {this.extended = extended;}
 
