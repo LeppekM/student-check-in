@@ -679,7 +679,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private void setCheckinInformation() {
         extended.setVisible(false);
-        faulty.setVisible(true);
+        //faulty.setVisible(true);
     }
 
     /**
@@ -803,21 +803,21 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * If faulty checkbox is shown, more items will be displayed
      */
     public void isFaulty() {
-        if (faulty.isSelected()) {
-            faultyText = faultyArea.getText();
-            transitionHelper.faultyTransition(faulty, resetButton, submitButton, 50);
-            transitionHelper.faultyBoxFadeTransition(faultyArea, -40);
-            faultPane.toFront();
-            faultyArea.setPrefColumnCount(400);
-            faultyArea.setPrefRowCount(400);
-            setCheckoutItemsDisable(true);
-        } else {
-            faultPane.toBack();
-            barcode.requestFocus();
-            transitionHelper.faultyTransition(faulty, resetButton, submitButton, -50);
-            transitionHelper.faultyBoxFadeTransition(faultyArea, 40);
-            setCheckoutItemsDisable(false);
-        }
+//        if (faulty.isSelected()) {
+//            faultyText = faultyArea.getText();
+//            transitionHelper.faultyTransition(faulty, resetButton, submitButton, 50);
+//            transitionHelper.faultyBoxFadeTransition(faultyArea, -40);
+//            faultPane.toFront();
+//            faultyArea.setPrefColumnCount(400);
+//            faultyArea.setPrefRowCount(400);
+//            setCheckoutItemsDisable(true);
+//        } else {
+//            faultPane.toBack();
+//            barcode.requestFocus();
+//            transitionHelper.faultyTransition(faulty, resetButton, submitButton, -50);
+//            transitionHelper.faultyBoxFadeTransition(faultyArea, 40);
+//            setCheckoutItemsDisable(false);
+//        }
     }
 
     /**
@@ -913,44 +913,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
 
-    /**
-     * Helper method to initialize barcode field properties.
-     */
-    private void initialBarodeFieldFunctions() {
-        barcode.setOnKeyReleased(event -> {
-            statusLabel.setVisible(true);
-            if (event.getCode() == KeyCode.TAB) {
-                return;
-            }
 
-        });
-        barcode.textProperty().addListener(
-                new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (newValue.length() == 6) {
-                            if (itemIsBeingCheckedIn(getBarcode())) {
-                                setCheckinInformation();
-                                statusLabel.setText("In");
-                            } else {
-                                setCheckoutInformation();
-                                statusLabel.setText("Out");
-                            }
-                            if (containsNumber(barcode.getText())) {
-                                partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
-                            }
-                            if (barcodesSame(getBarcode())) {
-                                newQuantity.setDisable(false);
-                            } else {
-                                newQuantity.setDisable(true);
-                                transitionHelper.spinnerInit(newQuantity);
-                            }
-                            barcode2.requestFocus();
-                        }
-
-                    }
-                });
-    }
 
     /**
      * Checks if barcodes are same
@@ -966,35 +929,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
     }
 
-    /**
-     * Helper method to initialize student id field properties.
-     */
-    private void initialStudentFieldFunctions() {
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-            studentInfo.setDisable(false);
-        } else {
-            studentInfo.setDisable(true);
-        }
-
-        studentID.textProperty().addListener(
-                new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
-                            studentInfo.setDisable(false);
-                        } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-                            studentInfo.setDisable(false);
-                            studentNameField.setText(student.getStudentNameFromEmail(studentID.getText().replace("'", "\\'")));
-                        } else {
-                            studentInfo.setDisable(true);
-                        }
-                    }
-                }
-        );
-
-        rfidFilter(studentID);
-
-    }
 
 
     /**
@@ -1017,10 +951,24 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
     private void faultyItems(){
+        faultyHelper1();
         faultyHelper2();
         faultyHelper3();
         faultyHelper4();
         faultyHelper5();
+    }
+
+    private void faultyHelper1() {
+        extended1.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    if (extended1.isSelected() && isFaultyCheck(extended1)) {
+                        faulty1 = faultyHelper();
+                    }
+                }
+            }
+        });
     }
 
     private void faultyHelper2() {
@@ -1073,6 +1021,48 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
             }
         });
+    }
+
+    /**
+     * Helper method to initialize barcode field properties.
+     */
+    private void initialBarodeFieldFunctions() {
+        barcode.setOnKeyReleased(event -> {
+            statusLabel.setVisible(true);
+            if (event.getCode() == KeyCode.TAB) {
+                return;
+            }
+
+        });
+        barcode.textProperty().addListener(
+                new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if (newValue.length() == 6) {
+                            if (itemIsBeingCheckedIn(getBarcode())) {
+                                //setCheckinInformation();
+                                extended1.setText("Faulty?");
+                                extended1.setVisible(true);
+                                statusLabel.setText("In");
+                            } else {
+                                statusLabel.setText("Out");
+                                extended1.setText("Extended?");
+                                extended.setDisable(false);
+                            }
+                            if (containsNumber(barcode.getText())) {
+                                partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
+                            }
+                            if (barcodesSame(getBarcode())) {
+                                newQuantity.setDisable(false);
+                            } else {
+                                newQuantity.setDisable(true);
+                                transitionHelper.spinnerInit(newQuantity);
+                            }
+                            barcode2.requestFocus();
+                        }
+
+                    }
+                });
     }
 
     /**
@@ -1184,6 +1174,36 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     }
 
+
+    /**
+     * Helper method to initialize student id field properties.
+     */
+    private void initialStudentFieldFunctions() {
+        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+            studentInfo.setDisable(false);
+        } else {
+            studentInfo.setDisable(true);
+        }
+
+        studentID.textProperty().addListener(
+                new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
+                            studentInfo.setDisable(false);
+                        } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                            studentInfo.setDisable(false);
+                            studentNameField.setText(student.getStudentNameFromEmail(studentID.getText().replace("'", "\\'")));
+                        } else {
+                            studentInfo.setDisable(true);
+                        }
+                    }
+                }
+        );
+
+        rfidFilter(studentID);
+
+    }
 
     /**
      * Helper method to set items in or out
