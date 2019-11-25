@@ -3,6 +3,7 @@ package InventoryController;
 import Database.Database;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
+import javafx.css.SimpleStyleableIntegerProperty;
 
 /**
  * Represents all of the info about parts on the total inventory tab
@@ -20,6 +21,15 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
     private boolean fault;
 
     private String action;
+
+    public TotalTabTableRow(int partID, long barcode, String serialNumber, String location, boolean fault, String partName){
+        this.partID = new SimpleIntegerProperty(partID);
+        this.barcode = new SimpleLongProperty(barcode);
+        this.serialNumber = new SimpleStringProperty(serialNumber);
+        this.location = new SimpleStringProperty(location);
+        this.fault = fault;
+        this.partName = new SimpleStringProperty(partName);
+    }
 
     public TotalTabTableRow(String studentName, String studentEmail, String partName, int partID,
                             long barcode, String serialNumber, String location, String status,

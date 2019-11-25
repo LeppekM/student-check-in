@@ -125,17 +125,17 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
             while (rs.next()) {
                 String serialNumber = rs.getString("serialNumber");
                 String partName = rs.getString("partName");
-                double price = rs.getDouble("price");
-                String vendor = rs.getString("vendorID");
-                String manufacturer = rs.getString("manufacturer");
+                //double price = rs.getDouble("price");
+                //String vendor = rs.getString("vendorID");
+                //String manufacturer = rs.getString("manufacturer");
                 String location = rs.getString("location");
                 long barcode = rs.getLong("barcode");
                 boolean fault = rs.getInt("isFaulty") == 1;
                 int partID = rs.getInt("partID");
-                int isCheckedOut = rs.getInt("isCheckedOut");
+                //int isCheckedOut = rs.getInt("isCheckedOut");
 //                String faultDesc = rs.getString("faultDesc");
-                Part part = new Part(partName, serialNumber, manufacturer, price, vendor, location, barcode, fault, partID);
-                part.setCheckedOut(isCheckedOut);
+                Part part = new Part(partName, serialNumber, location, barcode, fault, partID);
+               // part.setCheckedOut(isCheckedOut);
                 data.add(part);
             }
         } catch (SQLException e) {
