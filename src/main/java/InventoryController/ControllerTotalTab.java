@@ -64,8 +64,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     private JFXTreeTableColumn<TotalTabTableRow, Long> barcodeCol;
 
-    @FXML
-    private JFXTreeTableColumn<TotalTabTableRow, Boolean> faultCol;
 
     private String partName, partID, serialNumber, loc, barcode;
 
@@ -104,7 +102,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
 
-        partNameCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        partNameCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
         partNameCol.setStyle("-fx-font-size: 18px");
         partNameCol.setResizable(false);
         partNameCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, String>, TreeTableCell<TotalTabTableRow, String>>() {
@@ -259,38 +257,26 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         });
 
         serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
-        serialNumberCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        serialNumberCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
         serialNumberCol.setStyle("-fx-font-size: 18px");
         serialNumberCol.setResizable(false);
         serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
 
 
         locationCol = new JFXTreeTableColumn<>("Location");
-        locationCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        locationCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
         locationCol.setStyle("-fx-font-size: 18px");
         locationCol.setResizable(false);
         locationCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
-        barcodeCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        barcodeCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
         barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
 
-        faultCol = new JFXTreeTableColumn<>("Fault?");
-        faultCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
-        faultCol.setResizable(false);
-        faultCol.setCellFactory(new Callback<TreeTableColumn<TotalTabTableRow, Boolean>, TreeTableCell<TotalTabTableRow, Boolean>>() {
-            @Override
-            public TreeTableCell<TotalTabTableRow, Boolean> call(TreeTableColumn<TotalTabTableRow, Boolean> p) {
-                CheckBoxTreeTableCell<TotalTabTableRow, Boolean> cell = new CheckBoxTreeTableCell<TotalTabTableRow, Boolean>();
-                cell.setAlignment(Pos.CENTER);
-                return cell;
-            }
-        });
-
         partIDCol = new JFXTreeTableColumn<>("Part ID");
-        partIDCol.prefWidthProperty().bind(totalTable.widthProperty().divide(6));
+        partIDCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
         partIDCol.setStyle("-fx-font-size: 18px");
         partIDCol.setResizable(false);
         partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID().asObject());
@@ -456,13 +442,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         ObservableList<Part> list = totalTab.getTotalTabParts();
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new TotalTabTableRow(
-                    list.get(i).getPartID(), list.get(i).getBarcode(), list.get(i).getSerialNumber(), list.get(i).getLocation(), list.get(i).getFault(), list.get(i).getPartName()));
+                    list.get(i).getPartID(), list.get(i).getBarcode(), list.get(i).getSerialNumber(), list.get(i).getLocation(), list.get(i).getPartName()));
         }
         root = new RecursiveTreeItem<TotalTabTableRow>(
                 tableRows, RecursiveTreeObject::getChildren
         );
         totalTable.getColumns().setAll(partNameCol, barcodeCol,
-                serialNumberCol, locationCol, partIDCol, faultCol);
+                serialNumberCol, locationCol, partIDCol);
         totalTable.setRoot(root);
         totalTable.setShowRoot(false);
     }
