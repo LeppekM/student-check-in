@@ -31,6 +31,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.stream.IntStream;
 
@@ -97,7 +98,7 @@ public class StudentPage implements IController {
         if(student.getDate() == null){
             date.setText("Date of last rental: Never");
         }else {
-            date.setText("Date of last rental: " + sdf.format(new Date(student.getDate())));
+            date.setText("Date of last rental: " + student.getDate());
         }
         date.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         date.setStyle("-fx-font-size: 45px");
@@ -113,20 +114,8 @@ public class StudentPage implements IController {
 
     private double overdueFee(Student s){
         double overdueFees = 0.0;
-        int[] sID = new int[s.getSavedItems().size()];
-        for (int i = 0; i < s.getSavedItems().size(); i++) {
-            if (s.getSavedItems().get(i).getCheckID().matches("^[0-9]*")){
-                sID[i] = Integer.parseInt(s.getSavedItems().get(i).getCheckID());
-            }else {
-                sID[i] = Integer.parseInt(s.getSavedItems().get(i).getCheckID().substring(13));
-            }
-        }
-        for (int j = 0; j < s.getOverdueItems().size(); j++) {
-            int oID = Integer.parseInt(s.getOverdueItems().get(j).getCheckID());
-            boolean result = IntStream.of(sID).anyMatch(x -> x == oID);
-            if (!result) {
-                overdueFees += Double.parseDouble(s.getOverdueItems().get(j).getPrice().get());
-            }
+        for (int i = 0; i<s.getOverdueItems().size(); i++){
+            overdueFees +=s.getOverdueItems().get(i).getPrice().get();
         }
         return overdueFees;
     }

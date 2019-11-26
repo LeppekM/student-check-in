@@ -3,29 +3,39 @@ package Database;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class OverdueItem extends RecursiveTreeObject{
+public class OverdueItem extends RecursiveTreeObject {
     private SimpleIntegerProperty ID;
     private SimpleStringProperty part;
-    private SimpleStringProperty serial;
+    private SimpleLongProperty barcode;
     private SimpleStringProperty date;
-    private SimpleStringProperty price;
+    private SimpleDoubleProperty price;
     private SimpleStringProperty name;
     private SimpleStringProperty email;
     private SimpleStringProperty checkID;
 
-    public OverdueItem(int studentID, String name, String email, String partCon, String serialCon, String dateCon, String priceCon, String checkID){
+    public OverdueItem(int studentID, String name, String email, String partCon, long barcodeCon, String dateCon, String checkID) {
         this.ID = new SimpleIntegerProperty(studentID);
         this.part = new SimpleStringProperty(partCon);
-        this.serial = new SimpleStringProperty(serialCon);
+        this.barcode = new SimpleLongProperty(barcodeCon);
         this.date = new SimpleStringProperty(dateCon);
-        this.price = new SimpleStringProperty(priceCon);
         this.name = new SimpleStringProperty(name);
         this.email = new SimpleStringProperty(email);
         this.checkID = new SimpleStringProperty(checkID);
     }
 
+    public OverdueItem(int studentID, String name, String email, String partCon, long barcodeCon, String dateCon, String checkID, double price) {
+        this.ID = new SimpleIntegerProperty(studentID);
+        this.part = new SimpleStringProperty(partCon);
+        this.barcode = new SimpleLongProperty(barcodeCon);
+        this.date = new SimpleStringProperty(dateCon);
+        this.name = new SimpleStringProperty(name);
+        this.email = new SimpleStringProperty(email);
+        this.checkID = new SimpleStringProperty(checkID);
+        this.price = new SimpleDoubleProperty(price);
+    }
     public SimpleIntegerProperty getID() {
         return ID;
     }
@@ -38,17 +48,10 @@ public class OverdueItem extends RecursiveTreeObject{
         this.ID.set(ID);
     }
 
-    public SimpleStringProperty getPrice() {
+    public SimpleDoubleProperty getPrice() {
         return price;
     }
 
-    public SimpleStringProperty priceProperty() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price.set(price);
-    }
 
     public SimpleStringProperty getPart() {
         return part;
@@ -62,17 +65,10 @@ public class OverdueItem extends RecursiveTreeObject{
         this.part.set(part);
     }
 
-    public SimpleStringProperty getSerial() {
-        return serial;
+    public SimpleLongProperty getBarcode() {
+        return barcode;
     }
 
-    public SimpleStringProperty serialProperty() {
-        return serial;
-    }
-
-    public void setSerial(String serial) {
-        this.serial.set(serial);
-    }
 
     public SimpleStringProperty getDate() {
         return date;

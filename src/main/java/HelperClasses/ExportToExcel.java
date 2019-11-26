@@ -145,7 +145,7 @@ public class ExportToExcel {
 
 
 
-        String[] columns = {"Part Name", "Student Name", "Date", "Serial Number", "Price"}; //Number of columns in tableview
+        String[] columns = {"Student Name", "Student ID", "Part Name", "Barcode", "Due Date"}; //Number of columns in tableview
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
 
@@ -168,11 +168,11 @@ public class ExportToExcel {
 
         for (OverdueItem items :list) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(items.getPart().getValue());
-            row.createCell(1).setCellValue(items.getName().getValue());
-            row.createCell(2).setCellValue(items.getDate().getValue());
-            row.createCell(3).setCellValue(items.getSerial().getValue());
-            row.createCell(4).setCellValue(items.getPrice().getValue());
+            row.createCell(0).setCellValue(items.getName().getValue());
+            row.createCell(1).setCellValue(items.getID().getValue());
+            row.createCell(2).setCellValue(items.getPart().getValue());
+            row.createCell(3).setCellValue(items.getBarcode().getValue());
+            row.createCell(4).setCellValue(items.getDate().getValue());
         }
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);

@@ -102,12 +102,8 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                     barcodeAlreadyExistsError();
                 } else if (serialField.getText().equals(existing.getSerialNumber())) {
                     mustBeCommonSerialNumberError(partName);
-                }/* else if (!manufacturerField.getText().equals(existing.getManufacturer())
-                            || !priceField.getText().equals(existing.getPrice())
-                            || !vendorField.getValue().toString().equals(existing.getVendor())) {
-                    commonFieldsError(partName);
-                }*/ else {
-                    System.out.println("Reached here");
+                }
+                else {
                     addPart.addCommonItems(setPartFields(), database, quantity);
                     partAddedSuccess();
                     close();

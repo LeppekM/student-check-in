@@ -19,43 +19,43 @@
                <font>
                   <Font size="14.0" />
                </font></JFXTextField>
-                <Label layoutX="45.0" layoutY="75.0" text="Student Email:">
+                <Label layoutX="67.0" layoutY="77.0" text="Student ID:">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
-                <JFXTextField id="emailField" fx:id="emailField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="75.0" prefHeight="23.94140625" prefWidth="153.5078125">
+                <JFXTextField id="emailField" fx:id="idField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="75.0" prefHeight="23.94140625" prefWidth="153.5078125">
                <font>
                   <Font size="14.0" />
                </font></JFXTextField>
-                <Label layoutX="127.0" layoutY="136.0" text="Part:">
+                <Label layoutX="47.0" layoutY="138.0" text="Student Email:">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
-                <JFXTextField id="partField" fx:id="partName" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="136.0" prefHeight="23.94140625" prefWidth="153.5078125">
+                <JFXTextField id="partField" fx:id="emailField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="136.0" prefHeight="23.94140625" prefWidth="153.5078125">
                <font>
                   <Font size="14.0" />
                </font></JFXTextField>
-                <Label layoutX="41.0" layoutY="196.0" text="Serial Number:">
+                <Label layoutX="68.0" layoutY="198.0" text="Part Name:">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
-                <JFXTextField id="serialField" fx:id="serialNumber" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="196.0" prefHeight="23.94140625" prefWidth="153.5078125">
+                <JFXTextField id="serialField" fx:id="partName" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="196.0" prefHeight="23.94140625" prefWidth="153.5078125">
                <font>
                   <Font size="14.0" />
                </font></JFXTextField>
-                <Label layoutX="85.0" layoutY="253.0" text="Due Date:">
+                <Label layoutX="85.0" layoutY="253.0" text="Barcode: ">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
-                <JFXTextField id="dueField" fx:id="dueDate" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="253.0" prefHeight="23.94140625" prefWidth="153.5078125">
+                <JFXTextField id="dueField" fx:id="barcode" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="253.0" prefHeight="23.94140625" prefWidth="153.5078125">
                <font>
                   <Font size="14.0" />
                </font></JFXTextField>
-                <Label layoutX="129.0" layoutY="312.0" text="Fee:">
+                <Label layoutX="83.0" layoutY="315.0" text="Due Date:">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
-                <JFXTextField id="feeField" fx:id="fee" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="313.0" prefHeight="23.94140625" prefWidth="153.5078125">
+                <JFXTextField id="feeField" fx:id="dueDate" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="313.0" prefHeight="23.94140625" prefWidth="153.5078125">
                <font>
                   <Font size="14.0" />
                </font></JFXTextField>

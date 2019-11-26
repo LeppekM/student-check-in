@@ -354,8 +354,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     return;
                 }
                 extendedCheckoutHelper(thisStudent.getRFID());
-//            } else if (itemBeingCheckedBackInIsFaulty(getBarcode())) {
-//                faultyCheckinHelper(faultyArea.getText());
             } else if (newStudentIsCheckingOutItem()) {
                 noStudentError();
                 return;
@@ -710,11 +708,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 sp.setStudent(s);
                 sp.initWorker(worker);
                 checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), "1", extended.isSelected(), faulty.isSelected());
-                if (extended.isSelected()) {
-                    //checkoutObject.initExtendedInfo(courseName.getText(), profName.getText(), datePicker.getValue());
-                } else if (faulty.isSelected()) {
-                    //checkoutObject.initFaultyInfo(faultyTextArea.getText());
-                }
                 sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
             } catch (IOException e) {

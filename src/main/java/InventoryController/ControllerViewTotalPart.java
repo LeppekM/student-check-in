@@ -80,10 +80,6 @@ public class ControllerViewTotalPart {
         CheckoutObject checkoutObject = database.getLastCheckoutOf(row.getPartID().get());
         String type = actionType(checkoutObject);
 
-//        String actionType = actionType(checkoutObject);
-//        System.out.println(actionType);
-//        checkoutObject.
-
         // Sets Last Transaction Info if it has ever been checked out
         int rowNum = 0;
         // if the part has been checked out before, the student email associated with it will not be empty ("")

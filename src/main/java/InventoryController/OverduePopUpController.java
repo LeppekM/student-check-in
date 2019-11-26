@@ -12,39 +12,46 @@ import java.text.DecimalFormat;
 public class OverduePopUpController {
 
     @FXML
-    private JFXTextField nameField = new JFXTextField();
+    private JFXTextField nameField;
+
     @FXML
-    private JFXTextField emailField = new JFXTextField();
+    private JFXTextField idField;
+
     @FXML
-    private JFXTextField serialNumber = new JFXTextField();
+    private JFXTextField emailField;
+
     @FXML
-    private JFXTextField partName = new JFXTextField();
+    private JFXTextField partName;
+
     @FXML
-    private JFXTextField dueDate = new JFXTextField();
+    private JFXTextField barcode;
+
     @FXML
-    private JFXTextField fee = new JFXTextField();
+    private JFXTextField dueDate;
 
     private Database database = new Database();
 
-    public void populate(OverdueItem overdueItems, OverdueTabTableRow overdueTabTableRow){
-        DecimalFormat df = new DecimalFormat("#,###,##0.00");
+    public void populate(OverdueItem overdueItems, OverdueTabTableRow overdueTabTableRow) {
+
         if (overdueTabTableRow == null && overdueItems != null) {
             nameField.setText(overdueItems.getName().get());
+            idField.setText(String.valueOf(overdueItems.getID().get()));
             emailField.setText(overdueItems.getEmail().get());
-            serialNumber.setText(overdueItems.getSerial().get());
+            barcode.setText(String.valueOf(overdueItems.getBarcode().get()));
             partName.setText(overdueItems.getPart().get());
             dueDate.setText(overdueItems.getDate().get());
-            overdueItems.setPrice(overdueItems.getPrice().get().replaceAll("\\$", ""));
-            overdueItems.setPrice(overdueItems.getPrice().get().replaceAll(",", ""));
-            fee.setText("$" + df.format(Double.parseDouble(overdueItems.getPrice().get())));
-        }else if (overdueItems == null && overdueTabTableRow != null){
+//            overdueItems.setPrice(overdueItems.getPrice().get().replaceAll("\\$", ""));
+//            overdueItems.setPrice(overdueItems.getPrice().get().replaceAll(",", ""));
+//            fee.setText("$" + df.format(Double.parseDouble(overdueItems.getPrice().get())));
+        } else if (overdueItems == null && overdueTabTableRow != null) {
             partName.setText(overdueTabTableRow.getPartName().get());
-            serialNumber.setText(overdueTabTableRow.getSerialNumber().getValue().toString());
+            barcode.setText(overdueTabTableRow.getBarcode().getValue().toString());
+            idField.setText(String.valueOf(overdueTabTableRow.getStudentID().get()));
             dueDate.setText(overdueTabTableRow.getDueDate().get());
-            overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll("\\$", ""));
-            overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll(",", ""));
-            fee.setText("$" + df.format(Double.parseDouble(overdueTabTableRow.getFee().get())));
-            Student student = database.selectStudent(Integer.parseInt(overdueTabTableRow.getStudentID().get()), null);
+//            overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll("\\$", ""));
+//            overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll(",", ""));
+//            fee.setText("$" + df.format(Double.parseDouble(overdueTabTableRow.getFee().get())));
+            Student student = database.selectStudent(overdueTabTableRow.getStudentID().get(), null);
             nameField.setText(student.getName());
             emailField.setText(student.getEmail());
         }

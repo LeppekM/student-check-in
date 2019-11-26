@@ -131,7 +131,6 @@ public class Part {
     }
 
     public boolean getCheckedOut() {
-        System.out.println(checkedOut.get());
         return checkedOut.get();
     }
 

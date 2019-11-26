@@ -78,7 +78,7 @@ public class Database implements IController {
 
             databaseHelper.getCurrentDateTimeStamp();
             String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
-                    " parts.serialNumber, checkout.dueAt, parts.price, checkout.checkoutID from checkout " +
+                    " parts.barcode, checkout.dueAt, checkout.checkoutID from checkout " +
                     "left join parts on checkout.partID = parts.partID " +
                     "left join students on checkout.studentID = students.studentID " +
                     "where checkout.checkinAt is null";
@@ -90,8 +90,8 @@ public class Database implements IController {
                     if (isOverdue(dueAt)){
                         data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
                                 resultSet.getString("students.email"), resultSet.getString("parts.partName"),
-                                resultSet.getString("parts.serialNumber"), dueAt,
-                                resultSet.getString("parts.price"), resultSet.getString("checkout.checkoutID")));
+                                resultSet.getLong("parts.barcode"), dueAt,
+                                resultSet.getString("checkout.checkoutID")));
                     }
                 }
                 resultSet.close();
@@ -276,7 +276,6 @@ public class Database implements IController {
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
             DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
             String formattedDate = target.format(getTwoYearsAgo());
-            System.out.println(formattedDate);
             preparedStatement.setString(1, formattedDate);
             preparedStatement.execute();
             preparedStatement.close();
@@ -932,7 +931,7 @@ public class Database implements IController {
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != date('');";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                    "parts.serialNumber, checkout.dueAt, parts.price, checkout.checkoutID, checkout.checkinAt from checkout " +
+                    "parts.barcode, parts.price, checkout.dueAt, parts.price, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +
                     "inner join students on checkout.studentID = students.studentID " +
                     "where checkout.checkinAt is null";
@@ -951,7 +950,7 @@ public class Database implements IController {
                     "left join checkout on students.studentID = checkout.studentID " +
                     "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail + "' and checkout.reservedAt != date('');";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                    "parts.serialNumber, checkout.dueAt, parts.price, checkout.checkoutID, checkout.checkinAt from checkout " +
+                    "parts.barcode, parts.price, checkout.dueAt, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +
                     "inner join students on checkout.studentID = students.studentID " +
                     "where checkout.checkinAt is null";
@@ -1003,14 +1002,15 @@ public class Database implements IController {
                 String dueAt = resultSet.getString("checkout.dueAt");
                 int studentID = resultSet.getInt("checkout.studentID");
                 if (isOverdue(dueAt) && (studentID==ID || email.equals(studentEmail))) {
-                    overdueItems.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
+                    overdueItems.add(new OverdueItem(
+                            resultSet.getInt("checkout.studentID"),
                             resultSet.getString("students.studentName"),
                             resultSet.getString("students.email"),
                             resultSet.getString("parts.partName"),
-                            resultSet.getString("parts.serialNumber"),
+                            resultSet.getLong("parts.barcode"),
                             dueAt,
-                            resultSet.getString("parts.price"),
-                            resultSet.getString("checkout.checkoutID")));
+                            resultSet.getString("checkout.checkoutID"),
+                            resultSet.getDouble("parts.price")));
                 }
             }
             statement.close();
