@@ -442,7 +442,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         ObservableList<Part> list = totalTab.getTotalTabParts();
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new TotalTabTableRow(
-                    list.get(i).getPartID(), list.get(i).getBarcode(), list.get(i).getSerialNumber(), list.get(i).getLocation(), list.get(i).getPartName()));
+                    list.get(i).getPartID(), list.get(i).getBarcode(), list.get(i).getSerialNumber(), list.get(i).getLocation(), list.get(i).getPartName(), list.get(i).getPrice()));
         }
         root = new RecursiveTreeItem<TotalTabTableRow>(
                 tableRows, RecursiveTreeObject::getChildren
@@ -451,51 +451,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 serialNumberCol, locationCol, partIDCol);
         totalTable.setRoot(root);
         totalTable.setShowRoot(false);
-    }
-
-    /**
-     * Searches through the sort filter to grab what categories to return
-     *
-     * @return String to be input into raw SQL statement
-     * @author Matt Karcz
-     */
-    public String getSortTypes(ArrayList<String> types) {
-        String result = "";
-        if (!selectedFilters.isEmpty()) {
-            if (types.contains("All")) {
-                return result;
-            }
-            if (types.contains("Overdue") && !types.contains("Checked Out")) {
-                long longDate = System.currentTimeMillis();
-                Date date = new java.sql.Date(longDate);
-                if (result.isEmpty())
-                    result = result + ", checkout AS c WHERE (p.partID = c.partID AND p.isCheckedOut = 1 AND c.dueAt" +
-                            " < date('" + date.toString() + "'))";
-            }
-            if (types.contains("Checked Out")) {
-                if (result.isEmpty())
-                    result = result + "WHERE isCheckedOut = 1";
-                else
-                    result = result + " OR p.isCheckedOut = 1";
-            }
-            if (types.contains("Faulty")) {
-                if (result.isEmpty())
-                    result = result + "WHERE isFaulty = 1";
-                else
-                    result = result + " OR p.isFaulty = 1";
-            }
-            String currentFilter;
-            for (int i = 0; i < selectedFilters.size(); i++) {
-                currentFilter = selectedFilters.get(i);
-                if (!currentFilter.equals("Overdue") && !currentFilter.equals("Checked Out") && !currentFilter.equals("Faulty")) {
-                    if (result.isEmpty())
-                        result = result + "WHERE partName = '" + currentFilter + "'";
-                    else
-                        result = result + " OR p.partName = '" + currentFilter + "'";
-                }
-            }
-        }
-        return result;
     }
 
 

@@ -81,7 +81,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
             }
         });
 
-        //back.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993;");
+
         back.getStylesheets().add("/css/CheckButton.css");
 
         tabPane.widthProperty().addListener((observable, oldValue, newValue) ->
@@ -89,7 +89,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
             tabPane.setTabMinWidth(tabPane.getWidth() / 5.05);
             tabPane.setTabMaxWidth(tabPane.getWidth() / 5.05);
         });
-        //});
+
     }
 
     private void updateHistoryTab() {
@@ -108,55 +108,11 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
         faultyTabPageController.populateTable();
     }
 
-    /** Takes a raw statement and a data list as parameters, then returns the data list populated with the appropriate
-     * parts based on the statement where clause;
-     * @param rawStatement = The statement to select parts.
-     * @param data = List of part objects meant to be populated and used to fill a TableView
-     * @returns The list of parts filled with the parts based on what was requested in the raw statement.
-     * @author Matthew Karcz
-     */
-    public static ObservableList<Part> selectParts(String rawStatement, ObservableList<Part> data) {
-        StudentCheckIn.logger.info(rawStatement);
-        Statement currentStatement = null;
-        try {
-            Connection connection = database.getConnection();
-            currentStatement = connection.createStatement();
-            ResultSet rs = currentStatement.executeQuery(rawStatement);
-            while (rs.next()) {
-                String serialNumber = rs.getString("serialNumber");
-                String partName = rs.getString("partName");
-                //double price = rs.getDouble("price");
-                //String vendor = rs.getString("vendorID");
-                //String manufacturer = rs.getString("manufacturer");
-                String location = rs.getString("location");
-                long barcode = rs.getLong("barcode");
-                boolean fault = rs.getInt("isFaulty") == 1;
-                int partID = rs.getInt("partID");
-                //int isCheckedOut = rs.getInt("isCheckedOut");
-//                String faultDesc = rs.getString("faultDesc");
-                Part part = new Part(partName, serialNumber, location, barcode, fault, partID);
-               // part.setCheckedOut(isCheckedOut);
-                data.add(part);
-            }
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("Could not retrieve the list of students");
-            e.printStackTrace();
-        } finally {
-            if (currentStatement != null) {
-                try {
-                    currentStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            currentStatement = null;
-        }
-        return data;
-    }
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each necessary class
+     *
      * @param worker the currently logged in worker
      */
     @Override
@@ -170,11 +126,12 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     }
 
     /**
-     *Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
+     * Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
+     *
      * @author Matthew Karcz
      */
     @FXML
-    public void goBack(){
+    public void goBack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
             Parent root = loader.load();

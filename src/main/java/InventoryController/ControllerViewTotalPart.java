@@ -1,6 +1,8 @@
 package InventoryController;
 
+import CheckItemsController.CheckoutObject;
 import Database.Database;
+import Database.ObjectClasses.Student;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
@@ -42,12 +44,15 @@ public class ControllerViewTotalPart {
     @FXML
     private JFXTextArea faultField;
 
+    private Database database = new Database();
+
     /**
      * Adds a label and text field value to a specified row in the last transaction
      * column of the view part pop up.
-     * @param row the row index to be added to
+     *
+     * @param row    the row index to be added to
      * @param prompt the text for the label
-     * @param value the text for the text field
+     * @param value  the text for the text field
      */
     private void addField(int row, String prompt, String value) {
         Label label = new Label(prompt);
@@ -60,42 +65,58 @@ public class ControllerViewTotalPart {
 
     /**
      * Populates the 3 columns of the total inventory tab view part pop up
+     *
      * @param row holds potentially necessary info about part used to populate the row
      */
     public void populate(TotalTabTableRow row) {
-        // Sets basic part info
+
+        //Sets basic part info
         partNameField.setText(row.getPartName().getValue());
         barcodeField.setText(row.getBarcode().getValue().toString());
         serialNumberField.setText(row.getSerialNumber().getValue().toString());
         partIDField.setText("" + row.getPartID().get());
 
+        Student student = database.getStudentToLastCheckout(row.getPartID().get());
+        CheckoutObject checkoutObject = database.getLastCheckoutOf(row.getPartID().get());
+        String type = actionType(checkoutObject);
+
+//        String actionType = actionType(checkoutObject);
+//        System.out.println(actionType);
+//        checkoutObject.
+
         // Sets Last Transaction Info if it has ever been checked out
         int rowNum = 0;
         // if the part has been checked out before, the student email associated with it will not be empty ("")
-        if (!row.getStudentEmail().get().equals("")) {
-            addField(rowNum, "Student Name:", row.getStudentName().get());
+        if (!student.getEmail().equals("")) {
+            addField(rowNum, "Student Name:", student.getName());
             rowNum++;
-            addField(rowNum, "Student Email:", row.getStudentEmail().get());
+            addField(rowNum, "Student Email:", student.getEmail());
             rowNum++;
             boolean isOverdue = false;
-            if (row.getActionType().equals("Check Out")) {
-                Database database = new Database();
-                String className = row.getClassName().get();
+            //If item is checked out
+
+            if (!checkoutObject.getCheckoutAtDate().equals("")) {
+
+                String className = checkoutObject.getExtendedCourseName(); //Gets classname
                 if (className != null && !className.equals("")) {
                     addField(rowNum, "Class Name:", className);
                     rowNum++;
-                    addField(rowNum, "Professor Name:", row.getProfessorName().get());
+                    addField(rowNum, "Professor Name:", checkoutObject.getExtendedProfessor());
                     rowNum++;
                 }
-                isOverdue = database.isOverdue(row.getDueDate().get());
+                isOverdue = database.isOverdue(checkoutObject.getDueAt()) && checkoutObject.getCheckinAtDate() == null;
                 if (isOverdue) {
-                    addField(rowNum, "Fee:", "$" + df.format(Double.parseDouble(row.getFee().get())/100));
+                    addField(rowNum, "Fee:", "$" + df.format(row.getPrice().get() / 100)); //Gets p rice
                     rowNum++;
                 }
             }
-            addField(rowNum, row.getActionType() + " Date:", row.getAction());
+            if (type.equals("Check In")) {
+                addField(rowNum, type + " Date:", checkoutObject.getCheckinAtDate());
+            } else {
+                addField(rowNum, type + " Date:", checkoutObject.getCheckoutAtDate());
+            }
             rowNum++;
-            addField(rowNum, "Due Date:", row.getDueDate().get());
+            addField(rowNum, "Due Date:", checkoutObject.getDueAt());
             if (isOverdue) {
                 ((Label) gridCheckedOut.getChildren().get(rowNum * 2)).setStyle("-fx-text-fill: red");
             }
@@ -107,12 +128,14 @@ public class ControllerViewTotalPart {
 
         // Sets faulty info (removes fee info column if not faulty)
         if (row.sFaulty()) {
-            priceField.setText("$" + df.format(Double.parseDouble(row.getFee().get())));
+            priceField.setText("$" + df.format(row.getPrice().get()));
             faultField.setText(row.getFaultDescription().get());
         } else {
-            gridContainer.getChildren().remove(gridContainer.getChildren().size()-1);
-            gridContainer.getChildren().remove(gridContainer.getChildren().size()-1);
+            gridContainer.getChildren().remove(gridContainer.getChildren().size() - 1);
+            gridContainer.getChildren().remove(gridContainer.getChildren().size() - 1);
         }
+
+
     }
 
     /**
@@ -120,6 +143,18 @@ public class ControllerViewTotalPart {
      */
     public void goBack() {
         sceneViewTotalPart.fireEvent(new WindowEvent(((Node) sceneViewTotalPart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+    }
+
+    private String actionType(CheckoutObject checkout) {
+        try {
+            if (checkout.getCheckinAtDate().isEmpty()) {
+                return "Checkout";
+            } else {
+                return "Check In";
+            }
+        } catch (NullPointerException e) {
+            return "Checked Out";
+        }
     }
 
 }

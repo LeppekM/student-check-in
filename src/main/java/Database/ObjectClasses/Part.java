@@ -45,7 +45,7 @@ public class Part {
         this.faultDesc = new SimpleStringProperty("");
     }
 
-    public Part(String partName, String serialNumber, String location, long barcode, boolean fault, int partID) {
+    public Part(String partName, String serialNumber, String location, long barcode, boolean fault, int partID, double price) {
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
 
@@ -53,6 +53,7 @@ public class Part {
         this.barcode = new SimpleLongProperty(barcode);
         this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
+        this.price = new SimpleDoubleProperty(price);
 
     }
 

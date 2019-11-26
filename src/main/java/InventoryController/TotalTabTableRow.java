@@ -11,9 +11,10 @@ import javafx.css.SimpleStyleableIntegerProperty;
 public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     private StringProperty studentName, studentEmail, partName,  location,
-            status, dueDate, fee, faultDescription, className, professorName, serialNumber;
+            status, dueDate, faultDescription, className, professorName, serialNumber, fee;
 
     private IntegerProperty partID;
+    private DoubleProperty price;
     private LongProperty barcode;
 
     private String actionType;
@@ -22,12 +23,13 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
 
     private String action;
 
-    public TotalTabTableRow(int partID, long barcode, String serialNumber, String location, String partName){
+    public TotalTabTableRow(int partID, long barcode, String serialNumber, String location, String partName, double price){
         this.partID = new SimpleIntegerProperty(partID);
         this.barcode = new SimpleLongProperty(barcode);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.location = new SimpleStringProperty(location);
         this.partName = new SimpleStringProperty(partName);
+        this.price = new SimpleDoubleProperty(price);
     }
 
     public TotalTabTableRow(String studentName, String studentEmail, String partName, int partID,
@@ -58,6 +60,8 @@ public class TotalTabTableRow extends RecursiveTreeObject<TotalTabTableRow> {
         this.className = new SimpleStringProperty(className);
         this.professorName = new SimpleStringProperty(professorName);
     }
+
+    public DoubleProperty getPrice() {return price;}
 
     public void initFee(String fee) {
         this.fee = new SimpleStringProperty(fee);

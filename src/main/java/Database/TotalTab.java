@@ -18,19 +18,19 @@ public class TotalTab {
 
     private String partName, location, serialNumber;
     private long barcode;
-    private int  partID;
+    private int  partID, price;
     private boolean fault;
 
 
 
     public ObservableList<Part> getTotalTabParts(){
-        String query ="select partName, serialNumber, barcode, location, isFaulty, partID from parts;";
+        String query ="select partName, serialNumber, barcode, location, isFaulty, partID, price from parts;";
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while(resultSet.next()){
                 setVariables(resultSet);
-                Part part = new Part(partName, serialNumber, location, barcode, fault, partID);
+                Part part = new Part(partName, serialNumber, location, barcode, fault, partID, price);
                 data.add(part);
             }
         } catch (SQLException e) {
@@ -55,6 +55,7 @@ public class TotalTab {
             location = resultSet.getString("location");
             fault = resultSet.getBoolean("isFaulty");
             partID = resultSet.getInt("parts.partID");
+            price = resultSet.getInt("price");
 
         } catch (SQLException e){
             StudentCheckIn.logger.error("Cannot connect to the database while populating CheckedOutParts");
