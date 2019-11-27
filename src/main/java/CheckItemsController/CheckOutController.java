@@ -81,7 +81,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private TransitionHelper transitionHelper = new TransitionHelper();
     private ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
     private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
-    private String partNameFromBarcode;
     private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
 
     private static String professor, course, dueDate;
@@ -156,12 +155,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
             studentInfo.setDisable(false);
         } else {
             studentInfo.setDisable(true);
-        }
-
-        // enable the quantity field iff the barcode field contains a barcode for a part with
-        // unique barcodes
-        if (containsNumber(barcode.getText())) {
-            partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
         }
     }
 
@@ -288,7 +281,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     if (barcode.isFaulty()) {
                         faultyCheckinHelper(barcode.getFaultyText(), barcode.getBarcode());
                     }
-                    checkOut.setItemtoCheckedin(barcode.getBarcode());
+                    checkOut.setItemtoCheckedin(Integer.parseInt(getstudentID()), barcode.getBarcode());
                 }
             }
         }
@@ -789,7 +782,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private void faultyCheckinHelper(String text, long barcode) {
         faultyCheckIn.setPartToFaultyStatus(barcode);
         faultyCheckIn.addToFaultyTable(barcode, text);
-        checkOut.setItemtoCheckedin(barcode);
+        checkOut.setItemtoCheckedin(Integer.parseInt(getstudentID()), barcode);
     }
 
 
@@ -900,9 +893,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 extended1.setText("Extended?");
                                 extended.setDisable(false);
                             }
-                            if (containsNumber(barcode.getText())) {
-                                partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
-                            }
+
                             if (barcodesSame(getBarcode())) {
                                 newQuantity.setDisable(false);
                             } else {

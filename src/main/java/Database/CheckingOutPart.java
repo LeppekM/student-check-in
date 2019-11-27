@@ -308,16 +308,37 @@ public class CheckingOutPart {
         return checkoutID;
     }
 
+    int multipleBarcodeCheckinHelper(int studentID, long barcode){
+        int checkoutID = 0;
+        String query = "select checkoutID from checkout where studentID =? and barcode = ? and checkinAt IS NULL limit 1";
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, studentID);
+            statement.setLong(2, barcode);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                checkoutID = rs.getInt("checkoutID");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return checkoutID;
+
+
+    }
+
     /**
      * Method to return an item to checked in status
      * @param barcode Barcode of item
      */
-    public void setItemtoCheckedin(long barcode){
+    public void setItemtoCheckedin(int studentID, long barcode){
         int partID = getPartIDFromBarcode(barcode, getPartIDtoCheckin);
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(setDate);
             statement.setString(1, helper.getCurrentDateTimeStamp());
-            statement.setInt(2, getCheckoutIDfromPartID(partID));
+            statement.setInt(2, multipleBarcodeCheckinHelper(studentID, barcode));
             statement.execute();
             statement.close();
         } catch (SQLException e) {
