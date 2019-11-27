@@ -38,10 +38,10 @@ public class FaultyCheckIn {
      * @param barcode Barcode of part
      * @param description Description of fault
      */
-    public void addToFaultyTable(long barcode, String description){
+    public void addToFaultyTable(int studentID, long barcode, String description){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(addToFaulty);
-            addToFaultyHelper(barcode, description, statement).execute();
+            addToFaultyHelper(studentID, barcode, description, statement).execute();
             statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
@@ -56,9 +56,9 @@ public class FaultyCheckIn {
      * @param preparedStatement Statement to be executed
      * @return Statement to execute
      */
-    private PreparedStatement addToFaultyHelper(long barcode, String description, PreparedStatement preparedStatement){
-        int partID = checkingOutPart.getPartIDFromBarcode(barcode, getPartIDtoCheckin);
-        int checkoutID = checkingOutPart.getCheckoutIDfromPartID(partID);
+    private PreparedStatement addToFaultyHelper(int studentID,long barcode, String description, PreparedStatement preparedStatement){
+        int partID = checkingOutPart.getPartIDFromBarcodeAndStudentID(studentID, barcode);
+        int checkoutID = checkingOutPart.getCheckoutIDFromBarcodeAndStudentID(studentID, barcode);
         try {
             preparedStatement.setInt(1, checkoutID);
             preparedStatement.setInt(2, partID);

@@ -781,7 +781,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private void faultyCheckinHelper(String text, long barcode) {
         faultyCheckIn.setPartToFaultyStatus(barcode);
-        faultyCheckIn.addToFaultyTable(barcode, text);
+        faultyCheckIn.addToFaultyTable(Integer.parseInt(getstudentID()),barcode, text);
         checkOut.setItemtoCheckedin(Integer.parseInt(getstudentID()), barcode);
     }
 

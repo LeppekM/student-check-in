@@ -291,24 +291,24 @@ public class CheckingOutPart {
      * @param partID PartID to be passed in
      * @return
      */
-    int getCheckoutIDfromPartID(int partID){
-        int checkoutID = 0;
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement statement = connection.prepareStatement(getCheckoutIDFromPartID);
-            statement.setInt(1, partID);
-            ResultSet rs = statement.executeQuery();
-            if(rs.next()){
-                checkoutID = rs.getInt("checkoutID");
-            }
-            statement.close();
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-        return checkoutID;
-    }
+//    int getCheckoutIDfromPartID(int partID){
+//        int checkoutID = 0;
+//        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+//            PreparedStatement statement = connection.prepareStatement(getCheckoutIDFromPartID);
+//            statement.setInt(1, partID);
+//            ResultSet rs = statement.executeQuery();
+//            if(rs.next()){
+//                checkoutID = rs.getInt("checkoutID");
+//            }
+//            statement.close();
+//        } catch (SQLException e) {
+//            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
+//            throw new IllegalStateException("Cannot connect to the database", e);
+//        }
+//        return checkoutID;
+//    }
 
-    int multipleBarcodeCheckinHelper(int studentID, long barcode){
+    int getCheckoutIDFromBarcodeAndStudentID(int studentID, long barcode){
         int checkoutID = 0;
         String query = "select checkoutID from checkout where studentID =? and barcode = ? and checkinAt IS NULL limit 1";
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
@@ -325,8 +325,25 @@ public class CheckingOutPart {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return checkoutID;
+    }
 
-
+    int getPartIDFromBarcodeAndStudentID(int studentID, long barcode){
+        int partID = 0;
+        String query = "select partID from checkout where studentID =? and barcode = ? and checkinAt IS NULL limit 1";
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, studentID);
+            statement.setLong(2, barcode);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                partID = rs.getInt("partID");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return partID;
     }
 
     /**
@@ -338,7 +355,7 @@ public class CheckingOutPart {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(setDate);
             statement.setString(1, helper.getCurrentDateTimeStamp());
-            statement.setInt(2, multipleBarcodeCheckinHelper(studentID, barcode));
+            statement.setInt(2, getCheckoutIDFromBarcodeAndStudentID(studentID, barcode));
             statement.execute();
             statement.close();
         } catch (SQLException e) {
