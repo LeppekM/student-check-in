@@ -17,9 +17,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <?import HelperClasses.AutoCompleteTextField?>
-<VBox fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.CheckOutController">
+<VBox fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.CheckOutController">
    <children>
       <HBox prefHeight="106.0" prefWidth="1150.0" VBox.vgrow="NEVER">
          <children>
@@ -62,16 +61,12 @@
                <children>
                   <StackPane fx:id="faultPane" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
-                        <TextArea fx:id="faultyArea" prefHeight="200.0" prefWidth="383.0" promptText="Please enter a description of the fault" visible="false" />
+                        <TextArea prefHeight="200.0" prefWidth="383.0" promptText="Please enter a description of the fault" visible="false" />
                      </children>
                   </StackPane>
                   <AutoCompleteTextField fx:id="studentID" focusColor="FIREBRICK" GridPane.columnIndex="1" />
                   <JFXTextField fx:id="studentNameField" disable="true" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <JFXTextField fx:id="barcode" focusColor="FIREBRICK" onKeyTyped="#newBarcode1" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <JFXTextField fx:id="barcode2" focusColor="FIREBRICK" onKeyTyped="#dropBarcode2" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <JFXTextField fx:id="barcode3" focusColor="FIREBRICK" onKeyTyped="#dropBarcode3" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <JFXTextField fx:id="barcode4" focusColor="FIREBRICK" onKeyTyped="#dropBarcode4" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                   <JFXTextField fx:id="barcode5" focusColor="FIREBRICK" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <HBox fx:id="HBoxBarcode" alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <children>
                         <Spinner fx:id="newQuantity" accessibleHelp="1" accessibleRoleDescription="1" accessibleText="1" editable="true" prefHeight="25.0" prefWidth="62.0" stylesheets="@../css/SpinnerStyle.css" />
@@ -157,7 +152,7 @@
                                                       <Font size="24.0" />
                                                    </font>
                                                 </JFXCheckBox>
-                                                <JFXCheckBox fx:id="faulty" checkedColor="FIREBRICK" onAction="#isFaulty" prefHeight="35.0" prefWidth="162.0" text="Faulty" translateY="-10.0" visible="false">
+                                                <JFXCheckBox fx:id="faulty" checkedColor="FIREBRICK" prefHeight="35.0" prefWidth="162.0" text="Faulty" translateY="-10.0" visible="false">
                                                    <font>
                                                       <Font size="24.0" />
                                                    </font>
@@ -173,6 +168,10 @@
                         </HBox>
                      </children>
                   </StackPane>
+                  <JFXTextField fx:id="barcode2" focusColor="FIREBRICK" onKeyTyped="#dropBarcode2" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <JFXTextField fx:id="barcode3" focusColor="FIREBRICK" onKeyTyped="#dropBarcode3" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <JFXTextField fx:id="barcode4" focusColor="FIREBRICK" onKeyTyped="#dropBarcode4" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                   <JFXTextField fx:id="barcode5" focusColor="FIREBRICK" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
             </GridPane>
          </children>

@@ -11,15 +11,14 @@ import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,9 +26,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.*;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -39,10 +38,6 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
 
@@ -58,9 +53,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
     @FXML
     private AutoCompleteTextField studentID;
 
-    @FXML
-    private TextArea faultyArea;
-
 
     @FXML
     private JFXCheckBox faulty, extended, extended1, extended2, extended3, extended4, extended5;
@@ -74,13 +66,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
     @FXML
     private Label statusLabel,
             statusLabel2, statusLabel3, statusLabel4, statusLabel5;
-
-    @FXML
-    private StackPane faultPane;
-
-
-//    @FXML
-//    private TextArea faultyTextArea;
 
 
     @FXML
@@ -98,10 +83,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
     private String partNameFromBarcode;
     private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
-    private List<String> studentIDVerifier = new ArrayList<>();
-    private DatabaseHelper dbHelp = new DatabaseHelper();
+
     private static String professor, course, dueDate;
-    private static boolean fieldsFilled;
+
     private String faulty1, faulty2, faulty3, faulty4, faulty5;
     private String faultyText;
     private List<String> id = new ArrayList<>();
@@ -125,19 +109,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         submitTimer();
         dropBarcode();
         faultyItems();
-    }
-
-    /**
-     * Used to keep track of which worker is currently logged in by passing the worker into
-     * each necessary class
-     *
-     * @param worker the currently logged in worker
-     */
-    @Override
-    public void initWorker(Worker worker) {
-        if (this.worker == null) {
-            this.worker = worker;
-        }
     }
 
 
@@ -171,22 +142,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
         this.checkoutObject = checkoutObject;
         studentID.setText(checkoutObject.getStudentID());
 
-        // Yes... these two lines are actually required and work for some reason.
-        // Without them, the suggested student ID drop down appears top left of screen.
-        studentID.setVisible(false);
-        studentID.setVisible(true);
-
         barcode.setText(checkoutObject.getBarcode());
-        //quantity.setText(checkoutObject.getQuantity());
+
         if (checkoutObject.isExtended()) {
             extended.setSelected(true);
             isExtended();
-//            courseName.setText(checkoutObject.getExtendedCourseName());
-//            profName.setText(checkoutObject.getExtendedProfessor());
-//            datePicker.setValue(checkoutObject.getExtendedReturnDate());
         } else if (checkoutObject.isFaulty()) {
             faulty.setSelected(true);
-            //faultyTextArea.setText(checkoutObject.getFaultyDescription());
         }
 
         // enable the switch to student info button iff the student ID field contains a student ID
@@ -200,12 +162,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         // unique barcodes
         if (containsNumber(barcode.getText())) {
             partNameFromBarcode = database.getPartNameFromBarcode(Integer.parseInt(barcode.getText()));
-            if (database.hasUniqueBarcodes(partNameFromBarcode)) {
-//                quantity.setDisable(true);
-//                quantity.setText("1");
-            } else {
-                //quantity.setDisable(false);
-            }
         }
     }
 
@@ -252,53 +208,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return true;
     }
 
-    /**
-     * Request for admin pin.
-     *
-     * @param action Action required; pin to be entered
-     * @return True if pin is correct
-     */
-    public boolean requestAdminPin(String action) {
-        AtomicBoolean isValid = new AtomicBoolean(false);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
-            Parent root = loader.load();
-            ((AdminPinRequestController) loader.getController()).setAction(action);
-            Scene scene = new Scene(root, 400, 250);
-            Stage stage = new Stage();
-            stage.setTitle("Admin Pin Required");
-            stage.initOwner(main.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.setResizable(false);
-            stage.setOnCloseRequest(e -> {
-                // checks to see whether the pin was submitted or the window was just closed
-                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
-                    // checks to see if the input pin is empty. if empty, close pop up
-                    if (((AdminPinRequestController) loader.getController()).isNotEmpty()) {
-                        // checks to see whether the submitted pin matches one of the admin's pins
-                        if (((AdminPinRequestController) loader.getController()).isValid()) {
-                            stage.close();
-                            isValid.set(true);
-                        } else {
-                            stage.close();
-                            invalidAdminPinAlert();
-                            isValid.set(false);
-                        }
-                    } else {
-                        stage.close();
-                        isValid.set(false);
-                    }
-                }
-            });
-            stage.showAndWait();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
-            e.printStackTrace();
-        }
-        return isValid.get();
-    }
 
     private boolean isFaultyCheck(JFXCheckBox box) {
         return box.getText().equals("Faulty?") && box.isSelected();
@@ -370,12 +279,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Submits multiple items
      */
     private void submitMultipleItems() {
-        Student thisStudent = null;
-        if (containsNumber(getstudentID())) {
-            thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
-        } else {
-            thisStudent = database.selectStudent(-1, getstudentID());
-        }
         List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
         for (MultipleCheckoutObject barcode : barcodes) {
             if (barcode.isCheckedOut()) {
@@ -483,15 +386,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private boolean extendedCheckoutIsSelected(long barcode) {
         return !itemIsBeingCheckedIn(barcode) && extended.isSelected();
-    }
-
-    /**
-     * Helper method if item being checked back in is faulty
-     *
-     * @return True if item is faulty
-     */
-    private boolean itemBeingCheckedBackInIsFaulty(long barcode, boolean isFaulty) {
-        return itemIsBeingCheckedIn(barcode) && isFaulty;
     }
 
 
@@ -677,7 +571,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private void setCheckinInformation() {
         extended.setVisible(false);
-        //faulty.setVisible(true);
     }
 
     /**
@@ -792,39 +685,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         box.setSelected(value);
     }
 
-    /**
-     * If faulty checkbox is shown, more items will be displayed
-     */
-    public void isFaulty() {
-//        if (faulty.isSelected()) {
-//            faultyText = faultyArea.getText();
-//            transitionHelper.faultyTransition(faulty, resetButton, submitButton, 50);
-//            transitionHelper.faultyBoxFadeTransition(faultyArea, -40);
-//            faultPane.toFront();
-//            faultyArea.setPrefColumnCount(400);
-//            faultyArea.setPrefRowCount(400);
-//            setCheckoutItemsDisable(true);
-//        } else {
-//            faultPane.toBack();
-//            barcode.requestFocus();
-//            transitionHelper.faultyTransition(faulty, resetButton, submitButton, -50);
-//            transitionHelper.faultyBoxFadeTransition(faultyArea, 40);
-//            setCheckoutItemsDisable(false);
-//        }
-    }
-
-    /**
-     * Helper method for checking out items
-     *
-     * @param value True or false to disable buttons
-     */
-    private void setCheckoutItemsDisable(boolean value) {
-        HBoxBarcode2.setVisible(!value);
-        barcode2.setVisible(!value);
-        studentID.setDisable(value);
-        faultyArea.setVisible(value);
-
-    }
 
     /**
      * Makes new barcode field
@@ -875,7 +735,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method for dropping barcode down
      */
     private void barcodeDropHelper() {
-        //extended.setVisible(false);
         faulty.setVisible(false);
     }
 
@@ -1033,7 +892,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                         if (newValue.length() == 6) {
                             if (itemIsBeingCheckedIn(getBarcode())) {
-                                //setCheckinInformation();
                                 extended1.setText("Faulty?");
                                 extended1.setVisible(true);
                                 statusLabel.setText("In");
@@ -1202,25 +1060,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method to set items in or out
      */
     private void setLabelStatuses() {
-//        barcode2.setOnKeyReleased(event -> {
-//            if (event.getCode() == KeyCode.TAB) {
-//                return;
-//            }
-//
-//
-//        });
-//        barcode3.setOnKeyReleased(event -> {
-//            if (event.getCode() == KeyCode.TAB) {
-//                return;
-//            }
-//
-//        });
-//        barcode4.setOnKeyReleased(event -> {
-//            if (event.getCode() == KeyCode.TAB) {
-//                return;
-//            }
-//
-//        });
         barcode5.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.TAB) {
                 return;
@@ -1294,8 +1133,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
             controller.initWorker(worker);
             main.getScene().setRoot(root);
             ((IController) loader.getController()).initWorker(worker);
-            // NEEDED?
-            //mainMenuScene.getChildren().clear();
         } catch (IOException invoke) {
             StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
@@ -1401,10 +1238,72 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return parsable;
     }
 
+
+    /**
+     * Request for admin pin.
+     *
+     * @param action Action required; pin to be entered
+     * @return True if pin is correct
+     */
+    public boolean requestAdminPin(String action) {
+        AtomicBoolean isValid = new AtomicBoolean(false);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
+            Parent root = loader.load();
+            ((AdminPinRequestController) loader.getController()).setAction(action);
+            Scene scene = new Scene(root, 400, 250);
+            Stage stage = new Stage();
+            stage.setTitle("Admin Pin Required");
+            stage.initOwner(main.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.setResizable(false);
+            stage.setOnCloseRequest(e -> {
+                // checks to see whether the pin was submitted or the window was just closed
+                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
+                    // checks to see if the input pin is empty. if empty, close pop up
+                    if (((AdminPinRequestController) loader.getController()).isNotEmpty()) {
+                        // checks to see whether the submitted pin matches one of the admin's pins
+                        if (((AdminPinRequestController) loader.getController()).isValid()) {
+                            stage.close();
+                            isValid.set(true);
+                        } else {
+                            stage.close();
+                            invalidAdminPinAlert();
+                            isValid.set(false);
+                        }
+                    } else {
+                        stage.close();
+                        isValid.set(false);
+                    }
+                }
+            });
+            stage.showAndWait();
+        } catch (IOException e) {
+            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
+            e.printStackTrace();
+        }
+        return isValid.get();
+    }
+
     /**
      * Alert that the pin entered does not match one of the admin pins.
      */
     private void invalidAdminPinAlert() {
         stageWrapper.errorAlert("The entered pin is invalid");
+    }
+
+    /**
+     * Used to keep track of which worker is currently logged in by passing the worker into
+     * each necessary class
+     *
+     * @param worker the currently logged in worker
+     */
+    @Override
+    public void initWorker(Worker worker) {
+        if (this.worker == null) {
+            this.worker = worker;
+        }
     }
 }
