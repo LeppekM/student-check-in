@@ -30,7 +30,7 @@
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </Label>
-                <Label id="nameLabel" layoutX="90.0" layoutY="192.0" text="Serial Number:" GridPane.rowIndex="3">
+                <Label id="nameLabel" layoutX="90.0" layoutY="192.0" text="Barcode:" GridPane.rowIndex="3">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>

@@ -256,7 +256,7 @@ public class ExportToExcel {
 
 
 
-        String[] columns = {"Student Name", "Part Name", "Serial Number", "Action", "Date"}; //Number of columns in tableview
+        String[] columns = {"Student Name", "Part Name", "Barcode", "Action", "Date"}; //Number of columns in tableview
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
 
@@ -281,7 +281,7 @@ public class ExportToExcel {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getStudentName());
             row.createCell(1).setCellValue(items.getPartName());
-            row.createCell(2).setCellValue(items.getSerialNumber());
+            row.createCell(2).setCellValue(items.getBarcode());
             row.createCell(3).setCellValue(items.getAction());
             row.createCell(4).setCellValue(items.getDate());
         }

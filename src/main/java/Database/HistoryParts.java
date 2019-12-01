@@ -16,7 +16,7 @@ public class HistoryParts {
     private static Connection connection;
 
     // This query is used to get the data for the transaction history table in the inventory
-    private static final String HISTORY_QUERY = "SELECT studentName, email, partName, serialNumber, " +
+    private static final String HISTORY_QUERY = "SELECT studentName, email, partName, parts.barcode, " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
             "THEN 'Checked In' ELSE 'Checked Out' END AS 'Action', " +
             "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
@@ -29,7 +29,8 @@ public class HistoryParts {
             "THEN checkout.checkinAt ELSE checkout.checkoutAt END DESC;";
 
     private Statement statement;
-    private String studentName, studentEmail, partName, serialNumber, action, date;
+    private String studentName, studentEmail, partName, action, date;
+    private long barcode;
 
     public ObservableList<HistoryItems> data = FXCollections.observableArrayList();
 
@@ -49,7 +50,7 @@ public class HistoryParts {
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                HistoryItems historyItems = new HistoryItems(studentName, studentEmail, partName, serialNumber, action, date);
+                HistoryItems historyItems = new HistoryItems(studentName, studentEmail, partName, barcode, action, date);
                 data.add(historyItems);
             }
         } catch (SQLException e) {
@@ -67,7 +68,7 @@ public class HistoryParts {
             studentName = resultSet.getString("studentName");
             studentEmail = resultSet.getString("email");
             partName = resultSet.getString("partName");
-            serialNumber = resultSet.getString("serialNumber");
+            barcode = resultSet.getLong("barcode");
             action = resultSet.getString("Action");
             date = resultSet.getString("Date");
 

@@ -53,7 +53,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     private HistoryParts historyParts;
 
     private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
-     actionCol, dateCol, serialNumberCol;
+     actionCol, dateCol;
+
+    private JFXTreeTableColumn<HistoryTabTableRow, Long> barcodeCol;
 
 
     @FXML
@@ -97,11 +99,11 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
             }
         });
 
-        serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
-        serialNumberCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
-        serialNumberCol.setStyle("-fx-font-size: 18px");
-        serialNumberCol.setResizable(false);
-        serialNumberCol.setCellValueFactory(col-> col.getValue().getValue().getSerialNumber());
+        barcodeCol = new JFXTreeTableColumn<>("Barcode");
+        barcodeCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
+        barcodeCol.setStyle("-fx-font-size: 18px");
+        barcodeCol.setResizable(false);
+        barcodeCol.setCellValueFactory(col-> col.getValue().getValue().getBarcode().asObject());
 
 
 
@@ -180,12 +182,12 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         for (int i = 0; i < list.size(); i++) {
             tableRows.add(new HistoryTabTableRow(list.get(i).getStudentName(),
                     list.get(i).getStudentEmail(), list.get(i).getPartName(),
-                    list.get(i).getSerialNumber(), list.get(i).getAction(),
+                    list.get(i).getBarcode(), list.get(i).getAction(),
                     list.get(i).getDate()));
         }
 
         final TreeItem<HistoryTabTableRow> root = new RecursiveTreeItem<HistoryTabTableRow>(tableRows, RecursiveTreeObject::getChildren);
-        historyTable.getColumns().setAll(studentCol, partNameCol, serialNumberCol, actionCol, dateCol);
+        historyTable.getColumns().setAll(studentCol, partNameCol, barcodeCol, actionCol, dateCol);
         historyTable.setRoot(root);
         historyTable.setShowRoot(false);
     }
@@ -202,7 +204,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                 String input = searchInput.getText().toLowerCase();
                 student = tableRow.getValue().getStudentName().getValue();
                 partName = tableRow.getValue().getPartName().getValue();
-                serialNumber = tableRow.getValue().getSerialNumber().getValue().toString();
+                serialNumber = tableRow.getValue().getBarcode().getValue().toString();
                 action = tableRow.getValue().getAction().getValue();
                 date = tableRow.getValue().getDate().getValue().toLowerCase();
 

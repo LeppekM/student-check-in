@@ -1,16 +1,18 @@
 package Database;
 
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class HistoryItems {
 
-    private final SimpleStringProperty studentName, studentEmail, partName, serialNumber, action, date;
+    private final SimpleStringProperty studentName, studentEmail, partName, action, date;
+    private SimpleLongProperty barcode;
 
-    public HistoryItems(String studentName, String studentEmail, String partName, String serialNumber, String action, String date) {
+    public HistoryItems(String studentName, String studentEmail, String partName, long barcode, String action, String date) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
-        this.serialNumber = new SimpleStringProperty(serialNumber);
+        this.barcode = new SimpleLongProperty(barcode);
         this.action = new SimpleStringProperty(action);
         this.date = new SimpleStringProperty(date);
     }
@@ -35,13 +37,10 @@ public class HistoryItems {
         return partName.get();
     }
 
-    public String getSerialNumber() {
-        return serialNumber.get();
+    public long getBarcode() {
+        return barcode.get();
     }
 
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber.set(serialNumber);
-    }
 
     public String getAction() {
         return action.get();

@@ -1,10 +1,7 @@
 package InventoryController;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 import java.util.Comparator;
 
@@ -15,17 +12,18 @@ public class HistoryTabTableRow extends RecursiveTreeObject<HistoryTabTableRow>{
 
     private StringProperty studentName;
     private StringProperty studentEmail;
-    private StringProperty partName, serialNumber;
+    private StringProperty partName;
+    private LongProperty barcode;
 
     private StringProperty action;
     private StringProperty date;
 
-    public HistoryTabTableRow(String studentName, String studentEmail, String partName, String serialNumber,
+    public HistoryTabTableRow(String studentName, String studentEmail, String partName, long barcode,
                               String action, String date) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
-        this.serialNumber = new SimpleStringProperty(serialNumber);
+        this.barcode = new SimpleLongProperty(barcode);
         this.action = new SimpleStringProperty(action);
         this.date = new SimpleStringProperty(date);
     }
@@ -42,8 +40,8 @@ public class HistoryTabTableRow extends RecursiveTreeObject<HistoryTabTableRow>{
         return partName;
     }
 
-    public StringProperty getSerialNumber() {
-        return serialNumber;
+    public LongProperty getBarcode() {
+        return barcode;
     }
 
     public StringProperty getAction() {
