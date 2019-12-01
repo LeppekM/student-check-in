@@ -17,6 +17,29 @@ public class StudentInfo {
 
     private DatabaseHelper helper = new DatabaseHelper();
 
+    Database database = new Database();
+
+    public Student selectStudentClean(String email){
+        String query = "Select studentName, email, studentID from students where email = ?";
+        String studentEmail = "";
+        String name ="";
+        int id = 0;
+        try( Connection connection = DriverManager.getConnection(url, Database.username, Database.password)){
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                studentEmail = rs.getString("email");
+                name = rs.getString("studentName");
+                id = rs.getInt("studentID");
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return new Student(name,id,studentEmail);
+    }
+
     public String getStudentNameFromID(String studentID){
         String sName = "";
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {

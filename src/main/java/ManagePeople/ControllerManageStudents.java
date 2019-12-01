@@ -3,6 +3,7 @@ package ManagePeople;
 import Database.Database;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
+import Database.StudentInfo;
 import HelperClasses.AdminPinRequestController;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
@@ -69,6 +70,8 @@ public class ControllerManageStudents implements IController, Initializable {
     private JFXTreeTableColumn<ManageStudentsTabTableRow, String> firstNameCol, lastNameCol, idCol, emailCol;
 
     private String name, id, email, firstName, lastName;
+
+    private StudentInfo studentInfo = new StudentInfo();
 
     private static ObservableList<Student> data = FXCollections.observableArrayList();
 
@@ -402,7 +405,14 @@ public class ControllerManageStudents implements IController, Initializable {
     public void edit(int row) {
         Stage stage = new Stage();
         ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(row).getValue();
-        Student s = database.selectStudent(-1, r.getEmail().get());
+        Student s = null;
+        if (Integer.parseInt(r.getId().get()) == 0){
+            s = studentInfo.selectStudentClean(r.getEmail().get());
+        }
+        else {
+           s = database.selectStudent(Integer.parseInt(r.getId().get()),null);
+        }
+
         try {
             URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);

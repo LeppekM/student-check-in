@@ -908,6 +908,9 @@ public class Database implements IController {
         return false;
     }
 
+
+
+
     /**
      * Gets a student from the database based on their RFID
      * @param ID RFID to search for
@@ -935,7 +938,6 @@ public class Database implements IController {
                     "inner join parts on checkout.partID = parts.partID " +
                     "inner join students on checkout.studentID = students.studentID " +
                     "where checkout.checkinAt is null";
-//                "where checkout.dueAt < date('" + todaysDate + "') and students.studentID = " + ID + ";";
         }else if (ID == -1){
             studentEmail = studentEmail.replace("'", "\\'");
             query = "select * from students where email = '" + studentEmail + "';";

@@ -151,6 +151,10 @@ public class EditStudent implements IController {
      * This method fills the tables with data if there is any
      */
     private void populateTables() {
+        if(student.getRFID()==0){
+            return;
+        }
+
         final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
         final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
         final TreeItem<SavedPart> sItems = new RecursiveTreeItem<>(student.getSavedItems(), RecursiveTreeObject::getChildren);
