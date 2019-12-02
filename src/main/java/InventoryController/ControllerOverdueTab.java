@@ -176,7 +176,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             tableRows.add(new OverdueTabTableRow
                     (list.get(i).getName().get(),
                     list.get(i).getID().get(),
-                    list.get(i).getName().get(),
+                    list.get(i).getPart().get(),
                     list.get(i).getBarcode().get(),
                     list.get(i).getDate().get()));
         }
