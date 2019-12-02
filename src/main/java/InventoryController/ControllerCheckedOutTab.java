@@ -107,7 +107,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         checkedOutAtCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         checkedOutAtCol.setStyle("-fx-font-size: 18px");
         checkedOutAtCol.setResizable(false);
-        checkedOutAtCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
+        checkedOutAtCol.setCellValueFactory(col -> col.getValue().getValue().getCheckedOutAt());
         checkedOutAtCol.setCellFactory(col -> new TreeTableCell<CheckedOutTabTableRow, Date>(){
             @Override
             protected void updateItem(Date date, boolean empty){
