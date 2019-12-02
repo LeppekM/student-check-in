@@ -1,5 +1,6 @@
 package Database;
 
+import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
@@ -29,6 +30,7 @@ public class CheckedOutParts {
     private int checkoutID, studentID, partID;
     private long barcode;
     private String studentName, studentEmail, partName, serialNumber, checkedOutAt, dueDate, fee;
+    private DatabaseHelper helper = new DatabaseHelper();
 
     public ObservableList<CheckedOutItems> data = FXCollections.observableArrayList();
 

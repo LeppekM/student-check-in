@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import javafx.stage.WindowEvent;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 
 public class ControllerViewCheckedOutPart {
 
@@ -38,10 +39,10 @@ public class ControllerViewCheckedOutPart {
         barcodeField.setText(row.getBarcode().getValue().toString());
         serialNumberField.setText(row.getSerialNumber().get());
         partIDField.setText("" + row.getPartID().get());
-        checkedOutDateField.setText(row.getCheckedOutAt().get());
-        dueDateField.setText(row.getDueDate().get());
+        checkedOutDateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getCheckedOutAt().get()));
+        dueDateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDueDate().get()));
         Database database = new Database();
-        if (database.isOverdue(row.getDueDate().get())) {
+        if (database.isOverdue(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDueDate().get()))) {
             dueDatePrompt.setStyle("-fx-text-fill: red");
             Label feeLabel = new Label("Fee:");
             feeLabel.setFont(x1);

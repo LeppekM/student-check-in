@@ -2,6 +2,7 @@ package InventoryController;
 
 import Database.*;
 import Database.ObjectClasses.Worker;
+import HelperClasses.DatabaseHelper;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -26,7 +27,12 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -34,7 +40,7 @@ import java.util.function.Predicate;
 /**
  * This class acts as the controller for the history tab of the inventory page
  */
-public class ControllerHistoryTab  extends ControllerInventoryPage implements Initializable {
+public class ControllerHistoryTab extends ControllerInventoryPage implements Initializable {
 
     private Worker worker;
 
@@ -49,24 +55,26 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     @FXML
     private JFXTextField searchInput;
 
-    //private HistoryItems historyItems = new HistoryItems();
     private HistoryParts historyParts;
 
     private JFXTreeTableColumn<HistoryTabTableRow, String> studentCol, partNameCol,
-     actionCol, dateCol;
+            actionCol;
+
+    private JFXTreeTableColumn<HistoryTabTableRow, Date> dateCol;
 
     private JFXTreeTableColumn<HistoryTabTableRow, Long> barcodeCol;
-
+    private DatabaseHelper helper;
 
     @FXML
     private JFXButton searchButton, clearOldHistory;
 
     private String student, partName, serialNumber, action, date;
-    private Comparator<String> IntegerComparator;
+
 
     /**
      * This method sets the data in the history page.
-     * @param location used to resolve relative paths for the root object, or null if the location is not known.
+     *
+     * @param location  used to resolve relative paths for the root object, or null if the location is not known.
      * @param resources used to localize the root object, or null if the root object was not localized.
      */
     @Override
@@ -103,8 +111,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         barcodeCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
-        barcodeCol.setCellValueFactory(col-> col.getValue().getValue().getBarcode().asObject());
-
+        barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
 
 
         actionCol = new JFXTreeTableColumn<>("Action");
@@ -122,12 +129,18 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
         dateCol.prefWidthProperty().bind(historyTable.widthProperty().divide(5));
         dateCol.setStyle("-fx-font-size: 18px");
         dateCol.setResizable(false);
-        dateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String>, ObservableValue<String>>() {
+        dateCol.setCellValueFactory(col -> col.getValue().getValue().getDate());
+        dateCol.setCellFactory(col -> new TreeTableCell<HistoryTabTableRow, Date>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<HistoryTabTableRow, String> param) {
-                return param.getValue().getValue().getDate();
+            protected void updateItem(Date date, boolean empty) {
+                if (empty) {
+                    setText("");
+                } else {
+                    setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(date));
+                }
             }
         });
+
 
         tableRows = FXCollections.observableArrayList();
 
@@ -165,9 +178,9 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     /**
      *
      */
-    public void importTransaction(){
+    public void importTransaction() {
         historyParts = new HistoryParts();
-        ObservableList<HistoryItems> list = historyParts.getHistoryItems();
+        ObservableList<HistoryTabTableRow> list = historyParts.getHistoryItems();
         export.exportTransactionHistory(list);
     }
 
@@ -176,14 +189,14 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
      */
     public void populateTable() {
         historyParts = new HistoryParts();
-        ObservableList<HistoryItems> list = historyParts.getHistoryItems();
+        ObservableList<HistoryTabTableRow> list = historyParts.getHistoryItems();
         tableRows = FXCollections.observableArrayList();
 
         for (int i = 0; i < list.size(); i++) {
-            tableRows.add(new HistoryTabTableRow(list.get(i).getStudentName(),
-                    list.get(i).getStudentEmail(), list.get(i).getPartName(),
-                    list.get(i).getBarcode(), list.get(i).getAction(),
-                    list.get(i).getDate()));
+            tableRows.add(new HistoryTabTableRow(list.get(i).getStudentName().get(),
+                    list.get(i).getStudentEmail().get(), list.get(i).getPartName().get(),
+                    list.get(i).getBarcode().get(), list.get(i).getAction().get(),
+                    list.get(i).getDate().get()));
         }
 
         final TreeItem<HistoryTabTableRow> root = new RecursiveTreeItem<HistoryTabTableRow>(tableRows, RecursiveTreeObject::getChildren);
@@ -206,13 +219,13 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
                 partName = tableRow.getValue().getPartName().getValue();
                 serialNumber = tableRow.getValue().getBarcode().getValue().toString();
                 action = tableRow.getValue().getAction().getValue();
-                date = tableRow.getValue().getDate().getValue().toLowerCase();
+                date = tableRow.getValue().getDate().getValue().toString().toLowerCase();
 
                 return ((student != null && student.toLowerCase().contains(input))
                         || (partName != null && partName.toLowerCase().contains(input))
                         || (serialNumber != null && serialNumber.toLowerCase().contains(input))
                         || (action != null && action.toLowerCase().contains(input))
-                        || (date != null & date.toLowerCase().contains(input)));
+                        || (date != null && date.toLowerCase().contains(input)));
             }
         });
     }
@@ -230,6 +243,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
     /**
      * Asks whether the user really wants to clear the 2-year-old history.
+     *
      * @return true if yes; false otherwise
      */
     public boolean confirmDeleteOldHistory() {
@@ -246,6 +260,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
 
     /**
      * This part brings up a pop up to show info about the part and it's last transaction
+     *
      * @param index
      */
     private void viewPart(int index) {
@@ -276,6 +291,7 @@ public class ControllerHistoryTab  extends ControllerInventoryPage implements In
     /**
      * This method adds the current worker to the class, so that the class can confirm whether the
      * current worker is an administrator if the worker tries to clear the history.
+     *
      * @param worker the currently logged in worker
      */
     @Override

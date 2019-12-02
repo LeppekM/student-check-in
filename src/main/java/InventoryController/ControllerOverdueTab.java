@@ -5,7 +5,6 @@ import Database.OverdueItem;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,12 +20,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 
 import java.net.URL;
-import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -47,8 +46,10 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     private JFXTextField searchInput;
 
     @FXML
-    private JFXTreeTableColumn<OverdueTabTableRow, String> studentNameCol,  partNameCol,
-            dueDateCol;
+    private JFXTreeTableColumn<OverdueTabTableRow, String> studentNameCol,  partNameCol;
+
+    @FXML
+    private JFXTreeTableColumn<OverdueTabTableRow, Date> dueDateCol;
 
     @FXML
     private JFXTreeTableColumn<OverdueTabTableRow, Integer> studentIDCol;
@@ -104,17 +105,21 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
 
 
-        dueDateCol = new JFXTreeTableColumn<>("Due Date");
+        dueDateCol = new JFXTreeTableColumn<>("Date");
         dueDateCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
         dueDateCol.setStyle("-fx-font-size: 18px");
         dueDateCol.setResizable(false);
-        dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String>, ObservableValue<String>>() {
+        dueDateCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
+        dueDateCol.setCellFactory(col -> new TreeTableCell<OverdueTabTableRow, Date>(){
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueTabTableRow, String> param) {
-                return param.getValue().getValue().getDueDate();
+            protected void updateItem(Date date, boolean empty){
+                if (empty) {
+                    setText("");
+                } else {
+                    setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(date));
+                }
             }
         });
-
         tableRows = FXCollections.observableArrayList();
     }
 
@@ -171,9 +176,9 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             tableRows.add(new OverdueTabTableRow
                     (list.get(i).getName().get(),
                     list.get(i).getID().get(),
-                    list.get(i).getPart().get(),
+                    list.get(i).getName().get(),
                     list.get(i).getBarcode().get(),
-                    list.get(i).getDate().getValue()));
+                    list.get(i).getDate().get()));
         }
 
         root = new RecursiveTreeItem<OverdueTabTableRow>(
@@ -201,7 +206,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
                 studentName = tableRow.getValue().getStudentName().getValue();
                 partName = tableRow.getValue().getPartName().getValue();
                 serialNumber = tableRow.getValue().getBarcode().getValue().toString();
-                dueDate = tableRow.getValue().getDueDate().getValue();
+                dueDate = tableRow.getValue().getDueDate().getValue().toString();
 
 
                 return ((studentID != null && studentID.toLowerCase().contains(input))

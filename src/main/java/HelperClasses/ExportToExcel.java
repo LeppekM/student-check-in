@@ -1,13 +1,13 @@
 package HelperClasses;
 
-import Database.HistoryItems;
 import Database.ObjectClasses.Part;
 import Database.OverdueItem;
 import InventoryController.CheckedOutItems;
 import InventoryController.FaultyPartTabTableRow;
+import InventoryController.HistoryTabTableRow;
+import InventoryController.OverdueTabTableRow;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -170,7 +170,7 @@ public class ExportToExcel {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getName().getValue());
             row.createCell(1).setCellValue(items.getID().getValue());
-            row.createCell(2).setCellValue(items.getPart().getValue());
+            row.createCell(2).setCellValue(items.getName().getValue());
             row.createCell(3).setCellValue(items.getBarcode().getValue());
             row.createCell(4).setCellValue(items.getDate().getValue());
         }
@@ -248,7 +248,7 @@ public class ExportToExcel {
      * Exports transaction history to excel
      * @param list List of transactions
      */
-    public void exportTransactionHistory(ObservableList<HistoryItems> list) {
+    public void exportTransactionHistory(ObservableList<HistoryTabTableRow> list) {
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
         fileChooserSave.getExtensionFilters().addAll(
@@ -277,13 +277,13 @@ public class ExportToExcel {
             cell.setCellStyle(headerCellStyle);
         }
 
-        for (HistoryItems items :list) {
+        for (HistoryTabTableRow items :list) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(items.getStudentName());
-            row.createCell(1).setCellValue(items.getPartName());
-            row.createCell(2).setCellValue(items.getBarcode());
-            row.createCell(3).setCellValue(items.getAction());
-            row.createCell(4).setCellValue(items.getDate());
+            row.createCell(0).setCellValue(items.getStudentName().get());
+            row.createCell(1).setCellValue(items.getPartName().get());
+            row.createCell(2).setCellValue(items.getBarcode().get());
+            row.createCell(3).setCellValue(items.getAction().get());
+            row.createCell(4).setCellValue(items.getDate().toString());
         }
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);

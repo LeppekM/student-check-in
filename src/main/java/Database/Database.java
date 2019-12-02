@@ -90,7 +90,7 @@ public class Database implements IController {
                     if (isOverdue(dueAt)){
                         data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
                                 resultSet.getString("students.email"), resultSet.getString("parts.partName"),
-                                resultSet.getLong("parts.barcode"), dueAt,
+                                resultSet.getLong("parts.barcode"), databaseHelper.convertStringtoDate(dueAt),
                                 resultSet.getString("checkout.checkoutID")));
                     }
                 }
@@ -1010,7 +1010,7 @@ public class Database implements IController {
                             resultSet.getString("students.email"),
                             resultSet.getString("parts.partName"),
                             resultSet.getLong("parts.barcode"),
-                            dueAt,
+                            databaseHelper.convertStringtoDate(dueAt),
                             resultSet.getString("checkout.checkoutID"),
                             resultSet.getDouble("parts.price")));
                 }

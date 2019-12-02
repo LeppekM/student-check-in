@@ -1,9 +1,12 @@
 package Database;
 
+import HelperClasses.DatabaseHelper;
+import InventoryController.HistoryTabTableRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 /**
  * This class queries the database for the transaction history, and returns a student name, part name, serial number, action, quantity, date
@@ -29,15 +32,18 @@ public class HistoryParts {
             "THEN checkout.checkinAt ELSE checkout.checkoutAt END DESC;";
 
     private Statement statement;
-    private String studentName, studentEmail, partName, action, date;
+    private String studentName, studentEmail, partName, action ,date;
+
     private long barcode;
 
-    public ObservableList<HistoryItems> data = FXCollections.observableArrayList();
+    private DatabaseHelper helper = new DatabaseHelper();
+
+    public ObservableList<HistoryTabTableRow> data = FXCollections.observableArrayList();
 
     /**
      * Queries the database for the transaction history.
      */
-    public ObservableList<HistoryItems> getHistoryItems(){
+    public ObservableList<HistoryTabTableRow> getHistoryItems(){
         try {
             Class.forName(dbdriver);
         } catch (ClassNotFoundException e) {
@@ -50,7 +56,7 @@ public class HistoryParts {
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                HistoryItems historyItems = new HistoryItems(studentName, studentEmail, partName, barcode, action, date);
+                HistoryTabTableRow historyItems = new HistoryTabTableRow(studentName, studentEmail, partName, barcode, action, helper.convertStringtoDate(date));
                 data.add(historyItems);
             }
         } catch (SQLException e) {

@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 
+import java.text.SimpleDateFormat;
+
 public class ControllerViewHistoryPart {
 
     @FXML
@@ -20,7 +22,7 @@ public class ControllerViewHistoryPart {
         partNameField.setText(row.getPartName().get());
         serialNumberField.setText(String.valueOf(row.getBarcode().get()));
         actionField.setText(row.getAction().get());
-        dateField.setText(row.getDate().get());
+        dateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDate().get()));
     }
 
     public void goBack() {

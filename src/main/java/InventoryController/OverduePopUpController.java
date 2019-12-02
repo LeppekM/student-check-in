@@ -8,6 +8,7 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 
 public class OverduePopUpController {
 
@@ -39,7 +40,7 @@ public class OverduePopUpController {
             emailField.setText(overdueItems.getEmail().get());
             barcode.setText(String.valueOf(overdueItems.getBarcode().get()));
             partName.setText(overdueItems.getPart().get());
-            dueDate.setText(overdueItems.getDate().get());
+            dueDate.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(overdueItems.getDate().get()));
 //            overdueItems.setPrice(overdueItems.getPrice().get().replaceAll("\\$", ""));
 //            overdueItems.setPrice(overdueItems.getPrice().get().replaceAll(",", ""));
 //            fee.setText("$" + df.format(Double.parseDouble(overdueItems.getPrice().get())));
@@ -47,7 +48,7 @@ public class OverduePopUpController {
             partName.setText(overdueTabTableRow.getPartName().get());
             barcode.setText(overdueTabTableRow.getBarcode().getValue().toString());
             idField.setText(String.valueOf(overdueTabTableRow.getStudentID().get()));
-            dueDate.setText(overdueTabTableRow.getDueDate().get());
+            dueDate.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(overdueTabTableRow.getDueDate().get()));
 //            overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll("\\$", ""));
 //            overdueTabTableRow.setFee(overdueTabTableRow.getFee().get().replaceAll(",", ""));
 //            fee.setText("$" + df.format(Double.parseDouble(overdueTabTableRow.getFee().get())));
