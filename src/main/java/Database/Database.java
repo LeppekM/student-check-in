@@ -76,30 +76,30 @@ public class Database implements IController {
     public ObservableList<OverdueItem> getOverdue() {
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
 
-            databaseHelper.getCurrentDateTimeStamp();
-            String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
-                    " parts.barcode, checkout.dueAt, checkout.checkoutID from checkout " +
-                    "left join parts on checkout.partID = parts.partID " +
-                    "left join students on checkout.studentID = students.studentID " +
-                    "where checkout.checkinAt is null";
-            try {
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(overdue);
-                while(resultSet.next()){
-                    String dueAt = resultSet.getString("checkout.dueAt");
-                    if (isOverdue(dueAt)){
-                        data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
-                                resultSet.getString("students.email"), resultSet.getString("parts.partName"),
-                                resultSet.getLong("parts.barcode"), databaseHelper.convertStringtoDate(dueAt),
-                                resultSet.getString("checkout.checkoutID")));
-                    }
+        databaseHelper.getCurrentDateTimeStamp();
+        String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
+                " parts.barcode, checkout.dueAt, checkout.checkoutID from checkout " +
+                "left join parts on checkout.partID = parts.partID " +
+                "left join students on checkout.studentID = students.studentID " +
+                "where checkout.checkinAt is null";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(overdue);
+            while(resultSet.next()){
+                String dueAt = resultSet.getString("checkout.dueAt");
+                if (isOverdue(dueAt)){
+                    data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
+                            resultSet.getString("students.email"), resultSet.getString("parts.partName"),
+                            resultSet.getLong("parts.barcode"), databaseHelper.convertStringtoDate(dueAt),
+                            resultSet.getString("checkout.checkoutID")));
                 }
-                resultSet.close();
-                statement.close();
-            } catch(SQLException e){
-                StudentCheckIn.logger.error("SQL Error: " + e.getLocalizedMessage());
-                e.printStackTrace();
             }
+            resultSet.close();
+            statement.close();
+        } catch(SQLException e){
+            StudentCheckIn.logger.error("SQL Error: " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
         return data;
     }
 
@@ -266,7 +266,7 @@ public class Database implements IController {
     public void clearOldHistory() {
         String query =
                 "DELETE checkout " +
-                "FROM checkout " +
+                        "FROM checkout " +
                         "INNER JOIN parts " +
                         "ON checkout.partID = parts.partID " +
                         "AND checkout.checkinAt < ? " +
@@ -960,7 +960,7 @@ public class Database implements IController {
         Student student = null;
         String name = "";
         String email = "";
-        String date = "";
+        Date date = null;
         int id = 0;
         int uniqueID = 0;
         ObservableList<CheckedOutItems> checkedOutItems = FXCollections.observableArrayList();
@@ -991,8 +991,8 @@ public class Database implements IController {
                         resultSet.getString("parts.barcode"),
                         resultSet.getString("parts.serialNumber"),
                         resultSet.getInt("parts.partID"),
-                        resultSet.getString("checkout.checkoutAt"),
-                        resultSet.getString("checkout.dueAt"),
+                        databaseHelper.convertStringtoDate(resultSet.getString("checkout.checkoutAt")),
+                        databaseHelper.convertStringtoDate(resultSet.getString("checkout.dueAt")),
                         resultSet.getString("parts.price")));
             }
             statement.close();
@@ -1038,18 +1038,16 @@ public class Database implements IController {
             }
             // date null if no checkouts
             for (int i = 0; i < checkedOutItems.size() && date != null; i++){
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-                    Date d = sdf.parse(date);
-                    Date d1 = sdf.parse(checkedOutItems.get(i).getCheckedOutDate().get());
-                    if (d1.after(d)){
+                    Date d1 = checkedOutItems.get(i).getCheckedOutDate().get();
+                    if (d1.after(date)){
                         date = checkedOutItems.get(i).getCheckedOutDate().get();
                     }
-                }catch (ParseException e){
-                    e.printStackTrace();
-                }
             }
-            student = new Student(name, uniqueID, id, email, date, checkedOutItems, overdueItems, savedParts);
+            if (date != null) {
+                student = new Student(name, uniqueID, id, email, date.toString(), checkedOutItems, overdueItems, savedParts);
+            } else {
+                student = new Student(name, uniqueID, id, email, "", checkedOutItems, overdueItems, savedParts);
+            }
         }catch (SQLException e){
             e.printStackTrace();
         }

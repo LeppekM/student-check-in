@@ -3,26 +3,29 @@ package InventoryController;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 
+import java.util.Date;
+
 /**
  * Represents all of the info about parts on the checked out parts inventory tab
  */
 public class CheckedOutTabTableRow extends RecursiveTreeObject<CheckedOutTabTableRow> {
 
-    private StringProperty studentName, studentEmail, partName, serialNumber, checkedOutAt, dueDate, fee;
+    private StringProperty studentName, studentEmail, partName, serialNumber, fee;
     private LongProperty barcode;
     private IntegerProperty partID;
+    private ObjectProperty<Date> dueDate, checkedOutAt;
 
     public CheckedOutTabTableRow(String studentName, String studentEmail, String partName,
                                  long barcode, String serialNumber, int partID,
-                                 String checkedOutAt, String dueDate, String fee) {
+                                 Date checkedOutAt, Date dueDate, String fee) {
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
         this.partName = new SimpleStringProperty(partName);
         this.barcode = new SimpleLongProperty(barcode);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.partID = new SimpleIntegerProperty(partID);
-        this.checkedOutAt = new SimpleStringProperty(checkedOutAt);
-        this.dueDate = new SimpleStringProperty(dueDate);
+        this.checkedOutAt = new SimpleObjectProperty<>(checkedOutAt);
+        this.dueDate = new SimpleObjectProperty<>(dueDate);
         this.fee = new SimpleStringProperty(fee);
     }
 
@@ -50,11 +53,12 @@ public class CheckedOutTabTableRow extends RecursiveTreeObject<CheckedOutTabTabl
         return partID;
     }
 
-    public StringProperty getCheckedOutAt() {
+
+    public ObjectProperty<Date> getCheckedOutAt() {
         return checkedOutAt;
     }
 
-    public StringProperty getDueDate() {
+    public ObjectProperty<Date> getDueDate() {
         return dueDate;
     }
 

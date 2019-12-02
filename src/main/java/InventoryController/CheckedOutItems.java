@@ -1,18 +1,19 @@
 package InventoryController;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
+
+import java.util.Date;
 
 /**
  * This class allows the tableview for checked out items to be populated
  */
 public class CheckedOutItems extends RecursiveTreeObject{
     private final SimpleIntegerProperty checkoutID, studentID, partID;
-    private final SimpleStringProperty studentName, studentEmail, partName, barcode, serialNumber, checkedOutDate, dueDate, fee;
+    private final SimpleStringProperty studentName, studentEmail, partName, barcode, serialNumber, fee;
+    private ObjectProperty<Date> dueDate, checkedOutDate;
 
-    public CheckedOutItems(int checkoutID, String studentName, String studentEmail, int studentID, String partName, String barcode, String serialNumber, int partID, String checkedOutDate, String dueDate, String fee) {
+    public CheckedOutItems(int checkoutID, String studentName, String studentEmail, int studentID, String partName, String barcode, String serialNumber, int partID, Date checkedOutDate, Date dueDate, String fee) {
         this.checkoutID = new SimpleIntegerProperty(checkoutID);
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
@@ -21,8 +22,8 @@ public class CheckedOutItems extends RecursiveTreeObject{
         this.barcode = new SimpleStringProperty(barcode);
         this.serialNumber = new SimpleStringProperty(serialNumber);
         this.partID = new SimpleIntegerProperty(partID);
-        this.checkedOutDate = new SimpleStringProperty(checkedOutDate);
-        this.dueDate = new SimpleStringProperty(dueDate);
+        this.checkedOutDate = new SimpleObjectProperty<>(checkedOutDate);
+        this.dueDate = new SimpleObjectProperty<>(dueDate);
         this.fee = new SimpleStringProperty(fee);
     }
 
@@ -50,9 +51,9 @@ public class CheckedOutItems extends RecursiveTreeObject{
 
     public SimpleIntegerProperty getPartID() {return partID; }
 
-    public SimpleStringProperty getCheckedOutDate() { return checkedOutDate; }
+    public ObjectProperty<Date> getCheckedOutDate() { return checkedOutDate; }
 
-    public SimpleStringProperty getDueDate() {
+    public ObjectProperty<Date> getDueDate() {
         return dueDate;
     }
 

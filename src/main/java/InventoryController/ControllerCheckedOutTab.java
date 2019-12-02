@@ -24,6 +24,8 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -47,8 +49,9 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
     private TreeItem<CheckedOutTabTableRow> root;
 
     @FXML
-    private JFXTreeTableColumn<CheckedOutTabTableRow, String> studentNameCol, partNameCol,
-            checkedOutAtCol, dueDateCol;
+    private JFXTreeTableColumn<CheckedOutTabTableRow, String> studentNameCol, partNameCol;
+
+    private JFXTreeTableColumn<CheckedOutTabTableRow, Date> dueDateCol, checkedOutAtCol;
 
     @FXML
     private JFXTreeTableColumn<CheckedOutTabTableRow, Long> barcodeCol;
@@ -65,7 +68,6 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setStyle("-fx-text-fill: white");
         emptyTableLabel.setFont(new Font(18));
-//        searchButton.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;");
         checkedOutTable.setPlaceholder(emptyTableLabel);
 
         studentNameCol = new JFXTreeTableColumn<>("Student");
@@ -105,10 +107,15 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         checkedOutAtCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         checkedOutAtCol.setStyle("-fx-font-size: 18px");
         checkedOutAtCol.setResizable(false);
-        checkedOutAtCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
+        checkedOutAtCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
+        checkedOutAtCol.setCellFactory(col -> new TreeTableCell<CheckedOutTabTableRow, Date>(){
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
-                return param.getValue().getValue().getCheckedOutAt();
+            protected void updateItem(Date date, boolean empty){
+                if (empty) {
+                    setText("");
+                } else {
+                    setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(date));
+                }
             }
         });
 
@@ -116,10 +123,15 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         dueDateCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         dueDateCol.setStyle("-fx-font-size: 18px");
         dueDateCol.setResizable(false);
-        dueDateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
+        dueDateCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
+        dueDateCol.setCellFactory(col -> new TreeTableCell<CheckedOutTabTableRow, Date>(){
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
-                return param.getValue().getValue().getDueDate();
+            protected void updateItem(Date date, boolean empty){
+                if (empty) {
+                    setText("");
+                } else {
+                    setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(date));
+                }
             }
         });
 
@@ -169,8 +181,8 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
             tableRows.add(new CheckedOutTabTableRow(list.get(i).getStudentName().getValue(),
                     list.get(i).getStudentEmail().get(), list.get(i).getPartName().getValue(),
                     Long.valueOf(list.get(i).getBarcode().getValue()), list.get(i).getSerialNumber().get(),
-                    list.get(i).getPartID().get(), list.get(i).getCheckedOutDate().getValue(),
-                    list.get(i).getDueDate().getValue(), list.get(i).getFee().getValue()));
+                    list.get(i).getPartID().get(), list.get(i).getCheckedOutDate().get(),
+                    list.get(i).getDueDate().get(), list.get(i).getFee().getValue()));
         }
 
         root = new RecursiveTreeItem<CheckedOutTabTableRow>(
@@ -218,8 +230,8 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
                 studentName = tableRow.getValue().getStudentName().getValue();
                 partName = tableRow.getValue().getPartName().getValue();
                 barcode = tableRow.getValue().getBarcode().getValue().toString();
-                checkedOutAt = tableRow.getValue().getCheckedOutAt().getValue();
-                dueDate = tableRow.getValue().getDueDate().getValue();
+                checkedOutAt = tableRow.getValue().getCheckedOutAt().getValue().toString();
+                dueDate = tableRow.getValue().getDueDate().getValue().toString();
 
                 return ((studentName != null && studentName.toLowerCase().contains(input))
                         || (partName != null && partName.toLowerCase().contains(input))

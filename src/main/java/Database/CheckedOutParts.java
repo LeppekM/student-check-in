@@ -43,7 +43,8 @@ public class CheckedOutParts {
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                CheckedOutItems checkedOutItems = new CheckedOutItems(checkoutID, studentName, studentEmail, studentID, partName, "" + barcode, serialNumber, partID, checkedOutAt, dueDate, fee);
+                CheckedOutItems checkedOutItems = new CheckedOutItems(checkoutID, studentName, studentEmail, studentID, partName, "" + barcode,
+                        serialNumber, partID, helper.convertStringtoDate(checkedOutAt), helper.convertStringtoDate(dueDate), fee);
                 data.add(checkedOutItems);
             }
         } catch (SQLException e) {

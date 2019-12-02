@@ -56,8 +56,8 @@ public class CheckoutPopUp extends StudentPage implements IController {
         name.setText(checked.getStudentName().get());
         part.setText(checked.getPartName().get());
         barcode.setText(checked.getBarcode().get() + "");
-        coDate.setText(checked.getCheckedOutDate().get());
-        dueDate.setText(checked.getDueDate().get());
+        coDate.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(checked.getCheckedOutDate().get()));
+        dueDate.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(checked.getDueDate().get()));
         cID.setText("Checkout ID: " + checked.getCheckoutID().get());
     }
 
