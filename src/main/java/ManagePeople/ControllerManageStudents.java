@@ -338,13 +338,15 @@ public class ControllerManageStudents implements IController, Initializable {
         if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0) {
             if ((worker != null && worker.isAdmin())
                     || requestAdminPin("delete a student")) {
+
                 int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
+                String email = emailCol.getCellData(row);
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this student?");
                 alert.setTitle("Delete This Student?");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    database.deleteStudent(data.get(row).getEmail());
-                    data.remove(row);
+                    database.deleteStudent(email);
+                    //data.remove(row);
                     populateTable();
                 }
             }

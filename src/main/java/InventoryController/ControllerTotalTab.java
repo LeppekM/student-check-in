@@ -597,9 +597,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                     populateTable();
                 }
             }
-
-//            tableView.getItems().remove(part);
-//            populateTable();
         } catch (Exception e) {
             StudentCheckIn.logger.error("Exception while deleting part.");
             e.printStackTrace();

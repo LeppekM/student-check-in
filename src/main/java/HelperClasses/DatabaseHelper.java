@@ -1,5 +1,7 @@
 package HelperClasses;
 
+import InventoryController.StudentCheckIn;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -18,6 +20,9 @@ public class DatabaseHelper {
             date = new SimpleDateFormat("d MMM yyyy hh:mm:ss a").parse(stringDate);
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (NullPointerException e){
+            StudentCheckIn.logger.error("Item is being checked out for first time; no checkout date");
+            return null;
         }
         return date;
     }

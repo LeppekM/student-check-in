@@ -359,9 +359,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
 
         // getStudentID returns -1 if the field does not contain a number
+
         if (containsNumber(getstudentID())) {
             CheckedOutPartsObject currentInfo = containsNumber(getstudentID()) ? new CheckedOutPartsObject(barcode,
-                    database.selectStudent(studentID, null).getRFID()) : new CheckedOutPartsObject(barcode,
+                    database.selectStudent(studentID, null).getRFID())
+                    : new CheckedOutPartsObject(barcode,
                     database.selectStudent(studentID, getstudentID()).getRFID());
             for (CheckedOutPartsObject checkoutPart : checkoutParts) {
                 if (checkoutPart.equals(currentInfo)) {
