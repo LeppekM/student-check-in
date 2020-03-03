@@ -1,7 +1,7 @@
 package InventoryController;
 
-import HelperClasses.ImageViewPane;
 import Database.ObjectClasses.Worker;
+import HelperClasses.ImageViewPane;
 import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;

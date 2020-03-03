@@ -5,7 +5,6 @@ import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.StudentCheckIn;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;

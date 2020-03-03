@@ -1,19 +1,12 @@
 package Database;
 
 import HelperClasses.DatabaseHelper;
-import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-
 import java.sql.*;
-import java.time.ZoneId;
-import java.util.Date;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class queries the database for checked out items, and returns a student name, part name, quantity checked out, date checked out, and due date

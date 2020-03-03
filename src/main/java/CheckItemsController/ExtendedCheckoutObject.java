@@ -1,7 +1,5 @@
 package CheckItemsController;
 
-import java.time.LocalDate;
-
 /**
  * Stores info about an extended checkout object
  */

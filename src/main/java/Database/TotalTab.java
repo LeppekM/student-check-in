@@ -1,7 +1,6 @@
 package Database;
 
 import Database.ObjectClasses.Part;
-import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

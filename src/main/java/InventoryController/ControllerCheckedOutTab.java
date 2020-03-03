@@ -1,7 +1,6 @@
 package InventoryController;
 
 import Database.CheckedOutParts;
-import Database.ObjectClasses.Part;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
@@ -32,7 +31,7 @@ import java.util.function.Predicate;
 /**
  * This class acts as the controller for the checked out items part of the inventory tab
  */
-public class ControllerCheckedOutTab  extends ControllerInventoryPage implements Initializable {
+public class ControllerCheckedOutTab extends ControllerInventoryPage implements Initializable {
 
     @FXML
     private VBox checkedOutPage;
@@ -108,9 +107,9 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         checkedOutAtCol.setStyle("-fx-font-size: 18px");
         checkedOutAtCol.setResizable(false);
         checkedOutAtCol.setCellValueFactory(col -> col.getValue().getValue().getCheckedOutAt());
-        checkedOutAtCol.setCellFactory(col -> new TreeTableCell<CheckedOutTabTableRow, Date>(){
+        checkedOutAtCol.setCellFactory(col -> new TreeTableCell<CheckedOutTabTableRow, Date>() {
             @Override
-            protected void updateItem(Date date, boolean empty){
+            protected void updateItem(Date date, boolean empty) {
                 if (empty) {
                     setText("");
                 } else {
@@ -124,9 +123,9 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         dueDateCol.setStyle("-fx-font-size: 18px");
         dueDateCol.setResizable(false);
         dueDateCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
-        dueDateCol.setCellFactory(col -> new TreeTableCell<CheckedOutTabTableRow, Date>(){
+        dueDateCol.setCellFactory(col -> new TreeTableCell<CheckedOutTabTableRow, Date>() {
             @Override
-            protected void updateItem(Date date, boolean empty){
+            protected void updateItem(Date date, boolean empty) {
                 if (empty) {
                     setText("");
                 } else {
@@ -162,7 +161,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
         });
     }
 
-    public void exportCheckedOut(){
+    public void exportCheckedOut() {
         checkedOutParts = new CheckedOutParts();
         ObservableList<CheckedOutItems> list = checkedOutParts.getCheckedOutItems();
         export.exportCheckedOut(list);
@@ -171,7 +170,7 @@ public class ControllerCheckedOutTab  extends ControllerInventoryPage implements
     /**
      * This sets each column table to the corresponding field in the CheckedOutItems class, and then populates it.
      */
-    public void populateTable(){
+    public void populateTable() {
         tableRows.clear();
         checkedOutTable.getColumns().clear();
         checkedOutParts = new CheckedOutParts();

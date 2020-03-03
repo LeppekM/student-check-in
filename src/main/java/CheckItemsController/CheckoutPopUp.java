@@ -7,18 +7,13 @@ import Database.ObjectClasses.Worker;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.WindowEvent;
 
-import javax.swing.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;

@@ -1,18 +1,16 @@
 package CheckItemsController;
 
-import Database.*;
+import Database.Database;
 import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 
-import java.nio.file.Watchable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;

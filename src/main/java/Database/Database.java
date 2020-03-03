@@ -15,14 +15,13 @@ import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Database implements IController {
     //DB root pass: Userpassword123
@@ -63,6 +62,7 @@ public class Database implements IController {
 
     /**
      * Returns the connection to the database created by constructor method
+     *
      * @return the database connection
      */
     public Connection getConnection() {
@@ -71,6 +71,7 @@ public class Database implements IController {
 
     /**
      * This method uses an SQL query to get all items in the databse with a due date less than today's date
+     *
      * @return a list of overdue items
      */
     public ObservableList<OverdueItem> getOverdue() {
@@ -85,9 +86,9 @@ public class Database implements IController {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(overdue);
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 String dueAt = resultSet.getString("checkout.dueAt");
-                if (isOverdue(dueAt)){
+                if (isOverdue(dueAt)) {
                     data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
                             resultSet.getString("students.email"), resultSet.getString("parts.partName"),
                             resultSet.getLong("parts.barcode"), databaseHelper.convertStringtoDate(dueAt),
@@ -96,7 +97,7 @@ public class Database implements IController {
             }
             resultSet.close();
             statement.close();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             StudentCheckIn.logger.error("SQL Error: " + e.getLocalizedMessage());
             e.printStackTrace();
         }
@@ -105,12 +106,13 @@ public class Database implements IController {
 
     /**
      * Helper method to determine if item is overdue
+     *
      * @param date Due date of item
      * @return true if item is overdue; false otherwise
      */
-    public boolean isOverdue(String date){
+    public boolean isOverdue(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-        if(!date.isEmpty()) {
+        if (!date.isEmpty()) {
             try {
                 Date current = dateFormat.parse(databaseHelper.getCurrentDateTimeStamp());
                 Date dueDate = dateFormat.parse(date);
@@ -125,6 +127,7 @@ public class Database implements IController {
 
     /**
      * Helper method to get the current date
+     *
      * @return today's date
      */
     private static Date gettoday() {
@@ -134,6 +137,7 @@ public class Database implements IController {
 
     /**
      * Calculates the date that was 2 years ago from today
+     *
      * @return the date that was 2 years ago from today
      */
     private static Date getTwoYearsAgo() {
@@ -144,6 +148,7 @@ public class Database implements IController {
 
     /**
      * This uses an SQL query to soft delete an item from the database
+     *
      * @param partID a unique part id
      */
     public void deleteItem(int partID) {
@@ -162,6 +167,7 @@ public class Database implements IController {
      * For each part that's name equals partName, this sets the "isDeleted" value to 1, which is
      * true. This is called a soft delete, because the part is not actually removed from the
      * database, but will not show up in anything, since it is marked as deleted.
+     *
      * @param partName the name of the parts that are deleted
      */
     public void deleteParts(String partName) {
@@ -177,6 +183,7 @@ public class Database implements IController {
 
     /**
      * Gets a specific part from the database
+     *
      * @param partID unique id of the part
      * @return a Part
      */
@@ -202,6 +209,7 @@ public class Database implements IController {
 
     /**
      * Gets info about the student who most recently checked a part in or out
+     *
      * @param partID the part ID of the part being checked
      * @return a Student object that represents the student who last checked the part in or out
      */
@@ -231,13 +239,14 @@ public class Database implements IController {
 
     /**
      * Gets info about the most recent checkin/out transaction for the part with the matching part ID
+     *
      * @param partID the part ID of the part being checked
      * @return a CheckoutObject object that represents info about the part's last checkout
      */
     public CheckoutObject getLastCheckoutOf(int partID) {
         String query = "SELECT * FROM checkout WHERE partID = " + partID + ";";
         CheckoutObject checkoutObject = null;
-        String studentID = "", barcode= "", dueAt = "";
+        String studentID = "", barcode = "", dueAt = "";
         String checkoutAt = null, checkinAt = null;
 
         try {
@@ -286,21 +295,22 @@ public class Database implements IController {
 
     /**
      * Helper method to remove a fault
+     *
      * @param barcode barcode of faulty part
-     * @param name name of faulty part
+     * @param name    name of faulty part
      * @return partID
      */
-    private int getPartID(long barcode, String name){
+    private int getPartID(long barcode, String name) {
         String query = "select * from parts where partName = '" + name + "' and barcode = " + barcode + ";";
         int ID = 0;
-        try{
+        try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 ID = resultSet.getInt("partID");
             }
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ID;
@@ -308,26 +318,28 @@ public class Database implements IController {
 
     /**
      * Removes faulty part from table
+     *
      * @param barcode barcode of faulty part
-     * @param name name of faulty part
+     * @param name    name of faulty part
      */
-    public void resolveFault(long barcode, String name){
+    public void resolveFault(long barcode, String name) {
         int partID = getPartID(barcode, name);
         String query = "delete from fault where partID = " + partID + ";";
         String pquery = "update parts set isFaulty = 0, updatedAt = date('" + gettoday() + "'), updatedBy = '" +
                 this.worker.getName().replace("'", "\\'") + "' where partID = " + partID + ";";
-        try{
+        try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
             statement.executeUpdate(pquery);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Gets the fault description for the part with the matching part ID
+     *
      * @param partID the part ID for the part being checked
      * @return the fault description of the part
      */
@@ -348,6 +360,7 @@ public class Database implements IController {
 
     /**
      * Gets a part that has the matching part name
+     *
      * @param partName the name of the part being checked
      * @return the part with the matching part name
      */
@@ -374,6 +387,7 @@ public class Database implements IController {
 
     /**
      * Gets the name of the part that the barcode corresponds to
+     *
      * @param barcode the barcode for the part being checked
      * @return the name of the part
      */
@@ -396,6 +410,7 @@ public class Database implements IController {
 
     /**
      * Checks whether the part with the given part ID is currently checked out
+     *
      * @param partID the part ID of the part being checked
      * @return true if the matching part is checked out; false otherwise
      */
@@ -419,8 +434,9 @@ public class Database implements IController {
 
     /**
      * Gets a list of serial numbers used by a part with a given name, except for the part with the given part ID
+     *
      * @param partName the name of parts being checked
-     * @param partID the part ID of the part exempt from the search
+     * @param partID   the part ID of the part exempt from the search
      * @return the list of serial numbers
      */
     public ArrayList<String> getOtherSerialNumbersForPartName(String partName, String partID) {
@@ -442,8 +458,9 @@ public class Database implements IController {
 
     /**
      * Gets a list of barcodes used by a part with a given name, except for the part with the given part ID
+     *
      * @param partName the name of parts being checked
-     * @param partID the part ID of the part exempt from the search
+     * @param partID   the part ID of the part exempt from the search
      * @return the list of barcodes
      */
     public ArrayList<String> getOtherBarcodesForPartName(String partName, String partID) {
@@ -465,6 +482,7 @@ public class Database implements IController {
 
     /**
      * Gets a list of all barcodes used by parts with the given name
+     *
      * @param partName name of the part being checked
      * @return the list of barcodes
      */
@@ -490,6 +508,7 @@ public class Database implements IController {
 
     /**
      * Gets a list of all part IDs used by parts with the given name
+     *
      * @param partName name of the part being checked
      * @return the list of part IDs
      */
@@ -512,6 +531,7 @@ public class Database implements IController {
 
     /**
      * Gets a list of all serial numbers used by parts with the given name
+     *
      * @param partName name of the part being checked
      * @return the list of serial numbers
      */
@@ -534,6 +554,7 @@ public class Database implements IController {
 
     /**
      * Checks whether the parts with the given part name have unique barcodes
+     *
      * @param partName the name of the parts being checked
      * @return true if the part has unique barcodes; false otherwise
      */
@@ -553,6 +574,7 @@ public class Database implements IController {
 
     /**
      * Checks whether the parts with the given part name have unique serial numbers
+     *
      * @param partName the name of the parts being checked
      * @return true if the part has unique serial numbers; false otherwise
      */
@@ -572,6 +594,7 @@ public class Database implements IController {
 
     /**
      * Gets the number of parts that's part name matches the given part name
+     *
      * @param partName the part name being checked
      * @return the number of parts
      */
@@ -593,6 +616,7 @@ public class Database implements IController {
     /**
      * Gets a list of different part names for all parts. This is used for ensuring that when
      * a part name is added, it is not already used.
+     *
      * @return the list of distinct part names
      */
     public ArrayList<String> getUniquePartNames() {
@@ -613,6 +637,7 @@ public class Database implements IController {
     /**
      * Gets a list of different barcodes for all parts. This is used for ensuring that when
      * a barcode is added, it is not already used.
+     *
      * @return the list of distinct barcodes
      */
     public ArrayList<String> getUniqueBarcodes() {
@@ -634,6 +659,7 @@ public class Database implements IController {
      * This method returns a list of all distinct barcodes in the database, except for the ones
      * that belong to a part with the passed in part name. This is used for making sure not to
      * use an already existing barcode when adding parts.
+     *
      * @param partName the part name that is an exception
      * @return the list of barcodes
      */
@@ -655,6 +681,7 @@ public class Database implements IController {
 
     /**
      * This method checks to see whether the database contains a part with a passed in part name
+     *
      * @param partName the name of the part being checked
      * @return true if the database contains a part with part name that equals partName; false otherwise
      */
@@ -673,6 +700,7 @@ public class Database implements IController {
 
     /**
      * Gets the list of students from the database
+     *
      * @return observable list of students
      */
     public ObservableList<Student> getStudents() {
@@ -705,6 +733,7 @@ public class Database implements IController {
 
     /**
      * This method returns a list of all of the student emails in the system
+     *
      * @return the list of all student rfids
      */
     public ObservableList<String> getStudentRFIDs() {
@@ -730,6 +759,7 @@ public class Database implements IController {
 
     /**
      * This method returns a list of all of the student emails in the system
+     *
      * @return the list of all student emails
      */
     public ObservableList<String> getStudentEmails() {
@@ -755,11 +785,12 @@ public class Database implements IController {
 
     /**
      * Gets the list of workers from the database
+     *
      * @return observable list of workers
      */
-    public ObservableList<Worker> getWorkers(){
+    public ObservableList<Worker> getWorkers() {
         ObservableList<Worker> workerList = FXCollections.observableArrayList();
-        try{
+        try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM workers");
             String name;
@@ -773,7 +804,7 @@ public class Database implements IController {
             boolean over;
             boolean workers;
             boolean students;
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 name = resultSet.getString("workerName");
                 ID = resultSet.getInt("workerID");
                 pass = resultSet.getString("pass");
@@ -789,7 +820,7 @@ public class Database implements IController {
             }
             resultSet.close();
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
             StudentCheckIn.logger.error("Could not retrieve the list of students");
             alert.showAndWait();
@@ -800,6 +831,7 @@ public class Database implements IController {
 
     /**
      * This method gets a Worker object for the worker that has the passed in email
+     *
      * @param email the email of the worker to be retrieved
      * @return the Worker with the matching email
      */
@@ -885,6 +917,7 @@ public class Database implements IController {
 
     /**
      * This method checks whether pin matches one of the administrators' pins
+     *
      * @param pin the inputted pin that is being checked
      * @return true if pin is one of the administrators' pins; false otherwise
      */
@@ -909,14 +942,13 @@ public class Database implements IController {
     }
 
 
-
-
     /**
      * Gets a student from the database based on their RFID
+     *
      * @param ID RFID to search for
      * @return a student
      */
-    public Student selectStudent(int ID, String studentEmail){
+    public Student selectStudent(int ID, String studentEmail) {
         String query = null;
         String coList = null;
         String pList = null;
@@ -938,7 +970,7 @@ public class Database implements IController {
                     "inner join parts on checkout.partID = parts.partID " +
                     "inner join students on checkout.studentID = students.studentID " +
                     "where checkout.checkinAt is null";
-        }else if (ID == -1){
+        } else if (ID == -1) {
             studentEmail = studentEmail.replace("'", "\\'");
             query = "select * from students where email = '" + studentEmail + "';";
             coList = "select students.studentName, students.email, students.studentID, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
@@ -966,11 +998,11 @@ public class Database implements IController {
         ObservableList<CheckedOutItems> checkedOutItems = FXCollections.observableArrayList();
         ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
         ObservableList<SavedPart> savedParts = FXCollections.observableArrayList();
-        try{
+        try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 name = resultSet.getString("studentName");
                 email = resultSet.getString("email");
                 id = resultSet.getInt("studentID");
@@ -981,7 +1013,7 @@ public class Database implements IController {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(coList);
             resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 checkedOutItems.add(new CheckedOutItems(
                         resultSet.getInt("checkout.checkoutID"),
                         resultSet.getString("students.studentName"),
@@ -1000,10 +1032,10 @@ public class Database implements IController {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(oList);
             resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 String dueAt = resultSet.getString("checkout.dueAt");
                 int studentID = resultSet.getInt("checkout.studentID");
-                if (isOverdue(dueAt) && (studentID==ID || email.equals(studentEmail))) {
+                if (isOverdue(dueAt) && (studentID == ID || email.equals(studentEmail))) {
                     overdueItems.add(new OverdueItem(
                             resultSet.getInt("checkout.studentID"),
                             resultSet.getString("students.studentName"),
@@ -1020,7 +1052,7 @@ public class Database implements IController {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(pList);
             resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
                         resultSet.getString("parts.partName"),
                         resultSet.getString("checkout.checkoutAt"),
@@ -1037,18 +1069,18 @@ public class Database implements IController {
                 date = checkedOutItems.get(0).getCheckedOutDate().get();
             }
             // date null if no checkouts
-            for (int i = 0; i < checkedOutItems.size() && date != null; i++){
-                    Date d1 = checkedOutItems.get(i).getCheckedOutDate().get();
-                    if (d1.after(date)){
-                        date = checkedOutItems.get(i).getCheckedOutDate().get();
-                    }
+            for (int i = 0; i < checkedOutItems.size() && date != null; i++) {
+                Date d1 = checkedOutItems.get(i).getCheckedOutDate().get();
+                if (d1.after(date)) {
+                    date = checkedOutItems.get(i).getCheckedOutDate().get();
+                }
             }
             if (date != null) {
                 student = new Student(name, uniqueID, id, email, date.toString(), checkedOutItems, overdueItems, savedParts);
             } else {
                 student = new Student(name, uniqueID, id, email, "", checkedOutItems, overdueItems, savedParts);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return student;
@@ -1056,9 +1088,10 @@ public class Database implements IController {
 
     /**
      * Adds a new student to the database
+     *
      * @param s student to be added
      */
-    public void addStudent(Student s){
+    public void addStudent(Student s) {
         String email = s.getEmail().replace("'", "\\'");
         String name = s.getName().replace("'", "\\'");
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
@@ -1067,7 +1100,7 @@ public class Database implements IController {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
             StudentCheckIn.logger.error("Could not add student, SQL Exception");
             alert.showAndWait();
@@ -1078,6 +1111,7 @@ public class Database implements IController {
     /**
      * Adds a student to the database without the student's rfid. This is used for
      * importing a bunch of students when the rfid is unknown.
+     *
      * @param s the student to be added
      */
     public boolean importStudent(Student s) {
@@ -1090,7 +1124,7 @@ public class Database implements IController {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
             StudentCheckIn.logger.error("Could not add student " + s.getName().replace("'", "\\'") + ", SQL Exception");
             alert.showAndWait();
@@ -1106,15 +1140,15 @@ public class Database implements IController {
         return true;
     }
 
-    public void updateStudent(Student s){
+    public void updateStudent(Student s) {
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
                 s.getName().replace("'", "\\'") + "', students.email = '" + s.getEmail().replace("'", "\\'") + "', students.updatedAt = date('" +
-                gettoday().toString() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() +";";
-        try{
+                gettoday().toString() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
+        try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update student");
             StudentCheckIn.logger.error("Could not update student, SQL Exception");
             alert.showAndWait();
@@ -1124,17 +1158,18 @@ public class Database implements IController {
 
     /**
      * Deletes a student from the database
+     *
      * @param email students email
      */
-    public void deleteStudent(String email){
+    public void deleteStudent(String email) {
         //String query = "delete from students where students.studentName = '" + name.replace("'", "\\'") + "';";
         String query = "delete from students where email = ?";
-        try{
+        try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
             statement.execute();
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete student.");
             StudentCheckIn.logger.error("SQL Exception: Could not delete student.");
             alert.showAndWait();
@@ -1144,17 +1179,18 @@ public class Database implements IController {
 
     /**
      * Adds a new worker to the database
+     *
      * @param w worker to be added
      */
-    public void addWorker(Worker w){
-        int bit = w.isAdmin()? 1 : 0;
+    public void addWorker(Worker w) {
+        int bit = w.isAdmin() ? 1 : 0;
         String query = "insert into workers (email, workerName, pin, pass, ID, isAdmin, createdAt, createdBy) values ('" + w.getEmail().replace("'", "\\'") +
-                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " +w.getRIFD()+ ","+ bit + ", date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " + w.getRIFD() + "," + bit + ", date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add worker");
             StudentCheckIn.logger.error("Could not add worker, SQL Exception");
             alert.showAndWait();
@@ -1164,15 +1200,16 @@ public class Database implements IController {
 
     /**
      * Deletes a worker from the database
+     *
      * @param name workers name
      */
-    public void deleteWorker(String name){
+    public void deleteWorker(String name) {
         String query = "delete from workers where workers.workerName = '" + name.replace("'", "\\'") + "';";
-        try{
+        try {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete worker.");
             StudentCheckIn.logger.error("SQL Exception: Could not delete worker.");
             alert.showAndWait();
@@ -1180,10 +1217,10 @@ public class Database implements IController {
         }
     }
 
-    public void updateWorker(Worker w){
+    public void updateWorker(Worker w) {
         int admin = w.isAdmin() ? 1 : 0;
-        int over = w.isOver() ? 1: 0;
-        int edit = w.isEdit() ? 1: 0;
+        int over = w.isOver() ? 1 : 0;
+        int edit = w.isEdit() ? 1 : 0;
         int remove = w.isRemove() ? 1 : 0;
         int work = w.isWorker() ? 1 : 0;
         String query = "update workers set workers.workerName = '" + w.getName().replace("'", "\\'") + "', workers.pin = " +
@@ -1192,11 +1229,11 @@ public class Database implements IController {
                 ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
                 gettoday().toString() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
                 w.getID() + ";";
-        try{
+        try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update worker");
             StudentCheckIn.logger.error("Could not update worker, SQL Exception");
             alert.showAndWait();
@@ -1206,6 +1243,7 @@ public class Database implements IController {
 
     /**
      * This it to verify if the barcode is unused
+     *
      * @param barcode to check against
      * @return list of barcodes that match
      */
@@ -1219,7 +1257,7 @@ public class Database implements IController {
                 barcodes.add(resultSet.getInt("barcode"));
             }
             statement.close();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't retrieve the list of barcodes");
             alert.showAndWait();
             e.printStackTrace();
@@ -1230,11 +1268,12 @@ public class Database implements IController {
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each class.
+     *
      * @param worker the currently logged in worker
      */
     @Override
     public void initWorker(Worker worker) {
-        if (this.worker == null){
+        if (this.worker == null) {
             this.worker = worker;
         }
     }

@@ -2,7 +2,6 @@ package InventoryController;
 
 import Database.Database;
 import Database.FaultyPartLookup;
-import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Worker;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -26,7 +25,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;

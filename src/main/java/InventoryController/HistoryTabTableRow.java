@@ -3,9 +3,6 @@ package InventoryController;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 
-
-import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.Date;
 
 /**

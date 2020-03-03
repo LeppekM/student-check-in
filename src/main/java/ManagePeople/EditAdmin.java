@@ -14,8 +14,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-import java.util.Optional;
-
 public class EditAdmin implements IController {
 
     @FXML

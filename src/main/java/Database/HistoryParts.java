@@ -6,7 +6,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.time.LocalDate;
 
 /**
  * This class queries the database for the transaction history, and returns a student name, part name, serial number, action, quantity, date

@@ -1,14 +1,14 @@
 package InventoryController;
 
-import Database.*;
-
+import Database.EditPart;
 import Database.ObjectClasses.Part;
+import Database.VendorInformation;
 import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import com.jfoenix.controls.JFXSpinner;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;

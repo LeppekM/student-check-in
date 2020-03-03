@@ -5,7 +5,6 @@ import Database.OverdueItem;
 import InventoryController.CheckedOutItems;
 import InventoryController.FaultyPartTabTableRow;
 import InventoryController.HistoryTabTableRow;
-import InventoryController.OverdueTabTableRow;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import org.apache.poi.ss.usermodel.*;
@@ -19,17 +18,17 @@ public class ExportToExcel {
 
     /**
      * Exports faulty parts to excel file
+     *
      * @param list List of faulty parts
      */
-    public void exportFaulty(ObservableList<FaultyPartTabTableRow> list){
+    public void exportFaulty(ObservableList<FaultyPartTabTableRow> list) {
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
         fileChooserSave.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
 
 
-
-        String[] columns = {"Part Name", "Location", "Barcode",  "Student Name", "Student Email","Price","Fault Description"}; //Number of columns in tableview
+        String[] columns = {"Part Name", "Location", "Barcode", "Student Name", "Student Email", "Price", "Fault Description"}; //Number of columns in tableview
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
 
@@ -50,7 +49,7 @@ public class ExportToExcel {
             cell.setCellStyle(headerCellStyle);
         }
 
-        for (FaultyPartTabTableRow items :list) {
+        for (FaultyPartTabTableRow items : list) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getPartName().getValue());
             row.createCell(1).setCellValue(items.getLocation().getValue());
@@ -79,14 +78,14 @@ public class ExportToExcel {
 
     /**
      * Exports checked out items to a excel file
+     *
      * @param list List of checked out items and their information
      */
-    public void exportCheckedOut(ObservableList<CheckedOutItems> list){
+    public void exportCheckedOut(ObservableList<CheckedOutItems> list) {
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
         fileChooserSave.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
-
 
 
         String[] columns = {"Student Name", "Part Name", "Barcode", "Check Out Date", "Due Date"}; //Number of columns in tableview
@@ -110,13 +109,13 @@ public class ExportToExcel {
             cell.setCellStyle(headerCellStyle);
         }
 
-        for (CheckedOutItems items :list) {
+        for (CheckedOutItems items : list) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getStudentName().getValue());
             row.createCell(1).setCellValue(items.getPartName().getValue());
             row.createCell(2).setCellValue(items.getBarcode().getValue());
-            row.createCell(3).setCellValue(items.getCheckedOutDate().getValue());
-            row.createCell(4).setCellValue(items.getDueDate().getValue());
+            row.createCell(3).setCellValue(items.getCheckedOutDate().getValue().toString());
+            row.createCell(4).setCellValue(items.getDueDate().getValue().toString());
         }
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);
@@ -135,6 +134,7 @@ public class ExportToExcel {
 
     /**
      * Exports overdue items to excel sheet
+     *
      * @param list List of overdue items
      */
     public void exportOverdue(ObservableList<OverdueItem> list) {
@@ -142,7 +142,6 @@ public class ExportToExcel {
         fileChooserSave.setTitle("Save File");
         fileChooserSave.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
-
 
 
         String[] columns = {"Student Name", "Student ID", "Part Name", "Barcode", "Due Date"}; //Number of columns in tableview
@@ -166,13 +165,13 @@ public class ExportToExcel {
             cell.setCellStyle(headerCellStyle);
         }
 
-        for (OverdueItem items :list) {
+        for (OverdueItem items : list) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getName().getValue());
             row.createCell(1).setCellValue(items.getID().getValue());
             row.createCell(2).setCellValue(items.getName().getValue());
             row.createCell(3).setCellValue(items.getBarcode().getValue());
-            row.createCell(4).setCellValue(items.getDate().getValue());
+            row.createCell(4).setCellValue(items.getDate().getValue().toString());
         }
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);
@@ -191,14 +190,14 @@ public class ExportToExcel {
 
     /**
      * Exports the list of parts to excel
+     *
      * @param list List of parts to export
      */
-    public void exportPartList(ObservableList<Part> list){
+    public void exportPartList(ObservableList<Part> list) {
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
         fileChooserSave.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
-
 
 
         String[] columns = {"Part Name", "Serial Number", "Location", "Barcode"}; //Number of columns in tableview
@@ -222,7 +221,7 @@ public class ExportToExcel {
             cell.setCellStyle(headerCellStyle);
         }
 
-        for (Part items :list) {
+        for (Part items : list) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getPartName());
             row.createCell(1).setCellValue(items.getSerialNumber());
@@ -246,6 +245,7 @@ public class ExportToExcel {
 
     /**
      * Exports transaction history to excel
+     *
      * @param list List of transactions
      */
     public void exportTransactionHistory(ObservableList<HistoryTabTableRow> list) {
@@ -253,7 +253,6 @@ public class ExportToExcel {
         fileChooserSave.setTitle("Save File");
         fileChooserSave.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
-
 
 
         String[] columns = {"Student Name", "Part Name", "Barcode", "Action", "Date"}; //Number of columns in tableview
@@ -277,13 +276,13 @@ public class ExportToExcel {
             cell.setCellStyle(headerCellStyle);
         }
 
-        for (HistoryTabTableRow items :list) {
+        for (HistoryTabTableRow items : list) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getStudentName().get());
             row.createCell(1).setCellValue(items.getPartName().get());
             row.createCell(2).setCellValue(items.getBarcode().get());
             row.createCell(3).setCellValue(items.getAction().get());
-            row.createCell(4).setCellValue(items.getDate().toString());
+            row.createCell(4).setCellValue(items.getDate().get().toString());
         }
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);

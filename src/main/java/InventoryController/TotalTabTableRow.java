@@ -3,7 +3,6 @@ package InventoryController;
 import Database.Database;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
-import javafx.css.SimpleStyleableIntegerProperty;
 
 /**
  * Represents all of the info about parts on the total inventory tab

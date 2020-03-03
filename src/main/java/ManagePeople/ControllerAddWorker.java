@@ -1,6 +1,6 @@
 package ManagePeople;
 
-import Database.*;
+import Database.Database;
 import Database.ObjectClasses.Worker;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;

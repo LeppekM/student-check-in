@@ -7,7 +7,10 @@ import Database.StudentInfo;
 import HelperClasses.AdminPinRequestController;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXTreeTableColumn;
+import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -35,7 +38,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -77,6 +79,7 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * This method sets the data in the Manage Students page.
+     *
      * @param location  used to resolve relative paths for the root object, or null if the location is not known.
      * @param resources used to localize the root object, or null if the root object was not localized.
      */
@@ -154,9 +157,9 @@ public class ControllerManageStudents implements IController, Initializable {
                         email = tableRow.getValue().getEmail().getValue();
 
                         return ((firstName != null && firstName.toLowerCase().contains(input))
-                            || (id != null && id.toLowerCase().contains(input))
-                            || (email != null && email.toLowerCase().contains(input)))
-                        || (lastName != null && lastName.toLowerCase().contains(input));
+                                || (id != null && id.toLowerCase().contains(input))
+                                || (email != null && email.toLowerCase().contains(input)))
+                                || (lastName != null && lastName.toLowerCase().contains(input));
                     }
                 });
             }
@@ -190,7 +193,6 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * This method fills the table with the data, if there is any
-     *
      */
     public void populateTable() {
         tableRows.clear();
@@ -215,7 +217,6 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * This method creates a new student
-     *
      */
     public void addStudent() {
         Stage stage = new Stage();
@@ -332,6 +333,7 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * Deletes a student
+     *
      * @param actionEvent button event
      */
     public void deleteStudent(ActionEvent actionEvent) {
@@ -346,7 +348,6 @@ public class ControllerManageStudents implements IController, Initializable {
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     database.deleteStudent(email);
-                    //data.remove(row);
                     populateTable();
                 }
             }
@@ -355,6 +356,7 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * Brings up the request pin pop up
+     *
      * @param action reason for pop up
      * @return true if the pin is valid
      */
@@ -402,17 +404,17 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * This brings up the edit student window
+     *
      * @param row row in the table that the student is selected
      */
     public void edit(int row) {
         Stage stage = new Stage();
         ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(row).getValue();
         Student s = null;
-        if (Integer.parseInt(r.getId().get()) == 0){
+        if (Integer.parseInt(r.getId().get()) == 0) {
             s = studentInfo.selectStudentClean(r.getEmail().get());
-        }
-        else {
-           s = database.selectStudent(Integer.parseInt(r.getId().get()),null);
+        } else {
+            s = database.selectStudent(Integer.parseInt(r.getId().get()), null);
         }
 
         try {
@@ -459,6 +461,7 @@ public class ControllerManageStudents implements IController, Initializable {
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each necessary class
+     *
      * @param worker the currently logged in worker
      */
     @Override
@@ -492,6 +495,7 @@ public class ControllerManageStudents implements IController, Initializable {
 
     /**
      * This is an error that shows up if a student(s) can't be imported
+     *
      * @param failedImports list of failed students
      */
     private void failedImportAlert(List<Student> failedImports) {

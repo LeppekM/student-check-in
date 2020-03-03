@@ -1,11 +1,10 @@
 package InventoryController;
 
-import Database.*;
+import Database.HistoryParts;
 import Database.ObjectClasses.Worker;
 import HelperClasses.DatabaseHelper;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,11 +26,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;

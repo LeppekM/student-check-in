@@ -1,13 +1,12 @@
 package ManagePeople;
 
-import Database.*;
+import Database.Database;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.StageWrapper;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -18,8 +17,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ControllerAddStudent implements Initializable, IController {
 

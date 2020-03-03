@@ -1,11 +1,10 @@
 package HelperClasses;
 
-import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Worker;
-import InventoryController.ControllerShowPart;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -16,10 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -27,10 +23,8 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 

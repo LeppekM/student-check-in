@@ -3,15 +3,16 @@ package ManagePeople;
 import Database.Database;
 import Database.ObjectClasses.Worker;
 import InventoryController.IController;
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-
-import java.util.Optional;
 
 public class EditWorker implements IController {
 

@@ -6,7 +6,6 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
 import HelperClasses.AutoCompleteTextField;
-import HelperClasses.DatabaseHelper;
 import HelperClasses.StageWrapper;
 import InventoryController.ControllerMenu;
 import InventoryController.IController;
@@ -760,8 +759,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
 
-
-
     /**
      * Checks if barcodes are same
      *
@@ -777,13 +774,12 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
 
-
     /**
      * Helper method to checkin an item
      */
     private void faultyCheckinHelper(String text, long barcode) {
         faultyCheckIn.setPartToFaultyStatus(barcode);
-        faultyCheckIn.addToFaultyTable(Integer.parseInt(getstudentID()),barcode, text);
+        faultyCheckIn.addToFaultyTable(Integer.parseInt(getstudentID()), barcode, text);
         checkOut.setItemtoCheckedin(Integer.parseInt(getstudentID()), barcode);
     }
 
@@ -797,7 +793,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return result.orElse(null);
     }
 
-    private void faultyItems(){
+    private void faultyItems() {
         faultyHelper1();
         faultyHelper2();
         faultyHelper3();

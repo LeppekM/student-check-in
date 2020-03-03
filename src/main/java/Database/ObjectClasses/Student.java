@@ -1,9 +1,9 @@
 package Database.ObjectClasses;
 
+import Database.OverdueItem;
 import InventoryController.CheckedOutItems;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import Database.OverdueItem;
 
 /**
  * This class is a Java Object that represents a Student

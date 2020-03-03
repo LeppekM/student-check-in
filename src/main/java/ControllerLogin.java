@@ -1,6 +1,6 @@
 import Database.Database;
-import HelperClasses.ImageViewPane;
 import Database.ObjectClasses.Worker;
+import HelperClasses.ImageViewPane;
 import InventoryController.ControllerMenu;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
@@ -17,11 +17,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 

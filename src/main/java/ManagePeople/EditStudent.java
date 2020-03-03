@@ -3,10 +3,10 @@ package ManagePeople;
 import CheckItemsController.CheckoutPopUp;
 import CheckItemsController.SavedPopUp;
 import Database.Database;
-import Database.ObjectClasses.Worker;
-import Database.OverdueItem;
 import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
+import Database.ObjectClasses.Worker;
+import Database.OverdueItem;
 import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
@@ -16,13 +16,10 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,10 +34,6 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class EditStudent implements IController {
 
