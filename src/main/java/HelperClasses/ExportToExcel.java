@@ -169,7 +169,7 @@ public class ExportToExcel {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getName().getValue());
             row.createCell(1).setCellValue(items.getID().getValue());
-            row.createCell(2).setCellValue(items.getName().getValue());
+            row.createCell(2).setCellValue(items.getPart().getValue());
             row.createCell(3).setCellValue(items.getBarcode().getValue());
             row.createCell(4).setCellValue(items.getDate().getValue().toString());
         }

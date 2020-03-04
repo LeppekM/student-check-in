@@ -314,7 +314,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     }
 
     public void exportParts() {
-        export.exportPartList(data);
+        ObservableList<Part> list = totalTab.getTotalTabParts();
+        export.exportPartList(list);
     }
 
     /**
