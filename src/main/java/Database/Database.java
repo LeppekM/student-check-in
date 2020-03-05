@@ -1156,13 +1156,26 @@ public class Database implements IController {
         }
     }
 
+    private boolean studentHasCheckedOutItems(String email) {
+
+        Student s = selectStudent(-1, email);
+        if(s.getRFID() == 0){
+            return false;
+        }
+        return !s.getCheckedOut().isEmpty();
+    }
+
     /**
      * Deletes a student from the database
      *
      * @param email students email
      */
     public void deleteStudent(String email) {
-        //String query = "delete from students where students.studentName = '" + name.replace("'", "\\'") + "';";
+        if (studentHasCheckedOutItems(email)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Student could not be deleted because they have parts checked out");
+            alert.showAndWait();
+            return;
+        }
         String query = "delete from students where email = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
