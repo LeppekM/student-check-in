@@ -29,7 +29,7 @@ public class ExtendedCheckOut {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         catch (NullPointerException e){
-            stageWrapper.errorAlert("Barcode " + barcode +" was not found in system, so was not checked out");
+            stageWrapper.errorAlert("Barcode " + barcode +" is already checked out by another student");
         }
 
     }

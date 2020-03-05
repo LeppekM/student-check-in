@@ -83,6 +83,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
 
     private static String professor, course, dueDate;
+    private boolean isCheckedOutByOtherStudent = true;
 
     private String faulty1, faulty2, faulty3, faulty4, faulty5;
     private String faultyText;
@@ -261,7 +262,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
             } else {
                 submitMultipleItems();
             }
+            if(!isCheckedOutByOtherStudent){
+                return;
+            }
             stageWrapper.checkoutAlert("Success", "Part(s) Checked in/out successfully");
+
             reset();
 
         }
@@ -274,7 +279,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
         for (MultipleCheckoutObject barcode : barcodes) {
             if (barcode.isCheckedOut()) {
-                checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+                isCheckedOutByOtherStudent =checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
             } else {
                 for (int i = 0; i < barcode.getQuantity(); i++) {
                     if (barcode.isFaulty()) {
@@ -334,7 +339,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 if (barcode.isExtended()) {
                     extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
                 } else {
-                    checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                    isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                 }
             }
         }
@@ -886,7 +891,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 extended1.setText("Faulty?");
                                 extended1.setVisible(true);
                                 statusLabel.setText("In");
-                            } else {
+                            } else{
                                 statusLabel.setText("Out");
                                 extended1.setText("Extended?");
                                 extended.setDisable(false);
