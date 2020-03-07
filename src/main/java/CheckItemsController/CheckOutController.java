@@ -84,6 +84,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     private static String professor, course, dueDate;
     private boolean isCheckedOutByOtherStudent = true;
+    private boolean flag1, flag2, flag3, flag4, flag5 = true;
 
     private String faulty1, faulty2, faulty3, faulty4, faulty5;
     private String faultyText;
@@ -91,6 +92,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private static final int PAUSE_DELAY = 5;
     private static PauseTransition delay = new PauseTransition(Duration.minutes(PAUSE_DELAY));
     private Worker worker;
+    private int counter = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -109,7 +111,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
         dropBarcode();
         faultyItems();
     }
-
+    private void resetFlag(){
+        flag1 = true;
+        flag2 = true;
+        flag3 = true;
+        flag4 = true;
+        flag5 = true;
+    }
 
     /**
      * If no movement is recorded on page for 5 minutes, item will submit automatically
@@ -235,6 +243,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
      */
     public void submit() {
+        counter = 0;
+        resetFlag();
         Student thisStudent = null;
         if (containsNumber(getstudentID())) {
             thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
@@ -262,7 +272,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
             } else {
                 submitMultipleItems();
             }
-            if(!isCheckedOutByOtherStudent){
+
+            if (!flag1 || !flag2 || !flag3 || !flag4 || !flag5) {
                 return;
             }
             stageWrapper.checkoutAlert("Success", "Part(s) Checked in/out successfully");
@@ -276,10 +287,27 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Submits multiple items
      */
     private void submitMultipleItems() {
+
         List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
         for (MultipleCheckoutObject barcode : barcodes) {
             if (barcode.isCheckedOut()) {
-                isCheckedOutByOtherStudent =checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+                if(!flag1 || !flag2 || !flag3 || !flag4||!flag5){
+                    return;
+                }
+                if (counter == 0) {
+                    flag1 = checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+                } else if (counter == 1) {
+                    flag2 = checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+                } else if (counter == 2) {
+                    flag3 = checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+                } else if (counter == 3) {
+                    flag4 = checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+                } else if (counter == 4) {
+                    flag5 = checkOut.addMultipleCheckouts(barcode.getBarcode(), barcode.getStudentID(), barcode.getQuantity());
+                } else {
+                    System.out.println("Weird case shouldn't happen");
+                }
+                counter++;
             } else {
                 for (int i = 0; i < barcode.getQuantity(); i++) {
                     if (barcode.isFaulty()) {
@@ -337,9 +365,30 @@ public class CheckOutController extends ControllerMenu implements IController, I
         for (MultipleCheckoutObject barcode : collectMultipleBarcodes()) {
             for (int i = 0; i < barcode.getQuantity(); i++) {
                 if (barcode.isExtended()) {
-                    extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
+                    if (counter ==0){
+                        flag1 =extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
+                    } else if (counter ==1){
+                        flag2 = extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
+                    } else if (counter ==2){
+                        flag3 =extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
+                    } else if (counter ==3){
+                        flag4 =extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
+                    } else {
+                        flag5 =extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
+                    }
+
                 } else {
-                    isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                    if (counter ==0){
+                        flag1 =isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                    } else if (counter ==1){
+                        flag2 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                    } else if (counter ==2){
+                        flag3 =isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                    } else if (counter ==3){
+                        flag4 =isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                    } else {
+                        flag5 =isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                    }
                 }
             }
         }
@@ -891,7 +940,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 extended1.setText("Faulty?");
                                 extended1.setVisible(true);
                                 statusLabel.setText("In");
-                            } else{
+                            } else {
                                 statusLabel.setText("Out");
                                 extended1.setText("Extended?");
                                 extended.setDisable(false);

@@ -18,7 +18,7 @@ public class ExtendedCheckOut {
      * @param barcode
      * @param studentID
      */
-    public void addExtendedCheckout(long barcode, int studentID,  String profName, String courseName, String dueDate){
+    public boolean addExtendedCheckout(long barcode, int studentID,  String profName, String courseName, String dueDate){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             String extendedCheckout = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, prof, course, dueAt)\n" +
                     "VALUE(?,?,?,?,?,?,?);";
@@ -30,7 +30,9 @@ public class ExtendedCheckOut {
         }
         catch (NullPointerException e){
             stageWrapper.errorAlert("Barcode " + barcode +" is already checked out by another student");
+            return false;
         }
+        return true;
 
     }
 

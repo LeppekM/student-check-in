@@ -39,7 +39,6 @@ public class CheckingOutPart {
                 PreparedStatement statement = connection.prepareStatement(addToCheckouts);
                 addNewCheckoutHelper(barcode, studentID, statement).execute();
                 statement.close();
-                return true;
             } catch (SQLException e) {
                 StudentCheckIn.logger.error("SQLException: Can't connect to the database when adding new checkout item.");
                 throw new IllegalStateException("Cannot connect to the database", e);
@@ -50,6 +49,7 @@ public class CheckingOutPart {
         }
         else {
             stageWrapper.errorAlert("Barcode was not found in database, part was not checked out");
+            return false;
         }
         return true;
     }
