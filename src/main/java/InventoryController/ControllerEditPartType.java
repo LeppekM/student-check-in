@@ -195,16 +195,16 @@ public class ControllerEditPartType extends ControllerEditPart {
                 barcodeField.getText(), manufacturerField.getText(), vendor)) {
             isValid = false;
             fieldErrorAlert();
-        } else {
-            ArrayList<String> partNames = database.getUniquePartNames();
-            if (!nameField.getText().equals(part.getPartName())) {
-                for (String name: partNames){
-                    if (name.equals(nameField.getText())){
-                        isValid = false;
-                        uniquePartNameError();
-                        nameField.setText(part.getPartName());
-                    }
-                }
+//        } else {
+//            ArrayList<String> partNames = database.getUniquePartNames();
+//            if (!nameField.getText().equals(part.getPartName())) {
+//                for (String name: partNames){
+//                    if (name.equals(nameField.getText())){
+//                        //isValid = true;
+//                        //uniquePartNameError();
+//                        nameField.setText(part.getPartName());
+//                    }
+//                }
             } else if (!barcodeField.getText().equals(part.getBarcode().toString())) {
                 if (database.hasUniqueBarcodes(part.getPartName())) {
                     isValid = false;
@@ -224,7 +224,6 @@ public class ControllerEditPartType extends ControllerEditPart {
             if (newVendor){
                 vendorInformation.createNewVendor(vendor, vendorInformation());
             }
-        }
         return isValid;
     }
 
