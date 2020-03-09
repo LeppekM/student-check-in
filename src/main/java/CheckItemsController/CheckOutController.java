@@ -940,7 +940,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 extended1.setText("Faulty?");
                                 extended1.setVisible(true);
                                 statusLabel.setText("In");
-                            } else {
+                            }
+                            else if (!checkOut.errorCheck(getBarcode(), Integer.parseInt(getstudentID()))){
+                                statusLabel.setText("Error");
+                                extended1.setVisible(false);
+
+                            }
+                            else {
                                 statusLabel.setText("Out");
                                 extended1.setText("Extended?");
                                 extended.setDisable(false);
@@ -974,7 +980,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 extended.setDisable(true);
                                 extended2.setText("Faulty?");
                                 extended2.setVisible(true);
-                            } else {
+                            }
+                            else if (!checkOut.errorCheck(getBarcode2(), Integer.parseInt(getstudentID()))){
+                                statusLabel2.setText("Error");
+                                extended2.setVisible(false);
+
+                            }
+                            else {
                                 statusLabel2.setText("Out");
                                 extended2.setText("Extended?");
                                 extended.setDisable(false);
@@ -999,7 +1011,12 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 extended.setDisable(true);
                                 extended3.setText("Faulty?");
                                 extended3.setVisible(true);
-                            } else {
+                            }
+                            else if (!checkOut.errorCheck(getBarcode3(), Integer.parseInt(getstudentID()))){
+                                statusLabel3.setText("Error");
+                                extended3.setVisible(false);
+
+                            }else {
                                 statusLabel3.setText("Out");
                                 extended3.setText("Extended?");
                                 extended.setDisable(false);
@@ -1024,7 +1041,12 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 extended.setDisable(true);
                                 extended4.setText("Faulty?");
                                 extended4.setVisible(true);
-                            } else {
+                            }
+                            else if (!checkOut.errorCheck(getBarcode4(), Integer.parseInt(getstudentID()))){
+                                statusLabel4.setText("Error");
+                                extended4.setVisible(false);
+
+                            }else {
                                 statusLabel4.setText("Out");
                                 extended4.setText("Extended?");
                                 extended.setDisable(false);
@@ -1050,10 +1072,14 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 extended.setDisable(true);
                                 extended5.setText("Faulty?");
                                 extended5.setVisible(true);
-                            } else {
+                            }
+                            else if (!checkOut.errorCheck(getBarcode5(), Integer.parseInt(getstudentID()))){
+                                statusLabel5.setText("Error");
+                                extended5.setVisible(false);
+                            }else {
                                 statusLabel5.setText("Out");
                                 extended5.setText("Extended?");
-                                extended.setDisable(false);
+                                extended5.setDisable(false);
                             }
                             if (barcodesSame(getBarcode5())) {
                                 newQuantity5.setDisable(false);

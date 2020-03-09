@@ -26,6 +26,7 @@ public class CheckingOutPart {
     private StageWrapper stageWrapper = new StageWrapper();
 
 
+
     /**
      * Adds a new checkout item to the database
      * @param barcode
@@ -81,6 +82,30 @@ public class CheckingOutPart {
         return true;
     }
 
+    public boolean errorCheck(long barcode, int studentID){
+        String query = "select studentID from checkout where barcode = ? and checkinAt is null";
+        int returnedStudentID = 0;
+
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setLong(1, barcode);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                returnedStudentID =rs.getInt("studentID");
+            }
+            statement.close();
+            rs.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        if (returnedStudentID == 0){
+            return true;
+        }
+        System.out.println(returnedStudentID);
+        System.out.println(studentID);
+        return returnedStudentID == studentID;
+    }
     /**
      * Gets a list of all barcodes
      * @param barcode
