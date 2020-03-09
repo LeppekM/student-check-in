@@ -246,6 +246,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
         counter = 0;
         resetFlag();
         Student thisStudent = null;
+        if (!statusError()) {
+            stageWrapper.errorAlert("Error, parts were not checked out because there are errors with them");
+            return;
+        }
         if (containsNumber(getstudentID())) {
             thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
         } else {
@@ -273,14 +277,17 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 submitMultipleItems();
             }
 
-//            if (!flag1 || !flag2 || !flag3 || !flag4 || !flag5) {
-//                return;
-//            }
+
             stageWrapper.checkoutAlert("Success", "Part(s) Checked in/out successfully");
 
             reset();
 
         }
+    }
+
+    private boolean statusError(){
+        return !statusLabel.getText().equals("Error") && !statusLabel2.getText().equals("Error") && !statusLabel3.getText().equals("Error") &&
+                !statusLabel4.getText().equals("Error") && !statusLabel5.getText().equals("Error");
     }
 
     /**
