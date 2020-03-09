@@ -273,9 +273,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 submitMultipleItems();
             }
 
-            if (!flag1 || !flag2 || !flag3 || !flag4 || !flag5) {
-                return;
-            }
+//            if (!flag1 || !flag2 || !flag3 || !flag4 || !flag5) {
+//                return;
+//            }
             stageWrapper.checkoutAlert("Success", "Part(s) Checked in/out successfully");
 
             reset();
