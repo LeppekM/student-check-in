@@ -82,8 +82,32 @@ public class CheckingOutPart {
         return true;
     }
 
+    public boolean moreThanTwoParts(long barcode){
+        String query = "select barcode from parts where barcode = ?";
+        List<Long> barcodes = new LinkedList<>();
+
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setLong(1, barcode);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                barcodes.add(rs.getLong("barcode"));
+            }
+            statement.close();
+            rs.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return barcodes.size() > 2;
+    }
+
     public boolean errorCheck(long barcode, int studentID){
         String query = "select studentID from checkout where barcode = ? and checkinAt is null";
+        if(moreThanTwoParts(barcode)){
+            return true;
+        }
+
         int returnedStudentID = 0;
 
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
@@ -102,8 +126,7 @@ public class CheckingOutPart {
         if (returnedStudentID == 0){
             return true;
         }
-        System.out.println(returnedStudentID);
-        System.out.println(studentID);
+
         return returnedStudentID == studentID;
     }
     /**
