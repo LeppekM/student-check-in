@@ -2,9 +2,12 @@ package Database;
 
 import Database.ObjectClasses.Student;
 import HelperClasses.DatabaseHelper;
+import HelperClasses.StageWrapper;
 import InventoryController.StudentCheckIn;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentInfo {
     private final String url = Database.host + "/student_check_in";
@@ -16,8 +19,9 @@ public class StudentInfo {
     private final String getStudentNameFromEmailQuery = "select studentName from students where email = ?";
 
     private DatabaseHelper helper = new DatabaseHelper();
+    private StageWrapper stageWrapper = new StageWrapper();
 
-    Database database = new Database();
+
 
     public Student selectStudentClean(String email){
         String query = "Select studentName, email, studentID from students where email = ?";
@@ -56,6 +60,40 @@ public class StudentInfo {
         return sName;
     }
 
+    public boolean studentHasItemsCheckedOut(int studentID){
+        String query = "select studentID from checkout where studentID =? and checkinAt is null";
+        List<Integer> checkouts = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, studentID);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                checkouts.add(rs.getInt("studentID"));
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return !checkouts.isEmpty();
+    }
+    public String getStudentIDFromEmailActual(String email){
+        String sName = "";
+        String query = "select studentID from students where email = ?";
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                sName= rs.getString("studentID");
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return sName;
+
+    }
+
     public boolean getStudentIDFromEmail(String email){
         String sName = "";
         String query = "select studentID from students where email = ?";
@@ -76,8 +114,19 @@ public class StudentInfo {
         return false;
 
     }
+    public boolean studentHasCheckedOutItems2(String email){
+
+        int studentID = Integer.parseInt(getStudentIDFromEmailActual(email));
+        return studentHasItemsCheckedOut(studentID);
+    }
 
     public void updateStudent(String studentEmail, int studentID){
+
+
+        if(studentHasCheckedOutItems2(studentEmail)){
+            stageWrapper.errorAlert("User has parts already checked out, please resolve this issue before proceeding. IF YOU COMPLETE THIS TRANSACTION IT WILL NOT ACTUALLY GO THROUGH! TALK TO JIM");
+            return;
+        }
         String query = " update students\n" +
                 "  set studentID = ?\n" +
                 " where email = ?";

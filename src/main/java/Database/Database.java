@@ -6,6 +6,7 @@ import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.DatabaseHelper;
+import HelperClasses.StageWrapper;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
@@ -33,6 +34,8 @@ public class Database implements IController {
     static Connection connection;
     private DatabaseHelper databaseHelper = new DatabaseHelper();
     private Worker worker;
+    private StageWrapper stageWrapper = new StageWrapper();
+    private StudentInfo sInfo = new StudentInfo();
 
     /**
      * This creates a connection to the database
@@ -1141,6 +1144,10 @@ public class Database implements IController {
     }
 
     public void updateStudent(Student s) {
+        if(studentHasCheckedOutItems(s.getEmail())){
+            stageWrapper.errorAlert("Student has checked out items");
+            return;
+        }
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
                 s.getName().replace("'", "\\'") + "', students.email = '" + s.getEmail().replace("'", "\\'") + "', students.updatedAt = date('" +
                 gettoday().toString() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
@@ -1156,7 +1163,10 @@ public class Database implements IController {
         }
     }
 
-    private boolean studentHasCheckedOutItems(String email) {
+
+
+
+    public boolean studentHasCheckedOutItems(String email) {
 
         Student s = selectStudent(-1, email);
         if(s.getRFID() == 0){
