@@ -46,7 +46,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     private JFXTextField searchInput;
 
     @FXML
-    private JFXTreeTableColumn<OverdueTabTableRow, String> studentNameCol,  partNameCol;
+    private JFXTreeTableColumn<OverdueTabTableRow, String> studentNameCol,  partNameCol, serialNumberCol;
 
     @FXML
     private JFXTreeTableColumn<OverdueTabTableRow, Date> dueDateCol;
@@ -67,6 +67,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
     private Database database;
     private ObservableList<OverdueItem> list = FXCollections.observableArrayList();
     private ExportToExcel export = new ExportToExcel();
+    private final double NUM_OF_COLS = 6;
 
     /**
      * This method puts all overdue items into the list for populating the gui table
@@ -81,32 +82,38 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         overdueTable.setPlaceholder(emptyTableLabel);
 
         studentNameCol = new JFXTreeTableColumn<>("Student Name");
-        studentNameCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        studentNameCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(NUM_OF_COLS));
         studentNameCol.setStyle("-fx-font-size: 18px");
         studentNameCol.setResizable(false);
         studentNameCol.setCellValueFactory(col-> col.getValue().getValue().getStudentName());
 
         studentIDCol = new JFXTreeTableColumn<>("Student ID");
-        studentIDCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        studentIDCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(NUM_OF_COLS));
         studentIDCol.setStyle("-fx-font-size: 18px");
         studentIDCol.setResizable(false);
         studentIDCol.setCellValueFactory(col -> col.getValue().getValue().getStudentID().asObject());
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
-        partNameCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        partNameCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(NUM_OF_COLS));
         partNameCol.setStyle("-fx-font-size: 18px");
         partNameCol.setResizable(false);
         partNameCol.setCellValueFactory(col-> col.getValue().getValue().getPartName());
 
+        serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
+        serialNumberCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(NUM_OF_COLS));
+        serialNumberCol.setStyle("-fx-font-size: 18px");
+        serialNumberCol.setResizable(false);
+        serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
+
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
-        barcodeCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        barcodeCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(NUM_OF_COLS));
         barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
 
 
         dueDateCol = new JFXTreeTableColumn<>("Date");
-        dueDateCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(5));
+        dueDateCol.prefWidthProperty().bind(overdueTable.widthProperty().divide(NUM_OF_COLS));
         dueDateCol.setStyle("-fx-font-size: 18px");
         dueDateCol.setResizable(false);
         dueDateCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
@@ -144,6 +151,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
                         overdueTable.getTreeItem(i).getValue().getStudentName().get(),
                         overdueTable.getTreeItem(i).getValue().getStudentID().get(),
                         overdueTable.getTreeItem(i).getValue().getPartName().get(),
+                        overdueTable.getTreeItem(i).getValue().getSerialNumber().get(),
                         overdueTable.getTreeItem(i).getValue().getBarcode().get(),
                         overdueTable.getTreeItem(i).getValue().getDueDate().get());
                 ((OverduePopUpController) loader.getController()).populate(null, item);
@@ -172,13 +180,14 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         database = new Database();
         list = database.getOverdue();
 
-        for (int i = 0; i < list.size(); i++) {
+        for (OverdueItem overdueItem : list) {
             tableRows.add(new OverdueTabTableRow
-                    (list.get(i).getName().get(),
-                    list.get(i).getID().get(),
-                    list.get(i).getPart().get(),
-                    list.get(i).getBarcode().get(),
-                    list.get(i).getDate().get()));
+                    (overdueItem.getName().get(),
+                            overdueItem.getID().get(),
+                            overdueItem.getPart().get(),
+                            overdueItem.getSerialNumber().get(),
+                            overdueItem.getBarcode().get(),
+                            overdueItem.getDate().get()));
         }
 
         root = new RecursiveTreeItem<OverdueTabTableRow>(
@@ -191,7 +200,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
             }
         });
 
-        overdueTable.getColumns().setAll(studentIDCol, studentNameCol, partNameCol, barcodeCol, dueDateCol);
+        overdueTable.getColumns().setAll(studentIDCol, studentNameCol, partNameCol, serialNumberCol, barcodeCol, dueDateCol);
         overdueTable.setRoot(root);
         overdueTable.setShowRoot(false);
     }
@@ -214,7 +223,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
                         || (barcode!= null && barcode.toLowerCase().contains(input))
                         || (dueDate != null && dueDate.toLowerCase().contains(input))
                         || (studentName != null && studentName.toLowerCase().contains(input))
-                        || (studentID != null && studentID.toLowerCase().contains(input)));
+                        || (serialNumber != null && serialNumber.toLowerCase().contains(input)));
 
 
             }

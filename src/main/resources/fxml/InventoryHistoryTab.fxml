@@ -12,55 +12,52 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
-    <children>
-      <HBox>
-         <children>
-              <Label text="Transaction History">
-                  <stylesheets>
-                      <URL value="@../css/HeaderStyle.css" />
-                  </stylesheets>
-               <HBox.margin>
-                  <Insets left="20.0" top="14.0" />
-               </HBox.margin>
-              </Label>
-            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-               <children>
-                  <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" promptText="search">
-                     <HBox.margin>
-                        <Insets right="5.0" />
-                     </HBox.margin>
-                     <font>
-                        <Font size="18.0" />
-                     </font></JFXTextField>
-                    <JFXButton fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="45.0" prefWidth="69.0" stylesheets="@../css/CheckButton.css" text="Go" />
-               </children>
-               <HBox.margin>
-                  <Insets right="20.0" top="14.0" />
-               </HBox.margin></HBox>
-         </children>
-      </HBox>
-        <JFXTreeTableView fx:id="historyTable" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
-        <HBox alignment="CENTER_RIGHT" VBox.vgrow="NEVER">
-            <children>
-            <JFXButton alignment="CENTER" contentDisplay="TOP" onAction="#importTransaction" prefHeight="68.0" prefWidth="53.0" translateX="-20.0">
-               <graphic>
-                  <ImageView fitHeight="36.0" fitWidth="38.0">
-                     <image>
-                        <Image url="@../images/download.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </JFXButton>
-                <JFXButton fx:id="clearOldHistory" disable="true" mnemonicParsing="false" onAction="#clearOldHistory" prefHeight="45.0" prefWidth="175.0" stylesheets="@../css/CheckButton.css" text="Clear Old History">
-                    <HBox.margin>
-                        <Insets right="20.0" />
-                    </HBox.margin>
-                </JFXButton>
-            </children>
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
+<VBox fx:id="inventoryHistoryPage" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerHistoryTab">
+    <HBox>
+        <Label text="Transaction History">
+            <stylesheets>
+                <URL value="@../css/HeaderStyle.css"/>
+            </stylesheets>
+            <HBox.margin>
+                <Insets left="20.0" top="14.0"/>
+            </HBox.margin>
+        </Label>
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets right="20.0" top="14.0"/>
+            </HBox.margin>
+            <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" promptText="search">
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </JFXTextField>
+            <JFXButton fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="45.0"
+                       prefWidth="69.0" stylesheets="@../css/CheckButton.css" text="Go"/>
         </HBox>
-    </children>
+    </HBox>
+    <JFXTreeTableView fx:id="historyTable" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS"/>
+    <HBox alignment="CENTER_RIGHT" VBox.vgrow="NEVER">
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
+        <JFXButton alignment="CENTER" contentDisplay="TOP" onAction="#importTransaction" prefHeight="68.0"
+                   prefWidth="53.0" translateX="-20.0">
+            <graphic>
+                <ImageView fitHeight="36.0" fitWidth="38.0">
+                    <Image url="@../images/sheetDownload.png"/>
+                </ImageView>
+            </graphic>
+        </JFXButton>
+        <JFXButton fx:id="clearOldHistory" disable="true" mnemonicParsing="false" onAction="#clearOldHistory"
+                   prefHeight="45.0" prefWidth="175.0" stylesheets="@../css/CheckButton.css"
+                   text="Clear Old History">
+            <HBox.margin>
+                <Insets right="20.0"/>
+            </HBox.margin>
+        </JFXButton>
+    </HBox>
 </VBox>

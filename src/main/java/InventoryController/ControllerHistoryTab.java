@@ -245,7 +245,7 @@ public class ControllerHistoryTab extends ControllerInventoryPage implements Ini
         if (this.worker != null && this.worker.isAdmin()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm Delete Old History");
-            alert.setContentText("Are you sure you want to clear the transaction history for non-faulty parts older than 2 years?");
+            alert.setContentText("Are you sure you want to clear the transaction history for parts older than 2 years?");
             alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
             Optional<ButtonType> result = alert.showAndWait();
             return result.get() == ButtonType.YES;

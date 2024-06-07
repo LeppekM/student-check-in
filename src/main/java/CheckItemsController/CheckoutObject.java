@@ -7,8 +7,8 @@ import java.time.LocalDate;
  */
 public class CheckoutObject {
 
-    private static String studentID, barcode, quantity, checkoutAt, dueAt, extendedCourseName, extendedProfessor, faultyDescription;
-    private static boolean isExtended, isFaulty;
+    private static String studentID, barcode, quantity, checkoutAt, dueAt, extendedCourseName, extendedProfessor;
+    private static boolean isExtended;
     private LocalDate extendedReturnDate;
 
     private String checkoutAtDate, checkinAtDate;
@@ -16,12 +16,11 @@ public class CheckoutObject {
     /**
      * Constructor
      */
-    public CheckoutObject(String studentID, String barcode, String quantity, boolean isExtended, boolean isFaulty) {
+    public CheckoutObject(String studentID, String barcode, String quantity, boolean isExtended) {
         this.studentID = studentID;
         this.barcode = barcode;
         this.quantity = quantity;
         this.isExtended = isExtended;
-        this.isFaulty = isFaulty;
     }
 
     /**
@@ -33,14 +32,6 @@ public class CheckoutObject {
         this.checkoutAtDate = checkoutAt;
         this.checkinAtDate = checkinAt;
         this.dueAt = dueAt;
-    }
-
-    /**
-     * Passes in the faulty description. This is called only if the part is faulty
-     * @param faultyDescription
-     */
-    public void initFaultyInfo(String faultyDescription) {
-        this.faultyDescription = faultyDescription;
     }
 
     /*************************
@@ -81,10 +72,6 @@ public class CheckoutObject {
         return dueAt;
     }
 
-    public String getFaultyDescription() {
-        return faultyDescription;
-    }
-
     public String getBarcode() {
         return barcode;
     }
@@ -95,9 +82,5 @@ public class CheckoutObject {
 
     public boolean isExtended() {
         return isExtended;
-    }
-
-    public boolean isFaulty() {
-        return isFaulty;
     }
 }

@@ -16,13 +16,14 @@ public class OverdueTabTableRow extends RecursiveTreeObject<OverdueTabTableRow> 
     private ObjectProperty<Date> dueDate;
 
 
-    public OverdueTabTableRow(String studentName, int studentID, String partName, long barcode,
+    public OverdueTabTableRow(String studentName, int studentID, String partName, String serialNumber, long barcode,
                               Date dueDate) {
         this.studentID = new SimpleIntegerProperty(studentID);
         this.partName = new SimpleStringProperty(partName);
         this.studentName = new SimpleStringProperty(studentName);
         this.barcode = new SimpleLongProperty(barcode);
         this.dueDate = new SimpleObjectProperty<Date>(dueDate);
+        this.serialNumber = new SimpleStringProperty(serialNumber);
 
     }
 
@@ -42,6 +43,6 @@ public class OverdueTabTableRow extends RecursiveTreeObject<OverdueTabTableRow> 
         return dueDate;
     }
 
-
+    public StringProperty getSerialNumber(){return serialNumber;}
 
 }

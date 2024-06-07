@@ -3,58 +3,46 @@ package Database.ObjectClasses;
 import Database.AddPart;
 import javafx.beans.property.*;
 
-public class Part {
+public class Part implements DBObject{
 
-    private SimpleStringProperty partName, serialNumber, manufacturer, vendor, location, faultDesc;
+    private SimpleStringProperty partName, serialNumber, manufacturer, vendor, location;
     private final SimpleLongProperty barcode;
     private SimpleDoubleProperty price;
     private SimpleIntegerProperty partID, quantity;
-    private final SimpleBooleanProperty fault, checkedOut = new SimpleBooleanProperty(false);
+    private final SimpleBooleanProperty checkedOut = new SimpleBooleanProperty(false);
     AddPart addPart = new AddPart();
 
 
-    //TODO Combine all these constructors I mean my god why do we have three that do the same thing
-
-
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, boolean fault, int partID) {
+    public Part(String partName, String serialNumber, double price, String location, long barcode) {
         this.partName = new SimpleStringProperty(partName);
         this.serialNumber = new SimpleStringProperty(serialNumber);
-        this.manufacturer = new SimpleStringProperty(manufacturer);
         this.price = new SimpleDoubleProperty(price);
-        this.vendor = new SimpleStringProperty(vendor);
         this.location = new SimpleStringProperty(location);
         this.barcode = new SimpleLongProperty(barcode);
-        this.fault = new SimpleBooleanProperty(fault);
+    }
+
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, boolean toMakeConstructorsDifferent, int partID) {
+        this(partName, serialNumber, price, location, barcode);
+        this.manufacturer = new SimpleStringProperty(manufacturer);
+        this.vendor = new SimpleStringProperty(vendor);
         this.partID = new SimpleIntegerProperty(partID);
         this.quantity = new SimpleIntegerProperty(0);
-        this.faultDesc = new SimpleStringProperty("");
     }
 
     public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, int quantity) {
-        this.partName = new SimpleStringProperty(partName);
-        this.serialNumber = new SimpleStringProperty(serialNumber);
+        this(partName, serialNumber, price, location, barcode);
         this.manufacturer = new SimpleStringProperty(manufacturer);
-        this.price = new SimpleDoubleProperty(price);
         this.vendor = new SimpleStringProperty(vendor);
         this.location = new SimpleStringProperty(location);
-        this.barcode = new SimpleLongProperty(barcode);
         this.quantity = new SimpleIntegerProperty(quantity);
         //Returns the next part id
         this.partID = new SimpleIntegerProperty(addPart.getPartID());
-        this.fault = new SimpleBooleanProperty(false);
-        this.faultDesc = new SimpleStringProperty("");
     }
 
-    public Part(String partName, String serialNumber, String location, long barcode, boolean fault, int partID, double price) {
-        this.partName = new SimpleStringProperty(partName);
-        this.serialNumber = new SimpleStringProperty(serialNumber);
-
+    public Part(String partName, String serialNumber, String location, long barcode, int partID, double price) {
+        this(partName, serialNumber, price, location, barcode);
         this.location = new SimpleStringProperty(location);
-        this.barcode = new SimpleLongProperty(barcode);
-        this.fault = new SimpleBooleanProperty(fault);
         this.partID = new SimpleIntegerProperty(partID);
-        this.price = new SimpleDoubleProperty(price);
-
     }
 
     public String getPartName() {
@@ -113,21 +101,8 @@ public class Part {
         this.barcode.set(barcode);
     }
 
-    public boolean getFault() {
-        return fault.get();
-    }
-
-    public SimpleBooleanProperty faultProperty() {
-        return fault;
-    }
-
-    public void setFault(boolean fault) {
-        this.fault.set(fault);
-    }
-
     public void setCheckedOut(int checkedOut) {
-        this.checkedOut.set(checkedOut == 1 ? true : false);
-
+        this.checkedOut.set(checkedOut == 1);
     }
 
     public boolean getCheckedOut() {
@@ -154,14 +129,7 @@ public class Part {
         this.quantity.set(quantity);
     }
 
-    public String getFaultDesc() {
-        return faultDesc.get();
-    }
-
-    public void setFaultDesc(String faultDesc) {
-        this.faultDesc.set(faultDesc);
-    }
-
+    @Override
     public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode) {
         this.partName.set(partName);
         this.serialNumber.set(serialNumber);
@@ -174,10 +142,19 @@ public class Part {
 
     @Override
     public String toString() {
-        return "Part Name: " + getPartName() + "\tSerial Number: " + getSerialNumber() + "\tManufacturer: " + getManufacturer() +
-                "\tPrice: " + getPrice() + "\tVendor: " + getVendor() +
-                "\tLocation: " + getLocation() + "\tBarcode: " + getBarcode() + "\tFault: " + getFault() +
-                "\tFault Description: " + getFaultDesc() + "\tPart ID: " + getPartID() + "\tIs Deleted: "
-                + "\tIs Checked Out: " + getCheckedOut() + "\n";
+        StringBuilder str = new StringBuilder();
+        str.append("Part Name: ").append(getPartName());
+        str.append("\tSerial Number: ").append(getSerialNumber());
+        str.append("\tManufacturer: ").append(getManufacturer());
+        str.append("\tPrice: ").append(getPrice());
+        str.append("\tVendor: ").append(getVendor());
+        str.append("\tLocation: ").append(getLocation());
+        str.append("\tBarcode: ").append(getBarcode());
+        str.append("\tFault: ").append(false);
+        str.append("\tFault Description: "); // will not correctly parse if these are not appended
+        str.append("\tPart ID: ").append(getPartID());
+        str.append("\tIs Deleted: ");
+        str.append("\tIs CheckedOut: ").append(getCheckedOut()).append("\n");
+        return str.toString();
     }
 }

@@ -12,67 +12,59 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="manageWorkersScene" alignment="CENTER" prefHeight="800.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerManageWorkers">
-    <children>
-        <HBox prefHeight="100.0" prefWidth="200.0">
-            <children>
-                <Label text="Manage Workers" HBox.hgrow="ALWAYS">
-                    <stylesheets>
-                        <URL value="@../css/HeaderStyle.css" />
-                    </stylesheets>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-                </Label>
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <children>
-                      <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" prefHeight="50.0" promptText="search">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                      </JFXTextField>
-               </children>
-            </HBox>
-            </children>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
+<VBox fx:id="manageWorkersScene" alignment="CENTER" prefHeight="800.0" prefWidth="1150.0"
+      xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ManagePeople.ControllerManageWorkers">
+    <HBox prefHeight="100.0" prefWidth="200.0">
+        <VBox.margin>
+            <Insets left="10.0" right="10.0" top="10.0"/>
+        </VBox.margin>
+        <Label text="Manage Workers" HBox.hgrow="ALWAYS">
+            <stylesheets>
+                <URL value="@../css/HeaderStyle.css"/>
+            </stylesheets>
+        </Label>
+        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+            <JFXTextField fx:id="searchInput" focusColor="FIREBRICK" prefHeight="50.0" promptText="search">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </JFXTextField>
         </HBox>
-        <JFXTreeTableView fx:id="manageWorkersTable" prefHeight="480.0" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS" />
-        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
-            <children>
-                <Button fx:id="back" mnemonicParsing="false" onAction="#goBack" stylesheets="@../css/CheckButton.css" HBox.hgrow="ALWAYS">
-                    <graphic>
-                        <ImageView fitHeight="35.0" fitWidth="39.0">
-                            <image>
-                                <Image url="@../images/home.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" top="10.0" />
-                    </HBox.margin>
-                </Button>
-                <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-                <Button fx:id="addAdmin" mnemonicParsing="false" onAction="#addAdmin" prefHeight="35.0" prefWidth="160.0" stylesheets="@../css/CheckButton.css" text="Add Admin" textAlignment="CENTER">
-                    <HBox.margin>
-                        <Insets right="20.0" />
-                    </HBox.margin>
-                </Button>
-                <Button fx:id="addWorker" mnemonicParsing="false" onAction="#addWorker" prefHeight="35.0" prefWidth="160.0" stylesheets="@../css/CheckButton.css" text="Add Worker" textAlignment="CENTER">
-                    <HBox.margin>
-                        <Insets right="20.0" />
-                    </HBox.margin>
-                </Button>
-                <Button fx:id="deleteWorker" mnemonicParsing="false" onAction="#deleteWorker" prefHeight="35.0" prefWidth="160.0" stylesheets="@../css/CheckButton.css" text="Delete " textAlignment="CENTER" />
-               <HBox.margin>
-                  <Insets bottom="10.0" right="10.0" top="10.0" />
-               </HBox.margin>
-                </HBox>
-            </children>
+    </HBox>
+    <JFXTreeTableView fx:id="manageWorkersTable" prefHeight="480.0" stylesheets="@../css/TableStyle.css"
+                      VBox.vgrow="ALWAYS"/>
+    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+        <Button fx:id="back" mnemonicParsing="false" onAction="#goBack" stylesheets="@../css/CheckButton.css"
+                HBox.hgrow="ALWAYS">
+            <graphic>
+                <ImageView fitHeight="35.0" fitWidth="39.0">
+                    <Image url="@../images/home.png"/>
+                </ImageView>
+            </graphic>
+            <HBox.margin>
+                <Insets bottom="10.0" left="10.0" top="10.0"/>
+            </HBox.margin>
+        </Button>
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+        <Button fx:id="addAdmin" mnemonicParsing="false" onAction="#addAdmin" prefHeight="35.0"
+                prefWidth="160.0" stylesheets="@../css/CheckButton.css" text="Add Admin" textAlignment="CENTER">
+            <HBox.margin>
+                <Insets right="20.0"/>
+            </HBox.margin>
+        </Button>
+        <Button fx:id="addWorker" mnemonicParsing="false" onAction="#addWorker" prefHeight="35.0"
+                prefWidth="160.0" stylesheets="@../css/CheckButton.css" text="Add Worker"
+                textAlignment="CENTER">
+            <HBox.margin>
+                <Insets right="20.0"/>
+            </HBox.margin>
+        </Button>
+        <Button fx:id="deleteWorker" mnemonicParsing="false" onAction="#deleteWorker" prefHeight="35.0"
+                prefWidth="160.0" stylesheets="@../css/CheckButton.css" text="Delete " textAlignment="CENTER"/>
+            <HBox.margin>
+                <Insets bottom="10.0" right="10.0" top="10.0"/>
+            </HBox.margin>
         </HBox>
-    </children>
+    </HBox>
 </VBox>

@@ -28,7 +28,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     private TabPane tabPane;
 
     @FXML
-    private Tab totalTab, historyTab, checkedOutTab, overdueTab, faultsTab;
+    private Tab totalTab, historyTab, checkedOutTab, overdueTab;
 
     @FXML
     private ControllerTotalTab totalTabPageController;
@@ -42,8 +42,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     @FXML
     private ControllerOverdueTab overdueTabPageController;
 
-    @FXML
-    private ControllerFaultyTab faultyTabPageController;
 
     @FXML
     private Button back;
@@ -64,8 +62,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
                     updateCheckedOutTab();
                 } else if (newTab == overdueTab) {
                     updateOverdueTab();
-                } else if (newTab == faultsTab) {
-                    updateFaultsTab();
                 }
             }
         });
@@ -93,10 +89,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
         overdueTabPageController.populateTable();
     }
 
-    private void updateFaultsTab() {
-        faultyTabPageController.populateTable();
-    }
-
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
@@ -110,7 +102,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
             this.worker = worker;
             totalTabPageController.initWorker(worker);
             historyTabPageController.initWorker(worker);
-            faultyTabPageController.initWorker(worker);
         }
     }
 

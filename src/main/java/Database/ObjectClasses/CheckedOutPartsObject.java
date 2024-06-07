@@ -51,6 +51,7 @@ public class CheckedOutPartsObject {
         this.studentID = studentID;
     }
 
+    // 99% sure this is never used, will phase out
     @Override
     public boolean equals(Object o){
         CheckedOutPartsObject c = (CheckedOutPartsObject) o;

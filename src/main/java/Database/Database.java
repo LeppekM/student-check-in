@@ -2,7 +2,6 @@ package Database;
 
 import CheckItemsController.CheckoutObject;
 import Database.ObjectClasses.Part;
-import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.DatabaseHelper;
@@ -27,7 +26,7 @@ import java.util.Date;
 public class Database implements IController {
     //DB root pass: Userpassword123
     public static final String username = "root";
-    public static final String password = "Userpassword123";
+    public static final String password = "3l3ctr1c_B00gloo";
     static String host = "jdbc:mysql://localhost:3306";
     static final String dbdriver = "com.mysql.jdbc.Driver";
     static final String dbname = "student_check_in";
@@ -35,7 +34,6 @@ public class Database implements IController {
     private DatabaseHelper databaseHelper = new DatabaseHelper();
     private Worker worker;
     private StageWrapper stageWrapper = new StageWrapper();
-    private StudentInfo sInfo = new StudentInfo();
 
     /**
      * This creates a connection to the database
@@ -82,7 +80,7 @@ public class Database implements IController {
 
         databaseHelper.getCurrentDateTimeStamp();
         String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
-                " parts.barcode, checkout.dueAt, checkout.checkoutID from checkout " +
+                " parts.serialNumber, parts.barcode, checkout.dueAt, checkout.checkoutID from checkout " +
                 "left join parts on checkout.partID = parts.partID " +
                 "left join students on checkout.studentID = students.studentID " +
                 "where checkout.checkinAt is null";
@@ -94,6 +92,7 @@ public class Database implements IController {
                 if (isOverdue(dueAt)) {
                     data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
                             resultSet.getString("students.email"), resultSet.getString("parts.partName"),
+                            resultSet.getString("parts.serialNumber"),
                             resultSet.getLong("parts.barcode"), databaseHelper.convertStringtoDate(dueAt),
                             resultSet.getString("checkout.checkoutID")));
                 }
@@ -199,7 +198,7 @@ public class Database implements IController {
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getBoolean("isFaulty"),
+                        resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getBoolean("isFaulty"), // Faulty functionality removed, included here to differ from other constructor
                         resultSet.getInt("partID"));
             }
             resultSet.close();
@@ -272,8 +271,7 @@ public class Database implements IController {
     }
 
     /**
-     * This method clears the checkout data that is over 2 years old and does not involve a part
-     * that is faulty.
+     * This method clears the checkout data that is over 2 years old
      */
     public void clearOldHistory() {
         String query =
@@ -281,8 +279,7 @@ public class Database implements IController {
                         "FROM checkout " +
                         "INNER JOIN parts " +
                         "ON checkout.partID = parts.partID " +
-                        "AND checkout.checkinAt < ? " +
-                        "AND parts.isFaulty = 0;";
+                        "AND checkout.checkinAt < ? ";
 
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
@@ -296,70 +293,6 @@ public class Database implements IController {
         }
     }
 
-    /**
-     * Helper method to remove a fault
-     *
-     * @param barcode barcode of faulty part
-     * @param name    name of faulty part
-     * @return partID
-     */
-    private int getPartID(long barcode, String name) {
-        String query = "select * from parts where partName = '" + name + "' and barcode = " + barcode + ";";
-        int ID = 0;
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                ID = resultSet.getInt("partID");
-            }
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return ID;
-    }
-
-    /**
-     * Removes faulty part from table
-     *
-     * @param barcode barcode of faulty part
-     * @param name    name of faulty part
-     */
-    public void resolveFault(long barcode, String name) {
-        int partID = getPartID(barcode, name);
-        String query = "delete from fault where partID = " + partID + ";";
-        String pquery = "update parts set isFaulty = 0, updatedAt = date('" + gettoday() + "'), updatedBy = '" +
-                this.worker.getName().replace("'", "\\'") + "' where partID = " + partID + ";";
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(query);
-            statement.executeUpdate(pquery);
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Gets the fault description for the part with the matching part ID
-     *
-     * @param partID the part ID for the part being checked
-     * @return the fault description of the part
-     */
-    public String getFaultDescription(int partID) {
-        String query = "SELECT * FROM fault WHERE partID = " + partID + ";";
-        String description = "";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                description = resultSet.getString("description");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return description;
-    }
 
     /**
      * Gets a part that has the matching part name
@@ -954,7 +887,6 @@ public class Database implements IController {
     public Student selectStudent(int ID, String studentEmail) {
         String query = null;
         String coList = null;
-        String pList = null;
         String oList = null;
         if (studentEmail == null) {
             query = "select * from students where studentID = " + ID;
@@ -964,10 +896,6 @@ public class Database implements IController {
                     "left join parts on checkout.partID = parts.partID" +
                     " where students.studentID = " + ID +
                     " AND checkout.checkinAt is null;";
-            pList = "select students.studentName, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
-                    "from students " +
-                    "left join checkout on students.studentID = checkout.studentID " +
-                    "left join parts on checkout.partID = parts.partID where students.studentID = " + ID + " and checkout.reservedAt != date('');";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
                     "parts.barcode, parts.price, checkout.dueAt, parts.price, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +
@@ -982,10 +910,6 @@ public class Database implements IController {
                     "left join parts on checkout.partID = parts.partID" +
                     " where students.email = '" + studentEmail +
                     "' AND checkout.checkinAt is null;";
-            pList = "select students.studentName, students.email, students.studentID, parts.partName, checkout.checkoutAt, checkout.reservedAt, checkout.dueAt, checkout.checkoutID, checkout.returnDate, checkout.course " +
-                    "from students " +
-                    "left join checkout on students.studentID = checkout.studentID " +
-                    "left join parts on checkout.partID = parts.partID where students.email = '" + studentEmail + "' and checkout.reservedAt != date('');";
             oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
                     "parts.barcode, parts.price, checkout.dueAt, checkout.checkoutID, checkout.checkinAt from checkout " +
                     "inner join parts on checkout.partID = parts.partID " +
@@ -1000,7 +924,6 @@ public class Database implements IController {
         int uniqueID = 0;
         ObservableList<CheckedOutItems> checkedOutItems = FXCollections.observableArrayList();
         ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
-        ObservableList<SavedPart> savedParts = FXCollections.observableArrayList();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -1052,22 +975,6 @@ public class Database implements IController {
             }
             statement.close();
             resultSet.close();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(pList);
-            resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()) {
-                savedParts.add(new SavedPart(resultSet.getString("students.studentName"),
-                        resultSet.getString("parts.partName"),
-                        resultSet.getString("checkout.checkoutAt"),
-                        1,
-                        resultSet.getString("checkout.reservedAt"),
-                        resultSet.getString("checkout.dueAt"),
-                        resultSet.getString("checkout.checkoutID"),
-                        resultSet.getString("checkout.returnDate"),
-                        resultSet.getString("checkout.course")));
-            }
-            statement.close();
-            resultSet.close();
             if (checkedOutItems.size() > 0) {
                 date = checkedOutItems.get(0).getCheckedOutDate().get();
             }
@@ -1079,9 +986,9 @@ public class Database implements IController {
                 }
             }
             if (date != null) {
-                student = new Student(name, uniqueID, id, email, date.toString(), checkedOutItems, overdueItems, savedParts);
+                student = new Student(name, uniqueID, id, email, date.toString(), checkedOutItems, overdueItems);
             } else {
-                student = new Student(name, uniqueID, id, email, "", checkedOutItems, overdueItems, savedParts);
+                student = new Student(name, uniqueID, id, email, "", checkedOutItems, overdueItems);
             }
         } catch (SQLException e) {
             e.printStackTrace();

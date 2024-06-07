@@ -6,61 +6,75 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="overduePopUp" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.OverduePopUpController">
-    <children>
-        <AnchorPane layoutX="0.0" layoutY="0.0" prefHeight="405.0" prefWidth="500.0">
-            <children>
-                <Label layoutX="42.0" layoutY="13.0" text="Student Name:">
-                    <font>
-                        <Font name="System Bold" size="18.0" fx:id="x1" />
-                    </font>
-                </Label>
-                <JFXTextField id="nameField" fx:id="nameField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="14.0" prefHeight="23.94140625" prefWidth="153.5078125">
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
-                <Label layoutX="67.0" layoutY="77.0" text="Student ID:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
-                <JFXTextField id="emailField" fx:id="idField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="75.0" prefHeight="23.94140625" prefWidth="153.5078125">
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
-                <Label layoutX="47.0" layoutY="138.0" text="Student Email:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
-                <JFXTextField id="partField" fx:id="emailField" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="136.0" prefHeight="23.94140625" prefWidth="153.5078125">
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
-                <Label layoutX="68.0" layoutY="198.0" text="Part Name:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
-                <JFXTextField id="serialField" fx:id="partName" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="196.0" prefHeight="23.94140625" prefWidth="153.5078125">
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
-                <Label layoutX="85.0" layoutY="253.0" text="Barcode: ">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
-                <JFXTextField id="dueField" fx:id="barcode" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="253.0" prefHeight="23.94140625" prefWidth="153.5078125">
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
-                <Label layoutX="83.0" layoutY="315.0" text="Due Date:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
-                <JFXTextField id="feeField" fx:id="dueDate" alignment="CENTER" editable="false" focusColor="FIREBRICK" layoutX="175.0" layoutY="313.0" prefHeight="23.94140625" prefWidth="153.5078125">
-               <font>
-                  <Font size="14.0" />
-               </font></JFXTextField>
-            </children>
-        </AnchorPane>
-    </children>
+<VBox fx:id="overduePopUp" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.OverduePopUpController">
 
+    <AnchorPane prefHeight="405.0" prefWidth="500.0">
+        <Label layoutX="42.0" layoutY="13.0" text="Student Name:">
+            <font>
+                <Font name="System Bold" size="18.0" fx:id="x1"/>
+            </font>
+        </Label>
+        <JFXTextField id="nameField" fx:id="nameField" alignment="CENTER" editable="false" focusColor="FIREBRICK"
+                      layoutX="175.0" layoutY="14.0" prefHeight="23.94140625" prefWidth="153.5078125">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <Label layoutX="67.0" layoutY="77.0" text="Student ID:">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <JFXTextField id="emailField" fx:id="idField" alignment="CENTER" editable="false" focusColor="FIREBRICK"
+                      layoutX="175.0" layoutY="75.0" prefHeight="23.94140625" prefWidth="153.5078125">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <Label layoutX="47.0" layoutY="138.0" text="Student Email:">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <JFXTextField id="partField" fx:id="emailField" alignment="CENTER" editable="false" focusColor="FIREBRICK"
+                      layoutX="175.0" layoutY="136.0" prefHeight="23.94140625" prefWidth="153.5078125">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <Label layoutX="68.0" layoutY="198.0" text="Part Name:">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <JFXTextField id="serialField" fx:id="partName" alignment="CENTER" editable="false" focusColor="FIREBRICK"
+                      layoutX="175.0" layoutY="196.0" prefHeight="23.94140625" prefWidth="153.5078125">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <Label layoutX="85.0" layoutY="253.0" text="Barcode: ">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <JFXTextField id="dueField" fx:id="barcode" alignment="CENTER" editable="false" focusColor="FIREBRICK"
+                      layoutX="175.0" layoutY="253.0" prefHeight="23.94140625" prefWidth="153.5078125">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <Label layoutX="83.0" layoutY="315.0" text="Due Date:">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <JFXTextField id="feeField" fx:id="dueDate" alignment="CENTER" editable="false" focusColor="FIREBRICK"
+                      layoutX="175.0" layoutY="313.0" prefHeight="23.94140625" prefWidth="153.5078125">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+    </AnchorPane>
 </VBox>

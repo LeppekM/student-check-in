@@ -42,7 +42,6 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
     @FXML
     public VBox totalTabPage;
 
-    @FXML
     private ObservableList<TotalTabTableRow> tableRows;
 
     @FXML
@@ -53,33 +52,24 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     private TreeItem<TotalTabTableRow> root;
 
-    @FXML
     private JFXTreeTableColumn<TotalTabTableRow, String> partNameCol, locationCol, serialNumberCol;
 
-    @FXML
     private JFXTreeTableColumn<TotalTabTableRow, Integer> partIDCol;
 
-    @FXML
     private JFXTreeTableColumn<TotalTabTableRow, Long> barcodeCol;
-
-
-    private String partName, partID, serialNumber, loc, barcode;
-
-    private static ObservableList<Part> data
-            = FXCollections.observableArrayList();
-
 
     private Worker worker;
 
+    private final ArrayList<String> selectedFilters = new ArrayList<>();
 
-    private ArrayList<String> selectedFilters = new ArrayList<>();
-
-    private Image editOneImage = new Image("images/edit.png");
-    private Image editAllImage = new Image("images/edit_all.png");
-    private Image deleteOneImage = new Image("images/delete.png");
-    private Image deleteAllImage = new Image("images/delete_all.png");
+    private final Image editOneImage = new Image("images/edit.png");
+    private final Image editAllImage = new Image("images/editAll.png");
+    private final Image deleteOneImage = new Image("images/delete.png");
+    private final Image deleteAllImage = new Image("images/deleteAll.png");
 
     private TotalTab totalTab;
+
+    private final static int NUMBER_OF_COLS = 5;
 
     /**
      * This method is called when the inventory is loaded. It populates the table and sets
@@ -254,54 +244,35 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             }
         });
 
-        serialNumberCol = new JFXTreeTableColumn<>("Serial Number");
-        serialNumberCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
-        serialNumberCol.setStyle("-fx-font-size: 18px");
-        serialNumberCol.setResizable(false);
+        serialNumberCol = createNewCol("Serial Number");
         serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
 
-
-        locationCol = new JFXTreeTableColumn<>("Location");
-        locationCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
-        locationCol.setStyle("-fx-font-size: 18px");
-        locationCol.setResizable(false);
+        locationCol = createNewCol("Location");
         locationCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
 
-        barcodeCol = new JFXTreeTableColumn<>("Barcode");
-        barcodeCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
-        barcodeCol.setStyle("-fx-font-size: 18px");
-        barcodeCol.setResizable(false);
+        barcodeCol = createNewCol("Barcode");
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
 
-        partIDCol = new JFXTreeTableColumn<>("Part ID");
-        partIDCol.prefWidthProperty().bind(totalTable.widthProperty().divide(5));
-        partIDCol.setStyle("-fx-font-size: 18px");
-        partIDCol.setResizable(false);
+        partIDCol = createNewCol("Part ID");
         partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID().asObject());
 
         tableRows = FXCollections.observableArrayList();
 
         // Click to select if unselected and unselect if selected
-        totalTable.setRowFactory(new Callback<TreeTableView<TotalTabTableRow>, TreeTableRow<TotalTabTableRow>>() {
-            @Override
-            public TreeTableRow<TotalTabTableRow> call(TreeTableView<TotalTabTableRow> param) {
-                final TreeTableRow<TotalTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        if (event.getClickCount() == 2) {
-                            viewPart(row.getIndex());
-                        } else {
-                            final int index = row.getIndex();
-                            if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
-                                totalTable.getSelectionModel().clearSelection();
-                                event.consume();
-                            }
-                        }
+        totalTable.setRowFactory(param -> {
+            final TreeTableRow<TotalTabTableRow> row = new TreeTableRow<>();
+            row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                if (event.getClickCount() == 2) {
+                    viewPart(row.getIndex());
+                } else {
+                    final int index = row.getIndex();
+                    if (index >= 0 && index < totalTable.getCurrentItemsCount() && totalTable.getSelectionModel().isSelected(index)) {
+                        totalTable.getSelectionModel().clearSelection();
+                        event.consume();
                     }
-                });
-                return row;
-            }
+                }
+            });
+            return row;
         });
 
         // Updates the search if the user presses enter with the cursor in the search field
@@ -391,8 +362,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             selectedFilters.removeAll(selectedFilters.subList(0, selectedFilters.size()));
             for (String f : filters) {
                 f = f.trim();
-                if (f.equalsIgnoreCase("faulty") || f.equalsIgnoreCase("overdue") ||
-                        f.equalsIgnoreCase("checked out") || f.equalsIgnoreCase("all")) {
+                if (f.equalsIgnoreCase("overdue") || f.equalsIgnoreCase("checked out")
+                        || f.equalsIgnoreCase("all")) {
                     f = f.substring(0, 1).toUpperCase() + f.substring(1);
                     if (f.length() > 7) {
                         f = f.substring(0, 8) + f.substring(8, 9).toUpperCase() + f.substring(9);
@@ -416,11 +387,11 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      */
     private boolean isMatch(TotalTabTableRow value, String filter) {
         String input = filter.toLowerCase();
-        partName = value.getPartName().getValue();
-        serialNumber = value.getSerialNumber().getValue().toString();
-        loc = value.getLocation().getValue();
-        barcode = value.getBarcode().getValue().toString();
-        partID = value.getPartID().getValue().toString();
+        String partName = value.getPartName().getValue();
+        String serialNumber = value.getSerialNumber().getValue();
+        String loc = value.getLocation().getValue();
+        String barcode = value.getBarcode().getValue().toString();
+        String partID = value.getPartID().getValue().toString();
 
         return ((partName != null && partName.toLowerCase().contains(input))
                 || (serialNumber != null && serialNumber.toLowerCase().contains(input))
@@ -439,9 +410,9 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         totalTable.getColumns().clear();
         totalTab = new TotalTab();
         ObservableList<Part> list = totalTab.getTotalTabParts();
-        for (int i = 0; i < list.size(); i++) {
+        for (Part part : list) {
             tableRows.add(new TotalTabTableRow(
-                    list.get(i).getPartID(), list.get(i).getBarcode(), list.get(i).getSerialNumber(), list.get(i).getLocation(), list.get(i).getPartName(), list.get(i).getPrice()));
+                    part.getPartID(), part.getBarcode(), part.getSerialNumber(), part.getLocation(), part.getPartName(), part.getPrice()));
         }
         root = new RecursiveTreeItem<TotalTabTableRow>(
                 tableRows, RecursiveTreeObject::getChildren
@@ -461,8 +432,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         Stage stage = new Stage();
         try {
             URL myFxmlURL = ClassLoader.getSystemResource("fxml/AddPart.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load(myFxmlURL);
+            Parent root = FXMLLoader.load(myFxmlURL);
             Scene scene = new Scene(root, 400, 450);
             stage.setTitle("Add a Part");
             stage.initOwner(totalTabPage.getScene().getWindow());
@@ -638,8 +608,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         alert.setTitle("Error");
         alert.setContentText("At least one " + partName + " is currently checked out, so " +
                 partName + " parts cannot be deleted.");
-        StudentCheckIn.logger.error("At least one " + partName + " is currently checked out, so " +
-                partName + " parts cannot be deleted.");
+        StudentCheckIn.logger.error("At least one {} is currently checked out, so {} parts cannot be deleted.", partName, partName);
         alert.showAndWait();
     }
 
@@ -663,6 +632,20 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         alert.setContentText("The pin entered is invalid.");
         StudentCheckIn.logger.error("The pin entered is invalid.");
         alert.showAndWait();
+    }
+
+    /**
+     * Creates a new column for the table with
+     * @param colName
+     * @return
+     */
+    private JFXTreeTableColumn createNewCol(String colName) {
+        JFXTreeTableColumn tempCol = new JFXTreeTableColumn<>(colName);
+        tempCol.prefWidthProperty().bind(totalTable.widthProperty().divide(NUMBER_OF_COLS));
+        tempCol.setStyle("-fx-font-size: 18px");
+        tempCol.setResizable(false);
+
+        return tempCol;
     }
 
 }

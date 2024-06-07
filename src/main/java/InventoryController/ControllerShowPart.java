@@ -23,11 +23,11 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
 
     @FXML
     private TextField nameField, serialField, manufacturerField, priceField, vendorList, locationField, barcodeField,
-            quantityField, faultDescriptionField;
+            quantityField;
 
     @FXML
     private Label nameLabel, serialLabel, manufacturerLabel, priceLabel, vendorLabel, locationLabel, barcodeLabel,
-            quantityLabel, faultDescriptionLabel;
+            quantityLabel;
 
 
     private Part part;
@@ -52,7 +52,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         this.vendorList.setEditable(false);
         this.locationField.setEditable(false);
         this.barcodeField.setEditable(false);
-        this.faultDescriptionField.setEditable(false);
 
         this.nameField.managedProperty().bind(this.nameField.visibleProperty());
         this.serialField.managedProperty().bind(this.serialField.visibleProperty());
@@ -62,7 +61,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         this.vendorList.managedProperty().bind(this.vendorList.visibleProperty());
         this.locationField.managedProperty().bind(this.locationField.visibleProperty());
         this.barcodeField.managedProperty().bind(this.barcodeField.visibleProperty());
-        this.faultDescriptionField.managedProperty().bind(this.faultDescriptionField.visibleProperty());
 
         this.nameLabel.managedProperty().bind(this.nameLabel.visibleProperty());
         this.serialLabel.managedProperty().bind(this.serialLabel.visibleProperty());
@@ -72,7 +70,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         this.vendorLabel.managedProperty().bind(this.vendorLabel.visibleProperty());
         this.locationLabel.managedProperty().bind(this.locationLabel.visibleProperty());
         this.barcodeLabel.managedProperty().bind(this.barcodeLabel.visibleProperty());
-        this.faultDescriptionLabel.managedProperty().bind(this.faultDescriptionLabel.visibleProperty());
     }
 
     /**
@@ -91,7 +88,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
             this.priceField.setText("$" + df.format(part.getPrice()));
-            //this.vendorList.setText(vendorInformation.getVendorFromID(part.getVendor()));
             this.locationField.setText(part.getLocation());
             this.barcodeField.setText(part.getBarcode().toString());
         }
@@ -107,9 +103,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             case "total":
                 setTotalElements();
                 break;
-            case "fault":
-                setFaultElements();
-                break;
             case "checkedOut":
                 setCheckedOutElements();
                 break;
@@ -121,7 +114,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
                 setElements("price", false);
                 setElements("vendor", false);
                 setElements("location", false);
-                setElements("faultDesc", false);
                 setElements("barcode", false);
                 this.nameLabel.setVisible(true);
                 this.nameLabel.setText("Error: No info found. Please report \nthis to the developers.");
@@ -142,7 +134,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         setElements("price", true);
         setElements("vendor", true);
         setElements("location", true);
-        setElements("faultDesc", false);
         setElements("barcode", true);
     }
 
@@ -157,24 +148,9 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
         setElements("price", false);
         setElements("vendor", false);
         setElements("location", false);
-        setElements("faultDesc", false);
         setElements("barcode", true);
     }
 
-    /**
-     * Helper method to set visibility and position of UI elements based on the fault tab information
-     */
-    public void setFaultElements(){
-        setElements("name", true);
-        setElements("serial", true);
-        setElements("manufacturer", false);
-        setElements("quantity", false);
-        setElements("price", 175, 134, true);
-        setElements("vendor", false);
-        setElements("location", false);
-        setElements("faultDesc", 175, 214, true);
-        setElements("barcode", true);
-    }
 
     /**
      * Helper method to set visibility and position of UI elements
@@ -235,14 +211,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
                 this.locationField.setVisible(visible);
                 this.locationLabel.setVisible(visible);
                 break;
-            case "faultDesc":
-                this.faultDescriptionField.setLayoutX(x);
-                this.faultDescriptionField.setLayoutY(y);
-                this.faultDescriptionLabel.setLayoutX(x - 120);
-                this.faultDescriptionLabel.setLayoutY(y);
-                this.faultDescriptionField.setVisible(visible);
-                this.faultDescriptionLabel.setVisible(visible);
-                break;
             case "barcode":
                 this.barcodeLabel.setLayoutX(x);
                 this.barcodeLabel.setLayoutY(y);
@@ -284,10 +252,6 @@ public class ControllerShowPart extends ControllerInventoryPage implements Initi
             case "location":
                 this.locationField.setVisible(visible);
                 this.locationLabel.setVisible(visible);
-                break;
-            case "faultDesc":
-                this.faultDescriptionField.setVisible(visible);
-                this.faultDescriptionLabel.setVisible(visible);
                 break;
             case "barcode":
                 this.barcodeField.setVisible(visible);

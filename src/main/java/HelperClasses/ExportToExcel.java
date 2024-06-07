@@ -3,7 +3,6 @@ package HelperClasses;
 import Database.ObjectClasses.Part;
 import Database.OverdueItem;
 import InventoryController.CheckedOutItems;
-import InventoryController.FaultyPartTabTableRow;
 import InventoryController.HistoryTabTableRow;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
@@ -16,26 +15,7 @@ import java.io.IOException;
 public class ExportToExcel {
     StageWrapper helper = new StageWrapper();
 
-    /**
-     * Exports faulty parts to excel file
-     *
-     * @param list List of faulty parts
-     */
-    public void exportFaulty(ObservableList<FaultyPartTabTableRow> list) {
-        FileChooser fileChooserSave = new FileChooser();
-        fileChooserSave.setTitle("Save File");
-        fileChooserSave.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
-
-
-        String[] columns = {"Part Name", "Location", "Barcode", "Student Name", "Student Email", "Price", "Fault Description"}; //Number of columns in tableview
-        int rowNum = 1;
-        Workbook workbook = new XSSFWorkbook();
-
-        CreationHelper createHelper = workbook.getCreationHelper();
-
-        Sheet sheet = workbook.createSheet("Faulty Items");
-
+    private void formatExcelFile(String[] columns, Workbook workbook, Sheet sheet) {
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
         headerFont.setFontHeightInPoints((short) 14);
@@ -48,32 +28,6 @@ public class ExportToExcel {
             cell.setCellValue(columns[i]);
             cell.setCellStyle(headerCellStyle);
         }
-
-        for (FaultyPartTabTableRow items : list) {
-            Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(items.getPartName().getValue());
-            row.createCell(1).setCellValue(items.getLocation().getValue());
-            row.createCell(2).setCellValue(items.getBarcode().getValue());
-            row.createCell(3).setCellValue(items.getStudentName().getValue());
-            row.createCell(4).setCellValue(items.getStudentEmail().getValue());
-            row.createCell(5).setCellValue(items.getPrice().getValue());
-            row.createCell(6).setCellValue(items.getDescription().getValue());
-
-        }
-        for (int i = 0; i < columns.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
-        try {
-            FileOutputStream fileOut = new FileOutputStream(fileChooserSave.showSaveDialog(null));
-            workbook.write(fileOut);
-            fileOut.close();
-            // Closing the workbook
-            workbook.close();
-        } catch (NullPointerException | IOException e) {
-            return;
-        }
-        helper.slidingAlert("Success", "File created successfully!");
-
     }
 
     /**
@@ -96,18 +50,7 @@ public class ExportToExcel {
 
         Sheet sheet = workbook.createSheet("Checked Out Items");
 
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 14);
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < columns.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
+        formatExcelFile(columns, workbook, sheet);
 
         for (CheckedOutItems items : list) {
             Row row = sheet.createRow(rowNum++);
@@ -117,19 +60,7 @@ public class ExportToExcel {
             row.createCell(3).setCellValue(items.getCheckedOutDate().getValue().toString());
             row.createCell(4).setCellValue(items.getDueDate().getValue().toString());
         }
-        for (int i = 0; i < columns.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
-        try {
-            FileOutputStream fileOut = new FileOutputStream(fileChooserSave.showSaveDialog(null));
-            workbook.write(fileOut);
-            fileOut.close();
-            // Closing the workbook
-            workbook.close();
-        } catch (NullPointerException | IOException e) {
-            return;
-        }
-        helper.slidingAlert("Success", "File created successfully!");
+        buildExcelFile(fileChooserSave, columns, workbook, sheet);
     }
 
     /**
@@ -144,35 +75,27 @@ public class ExportToExcel {
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
 
 
-        String[] columns = {"Student Name", "Student ID", "Part Name", "Barcode", "Due Date"}; //Number of columns in tableview
+        String[] columns = {"Student Name", "Student ID", "Part Name", "Serial Number", "Barcode", "Due Date"}; //Number of columns in tableview
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
 
-        CreationHelper createHelper = workbook.getCreationHelper();
-
         Sheet sheet = workbook.createSheet("Overdue Items");
 
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 14);
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < columns.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
+        formatExcelFile(columns, workbook, sheet);
 
         for (OverdueItem items : list) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getName().getValue());
             row.createCell(1).setCellValue(items.getID().getValue());
             row.createCell(2).setCellValue(items.getPart().getValue());
-            row.createCell(3).setCellValue(items.getBarcode().getValue());
-            row.createCell(4).setCellValue(items.getDate().getValue().toString());
+            row.createCell(3).setCellValue(items.getSerialNumber().getValue());
+            row.createCell(4).setCellValue(items.getBarcode().getValue());
+            row.createCell(5).setCellValue(items.getDate().getValue().toString());
         }
+        buildExcelFile(fileChooserSave, columns, workbook, sheet);
+    }
+
+    private void buildExcelFile(FileChooser fileChooserSave, String[] columns, Workbook workbook, Sheet sheet) {
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);
         }
@@ -208,18 +131,7 @@ public class ExportToExcel {
 
         Sheet sheet = workbook.createSheet("Parts List");
 
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 14);
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < columns.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
+        formatExcelFile(columns, workbook, sheet);
 
         for (Part items : list) {
             Row row = sheet.createRow(rowNum++);
@@ -228,19 +140,7 @@ public class ExportToExcel {
             row.createCell(2).setCellValue(items.getLocation());
             row.createCell(3).setCellValue(items.getBarcode());
         }
-        for (int i = 0; i < columns.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
-        try {
-            FileOutputStream fileOut = new FileOutputStream(fileChooserSave.showSaveDialog(null));
-            workbook.write(fileOut);
-            fileOut.close();
-            // Closing the workbook
-            workbook.close();
-        } catch (NullPointerException | IOException e) {
-            return;
-        }
-        helper.slidingAlert("Success", "File created successfully!");
+        buildExcelFile(fileChooserSave, columns, workbook, sheet);
     }
 
     /**
@@ -263,18 +163,7 @@ public class ExportToExcel {
 
         Sheet sheet = workbook.createSheet("Transaction History");
 
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 14);
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < columns.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
+        formatExcelFile(columns, workbook, sheet);
 
         for (HistoryTabTableRow items : list) {
             Row row = sheet.createRow(rowNum++);
@@ -284,20 +173,7 @@ public class ExportToExcel {
             row.createCell(3).setCellValue(items.getAction().get());
             row.createCell(4).setCellValue(items.getDate().get().toString());
         }
-        for (int i = 0; i < columns.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
-        try {
-            FileOutputStream fileOut = new FileOutputStream(fileChooserSave.showSaveDialog(null));
-            workbook.write(fileOut);
-            fileOut.close();
-            // Closing the workbook
-            workbook.close();
-        } catch (NullPointerException | IOException e) {
-            return;
-        }
-
-        helper.slidingAlert("Success", "File created successfully!");
+        buildExcelFile(fileChooserSave, columns, workbook, sheet);
     }
 
 }

@@ -15,7 +15,6 @@ public class HistoryParts {
     private static String host = Database.host;
     private static final String dbdriver = "com.mysql.jdbc.Driver";
     private static final String dbname = "student_check_in";
-    private static Connection connection;
 
     // This query is used to get the data for the transaction history table in the inventory
     private static final String HISTORY_QUERY = "SELECT studentName, email, partName, parts.barcode, " +

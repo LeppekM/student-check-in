@@ -8,48 +8,31 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="inventoryScene" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerInventoryPage">
-  <children>
-        <JFXTabPane fx:id="tabPane" layoutX="0.0" layoutY="0.0" stylesheets="@../css/TabStyle.css" tabClosingPolicy="UNAVAILABLE">
-          <tabs>
-            <Tab fx:id="totalTab" text="Total Inventory">
-              <content>
-                <fx:include fx:id="totalTabPage" source="InventoryTotalTab.fxml" />
-              </content>
-            </Tab>
-            <Tab fx:id="historyTab" text="Transaction History">
-              <content>
-                <fx:include fx:id="historyTabPage" source="InventoryHistoryTab.fxml" />
-              </content>
-            </Tab>
-            <Tab fx:id="checkedOutTab" text="Checked Out">
-              <content>
-                <fx:include fx:id="checkedOutTabPage" source="InventoryCheckedOutTab.fxml" />
-              </content>
-            </Tab>
-            <Tab fx:id="overdueTab" text="Overdue">
-              <content>
-                <fx:include fx:id="overdueTabPage" source="InventoryOverdueTab.fxml" />
-              </content>
-            </Tab>
-            <Tab fx:id="faultsTab" text="Faulty">
-              <content>
-                <fx:include fx:id="faultyTabPage" source="InventoryFaultyTab.fxml" />
-              </content>
-            </Tab>
-          </tabs>
-        </JFXTabPane>
-              <JFXButton fx:id="back" mnemonicParsing="false" onAction="#goBack" StackPane.alignment="BOTTOM_LEFT">
-                <graphic>
-                  <ImageView fitHeight="35.0" fitWidth="39.0">
-                    <image>
-                      <Image url="@../images/home.png" />
-                    </image>
-                  </ImageView>
-                </graphic>
-         <StackPane.margin>
-            <Insets bottom="10.0" left="20.0" />
-         </StackPane.margin>
-              </JFXButton>
-  </children>
+<StackPane fx:id="inventoryScene" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="InventoryController.ControllerInventoryPage">
+  <JFXTabPane fx:id="tabPane" stylesheets="@../css/TabStyle.css"
+              tabClosingPolicy="UNAVAILABLE">
+    <Tab fx:id="totalTab" text="Total Inventory">
+      <fx:include fx:id="totalTabPage" source="InventoryTotalTab.fxml"/>
+    </Tab>
+    <Tab fx:id="historyTab" text="Transaction History">
+      <fx:include fx:id="historyTabPage" source="InventoryHistoryTab.fxml"/>
+    </Tab>
+    <Tab fx:id="checkedOutTab" text="Checked Out">
+      <fx:include fx:id="checkedOutTabPage" source="InventoryCheckedOutTab.fxml"/>
+    </Tab>
+    <Tab fx:id="overdueTab" text="Overdue">
+      <fx:include fx:id="overdueTabPage" source="InventoryOverdueTab.fxml"/>
+    </Tab>
+  </JFXTabPane>
+  <JFXButton fx:id="back" mnemonicParsing="false" onAction="#goBack" StackPane.alignment="BOTTOM_LEFT">
+    <graphic>
+      <ImageView fitHeight="35.0" fitWidth="39.0">
+        <Image url="@../images/home.png"/>
+      </ImageView>
+    </graphic>
+    <StackPane.margin>
+      <Insets bottom="10.0" left="20.0"/>
+    </StackPane.margin>
+  </JFXButton>
 </StackPane>

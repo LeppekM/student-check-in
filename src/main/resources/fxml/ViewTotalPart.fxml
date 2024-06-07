@@ -13,138 +13,131 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="root" fx:id="sceneViewTotalPart" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerViewTotalPart">
-    <children>
-        <HBox fx:id="gridContainer">
-            <children>
-            <VBox alignment="TOP_CENTER">
-               <children>
-                  <Label text="Part Info" underline="true">
-                     <font>
-                        <Font size="24.0" />
-                     </font></Label>
-                      <GridPane fx:id="grid" hgap="3.0" vgap="15.0">
-                          <children>
-                              <Label text="Part Name:">
-                                  <font>
-                                      <Font size="18.0" fx:id="x1" />
-                                  </font>
-                              </Label>
-                              <Label id="nameLabel" font="$x1" text="Barcode:" GridPane.rowIndex="1" />
-                              <Label id="nameLabel" font="$x1" text="Serial Number:" GridPane.rowIndex="2" />
-                              <Label id="nameLabel" font="$x1" text="Part ID:" GridPane.rowIndex="3" />
-                              <JFXTextField fx:id="partNameField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                              <JFXTextField fx:id="barcodeField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <JFXTextField fx:id="serialNumberField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <JFXTextField fx:id="partIDField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                          </children>
-                          <columnConstraints>
-                              <ColumnConstraints halignment="RIGHT" />
-                              <ColumnConstraints />
-                              <ColumnConstraints />
-                          </columnConstraints>
-                          <rowConstraints>
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                          </rowConstraints>
-                          <VBox.margin>
-                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                          </VBox.margin>
-                      </GridPane>
-               </children>
-            </VBox>
-            <Separator orientation="VERTICAL">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <HBox.margin>
-                  <Insets left="15.0" />
-               </HBox.margin>
-            </Separator>
-            <VBox alignment="TOP_CENTER">
-               <children>
-                  <Label text="Last Transaction Info" underline="true">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                      <GridPane fx:id="gridCheckedOut" hgap="3.0" vgap="15.0">
-                          <columnConstraints>
-                              <ColumnConstraints halignment="RIGHT" />
-                              <ColumnConstraints />
-                              <ColumnConstraints />
-                          </columnConstraints>
-                          <rowConstraints>
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                              <RowConstraints valignment="BASELINE" />
-                          </rowConstraints>
-                          <VBox.margin>
-                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                          </VBox.margin>
-                      </GridPane>
-               </children>
-            </VBox>
-                <Separator orientation="VERTICAL">
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
-                    <HBox.margin>
-                        <Insets left="15.0" />
-                    </HBox.margin>
-                </Separator>
-                <VBox alignment="TOP_CENTER">
-                    <children>
-                        <Label text="Fault Info" underline="true">
-                            <font>
-                                <Font size="24.0" />
-                            </font>
-                        </Label>
-                        <GridPane fx:id="gridFault" hgap="3.0" vgap="15.0">
-                            <children>
-                                <Label id="nameLabel" font="$x1" text="Price:" GridPane.rowIndex="0" />
-                                <Label id="nameLabel" font="$x1" text="Fault Description:" GridPane.rowIndex="1" />
-                                <JFXTextField fx:id="priceField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                <JFXTextArea fx:id="faultField" editable="false" prefColumnCount="15" prefRowCount="3" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" />
-                            </children>
-                            <columnConstraints>
-                                <ColumnConstraints halignment="RIGHT" />
-                                <ColumnConstraints />
-                                <ColumnConstraints />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints valignment="BASELINE" />
-                                <RowConstraints valignment="BASELINE" />
-                                <RowConstraints valignment="BASELINE" />
-                                <RowConstraints valignment="BASELINE" />
-                                <RowConstraints valignment="BASELINE" />
-                                <RowConstraints valignment="BASELINE" />
-                            </rowConstraints>
-                            <VBox.margin>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                            </VBox.margin>
-                        </GridPane>
-                    </children>
-                </VBox>
-            </children>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" />
-         </VBox.margin>
-        </HBox>
-        <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0">
-            <children>
-                <JFXButton onAction="#goBack" stylesheets="@../css/CheckButton.css" text="Close" />
-            </children>
-            <VBox.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-            </VBox.margin>
-        </HBox>
-    </children>
+<VBox id="root" fx:id="sceneViewTotalPart" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="InventoryController.ControllerViewTotalPart">
+    <HBox fx:id="gridContainer">
+        <VBox.margin>
+            <Insets left="10.0" right="10.0"/>
+        </VBox.margin>
+        <VBox alignment="TOP_CENTER">
+            <Label text="Part Info" underline="true">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Label>
+            <GridPane fx:id="grid" hgap="3.0" vgap="15.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT"/>
+                    <ColumnConstraints/>
+                    <ColumnConstraints/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                </rowConstraints>
+                <VBox.margin>
+                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                </VBox.margin>
+                <Label text="Part Name:">
+                    <font>
+                        <Font size="18.0" fx:id="x1"/>
+                    </font>
+                </Label>
+                <Label id="nameLabel" font="$x1" text="Barcode:" GridPane.rowIndex="1"/>
+                <Label id="nameLabel" font="$x1" text="Serial Number:" GridPane.rowIndex="2"/>
+                <Label id="nameLabel" font="$x1" text="Part ID:" GridPane.rowIndex="3"/>
+                <JFXTextField fx:id="partNameField" editable="false" focusColor="FIREBRICK"
+                              GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <JFXTextField fx:id="barcodeField" editable="false" focusColor="FIREBRICK"
+                              GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <JFXTextField fx:id="serialNumberField" editable="false" focusColor="FIREBRICK"
+                              GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <JFXTextField fx:id="partIDField" editable="false" focusColor="FIREBRICK"
+                              GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            </GridPane>
+        </VBox>
+        <Separator orientation="VERTICAL">
+            <opaqueInsets>
+                <Insets/>
+            </opaqueInsets>
+            <HBox.margin>
+                <Insets left="15.0"/>
+            </HBox.margin>
+        </Separator>
+        <VBox alignment="TOP_CENTER">
+            <Label text="Last Transaction Info" underline="true">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Label>
+            <GridPane fx:id="gridCheckedOut" hgap="3.0" vgap="15.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT"/>
+                    <ColumnConstraints/>
+                    <ColumnConstraints/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                </rowConstraints>
+                <VBox.margin>
+                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                </VBox.margin>
+            </GridPane>
+        </VBox>
+        <Separator orientation="VERTICAL">
+            <opaqueInsets>
+                <Insets/>
+            </opaqueInsets>
+            <HBox.margin>
+                <Insets left="15.0"/>
+            </HBox.margin>
+        </Separator>
+        <VBox alignment="TOP_CENTER">
+            <Label text="Fault Info" underline="true">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Label>
+            <GridPane fx:id="gridFault" hgap="3.0" vgap="15.0">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT"/>
+                    <ColumnConstraints/>
+                    <ColumnConstraints/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                    <RowConstraints valignment="BASELINE"/>
+                </rowConstraints>
+                <VBox.margin>
+                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                </VBox.margin>
+                <Label id="nameLabel" font="$x1" text="Price:" GridPane.rowIndex="0"/>
+                <Label id="nameLabel" font="$x1" text="Fault Description:" GridPane.rowIndex="1"/>
+                <JFXTextField fx:id="priceField" editable="false" focusColor="FIREBRICK"
+                              GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <JFXTextArea fx:id="faultField" editable="false" prefColumnCount="15" prefRowCount="3"
+                             prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER"
+                             GridPane.rowIndex="1"/>
+            </GridPane>
+        </VBox>
+    </HBox>
+    <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0">
+        <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </VBox.margin>
+        <JFXButton onAction="#goBack" stylesheets="@../css/CheckButton.css" text="Close"/>
+    </HBox>
 </VBox>

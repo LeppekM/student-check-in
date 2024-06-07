@@ -7,32 +7,36 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CheckItemsController.ExtendedCheckoutController">
-   <children>
-      <Label layoutX="127.0" layoutY="89.0" text="Course Name">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="101.0" layoutY="178.0" text="Professor Name">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="144.0" layoutY="266.0" text="Return Date">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <JFXTextField fx:id="courseName" focusColor="FIREBRICK" layoutX="257.0" layoutY="90.0" />
-      <JFXTextField fx:id="profName" focusColor="FIREBRICK" layoutX="257.0" layoutY="178.0" />
-      <JFXDatePicker fx:id="returnDate" defaultColor="FIREBRICK" layoutX="257.0" layoutY="260.0" />
-      <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" layoutX="232.0" layoutY="323.0" onAction="#reset" prefHeight="45.0" prefWidth="97.0" stylesheets="@../css/CheckButton.css" text="Reset" textFill="#043993" />
-      <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" layoutX="352.0" layoutY="323.0" onAction="#submit" prefHeight="45.0" prefWidth="97.0" stylesheets="@../css/CheckButton.css" text="Submit" textFill="#043993" />
-      <Label layoutX="132.0" layoutY="14.0" text="Extended Checkout Information" textAlignment="CENTER">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-   </children>
+<Pane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="CheckItemsController.ExtendedCheckoutController">
+   <Label layoutX="127.0" layoutY="89.0" text="Course Name">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Label>
+   <Label layoutX="101.0" layoutY="178.0" text="Professor Name">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Label>
+   <Label layoutX="144.0" layoutY="266.0" text="Return Date">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Label>
+   <JFXTextField fx:id="courseName" focusColor="FIREBRICK" layoutX="257.0" layoutY="90.0"/>
+   <JFXTextField fx:id="profName" focusColor="FIREBRICK" layoutX="257.0" layoutY="178.0"/>
+   <JFXDatePicker fx:id="returnDate" defaultColor="FIREBRICK" layoutX="257.0" layoutY="260.0"/>
+   <JFXButton fx:id="resetButton" alignment="CENTER" contentDisplay="CENTER" layoutX="232.0" layoutY="323.0"
+              onAction="#reset" prefHeight="45.0" prefWidth="97.0" stylesheets="@../css/CheckButton.css" text="Reset"
+              textFill="#043993"/>
+   <JFXButton fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" layoutX="352.0" layoutY="323.0"
+              onAction="#submit" prefHeight="45.0" prefWidth="97.0" stylesheets="@../css/CheckButton.css" text="Submit"
+              textFill="#043993"/>
+   <Label layoutX="132.0" layoutY="14.0" text="Extended Checkout Information" textAlignment="CENTER">
+      <font>
+         <Font size="24.0"/>
+      </font>
+   </Label>
 </Pane>

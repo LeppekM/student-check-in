@@ -12,77 +12,82 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.EditAdmin">
-   <children>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="789.0">
-         <children>
-            <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#save" style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;">
-               <graphic>
-                  <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/Save.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <VBox fx:id="vbox" layoutX="40.0" layoutY="16.0" prefHeight="526.0" prefWidth="668.0" style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
-               <children>
-                  <JFXTextField fx:id="email" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0" promptText="MSOE Email">
-                     <font>
-                        <Font name="Arial Black" size="32.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="workerName" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0" promptText="Name (First and Last)">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Arial Black" size="32.0" />
-                     </font></JFXTextField>
-                  <JFXTextField fx:id="eRFIDa" alignment="CENTER" focusColor="FIREBRICK" layoutX="10.0" layoutY="110.0" prefHeight="100.0" promptText="RFID">
-                     <font>
-                        <Font name="Arial Black" size="32.0" />
-                     </font>
-                  </JFXTextField>
-                  <Pane prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <JFXPasswordField fx:id="pass" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0" prefWidth="670.0" promptText="Password">
-                           <font>
-                              <Font name="Arial Black" size="32.0" />
-                           </font>
-                        </JFXPasswordField>
-                        <JFXTextField fx:id="unmasked" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0" prefWidth="670.0" promptText="Password">
-                           <font>
-                              <Font name="Arial Black" size="32.0" />
-                           </font>
-                        </JFXTextField>
-                     </children>
-                  </Pane>
-                  <Pane prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <JFXPasswordField fx:id="pin" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0" prefWidth="670.0" promptText="Pin">
-                           <font>
-                              <Font name="Arial Black" size="32.0" />
-                           </font>
-                        </JFXPasswordField>
-                        <JFXTextField fx:id="unmaskedPin" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0" prefWidth="670.0" promptText="Pin">
-                           <font>
-                              <Font name="Arial Black" size="32.0" />
-                           </font>
-                        </JFXTextField>
-                     </children>
-                  </Pane>
-               </children></VBox>
-            <JFXCheckBox fx:id="showPass" checkedColor="#d71818" layoutX="680.0" layoutY="320.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="107.0" text="Show Password" wrapText="true">
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="600.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/8.0.121"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.EditAdmin">
+   <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+         prefWidth="789.0">
+      <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#save"
+              style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt; -fx-border-color: #043993; -fx-text-fill: #000000;">
+         <graphic>
+            <ImageView fitHeight="35.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@../images/save.png"/>
+            </ImageView>
+         </graphic>
+      </Button>
+      <VBox fx:id="vbox" layoutX="40.0" layoutY="16.0" prefHeight="526.0" prefWidth="668.0"
+            style="-fx-text-fill: red; -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );">
+         <JFXTextField fx:id="email" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0"
+                       promptText="MSOE Email">
+            <font>
+               <Font name="Arial Black" size="32.0"/>
+            </font>
+         </JFXTextField>
+         <JFXTextField fx:id="workerName" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0"
+                       promptText="Name (First and Last)">
+            <VBox.margin>
+               <Insets/>
+            </VBox.margin>
+            <font>
+               <Font name="Arial Black" size="32.0"/>
+            </font>
+         </JFXTextField>
+         <JFXTextField fx:id="eRFIDa" alignment="CENTER" focusColor="FIREBRICK" layoutX="10.0" layoutY="110.0"
+                       prefHeight="100.0" promptText="RFID">
+            <font>
+               <Font name="Arial Black" size="32.0"/>
+            </font>
+         </JFXTextField>
+         <Pane prefHeight="100.0" prefWidth="200.0">
+            <JFXPasswordField fx:id="pass" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0"
+                              prefWidth="670.0" promptText="Password">
                <font>
-                  <Font name="Arial Black" size="14.0" />
-               </font></JFXCheckBox>
-            <JFXCheckBox fx:id="showPin" checkedColor="#d71818" layoutX="680.0" layoutY="420.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="110.0" text="Show Pin" wrapText="true">
-               <font>
-                  <Font name="Arial Black" size="14.0" />
+                  <Font name="Arial Black" size="32.0"/>
                </font>
-            </JFXCheckBox>
-         </children>
-      </Pane>
-   </children>
+            </JFXPasswordField>
+            <JFXTextField fx:id="unmasked" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0"
+                          prefWidth="670.0" promptText="Password">
+               <font>
+                  <Font name="Arial Black" size="32.0"/>
+               </font>
+            </JFXTextField>
+         </Pane>
+         <Pane prefHeight="100.0" prefWidth="200.0">
+            <JFXPasswordField fx:id="pin" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0"
+                              prefWidth="670.0" promptText="Pin">
+               <font>
+                  <Font name="Arial Black" size="32.0"/>
+               </font>
+            </JFXPasswordField>
+            <JFXTextField fx:id="unmaskedPin" alignment="CENTER" focusColor="FIREBRICK" prefHeight="100.0"
+                          prefWidth="670.0" promptText="Pin">
+               <font>
+                  <Font name="Arial Black" size="32.0"/>
+               </font>
+            </JFXTextField>
+         </Pane>
+      </VBox>
+      <JFXCheckBox fx:id="showPass" checkedColor="#d71818" layoutX="680.0" layoutY="320.0" mnemonicParsing="false"
+                   prefHeight="100.0" prefWidth="107.0" text="Show Password" wrapText="true">
+         <font>
+            <Font name="Arial Black" size="14.0"/>
+         </font>
+      </JFXCheckBox>
+      <JFXCheckBox fx:id="showPin" checkedColor="#d71818" layoutX="680.0" layoutY="420.0" mnemonicParsing="false"
+                   prefHeight="100.0" prefWidth="110.0" text="Show Pin" wrapText="true">
+         <font>
+            <Font name="Arial Black" size="14.0"/>
+         </font>
+      </JFXCheckBox>
+   </Pane>
 </AnchorPane>

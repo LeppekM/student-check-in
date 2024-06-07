@@ -11,93 +11,95 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="root" fx:id="sceneViewHistoryPart" prefHeight="450.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerViewHistoryPart">
-    <children>
-        <GridPane alignment="TOP_CENTER" hgap="3.0" prefHeight="367.0" prefWidth="370.0" vgap="15.0">
-            <children>
-                <Label text="Student Name:">
-                    <font>
-                        <Font name="System Bold" size="18.0" fx:id="x1" />
-                    </font>
-                </Label>
-                <Label id="nameLabel" layoutX="45.0" layoutY="55.0" text="Student Email:" GridPane.rowIndex="1">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
-                <Label id="nameLabel" layoutX="52.0" layoutY="148.0" text="Part Name:" GridPane.rowIndex="2">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
-                <Label id="nameLabel" layoutX="90.0" layoutY="192.0" text="Barcode:" GridPane.rowIndex="3">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
-                <Label id="nameLabel" layoutX="119.0" layoutY="235.0" text="Action:" GridPane.rowIndex="4">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
-                <Label id="nameLabel" layoutX="93.0" layoutY="323.0" text="Date:" GridPane.rowIndex="5">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
-                <JFXTextField fx:id="studentNameField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </JFXTextField>
-                <JFXTextField fx:id="studentEmailField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </JFXTextField>
-                <JFXTextField fx:id="partNameField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </JFXTextField>
-                <JFXTextField fx:id="serialNumberField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </JFXTextField>
-                <JFXTextField fx:id="actionField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </JFXTextField>
-                <JFXTextField fx:id="dateField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </JFXTextField>
-            </children>
-            <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints valignment="BASELINE" vgrow="ALWAYS" />
-                <RowConstraints valignment="BASELINE" vgrow="ALWAYS" />
-                <RowConstraints valignment="BASELINE" vgrow="ALWAYS" />
-                <RowConstraints valignment="BASELINE" vgrow="ALWAYS" />
-                <RowConstraints valignment="BASELINE" vgrow="ALWAYS" />
-                <RowConstraints valignment="BASELINE" vgrow="ALWAYS" />
-            </rowConstraints>
-         <VBox.margin>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-         </VBox.margin>
-        </GridPane>
-      <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0">
-         <children>
-             <JFXButton onAction="#goBack" stylesheets="@../css/CheckButton.css" text="Done" />
-         </children>
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
-      </HBox>
-    </children>
+<VBox id="root" fx:id="sceneViewHistoryPart" prefHeight="450.0" prefWidth="400.0"
+      xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="InventoryController.ControllerViewHistoryPart">
+    <GridPane alignment="TOP_CENTER" hgap="3.0" prefHeight="367.0" prefWidth="370.0" vgap="15.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints valignment="BASELINE" vgrow="ALWAYS"/>
+            <RowConstraints valignment="BASELINE" vgrow="ALWAYS"/>
+            <RowConstraints valignment="BASELINE" vgrow="ALWAYS"/>
+            <RowConstraints valignment="BASELINE" vgrow="ALWAYS"/>
+            <RowConstraints valignment="BASELINE" vgrow="ALWAYS"/>
+            <RowConstraints valignment="BASELINE" vgrow="ALWAYS"/>
+        </rowConstraints>
+        <VBox.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+        </VBox.margin>
+        <Label text="Student Name:">
+            <font>
+                <Font name="System Bold" size="18.0" fx:id="x1"/>
+            </font>
+        </Label>
+        <Label id="nameLabel" layoutX="45.0" layoutY="55.0" text="Student Email:" GridPane.rowIndex="1">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <Label id="nameLabel" layoutX="52.0" layoutY="148.0" text="Part Name:" GridPane.rowIndex="2">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <Label id="nameLabel" layoutX="90.0" layoutY="192.0" text="Barcode:" GridPane.rowIndex="3">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <Label id="nameLabel" layoutX="119.0" layoutY="235.0" text="Action:" GridPane.rowIndex="4">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <Label id="nameLabel" layoutX="93.0" layoutY="323.0" text="Date:" GridPane.rowIndex="5">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <JFXTextField fx:id="studentNameField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1"
+                      GridPane.rowIndex="0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <JFXTextField fx:id="studentEmailField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1"
+                      GridPane.rowIndex="1">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <JFXTextField fx:id="partNameField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1"
+                      GridPane.rowIndex="2">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <JFXTextField fx:id="serialNumberField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1"
+                      GridPane.rowIndex="3">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <JFXTextField fx:id="actionField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1"
+                      GridPane.rowIndex="4">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+        <JFXTextField fx:id="dateField" editable="false" focusColor="FIREBRICK" GridPane.columnIndex="1"
+                      GridPane.rowIndex="5">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </JFXTextField>
+    </GridPane>
+    <HBox alignment="BOTTOM_RIGHT" prefHeight="50.0">
+        <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </VBox.margin>
+        <JFXButton onAction="#goBack" stylesheets="@../css/CheckButton.css" text="Done"/>
+    </HBox>
 </VBox>

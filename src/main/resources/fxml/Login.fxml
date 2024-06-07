@@ -16,120 +16,125 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="loginScene" minHeight="525.0" minWidth="1030.0" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerLogin">
-    <children>
-        <VBox alignment="CENTER">
-            <StackPane>
-                <children>
-                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="95.0" stroke="BLACK" strokeType="INSIDE" width="1010.0">
-                        <effect>
-                            <DropShadow />
-                        </effect>
-                    </Rectangle>
-                    <Label style="-fx-font-weight: bold" text="MSOE Technical Support Center" underline="true">
+<StackPane fx:id="loginScene" minHeight="525.0" minWidth="1030.0" prefHeight="400.0" prefWidth="640.0"
+           xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerLogin">
+    <VBox alignment="CENTER">
+        <StackPane>
+            <VBox.margin>
+                <Insets bottom="25.0"/>
+            </VBox.margin>
+            <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="95.0" stroke="BLACK"
+                       strokeType="INSIDE" width="1010.0">
+                <effect>
+                    <DropShadow/>
+                </effect>
+            </Rectangle>
+            <Label style="-fx-font-weight: bold" text="MSOE Technical Support Center" underline="true">
+                <font>
+                    <Font size="64.0"/>
+                </font>
+            </Label>
+        </StackPane>
+        <StackPane prefHeight="150.0" prefWidth="200.0">
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="275.0" stroke="BLACK"
+                       strokeType="INSIDE" width="300.0">
+                <effect>
+                    <DropShadow/>
+                </effect>
+            </Rectangle>
+            <Pane prefHeight="279.0" prefWidth="764.0"/>
+            <VBox alignment="CENTER">
+                <Label style="-fx-font-weight: bold" text="Login">
+                    <font>
+                        <Font size="54.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                </Label>
+                <GridPane fx:id="emailLogin" alignment="CENTER" hgap="2.0" vgap="30.0">
+                    <Label fx:id="emailLabel" alignment="CENTER_RIGHT" contentDisplay="CENTER"
+                           style="-fx-font-weight: bold" text="email:" visible="false">
                         <font>
-                            <Font size="64.0" />
+                            <Font size="18.0"/>
                         </font>
                     </Label>
-                </children>
-                <VBox.margin>
-                    <Insets bottom="25.0" />
-                </VBox.margin>
-            </StackPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
-                <children>
-                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="275.0" stroke="BLACK" strokeType="INSIDE" width="300.0">
-                        <effect>
-                            <DropShadow />
-                        </effect></Rectangle>
-               <Pane prefHeight="279.0" prefWidth="764.0" />
-                    <VBox alignment="CENTER">
-                        <children>
-                            <Label style="-fx-font-weight: bold" text="Login">
-                                <font>
-                                    <Font size="54.0" />
-                                </font>
-                                <VBox.margin>
-                                    <Insets bottom="10.0" />
-                                </VBox.margin>
-                            </Label>
-                            <GridPane fx:id="emailLogin" alignment="CENTER" hgap="2.0" vgap="30.0">
-                                <Label fx:id="emailLabel" alignment="CENTER_RIGHT" contentDisplay="CENTER" style="-fx-font-weight: bold" text="email:" visible="false">
-                                    <font>
-                                        <Font size="18.0" />
-                                    </font>
-                                </Label>
-                                <Label fx:id="passLabel" style="-fx-font-weight: bold" text="password:" visible="false" GridPane.rowIndex="1">
-                                    <font>
-                                        <Font size="18.0" />
-                                    </font>
-                                </Label>
-                                <JFXTextField fx:id="emailInputLoginPage" focusColor="FIREBRICK" visible="false" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                           <padding>
-                              <Insets top="7.0" />
-                           </padding>
-                        </JFXTextField>
-                                <JFXPasswordField fx:id="passwordInputLoginPage" focusColor="FIREBRICK" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                           <padding>
-                              <Insets top="7.0" />
-                           </padding>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </JFXPasswordField>
-                        <Label fx:id="RFIDLabel" text="RFID:">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <JFXTextField fx:id="RFID" focusColor="FIREBRICK" GridPane.columnIndex="1" />
-                        <columnConstraints>
-                           <ColumnConstraints halignment="RIGHT" />
-                           <ColumnConstraints minWidth="10.0" prefWidth="170.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                           <RowConstraints valignment="BOTTOM" />
-                           <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" />
-                        </rowConstraints>
+                    <Label fx:id="passLabel" style="-fx-font-weight: bold" text="password:" visible="false"
+                           GridPane.rowIndex="1">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Label>
+                    <JFXTextField fx:id="emailInputLoginPage" focusColor="FIREBRICK" visible="false"
+                                  GridPane.columnIndex="1">
+                        <font>
+                            <Font size="16.0"/>
+                        </font>
                         <padding>
-                           <Insets bottom="10.0" />
+                            <Insets top="7.0"/>
                         </padding>
-                            </GridPane>
-                            <Label fx:id="invalidLoginCredentialsError" style="-fx-font-weight: bold" text="Invalid Credentials" textFill="RED" visible="false">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                                <VBox.margin>
-                                    <Insets bottom="10.0" top="10.0" />
-                                </VBox.margin>
-                            </Label>
-                            <HBox alignment="CENTER" maxHeight="50.0" maxWidth="115.0" minHeight="50.0" minWidth="115.0" prefHeight="50.0" prefWidth="115.0" VBox.vgrow="NEVER">
-                                <VBox.margin>
-                                    <Insets bottom="20.0" />
-                                </VBox.margin>
-                                <JFXButton fx:id="loginButtonLoginPage" alignment="CENTER" onAction="#login" prefWidth="110.0" style="-fx-background-color: white;" stylesheets="@../css/CheckButton.css" text="Login" />
-                            </HBox>
-                        </children>
-                    </VBox>
-                </children>
-                <VBox.margin>
-                    <Insets />
-                </VBox.margin>
-            </StackPane>
-            <StackPane.margin>
-                <Insets />
-            </StackPane.margin>
-        </VBox>
-      <JFXButton fx:id="switchButton" mnemonicParsing="false" onAction="#switchToOther" prefHeight="45.0" prefWidth="193.0" stylesheets="@../css/CheckButton.css" text="Login Using Email" textFill="FIREBRICK">
-         <StackPane.margin>
-            <Insets top="450.0" />
-         </StackPane.margin>
-      </JFXButton>
-    </children>
+                    </JFXTextField>
+                    <JFXPasswordField fx:id="passwordInputLoginPage" focusColor="FIREBRICK" visible="false"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <font>
+                            <Font size="16.0"/>
+                        </font>
+                        <padding>
+                            <Insets top="7.0"/>
+                        </padding>
+                        <GridPane.margin>
+                            <Insets/>
+                        </GridPane.margin>
+                    </JFXPasswordField>
+                    <Label fx:id="RFIDLabel" text="RFID:">
+                        <font>
+                            <Font name="System Bold" size="18.0"/>
+                        </font>
+                    </Label>
+                    <JFXTextField fx:id="RFID" focusColor="FIREBRICK" GridPane.columnIndex="1"/>
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT"/>
+                        <ColumnConstraints minWidth="10.0" prefWidth="170.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints valignment="BOTTOM"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM"/>
+                    </rowConstraints>
+                    <padding>
+                        <Insets bottom="10.0"/>
+                    </padding>
+                </GridPane>
+                <Label fx:id="invalidLoginCredentialsError" style="-fx-font-weight: bold"
+                       text="Invalid Credentials" textFill="RED" visible="false">
+                    <font>
+                        <Font size="12.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="10.0" top="10.0"/>
+                    </VBox.margin>
+                </Label>
+                <HBox alignment="CENTER" maxHeight="50.0" maxWidth="115.0" minHeight="50.0" minWidth="115.0"
+                      prefHeight="50.0" prefWidth="115.0" VBox.vgrow="NEVER">
+                    <VBox.margin>
+                        <Insets bottom="20.0"/>
+                    </VBox.margin>
+                    <JFXButton fx:id="loginButtonLoginPage" alignment="CENTER" onAction="#login"
+                               prefWidth="110.0" style="-fx-background-color: white;"
+                               stylesheets="@../css/CheckButton.css" text="Login"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+        <StackPane.margin>
+            <Insets/>
+        </StackPane.margin>
+    </VBox>
+    <JFXButton fx:id="switchButton" mnemonicParsing="false" onAction="#switchToOther" prefHeight="45.0"
+               prefWidth="193.0" stylesheets="@../css/CheckButton.css" text="Login Using Email" textFill="FIREBRICK">
+        <StackPane.margin>
+          <Insets top="450.0"/>
+        </StackPane.margin>
+    </JFXButton>
 </StackPane>

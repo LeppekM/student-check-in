@@ -17,10 +17,9 @@ public class Student {
     private String date;
     private ObservableList<CheckedOutItems> checkedOut;
     private ObservableList<OverdueItem> overdueItems;
-    private ObservableList<SavedPart> savedItems;
 
     public Student(String name, int uniqueID, int RFID, String email, String date, ObservableList<CheckedOutItems> checkedOut,
-                   ObservableList<OverdueItem> overdueItems, ObservableList<SavedPart> savedItems){
+                   ObservableList<OverdueItem> overdueItems){
         this.name = name;
         this.uniqueID = uniqueID;
         this.RFID = RFID;
@@ -28,7 +27,6 @@ public class Student {
         this.date = date;
         this.checkedOut = checkedOut;
         this.overdueItems = overdueItems;
-        this.savedItems = savedItems;
     }
 
     public Student(String name, int RFID, String email) {
@@ -107,14 +105,6 @@ public class Student {
 
     public void setOverdueItems(ObservableList<OverdueItem> overdueItems) {
         this.overdueItems = FXCollections.observableArrayList(overdueItems);
-    }
-
-    public ObservableList<SavedPart> getSavedItems() {
-        return savedItems;
-    }
-
-    public void setSavedItems(ObservableList<SavedPart> savedItems) {
-        this.savedItems = FXCollections.observableArrayList(savedItems);
     }
 
 }

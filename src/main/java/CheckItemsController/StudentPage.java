@@ -1,6 +1,5 @@
 package CheckItemsController;
 
-import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
@@ -50,16 +49,10 @@ public class StudentPage implements IController {
     private JFXTreeTableView oTable;
 
     @FXML
-    private JFXTreeTableView sTable;
-
-    @FXML
     private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
 
     @FXML
     private JFXTreeTableColumn<OverdueItem, String> oTableCol;
-
-    @FXML
-    private JFXTreeTableColumn<SavedPart, String> sTableCol;
 
     private Worker worker;
 
@@ -73,8 +66,6 @@ public class StudentPage implements IController {
 
     public void setStudent(Student s) {
         student = s;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        double overdueFees = overdueFee(student);
         studentName = new Label("");
         studentName.setText(student.getName());
         studentName.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
@@ -87,10 +78,6 @@ public class StudentPage implements IController {
         RFID.setText(student.getRFID() + "");
         RFID.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
         RFID.setStyle("-fx-font-size: 45px");
-        fees = new Label("");
-        fees.setText("Outstanding fees: $" + overdueFees);
-        fees.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
-        fees.setStyle("-fx-font-size: 45px");
         date = new Label("");
         if(student.getDate() == null){
             date.setText("Date of last rental: Never");
@@ -98,12 +85,11 @@ public class StudentPage implements IController {
             date.setText("Date of last rental: " + student.getDate());
         }
         date.getStylesheets().add(getClass().getResource("/css/HeaderStyle.css").toExternalForm());
-        date.setStyle("-fx-font-size: 45px");
+        date.setStyle("-fx-font-size: 30px");
         vbox.getChildren().add(studentName);
         vbox.getChildren().add(email);
         vbox.getChildren().add(RFID);
         vbox.getChildren().add(date);
-        vbox.getChildren().add(fees);
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(5);
         setTables();
@@ -151,17 +137,6 @@ public class StudentPage implements IController {
         Label emptyTableLabel3 = new Label("No parts found.");
         emptyTableLabel3.setStyle("-fx-text-fill: white");
         emptyTableLabel3.setFont(new Font(18));
-        sTable.setPlaceholder(emptyTableLabel3);
-        sTableCol = new JFXTreeTableColumn<>("Part Name");
-        sTableCol.prefWidthProperty().bind(sTable.widthProperty());
-        sTableCol.setStyle("-fx-font-size: 18px");
-        sTableCol.setResizable(false);
-        sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<SavedPart, String> param) {
-                return param.getValue().getValue().getPartName();
-            }
-        });
 
         populateTables();
     }
@@ -169,16 +144,12 @@ public class StudentPage implements IController {
     private void populateTables() {
         final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
         final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
-        final TreeItem<SavedPart> sItems = new RecursiveTreeItem<>(student.getSavedItems(), RecursiveTreeObject::getChildren);
         coTable.getColumns().setAll(coTableCol);
         coTable.setRoot(coItems);
         coTable.setShowRoot(false);
         oTable.getColumns().setAll(oTableCol);
         oTable.setRoot(oItems);
         oTable.setShowRoot(false);
-        sTable.getColumns().setAll(sTableCol);
-        sTable.setRoot(sItems);
-        sTable.setShowRoot(false);
     }
 
     public void goBack() {
@@ -241,31 +212,6 @@ public class StudentPage implements IController {
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.showAndWait();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void sPopUp(MouseEvent event) {
-        if (event.getClickCount() == 2) {
-            Stage stage = new Stage();
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SavedPopUp.fxml"));
-                Parent root = loader.load();
-                ((IController) loader.getController()).initWorker(worker);
-                Scene scene = new Scene(root, 350, 400);
-                stage.setTitle("Saved Item");
-                stage.initOwner(main.getScene().getWindow());
-                stage.setScene(scene);
-                int index = sTable.getSelectionModel().getSelectedIndex();
-                if (index != -1) {
-                    SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
-                    ((SavedPopUp) loader.getController()).populate(item);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.showAndWait();
-                }
-                fees.setText("Outstanding fees: $" + overdueFee(student));
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -33,16 +33,10 @@ public class ControllerViewTotalPart {
     private Font x1;
 
     @FXML
-    private GridPane grid, gridCheckedOut, gridFaulty;
+    private GridPane gridCheckedOut;
 
     @FXML
-    private Label checkoutActionDate, dueDatePrompt, professorNamePrompt, classNamePrompt;
-
-    @FXML
-    private JFXTextField studentNameField, studentEmailField, professorNameField, classNameField, partNameField, barcodeField, serialNumberField, partIDField, checkoutActionDateField, dueDateField, priceField;
-
-    @FXML
-    private JFXTextArea faultField;
+    private JFXTextField partNameField, barcodeField, serialNumberField, partIDField, priceField;
 
     private Database database = new Database();
 
@@ -114,22 +108,17 @@ public class ControllerViewTotalPart {
             rowNum++;
             addField(rowNum, "Due Date:", checkoutObject.getDueAt());
             if (isOverdue) {
-                ((Label) gridCheckedOut.getChildren().get(rowNum * 2)).setStyle("-fx-text-fill: red");
+                gridCheckedOut.getChildren().get(rowNum * 2).setStyle("-fx-text-fill: red");
             }
-            rowNum++;
         } else {
             gridContainer.getChildren().remove(2);
             gridContainer.getChildren().remove(1);
         }
 
-        // Sets faulty info (removes fee info column if not faulty)
-        if (row.sFaulty()) {
-            priceField.setText("$" + df.format(row.getPrice().get()));
-            faultField.setText(row.getFaultDescription().get());
-        } else {
-            gridContainer.getChildren().remove(gridContainer.getChildren().size() - 1);
-            gridContainer.getChildren().remove(gridContainer.getChildren().size() - 1);
-        }
+        // removes fee info column
+        gridContainer.getChildren().remove(gridContainer.getChildren().size() - 1);
+        gridContainer.getChildren().remove(gridContainer.getChildren().size() - 1);
+
 
 
     }

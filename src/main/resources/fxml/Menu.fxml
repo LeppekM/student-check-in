@@ -9,68 +9,63 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainMenuScene" onKeyTyped="#openCheckoutFromScanner" prefHeight="620.0" prefWidth="800.0" stylesheets="@../css/MenuStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerMenu">
-  <children>
-    <StackPane fx:id="pane" VBox.vgrow="ALWAYS">
-      <children>
-        <VBox alignment="CENTER">
-          <children>
-            <HBox alignment="CENTER">
-              <children>
-                <VBox>
-                  <children>
-                    <JFXButton fx:id="inventory" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" style="-fx-font-size: 28" stylesheets="@../css/ButtonStyle.css" text="Inventory">
-                      <VBox.margin>
-                        <Insets bottom="50.0" />
-                      </VBox.margin>
-                    </JFXButton>
-                    <JFXButton fx:id="inventory1" mnemonicParsing="false" onAction="#openCheckItemsPage" prefHeight="150.0" prefWidth="225.0" style="-fx-font-size: 28" stylesheets="@../css/ButtonStyle.css" text="Checkout/In">
-                      <VBox.margin>
-                        <Insets top="25.0" />
-                      </VBox.margin>
-                    </JFXButton>
-                  </children>
-                  <padding>
-                    <Insets right="75.0" />
-                  </padding>
-                </VBox>
-                <VBox>
-                  <children>
-                    <JFXButton fx:id="manageStudents" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" style="-fx-font-size: 28" stylesheets="@../css/ButtonStyle.css" text="Button" textAlignment="CENTER">
-                    <VBox.margin>
-                      <Insets bottom="50.0" />
-                    </VBox.margin>
-                  </JFXButton>
-                    <JFXButton fx:id="manageWorkers" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0" style="-fx-font-size: 28" stylesheets="@../css/ButtonStyle.css" textAlignment="CENTER">
-                      <VBox.margin>
-                        <Insets top="25.0" />
-                      </VBox.margin>
-                    </JFXButton>
-                  </children>
-                  <padding>
-                    <Insets right="50.0" />
-                  </padding>
-                </VBox>
-              </children>
-              <stylesheets>
-                <URL value="@../css/MenuStyle.css" />
-              </stylesheets>
-            </HBox>
-          </children>
+<VBox fx:id="mainMenuScene" onKeyTyped="#openCheckoutFromScanner" prefHeight="620.0" prefWidth="800.0"
+      stylesheets="@../css/MenuStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="InventoryController.ControllerMenu">
+  <StackPane fx:id="pane" VBox.vgrow="ALWAYS">
+    <VBox alignment="CENTER">
+      <HBox alignment="CENTER">
+        <stylesheets>
+          <URL value="@../css/MenuStyle.css"/>
+        </stylesheets>
+        <VBox>
+          <padding>
+            <Insets right="75.0"/>
+          </padding>
+          <JFXButton fx:id="inventory" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0"
+                     style="-fx-font-size: 28" stylesheets="@../css/ButtonStyle.css" text="Inventory">
+            <VBox.margin>
+              <Insets bottom="50.0"/>
+            </VBox.margin>
+          </JFXButton>
+          <JFXButton fx:id="inventory1" mnemonicParsing="false" onAction="#openCheckItemsPage"
+                     prefHeight="150.0" prefWidth="225.0" style="-fx-font-size: 28"
+                     stylesheets="@../css/ButtonStyle.css" text="Checkout/In">
+            <VBox.margin>
+              <Insets top="25.0"/>
+            </VBox.margin>
+          </JFXButton>
         </VBox>
-        <JFXButton fx:id="logout" mnemonicParsing="false" onMouseClicked="#logout" stylesheets="@../css/ButtonStyle.css" StackPane.alignment="TOP_RIGHT">
-          <graphic>
-            <ImageView fitHeight="35.0" fitWidth="39.0">
-              <image>
-                <Image url="@../images/logout.png" />
-              </image>
-            </ImageView>
-          </graphic>
-          <StackPane.margin>
-            <Insets right="20.0" top="20.0" />
-          </StackPane.margin>
+        <VBox>
+          <padding>
+            <Insets right="50.0"/>
+          </padding>
+          <JFXButton fx:id="manageStudents" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0"
+                     style="-fx-font-size: 28" stylesheets="@../css/ButtonStyle.css" text="Button"
+                     textAlignment="CENTER">
+          <VBox.margin>
+            <Insets bottom="50.0"/>
+          </VBox.margin>
         </JFXButton>
-      </children>
-    </StackPane>
-  </children>
+          <JFXButton fx:id="manageWorkers" mnemonicParsing="false" prefHeight="150.0" prefWidth="225.0"
+                     style="-fx-font-size: 28" stylesheets="@../css/ButtonStyle.css" textAlignment="CENTER">
+            <VBox.margin>
+              <Insets top="25.0"/>
+            </VBox.margin>
+          </JFXButton>
+        </VBox>
+      </HBox>
+    </VBox>
+    <JFXButton fx:id="logout" mnemonicParsing="false" onMouseClicked="#logout" stylesheets="@../css/ButtonStyle.css"
+               StackPane.alignment="TOP_RIGHT">
+      <graphic>
+        <ImageView fitHeight="35.0" fitWidth="39.0">
+          <Image url="@../images/logout.png"/>
+        </ImageView>
+      </graphic>
+      <StackPane.margin>
+        <Insets right="20.0" top="20.0"/>
+      </StackPane.margin>
+    </JFXButton>
+  </StackPane>
 </VBox>

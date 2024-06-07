@@ -52,9 +52,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
     @FXML
     private AutoCompleteTextField studentID;
 
-
     @FXML
-    private JFXCheckBox faulty, extended, extended1, extended2, extended3, extended4, extended5;
+    private JFXCheckBox extended, extended1, extended2, extended3, extended4, extended5;
 
     @FXML
     private JFXButton studentInfo, submitButton, resetButton;
@@ -63,34 +62,27 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private Spinner<Integer> newQuantity, newQuantity2, newQuantity3, newQuantity4, newQuantity5;
 
     @FXML
-    private Label statusLabel,
-            statusLabel2, statusLabel3, statusLabel4, statusLabel5;
-
+    private Label statusLabel, statusLabel2, statusLabel3, statusLabel4, statusLabel5;
 
     @FXML
     private HBox HBoxBarcode, HBoxBarcode2, HBoxBarcode3, HBoxBarcode4, HBoxBarcode5;
 
 
     private CheckoutObject checkoutObject;
-    private ExtendedCheckoutObject extendedCheckOutObject;
-    private StageWrapper stageWrapper = new StageWrapper();
-    private Database database = new Database();
-    private CheckingOutPart checkOut = new CheckingOutPart();
-    private StudentInfo student = new StudentInfo();
-    private TransitionHelper transitionHelper = new TransitionHelper();
-    private ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
-    private FaultyCheckIn faultyCheckIn = new FaultyCheckIn();
-    private List<CheckedOutPartsObject> checkoutParts = new ArrayList<>();
+    private final StageWrapper stageWrapper = new StageWrapper();
+    private final Database database = new Database();
+    private final CheckingOutPart checkOut = new CheckingOutPart();
+    private final StudentInfo student = new StudentInfo();
+    private final TransitionHelper transitionHelper = new TransitionHelper();
+    private final ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
 
     private static String professor, course, dueDate;
     private boolean isCheckedOutByOtherStudent = true;
     private boolean flag1, flag2, flag3, flag4, flag5 = true;
 
-    private String faulty1, faulty2, faulty3, faulty4, faulty5;
-    private String faultyText;
-    private List<String> id = new ArrayList<>();
+    private final List<String> id = new ArrayList<>();
     private static final int PAUSE_DELAY = 5;
-    private static PauseTransition delay = new PauseTransition(Duration.minutes(PAUSE_DELAY));
+    private static final PauseTransition delay = new PauseTransition(Duration.minutes(PAUSE_DELAY));
     private Worker worker;
     private int counter = 0;
 
@@ -109,7 +101,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         transitionHelper.spinnerInit(newQuantity);
         submitTimer();
         dropBarcode();
-        faultyItems();
     }
     private void resetFlag(){
         flag1 = true;
@@ -134,7 +125,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @param checkout Object to be instantiated
      */
     public void initExtendedObject(ExtendedCheckoutObject checkout) {
-        this.extendedCheckOutObject = checkout;
         course = checkout.getCourse();
         professor = checkout.getProf();
         dueDate = checkout.getExtendedDate();
@@ -154,16 +144,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
         if (checkoutObject.isExtended()) {
             extended.setSelected(true);
             isExtended();
-        } else if (checkoutObject.isFaulty()) {
-            faulty.setSelected(true);
         }
 
         // enable the switch to student info button iff the student ID field contains a student ID
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-            studentInfo.setDisable(false);
-        } else {
-            studentInfo.setDisable(true);
-        }
+        studentInfo.setDisable(!studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") && !studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$"));
     }
 
 
@@ -187,19 +171,19 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
 
     /**
-     * If student has overdue items, system will ask for override to checkout more items.
+     * If student has overdue items, system will ask for override to check out more items.
      *
      * @param student Student checking out items
      * @return Response if override is authorized
      */
     private boolean ensureNotOverdue(Student student) {
-        if (!barcode.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode.getText()))
-                || (!barcode2.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode2.getText())))
-                || (!barcode3.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode3.getText())))
-                || (!barcode4.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode4.getText())))
-                || (!barcode5.getText().equals("") && !itemIsBeingCheckedIn(Long.parseLong(barcode5.getText())))) {
-            if (student.getOverdueItems().size() > 0) {
-                if ((worker != null && worker.isAdmin() || worker.isOver())) {
+        if (!barcode.getText().isEmpty() && !itemIsBeingCheckedIn(Long.parseLong(barcode.getText()))
+                || (!barcode2.getText().isEmpty() && !itemIsBeingCheckedIn(Long.parseLong(barcode2.getText())))
+                || (!barcode3.getText().isEmpty() && !itemIsBeingCheckedIn(Long.parseLong(barcode3.getText())))
+                || (!barcode4.getText().isEmpty() && !itemIsBeingCheckedIn(Long.parseLong(barcode4.getText())))
+                || (!barcode5.getText().isEmpty() && !itemIsBeingCheckedIn(Long.parseLong(barcode5.getText())))) {
+            if (!student.getOverdueItems().isEmpty()) {
+                if ((worker != null && worker.isAdmin() || Objects.requireNonNull(worker).isOver())) {
                     return ensureOverride();
                 } else {
                     return requestAdminPin("override overdue");
@@ -209,11 +193,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return true;
     }
 
-
-    private boolean isFaultyCheck(JFXCheckBox box) {
-        return box.getText().equals("Faulty?") && box.isSelected();
-    }
-
     /**
      * Collects barcodes and pertinent information about them
      *
@@ -221,20 +200,20 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private List<MultipleCheckoutObject> collectMultipleBarcodes() {
         List<MultipleCheckoutObject> barcodeInfo = new LinkedList<>();
-        if (barcodeIsNotEmpty(barcode)) {
-            addBarcodes(getQuantitySpinner(), barcodeInfo, statusLabel, getBarcode(), checkboxSelected(extended1), isFaultyCheck(extended1), faulty1);
+        if (!barcode.getText().isEmpty()) {
+            addBarcodes(getQuantitySpinner(), barcodeInfo, statusLabel, getBarcode(), extended1.isSelected());
         }
-        if (barcodeIsNotEmpty(barcode2)) {
-            addBarcodes(getQuantitySpinner2(), barcodeInfo, statusLabel2, getBarcode2(), checkboxSelected(extended2), isFaultyCheck(extended2), faulty2);
+        if (!barcode2.getText().isEmpty()) {
+            addBarcodes(getQuantitySpinner2(), barcodeInfo, statusLabel2, getBarcode2(), extended2.isSelected());
         }
-        if (barcodeIsNotEmpty(barcode3)) {
-            addBarcodes(getQuantitySpinner3(), barcodeInfo, statusLabel3, getBarcode3(), checkboxSelected(extended3), isFaultyCheck(extended3), faulty3);
+        if (!barcode3.getText().isEmpty()) {
+            addBarcodes(getQuantitySpinner3(), barcodeInfo, statusLabel3, getBarcode3(), extended3.isSelected());
         }
-        if (barcodeIsNotEmpty(barcode4)) {
-            addBarcodes(getQuantitySpinner4(), barcodeInfo, statusLabel4, getBarcode4(), checkboxSelected(extended4), isFaultyCheck(extended4), faulty4);
+        if (!barcode4.getText().isEmpty()) {
+            addBarcodes(getQuantitySpinner4(), barcodeInfo, statusLabel4, getBarcode4(), extended4.isSelected());
         }
-        if (barcodeIsNotEmpty(barcode5)) {
-            addBarcodes(getQuantitySpinner5(), barcodeInfo, statusLabel5, getBarcode5(), checkboxSelected(extended5), isFaultyCheck(extended5), faulty5);
+        if (!barcode5.getText().isEmpty()) {
+            addBarcodes(getQuantitySpinner5(), barcodeInfo, statusLabel5, getBarcode5(), extended5.isSelected());
         }
         return barcodeInfo;
     }
@@ -317,9 +296,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 counter++;
             } else {
                 for (int i = 0; i < barcode.getQuantity(); i++) {
-                    if (barcode.isFaulty()) {
-                        faultyCheckinHelper(barcode.getFaultyText(), barcode.getBarcode());
-                    }
                     checkOut.setItemtoCheckedin(Integer.parseInt(getstudentID()), barcode.getBarcode());
                 }
             }
@@ -330,7 +306,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     /**
      * Helper method to add barcodes
      */
-    private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode, boolean extendedStatus, boolean isFaulty, String faultyText) {
+    private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode, boolean extendedStatus) {
         Student thisStudent = null;
         if (containsNumber(getstudentID())) {
             thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
@@ -338,30 +314,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
             thisStudent = database.selectStudent(-1, getstudentID());
         }
         database.initWorker(worker);
-        boolean checkStatus = statusIsOut(status);
+        boolean checkStatus = status.getText().equals("Out");
 
-        barcodes.add(new MultipleCheckoutObject(barcode, thisStudent.getRFID(), checkStatus, quantity, extendedStatus, isFaulty, faultyText));
-    }
-
-
-    /**
-     * Helper to check if item is being checked in or out
-     *
-     * @param status Status of item
-     * @return True if item is being checked out
-     */
-    private boolean statusIsOut(Label status) {
-        return status.getText().equals("Out");
-    }
-
-    /**
-     * Helper method to check if barcode is empty
-     *
-     * @param barcode Barcode field to be checked
-     * @return True if barcode is not empty
-     */
-    private boolean barcodeIsNotEmpty(JFXTextField barcode) {
-        return !(barcode.getText().isEmpty());
+        barcodes.add(new MultipleCheckoutObject(barcode, thisStudent.getRFID(), checkStatus, quantity, extendedStatus));
     }
 
 
@@ -386,23 +341,19 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
                 } else {
                     if (counter ==0){
-                        flag1 =isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag1 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else if (counter ==1){
                         flag2 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else if (counter ==2){
-                        flag3 =isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag3 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else if (counter ==3){
-                        flag4 =isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag4 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else {
-                        flag5 =isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag5 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     }
                 }
             }
         }
-    }
-
-    private boolean checkboxSelected(JFXCheckBox box) {
-        return box.isSelected();
     }
 
 
@@ -412,7 +363,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @return True if item is being checked in
      */
     private boolean itemIsBeingCheckedIn(long barcode) {
-        checkoutParts = checkOut.returnCheckedOutObjects();
+        List<CheckedOutPartsObject> checkoutParts = checkOut.returnCheckedOutObjects();
         int studentID = -1;
         if (containsNumber(getstudentID())) {
             studentID = Integer.parseInt(getstudentID());
@@ -507,7 +458,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
                     }
                     if (studentEmail != null) {
-                        updateStudent(studentEmail);
+                        student.updateStudent(studentEmail.replace("'", "\\'"), Integer.parseInt(getstudentID()));
                     }
                 }
                 studentNameField.setText(studentName);
@@ -515,14 +466,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         });
     }
 
-    /**
-     * Updates student info given an email, will add the student ID
-     *
-     * @param studentEmail Email to be checked for
-     */
-    private void updateStudent(String studentEmail) {
-        student.updateStudent(studentEmail.replace("'", "\\'"), Integer.parseInt(getstudentID()));
-    }
 
     /**
      * Asks user for a student name
@@ -632,7 +575,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Sets checkout information
      */
     private void setCheckoutInformation() {
-        faulty.setVisible(false);
         extended.setVisible(true);
     }
 
@@ -648,14 +590,14 @@ public class CheckOutController extends ControllerMenu implements IController, I
         } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
             s = database.selectStudent(-1, studentID.getText());
         }
-        if (s != null && !s.getName().equals("")) {
+        if (s != null && !s.getName().isEmpty()) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Student.fxml"));
-                Parent root = (Parent) loader.load();
+                Parent root = loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(s);
                 sp.initWorker(worker);
-                checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), "1", extended.isSelected(), faulty.isSelected());
+                checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), "1", extended.isSelected());
                 sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
             } catch (IOException e) {
@@ -759,7 +701,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         if (barcode3.isVisible()) {
             return;
         }
-        barcodeDropHelper();
         NewBarcodeFieldHelper(HBoxBarcode3, barcode3, newQuantity3);
     }
 
@@ -770,7 +711,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         if (barcode4.isVisible()) {
             return;
         }
-        barcodeDropHelper();
         NewBarcodeFieldHelper(HBoxBarcode4, barcode4, newQuantity4);
     }
 
@@ -781,16 +721,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         if (barcode5.isVisible()) {
             return;
         }
-        barcodeDropHelper();
         NewBarcodeFieldHelper(HBoxBarcode5, barcode5, newQuantity5);
-    }
-
-
-    /**
-     * Helper method for dropping barcode down
-     */
-    private void barcodeDropHelper() {
-        faulty.setVisible(false);
     }
 
 
@@ -811,7 +742,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @param newQuantity4 Quantity of parts
      */
     private void NewBarcodeFieldHelper(HBox hBoxBarcode4, JFXTextField barcode4, Spinner<Integer> newQuantity4) {
-        transitionHelper.translateBarcodeItems(submitButton, resetButton, extended, faulty, 60);
+        transitionHelper.translateBarcodeItems(submitButton, resetButton, extended, 60);
         transitionHelper.fadeTransition(hBoxBarcode4);
         transitionHelper.fadeTransition(barcode4);
         transitionHelper.spinnerInit(newQuantity4);
@@ -834,140 +765,36 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
     }
 
-
-    /**
-     * Helper method to checkin an item
-     */
-    private void faultyCheckinHelper(String text, long barcode) {
-        faultyCheckIn.setPartToFaultyStatus(barcode);
-        faultyCheckIn.addToFaultyTable(Integer.parseInt(getstudentID()), barcode, text);
-        checkOut.setItemtoCheckedin(Integer.parseInt(getstudentID()), barcode);
-    }
-
-
-    private String faultyHelper() {
-        TextInputDialog dialog = new TextInputDialog("\r\n\r\n");
-        dialog.setTitle("Faulty Item Checkin ");
-        dialog.setHeaderText("Faulty Checkin Description");
-        dialog.setContentText("Please enter description \nof what is wrong with the item:");
-        Optional<String> result = dialog.showAndWait();
-        return result.orElse(null);
-    }
-
-    private void faultyItems() {
-        faultyHelper1();
-        faultyHelper2();
-        faultyHelper3();
-        faultyHelper4();
-        faultyHelper5();
-    }
-
-    private void faultyHelper1() {
-        extended1.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    if (extended1.isSelected() && isFaultyCheck(extended1)) {
-                        faulty1 = faultyHelper();
-                    }
-                }
-            }
-        });
-    }
-
-    private void faultyHelper2() {
-        extended2.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    if (extended2.isSelected() && isFaultyCheck(extended2)) {
-                        faulty2 = faultyHelper();
-                    }
-                }
-            }
-        });
-    }
-
-    private void faultyHelper3() {
-        extended3.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    if (extended3.isSelected() && isFaultyCheck(extended3)) {
-                        faulty3 = faultyHelper();
-                    }
-                }
-            }
-        });
-    }
-
-    private void faultyHelper4() {
-        extended4.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    if (extended4.isSelected() && isFaultyCheck(extended4)) {
-                        faulty4 = faultyHelper();
-                    }
-                }
-            }
-        });
-    }
-
-    private void faultyHelper5() {
-        extended5.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    if (extended5.isSelected() && isFaultyCheck(extended5)) {
-                        faulty5 = faultyHelper();
-                    }
-                }
-            }
-        });
-    }
-
     /**
      * Helper method to initialize barcode field properties.
      */
     private void initialBarodeFieldFunctions() {
         barcode.setOnKeyReleased(event -> {
             statusLabel.setVisible(true);
-            if (event.getCode() == KeyCode.TAB) {
-                return;
-            }
-
         });
         barcode.textProperty().addListener(
-                new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (newValue.length() == 6) {
-                            if (itemIsBeingCheckedIn(getBarcode())) {
-                                extended1.setText("Faulty?");
-                                extended1.setVisible(true);
-                                statusLabel.setText("In");
-                            }
-                            else if (!checkOut.errorCheck(getBarcode(), Integer.parseInt(getstudentID()))){
-                                statusLabel.setText("Error");
-                                extended1.setVisible(false);
-
-                            }
-                            else {
-                                statusLabel.setText("Out");
-                                extended1.setText("Extended?");
-                                extended.setDisable(false);
-                            }
-
-                            if (barcodesSame(getBarcode())) {
-                                newQuantity.setDisable(false);
-                            } else {
-                                newQuantity.setDisable(true);
-                                transitionHelper.spinnerInit(newQuantity);
-                            }
-                            barcode2.requestFocus();
+                (observable, oldValue, newValue) -> {
+                    if (newValue.length() == 6) {
+                        if (itemIsBeingCheckedIn(getBarcode())) {
+                            statusLabel.setText("In");
+                        }
+                        else if (!checkOut.errorCheck(getBarcode(), Integer.parseInt(getstudentID()))){
+                            statusLabel.setText("Error");
+                            extended1.setVisible(false);
+                        }
+                        else {
+                            statusLabel.setText("Out");
+                            extended1.setText("Extended?");
+                            extended.setDisable(false);
                         }
 
+                        if (barcodesSame(getBarcode())) {
+                            newQuantity.setDisable(false);
+                        } else {
+                            newQuantity.setDisable(true);
+                            transitionHelper.spinnerInit(newQuantity);
+                        }
+                        barcode2.requestFocus();
                     }
                 });
     }
@@ -978,124 +805,101 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private void dropBarcode() {
 
         barcode2.textProperty().addListener(
-                new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (newValue.length() == 6) {
-                            if (itemIsBeingCheckedIn(getBarcode2())) {
-                                statusLabel2.setText("In");
-                                extended.setDisable(true);
-                                extended2.setText("Faulty?");
-                                extended2.setVisible(true);
-                            }
-                            else if (!checkOut.errorCheck(getBarcode2(), Integer.parseInt(getstudentID()))){
-                                statusLabel2.setText("Error");
-                                extended2.setVisible(false);
-
-                            }
-                            else {
-                                statusLabel2.setText("Out");
-                                extended2.setText("Extended?");
-                                extended.setDisable(false);
-                            }
-                            if (barcodesSame(getBarcode2())) {
-                                newQuantity2.setDisable(false);
-                            } else {
-                                newQuantity2.setDisable(true);
-                                transitionHelper.spinnerInit(newQuantity2);
-                            }
-                            barcode3.requestFocus();
+                (observable, oldValue, newValue) -> {
+                    if (newValue.length() == 6) {
+                        if (itemIsBeingCheckedIn(getBarcode2())) {
+                            statusLabel2.setText("In");
+                            extended.setDisable(true);
                         }
+                        else if (!checkOut.errorCheck(getBarcode2(), Integer.parseInt(getstudentID()))){
+                            statusLabel2.setText("Error");
+                            extended2.setVisible(false);
+                        }
+                        else {
+                            statusLabel2.setText("Out");
+                            extended2.setText("Extended?");
+                            extended.setDisable(false);
+                        }
+                        if (barcodesSame(getBarcode2())) {
+                            newQuantity2.setDisable(false);
+                        } else {
+                            newQuantity2.setDisable(true);
+                            transitionHelper.spinnerInit(newQuantity2);
+                        }
+                        barcode3.requestFocus();
                     }
                 });
         barcode3.textProperty().addListener(
-                new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (newValue.length() == 6) {
-                            if (itemIsBeingCheckedIn(getBarcode3())) {
-                                statusLabel3.setText("In");
-                                extended.setDisable(true);
-                                extended3.setText("Faulty?");
-                                extended3.setVisible(true);
-                            }
-                            else if (!checkOut.errorCheck(getBarcode3(), Integer.parseInt(getstudentID()))){
-                                statusLabel3.setText("Error");
-                                extended3.setVisible(false);
-
-                            }else {
-                                statusLabel3.setText("Out");
-                                extended3.setText("Extended?");
-                                extended.setDisable(false);
-                            }
-                            if (barcodesSame(getBarcode3())) {
-                                newQuantity3.setDisable(false);
-                            } else {
-                                newQuantity3.setDisable(true);
-                                transitionHelper.spinnerInit(newQuantity3);
-                            }
-                            barcode4.requestFocus();
+                (observable, oldValue, newValue) -> {
+                    if (newValue.length() == 6) {
+                        if (itemIsBeingCheckedIn(getBarcode3())) {
+                            statusLabel3.setText("In");
+                            extended.setDisable(true);
+                        } else if (!checkOut.errorCheck(getBarcode3(), Integer.parseInt(getstudentID()))) {
+                            statusLabel3.setText("Error");
+                            extended3.setVisible(false);
+                        } else {
+                            statusLabel3.setText("Out");
+                            extended3.setText("Extended?");
+                            extended.setDisable(false);
                         }
+                        if (barcodesSame(getBarcode3())) {
+                            newQuantity3.setDisable(false);
+                        } else {
+                            newQuantity3.setDisable(true);
+                            transitionHelper.spinnerInit(newQuantity3);
+                        }
+                        barcode4.requestFocus();
                     }
                 });
         barcode4.textProperty().addListener(
-                new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (newValue.length() == 6) {
-                            if (itemIsBeingCheckedIn(getBarcode4())) {
-                                statusLabel4.setText("In");
-                                extended.setDisable(true);
-                                extended4.setText("Faulty?");
-                                extended4.setVisible(true);
-                            }
-                            else if (!checkOut.errorCheck(getBarcode4(), Integer.parseInt(getstudentID()))){
-                                statusLabel4.setText("Error");
-                                extended4.setVisible(false);
-
-                            }else {
-                                statusLabel4.setText("Out");
-                                extended4.setText("Extended?");
-                                extended.setDisable(false);
-                            }
-                            if (barcodesSame(getBarcode4())) {
-                                newQuantity4.setDisable(false);
-                            } else {
-                                newQuantity4.setDisable(true);
-                                transitionHelper.spinnerInit(newQuantity4);
-                            }
-                            barcode5.requestFocus();
+                (observable, oldValue, newValue) -> {
+                    if (newValue.length() == 6) {
+                        if (itemIsBeingCheckedIn(getBarcode4())) {
+                            statusLabel4.setText("In");
+                            extended.setDisable(true);
                         }
+                        else if (!checkOut.errorCheck(getBarcode4(), Integer.parseInt(getstudentID()))){
+                            statusLabel4.setText("Error");
+                            extended4.setVisible(false);
+
+                        }else {
+                            statusLabel4.setText("Out");
+                            extended4.setText("Extended?");
+                            extended.setDisable(false);
+                        }
+                        if (barcodesSame(getBarcode4())) {
+                            newQuantity4.setDisable(false);
+                        } else {
+                            newQuantity4.setDisable(true);
+                            transitionHelper.spinnerInit(newQuantity4);
+                        }
+                        barcode5.requestFocus();
                     }
                 });
 
         barcode5.textProperty().addListener(
-                new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (newValue.length() == 6) {
-                            if (itemIsBeingCheckedIn(getBarcode5())) {
-                                statusLabel5.setText("In");
-                                extended.setDisable(true);
-                                extended5.setText("Faulty?");
-                                extended5.setVisible(true);
-                            }
-                            else if (!checkOut.errorCheck(getBarcode5(), Integer.parseInt(getstudentID()))){
-                                statusLabel5.setText("Error");
-                                extended5.setVisible(false);
-                            }else {
-                                statusLabel5.setText("Out");
-                                extended5.setText("Extended?");
-                                extended5.setDisable(false);
-                            }
-                            if (barcodesSame(getBarcode5())) {
-                                newQuantity5.setDisable(false);
-                            } else {
-                                newQuantity5.setDisable(true);
-                                transitionHelper.spinnerInit(newQuantity5);
-                            }
-
+                (observable, oldValue, newValue) -> {
+                    if (newValue.length() == 6) {
+                        if (itemIsBeingCheckedIn(getBarcode5())) {
+                            statusLabel5.setText("In");
+                            extended.setDisable(true);
                         }
+                        else if (!checkOut.errorCheck(getBarcode5(), Integer.parseInt(getstudentID()))){
+                            statusLabel5.setText("Error");
+                            extended5.setVisible(false);
+                        } else {
+                            statusLabel5.setText("Out");
+                            extended5.setText("Extended?");
+                            extended5.setDisable(false);
+                        }
+                        if (barcodesSame(getBarcode5())) {
+                            newQuantity5.setDisable(false);
+                        } else {
+                            newQuantity5.setDisable(true);
+                            transitionHelper.spinnerInit(newQuantity5);
+                        }
+
                     }
                 });
 
@@ -1106,24 +910,17 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method to initialize student id field properties.
      */
     private void initialStudentFieldFunctions() {
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") || studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-            studentInfo.setDisable(false);
-        } else {
-            studentInfo.setDisable(true);
-        }
+        studentInfo.setDisable(!studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") && !studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$"));
 
         studentID.textProperty().addListener(
-                new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
-                            studentInfo.setDisable(false);
-                        } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-                            studentInfo.setDisable(false);
-                            studentNameField.setText(student.getStudentNameFromEmail(studentID.getText().replace("'", "\\'")));
-                        } else {
-                            studentInfo.setDisable(true);
-                        }
+                (observable, oldValue, newValue) -> {
+                    if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
+                        studentInfo.setDisable(false);
+                    } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                        studentInfo.setDisable(false);
+                        studentNameField.setText(student.getStudentNameFromEmail(studentID.getText().replace("'", "\\'")));
+                    } else {
+                        studentInfo.setDisable(true);
                     }
                 }
         );
@@ -1185,16 +982,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @param textField Textfield to be filtered
      */
     private void rfidFilter(JFXTextField textField) {
-        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    //in focus
-                } else {
-                    String id = textField.getText();
-                    if (textField.getText().contains("rfid:")) {
-                        textField.setText(id.substring(5));
-                    }
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                String id = textField.getText();
+                if (textField.getText().contains("rfid:")) {
+                    textField.setText(id.substring(5));
                 }
             }
         });

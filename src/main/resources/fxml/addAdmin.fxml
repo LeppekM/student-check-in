@@ -11,136 +11,123 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="423.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerAddAdmin">
-   <children>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="350.0">
-         <children>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0" prefWidth="350.0">
-               <children>
-                  <HBox prefHeight="50.0" prefWidth="200.0">
-                     <children>
-                        <Label layoutY="50.0" text="MSOE Email:">
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                           <padding>
-                              <Insets left="10.0" right="5.0" top="20.0" />
-                           </padding>
-                        </Label>
-                        <JFXTextField fx:id="email" focusColor="FIREBRICK" prefWidth="175.0">
-                           <padding>
-                              <Insets top="23.0" />
-                           </padding>
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                        </JFXTextField>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="50.0" prefWidth="200.0">
-                     <children>
-                        <Label text="First Name:">
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                           <padding>
-                              <Insets left="10.0" right="5.0" top="20.0" />
-                           </padding>
-                        </Label>
-                        <JFXTextField fx:id="first" focusColor="FIREBRICK" prefWidth="187.0">
-                           <padding>
-                              <Insets top="23.0" />
-                           </padding>
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                        </JFXTextField>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="50.0" prefWidth="200.0">
-                     <children>
-                        <Label text="Last Name:">
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                           <padding>
-                              <Insets left="10.0" right="5.0" top="20.0" />
-                           </padding>
-                        </Label>
-                        <JFXTextField fx:id="last" focusColor="FIREBRICK" prefWidth="187.0">
-                           <padding>
-                              <Insets top="23.0" />
-                           </padding>
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                        </JFXTextField>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="50.0" prefWidth="200.0">
-                     <children>
-                        <Label text="Password:">
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                           <padding>
-                              <Insets left="10.0" right="5.0" top="20.0" />
-                           </padding>
-                        </Label>
-                        <JFXPasswordField fx:id="pass" focusColor="FIREBRICK" prefWidth="194.0">
-                           <padding>
-                              <Insets top="23.0" />
-                           </padding>
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                        </JFXPasswordField>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="50.0" prefWidth="200.0">
-                     <children>
-                        <Label text="4-Digit Pin:">
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                           <padding>
-                              <Insets left="10.0" right="5.0" top="20.0" />
-                           </padding>
-                        </Label>
-                        <JFXPasswordField fx:id="pin" focusColor="FIREBRICK" prefWidth="185.0">
-                           <padding>
-                              <Insets top="23.0" />
-                           </padding>
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                        </JFXPasswordField>
-                     </children>
-                  </HBox>
-                  <HBox layoutX="10.0" layoutY="230.0" prefHeight="50.0" prefWidth="200.0">
-                     <children>
-                        <Label text="RFID:">
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                           <padding>
-                              <Insets left="10.0" right="5.0" top="20.0" />
-                           </padding>
-                        </Label>
-                        <JFXTextField fx:id="RFIDA" focusColor="FIREBRICK" prefWidth="185.0">
-                           <padding>
-                              <Insets top="23.0" />
-                           </padding>
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                        </JFXTextField>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-            <JFXButton fx:id="submit" buttonType="RAISED" layoutX="120.0" layoutY="350.0" mnemonicParsing="false" onAction="#submit" stylesheets="@../css/CheckButton.css" text="Submit" />
-         </children>
-      </Pane>
-   </children>
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="423.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.121"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagePeople.ControllerAddAdmin">
+   <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
+         prefWidth="350.0">
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0"
+            prefWidth="350.0">
+         <HBox prefHeight="50.0" prefWidth="200.0">
+            <Label layoutY="50.0" text="MSOE Email:">
+               <font>
+                  <Font size="22.0"/>
+               </font>
+               <padding>
+                  <Insets left="10.0" right="5.0" top="20.0"/>
+               </padding>
+            </Label>
+            <JFXTextField fx:id="email" focusColor="FIREBRICK" prefWidth="175.0">
+               <padding>
+                  <Insets top="23.0"/>
+               </padding>
+               <font>
+                  <Font size="22.0"/>
+               </font>
+            </JFXTextField>
+         </HBox>
+         <HBox prefHeight="50.0" prefWidth="200.0">
+            <Label text="First Name:">
+               <font>
+                  <Font size="22.0"/>
+               </font>
+               <padding>
+                  <Insets left="10.0" right="5.0" top="20.0"/>
+               </padding>
+            </Label>
+            <JFXTextField fx:id="first" focusColor="FIREBRICK" prefWidth="187.0">
+               <padding>
+                  <Insets top="23.0"/>
+               </padding>
+               <font>
+                  <Font size="22.0"/>
+               </font>
+            </JFXTextField>
+         </HBox>
+         <HBox prefHeight="50.0" prefWidth="200.0">
+            <Label text="Last Name:">
+               <font>
+                  <Font size="22.0"/>
+               </font>
+               <padding>
+                  <Insets left="10.0" right="5.0" top="20.0"/>
+               </padding>
+            </Label>
+            <JFXTextField fx:id="last" focusColor="FIREBRICK" prefWidth="187.0">
+               <padding>
+                  <Insets top="23.0"/>
+               </padding>
+               <font>
+                  <Font size="22.0"/>
+               </font>
+            </JFXTextField>
+         </HBox>
+         <HBox prefHeight="50.0" prefWidth="200.0">
+            <Label text="Password:">
+               <font>
+                  <Font size="22.0"/>
+               </font>
+               <padding>
+                  <Insets left="10.0" right="5.0" top="20.0"/>
+               </padding>
+            </Label>
+            <JFXPasswordField fx:id="pass" focusColor="FIREBRICK" prefWidth="194.0">
+               <padding>
+                  <Insets top="23.0"/>
+               </padding>
+               <font>
+                  <Font size="22.0"/>
+               </font>
+            </JFXPasswordField>
+         </HBox>
+         <HBox prefHeight="50.0" prefWidth="200.0">
+            <Label text="4-Digit Pin:">
+               <font>
+                  <Font size="22.0"/>
+               </font>
+               <padding>
+                  <Insets left="10.0" right="5.0" top="20.0"/>
+               </padding>
+            </Label>
+            <JFXPasswordField fx:id="pin" focusColor="FIREBRICK" prefWidth="185.0">
+               <padding>
+                  <Insets top="23.0"/>
+               </padding>
+               <font>
+                  <Font size="22.0"/>
+               </font>
+            </JFXPasswordField>
+         </HBox>
+         <HBox layoutX="10.0" layoutY="230.0" prefHeight="50.0" prefWidth="200.0">
+            <Label text="RFID:">
+               <font>
+                  <Font size="22.0"/>
+               </font>
+               <padding>
+                  <Insets left="10.0" right="5.0" top="20.0"/>
+               </padding>
+            </Label>
+            <JFXTextField fx:id="RFIDA" focusColor="FIREBRICK" prefWidth="185.0">
+               <padding>
+                  <Insets top="23.0"/>
+               </padding>
+               <font>
+                  <Font size="22.0"/>
+               </font>
+            </JFXTextField>
+         </HBox>
+      </VBox>
+      <JFXButton fx:id="submit" buttonType="RAISED" layoutX="120.0" layoutY="350.0" mnemonicParsing="false"
+                 onAction="#submit" stylesheets="@../css/CheckButton.css" text="Submit"/>
+   </Pane>
 </AnchorPane>

@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 public class AddPart {
     private final String url = Database.host + "/student_check_in";
     private String addQuery = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
-            " location, barcode, isFaulty, isCheckedOut, createdAt, createdBy)"+
-            "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+            " location, barcode, isCheckedOut, createdAt, createdBy)"+
+            "VALUES(?,?,?,?,?,?,?,?,?,?)";
     private String getpartIDQuery = "SELECT partID\n" +
             "FROM parts\n" +
             "ORDER BY partID DESC\n" +
@@ -28,12 +28,6 @@ public class AddPart {
     public void addCommonItems(Part part, Database database, int quantity) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             Part existing = database.selectPartByPartName(part.getPartName());
-            //Too restrictive via Jim; they can just edit parts later that arne't right
-//            if (existing == null || (part.getBarcode().equals(existing.getBarcode())
-//                    && part.getSerialNumber().equals(existing.getSerialNumber())
-//                    && part.getManufacturer().equals(existing.getManufacturer())
-//                    && part.getPrice() == existing.getPrice()
-//                    && part.getVendor().equals(existing.getVendor()))) {
                 for (int i = 0; i < quantity; i++) {
                     PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
                     insertQuery(part, preparedStatement).execute();
@@ -99,10 +93,9 @@ public class AddPart {
             preparedStatement.setString(6, part.getLocation());
             preparedStatement.setLong(7, part.getBarcode());
             preparedStatement.setInt(8, 0);
-            preparedStatement.setInt(9,0);
-            preparedStatement.setString(10, getCurrentDate());
+            preparedStatement.setString(9,getCurrentDate());
+            preparedStatement.setString(10, "Jim");
             //Hardcoded created by because we don't have workers setup yet
-            preparedStatement.setString(11, "Jim");
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }

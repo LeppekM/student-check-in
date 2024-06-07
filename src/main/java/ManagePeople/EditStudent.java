@@ -1,9 +1,7 @@
 package ManagePeople;
 
 import CheckItemsController.CheckoutPopUp;
-import CheckItemsController.SavedPopUp;
 import Database.Database;
-import Database.ObjectClasses.SavedPart;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
@@ -47,19 +45,11 @@ public class EditStudent implements IController {
     private JFXTextField studentName, email, RFID;
 
     @FXML
-    private Label fees, date;
+    private JFXTreeTableView coTable, oTable;
 
-    @FXML
-    private JFXTreeTableView coTable, oTable, sTable;
-
-    @FXML
     private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
 
-    @FXML
     private JFXTreeTableColumn<OverdueItem, String> oTableCol;
-
-    @FXML
-    private JFXTreeTableColumn<SavedPart, String> sTableCol;
 
     private static Student student;
     private Worker worker;
@@ -122,21 +112,6 @@ public class EditStudent implements IController {
             }
         });
 
-        sTableCol = new JFXTreeTableColumn<>("Part Name");
-        Label emptyTableLabel3 = new Label("No parts found.");
-        emptyTableLabel3.setStyle("-fx-text-fill: white");
-        emptyTableLabel3.setFont(new Font(18));
-        sTable.setPlaceholder(emptyTableLabel);
-        sTableCol.prefWidthProperty().bind(sTable.widthProperty());
-        sTableCol.setStyle("-fx-font-size: 18px");
-        sTableCol.setResizable(false);
-        sTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SavedPart, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<SavedPart, String> param) {
-                return param.getValue().getValue().getPartName();
-            }
-        });
-
         populateTables();
     }
 
@@ -150,16 +125,12 @@ public class EditStudent implements IController {
 
         final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
         final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
-        final TreeItem<SavedPart> sItems = new RecursiveTreeItem<>(student.getSavedItems(), RecursiveTreeObject::getChildren);
         coTable.getColumns().setAll(coTableCol);
         coTable.setRoot(coItems);
         coTable.setShowRoot(false);
         oTable.getColumns().setAll(oTableCol);
         oTable.setRoot(oItems);
         oTable.setShowRoot(false);
-        sTable.getColumns().setAll(sTableCol);
-        sTable.setRoot(sItems);
-        sTable.setShowRoot(false);
     }
 
     /**
@@ -208,33 +179,6 @@ public class EditStudent implements IController {
                 if (index != -1) {
                     OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
                     ((OverduePopUpController) loader.getController()).populate(item, null);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * This method opens the saved part pop up for a student
-     * @param event double click
-     */
-    public void sPopUp(MouseEvent event) {
-        if (event.getClickCount() == 2) {
-            Stage stage = new Stage();
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SavedPopUp.fxml"));
-                Parent root = loader.load();
-                Scene scene = new Scene(root, 350, 400);
-                stage.setTitle("Saved Item");
-                stage.initOwner(main.getScene().getWindow());
-                stage.setScene(scene);
-                int index = sTable.getSelectionModel().getSelectedIndex();
-                if (index != -1) {
-                    SavedPart item = ((SavedPart) sTable.getSelectionModel().getModelItem(index).getValue());
-                    ((SavedPopUp) loader.getController()).populate(item);
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.show();
                 }
