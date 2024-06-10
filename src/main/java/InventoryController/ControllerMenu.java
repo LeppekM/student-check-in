@@ -2,7 +2,6 @@ package InventoryController;
 
 import Database.ObjectClasses.Worker;
 import HelperClasses.ImageViewPane;
-import HelperClasses.StageWrapper;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,15 +10,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -34,14 +30,9 @@ public class ControllerMenu implements IController, Initializable {
     private StackPane pane;
 
     @FXML
-    private JFXButton inventory, manageStudents, manageWorkers;
-
-    private ImageViewPane msoeBackgroundImage;
+    private JFXButton manageWorkers;
 
     private Worker worker;
-
-    private List <String> studentIDArray = new ArrayList<>();
-    private StageWrapper stageWrapper = new StageWrapper();
 
     /**
      * Initializes the buttons and sets the MSOE logo as the background image
@@ -50,20 +41,17 @@ public class ControllerMenu implements IController, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.worker = null;
         manageWorkers.setDisable(true);
-        manageStudents.setText("Manage\nStudents");
         manageWorkers.setText("Manage\nWorkers");
-        inventory.setOnAction(event -> openInventory());
-        manageStudents.setOnAction(event -> openMangeStudents());
         manageWorkers.setOnAction(event -> openManageWorkers());
         Image image = new Image("images/msoeBackgroundImage.png");
         ImageView imageView = new ImageView();
         imageView.setImage(image);
-        this.msoeBackgroundImage = new ImageViewPane(imageView);
-        this.msoeBackgroundImage.setPrefWidth(591);
-        this.msoeBackgroundImage.setPrefHeight(789);
-        this.msoeBackgroundImage.setOpacity(0.55);
-        pane.getChildren().add(this.msoeBackgroundImage);
-        this.msoeBackgroundImage.toBack();
+        ImageViewPane msoeBackgroundImage = new ImageViewPane(imageView);
+        msoeBackgroundImage.setPrefWidth(591);
+        msoeBackgroundImage.setPrefHeight(789);
+        msoeBackgroundImage.setOpacity(0.55);
+        pane.getChildren().add(msoeBackgroundImage);
+        msoeBackgroundImage.toBack();
     }
 
     /**
@@ -75,30 +63,31 @@ public class ControllerMenu implements IController, Initializable {
     public void initWorker(Worker worker) {
         if (this.worker == null) {
             this.worker = worker;
-            if (this.worker != null && (this.worker.isAdmin() || this.worker.isWorker())) {
+            if (this.worker != null && (this.worker.isAdmin() || this.worker.canEditWorkers())) {
                 manageWorkers.setDisable(false);
             }
         }
     }
 
+    @FXML
     private void openInventory(){
         newStage("/fxml/InventoryPage.fxml");
     }
 
+    @FXML
     private void openMangeStudents() {
         newStage("/fxml/manageStudents.fxml");
     }
 
+    @FXML
     public void openCheckItemsPage(){
         newStage("/fxml/CheckOutPage.fxml");
     }
 
     private void openManageWorkers() {
         if (worker != null) {
-            if (worker.isAdmin() || worker.isWorker()) {
+            if (worker.isAdmin() || worker.canEditWorkers()) {
                 newStage("/fxml/manageWorkers.fxml");
-            } else {
-                adminStatusRequiredForManageWorkersError();
             }
         }
     }
@@ -124,8 +113,6 @@ public class ControllerMenu implements IController, Initializable {
             controller.initWorker(worker);
             mainMenuScene.getScene().setRoot(root);
             ((IController) loader.getController()).initWorker(worker);
-            // NEEDED?
-            //mainMenuScene.getChildren().clear();
         }
         catch(IOException invoke){
             StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
@@ -133,21 +120,6 @@ public class ControllerMenu implements IController, Initializable {
             alert.showAndWait();
             invoke.printStackTrace();
         }
-    }
-
-    public void openCheckoutFromScanner(KeyEvent keyEvent){
-        studentIDArray.add(keyEvent.getCharacter());
-        if(stageWrapper.getStudentID(studentIDArray).matches("^(rfid)$")) {
-                newStage("/fxml/CheckOutPage.fxml");
-            }
-    }
-
-    private void adminStatusRequiredForManageWorkersError() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Admin status is required to manage workers.\nPlease sign in with an administrator account to manage workers.");
-        StudentCheckIn.logger.error("Admin status is required to manage workers.\nPlease sign in with an administrator account to manage workers.");
-        alert.showAndWait();
     }
 
 }

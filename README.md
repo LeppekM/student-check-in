@@ -19,7 +19,7 @@ This is the check-in/check-out system that keeps track of parts belonging to the
 
 ### Contribution ###
 
-Original developers are Daniel Lang, Matt, Bailey Terry, and Joe Gilpin. Code was updated in 2024 by Martina Leppek.
+Original developers are Daniel Lang, Matthew Karcz, Bailey Terry, and Joe Gilpin. Code was updated in 2024 by Martina Leppek.
 
 Product Owner: Jim Frommell
 
