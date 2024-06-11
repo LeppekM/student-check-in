@@ -2,7 +2,7 @@ package Database;
 
 import Database.ObjectClasses.CheckedOutPartsObject;
 import HelperClasses.DatabaseHelper;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import InventoryController.StudentCheckIn;
 
 import java.sql.*;
@@ -13,17 +13,10 @@ import java.util.List;
 public class CheckingOutPart {
 
     private final String url = Database.host + "/student_check_in";
-    private final String getPartIDtoAdd = "SELECT partID \n" +
-            "FROM parts \n" +
-            "WHERE barcode = ? \n" +
-            "    AND isCheckedOut = 0\n" +
-            "    LIMIT 1";
-
-    private final String getCheckoutIDFromPartID = "select checkoutID from checkout where (partID = ? and checkinAt is null) ";
 
     private DatabaseHelper helper = new DatabaseHelper();
     private List<CheckedOutPartsObject> checkedOutItems = new ArrayList<>();
-    private StageWrapper stageWrapper = new StageWrapper();
+    private StageUtils stageUtils = StageUtils.getInstance();
 
 
 
@@ -44,12 +37,12 @@ public class CheckingOutPart {
                 StudentCheckIn.logger.error("SQLException: Can't connect to the database when adding new checkout item.");
                 throw new IllegalStateException("Cannot connect to the database", e);
             } catch (NullPointerException e){
-                stageWrapper.errorAlert("Part with barcode of "+ barcode +" is already checked out");
+                stageUtils.errorAlert("Part with barcode of "+ barcode +" is already checked out");
                 return false;
             }
         }
         else {
-            stageWrapper.errorAlert("Barcode was not found in database, part was not checked out");
+            stageUtils.errorAlert("Barcode was not found in database, part was not checked out");
             return false;
         }
         return true;
@@ -74,7 +67,7 @@ public class CheckingOutPart {
                 addNewCheckoutItem(barcodes.get(i), studentID);
             }
             else {
-                stageWrapper.errorAlert("Checked out " + i + " part(s). No more parts in inventory can be checked out");
+                stageUtils.errorAlert("Checked out " + i + " part(s). No more parts in inventory can be checked out");
                 return false;
             }
         }
@@ -223,6 +216,7 @@ public class CheckingOutPart {
      * @return
      */
     private PreparedStatement addNewCheckoutHelper(long barcode, int studentID, PreparedStatement preparedStatement){
+        String getPartIDtoAdd = "SELECT partID \nFROM parts \nWHERE barcode = ? \n    AND isCheckedOut = 0\n    LIMIT 1";
         int partID = getPartIDFromBarcode(barcode, getPartIDtoAdd);
         if (partID == 0){
             throw new  NullPointerException();
@@ -309,13 +303,12 @@ public class CheckingOutPart {
      * @return A list of barcodes in the checked out tab
      */
     public List<CheckedOutPartsObject> returnCheckedOutObjects(){
-        if(checkedOutItems.size()!=0){
+        if(!checkedOutItems.isEmpty()){
             checkedOutItems.clear();
         }
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             Statement statement = connection.createStatement();
-            String getCheckedOutItems = "select barcode, studentID from checkout \n" +
-                    "where checkinAt is NULL";
+            String getCheckedOutItems = "select barcode, studentID from checkout \nwhere checkinAt is NULL";
             ResultSet resultSet = statement.executeQuery(getCheckedOutItems);
             while(resultSet.next()){
                 checkedOutItems.add(new CheckedOutPartsObject(resultSet.getLong("barcode"), resultSet.getInt("studentID")));
@@ -346,51 +339,6 @@ public class CheckingOutPart {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return checkoutID;
-    }
-
-    public boolean partCanBeCheckedOut(long barcode, int studentID){
-        return false;
-//        int sID = 0;
-////        int partID = getPartIDFromBarcode(barcode,)
-//        System.out.println(partID);
-//        String query ="select studentID from checkout where partID = ? and checkinAt is null";
-//        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-//            PreparedStatement statement = connection.prepareStatement(query);
-//            statement.setInt(1, partID);
-//            ResultSet rs = statement.executeQuery();
-//            if(rs.next()){
-//                sID = rs.getInt("studentID");
-//            }
-//            statement.close();
-//        } catch (SQLException e) {
-//            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
-//            throw new IllegalStateException("Cannot connect to the database", e);
-//        }
-//        System.out.println(studentID);
-//        System.out.println(sID);
-//        if(sID == 0 ){
-//            return true;
-//        }
-//        return sID == studentID;
-    }
-
-    int getPartIDFromBarcodeAndStudentID(int studentID, long barcode){
-        int partID = 0;
-        String query = "select partID from checkout where studentID =? and barcode = ? and checkinAt IS NULL limit 1";
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, studentID);
-            statement.setLong(2, barcode);
-            ResultSet rs = statement.executeQuery();
-            if(rs.next()){
-                partID = rs.getInt("partID");
-            }
-            statement.close();
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-        return partID;
     }
 
     /**

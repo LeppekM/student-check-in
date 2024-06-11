@@ -3,7 +3,7 @@ package InventoryController;
 import Database.AddPart;
 import Database.ObjectClasses.Part;
 import Database.VendorInformation;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
@@ -47,13 +47,12 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     VendorInformation vendorInformation = new VendorInformation();
     private ArrayList <String> vendors = vendorInformation.getVendorList();
 
-    StageWrapper stageWrapper = new StageWrapper();
+    private StageUtils stageUtils = StageUtils.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showVendors();
-        StageWrapper stageWrapper = new StageWrapper();
-        stageWrapper.acceptIntegerOnly(barcodeField);
+        stageUtils.acceptIntegerOnly(barcodeField);
         setFieldValidator();
 
         // make sure that the price field only accepts a valid price
@@ -68,8 +67,8 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     }
 
     private void setFieldValidator() {
-        stageWrapper.acceptIntegerOnly(barcodeField);
-        stageWrapper.acceptIntegerOnly(quantityField);
+        stageUtils.acceptIntegerOnly(barcodeField);
+        stageUtils.acceptIntegerOnly(quantityField);
     }
 
     /**
@@ -228,28 +227,28 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
 
     /**
      * Checks if the input entered is a double
-     * @param price The double to be returned. Returns -1 if not a double, and the value otherwise
-     * @return
+     * @param price The double to be checked
+     * @return the price as a double if it is valid, -1 if it is not a positive double
      */
     public double priceCheck(String price){
         double positivePriceCheck;
-        double failedvalue = -1;
+        double failedValue = -1;
         try {
-            positivePriceCheck = Double.valueOf(price); //If price is a valid double
+            positivePriceCheck = Double.parseDouble(price); //If price is a valid double
         }
         catch (Exception e){
-            return failedvalue;
+            return failedValue;
         }
         if(positivePriceCheck > 0){ //If price is greater than 0
             return positivePriceCheck;
         }
-        return failedvalue;
+        return failedValue;
     }
 
     /**
      * Checks if the input entered is an integer
-     * @param quantity The integer to be returned. Returns -1 if not an int, and the value otherwise
-     * @return
+     * @param quantity The integer to be returned.
+     * @return -1 if not an int, and the value otherwise
      */
     public int quantityCheck(String quantity){
         int positiveCheck;
@@ -267,29 +266,23 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     }
 
     /**
-     * Determines if the price textfield input is valid or not
+     * Determines if the price textField input is valid or not
      * @return True if the price is valid
      */
     private boolean validatePriceField(){
-        if(priceCheck(priceField.getText())==-1){
-            return false;
-        }
-        return true;
+        return priceCheck(priceField.getText()) != -1;
     }
 
     /**
-     * Determines if the quantity textfield input is valid or not
+     * Determines if the quantity textField input is valid or not
      * @return True if the quantity is valid
      */
     private boolean validateQuantityField(){
-        if(quantityCheck(quantityField.getText())==-1){
-            return false;
-        }
-        return true;
+        return quantityCheck(quantityField.getText()) != -1;
     }
 
     /**
-     * This checks to see if the textfields are empty
+     * This checks to see if the textFields are empty
      * @return False if any field is empty
      */
     private boolean validateFieldsNotEmpty(){
@@ -377,47 +370,29 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("All " + partName + " parts must have the same serial number.");
-        StudentCheckIn.logger.error("All " + partName + " parts must have the same serial number.");
+        StudentCheckIn.logger.error("All {} parts must have the same serial number.", partName);
         alert.showAndWait();
     }
     private void mustBeCommonBarcodeAndSerialNumberError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("All " + partName + " parts must have the same barcode and serial number.");
-        StudentCheckIn.logger.error("All " + partName + " parts must have the same barcode and serial number.");
+        StudentCheckIn.logger.error("All {} parts must have the same barcode and serial number.", partName);
         alert.showAndWait();
     }
     private void commonFieldsError(String partName) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText(partName + " parts have the same barcode and serial number, so their other fields must also be the same.");
-        StudentCheckIn.logger.error(partName + " parts have the same barcode and serial number, so their other fields must also be the same.");
+        StudentCheckIn.logger.error("{} parts have the same barcode and serial number, so their other fields must also be the same.", partName);
         alert.showAndWait();
     }
 
-       /**
+    /**
      * Creates an alert informing user that part was added successfully
      */
     private void partAddedSuccess(){
-        new Thread(new Runnable() {
-            @Override public void run() {
-                Platform.runLater(() -> {
-                    Stage owner = new Stage(StageStyle.TRANSPARENT);
-                    StackPane root = new StackPane();
-                    root.setStyle("-fx-background-color: TRANSPARENT");
-                    Scene scene = new Scene(root, 1, 1);
-                    owner.setScene(scene);
-                    owner.setWidth(1);
-                    owner.setHeight(1);
-                    owner.toBack();
-                    owner.show();
-                    Notifications.create().title("Successful!").text("Part added successfully.").hideAfter(new Duration(5000)).show();
-                    PauseTransition delay = new PauseTransition(Duration.seconds(5));
-                    delay.setOnFinished( event -> owner.close() );
-                    delay.play();
-                });
-            }
-        }).start();
+        stageUtils.successAlert("Part added successfully.");
     }
 
     /**
@@ -432,7 +407,6 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * repopulates the table.
      */
     private void close(){
-        //sceneAddPart.getScene().getWindow().hide();
-        sceneAddPart.fireEvent(new WindowEvent(((Node) sceneAddPart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        sceneAddPart.fireEvent(new WindowEvent(sceneAddPart.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 }

@@ -24,15 +24,13 @@ public class AdminPinRequestController implements Initializable {
     @FXML
     private JFXPasswordField adminPinInputAdminPinRequest;
 
-    private StageWrapper stageWrapper;
-
     private boolean submitted;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        stageWrapper = new StageWrapper();
+        StageUtils stageUtils = StageUtils.getInstance();
         submitted = false;
-        stageWrapper.acceptIntegerOnly(adminPinInputAdminPinRequest);
+        stageUtils.acceptIntegerOnly(adminPinInputAdminPinRequest);
         adminPinInputAdminPinRequest.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 submit();
@@ -48,7 +46,7 @@ public class AdminPinRequestController implements Initializable {
     @FXML
     private void submit() {
         submitted = true;
-        sceneAdminPinRequest.fireEvent(new WindowEvent(((Node) sceneAdminPinRequest).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        sceneAdminPinRequest.fireEvent(new WindowEvent(sceneAdminPinRequest.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
     public boolean isSubmitted() {
@@ -56,7 +54,7 @@ public class AdminPinRequestController implements Initializable {
     }
 
     public boolean isNotEmpty() {
-        return !adminPinInputAdminPinRequest.getText().equals("");
+        return !adminPinInputAdminPinRequest.getText().isEmpty();
     }
 
     public boolean isValid() {

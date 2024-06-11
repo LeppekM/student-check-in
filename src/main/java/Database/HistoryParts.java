@@ -12,7 +12,7 @@ import java.sql.*;
  */
 public class HistoryParts {
 
-    private static String host = Database.host;
+    private static final String host = Database.host;
     private static final String dbdriver = "com.mysql.jdbc.Driver";
     private static final String dbname = "student_check_in";
 
@@ -29,12 +29,11 @@ public class HistoryParts {
             "WHEN checkout.checkoutAt < checkout.checkinAt " +
             "THEN checkout.checkinAt ELSE checkout.checkoutAt END DESC;";
 
-    private Statement statement;
     private String studentName, studentEmail, partName, action ,date;
 
     private long barcode;
 
-    private DatabaseHelper helper = new DatabaseHelper();
+    private final DatabaseHelper helper = new DatabaseHelper();
 
     public ObservableList<HistoryTabTableRow> data = FXCollections.observableArrayList();
 
@@ -50,7 +49,7 @@ public class HistoryParts {
         }
 
         try (Connection connection = DriverManager.getConnection((host + "/" + dbname), Database.username, Database.password)) {
-            statement = connection.createStatement();
+            Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(HISTORY_QUERY);
             while(resultSet.next()){
                 setVariables(resultSet);

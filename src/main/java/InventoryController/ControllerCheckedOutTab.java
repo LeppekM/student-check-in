@@ -73,34 +73,19 @@ public class ControllerCheckedOutTab extends ControllerInventoryPage implements 
         studentNameCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         studentNameCol.setStyle("-fx-font-size: 18px");
         studentNameCol.setResizable(false);
-        studentNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
-                return param.getValue().getValue().getStudentName();
-            }
-        });
+        studentNameCol.setCellValueFactory(param -> param.getValue().getValue().getStudentName());
 
         partNameCol = new JFXTreeTableColumn<>("Part Name");
         partNameCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         partNameCol.setStyle("-fx-font-size: 18px");
         partNameCol.setResizable(false);
-        partNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, String> param) {
-                return param.getValue().getValue().getPartName();
-            }
-        });
+        partNameCol.setCellValueFactory(param -> param.getValue().getValue().getPartName());
 
         barcodeCol = new JFXTreeTableColumn<>("Barcode");
         barcodeCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
         barcodeCol.setStyle("-fx-font-size: 18px");
         barcodeCol.setResizable(false);
-        barcodeCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, Long>, ObservableValue<Long>>() {
-            @Override
-            public ObservableValue<Long> call(TreeTableColumn.CellDataFeatures<CheckedOutTabTableRow, Long> param) {
-                return param.getValue().getValue().getBarcode().asObject();
-            }
-        });
+        barcodeCol.setCellValueFactory(param -> param.getValue().getValue().getBarcode().asObject());
 
         checkedOutAtCol = new JFXTreeTableColumn<>("Check Out Date");
         checkedOutAtCol.prefWidthProperty().bind(checkedOutTable.widthProperty().divide(5));
@@ -137,27 +122,21 @@ public class ControllerCheckedOutTab extends ControllerInventoryPage implements 
         tableRows = FXCollections.observableArrayList();
 
         // Click to select if unselected and deselect if selected
-        checkedOutTable.setRowFactory(new Callback<TreeTableView<CheckedOutTabTableRow>, TreeTableRow<CheckedOutTabTableRow>>() {
-            @Override
-            public TreeTableRow<CheckedOutTabTableRow> call(TreeTableView<CheckedOutTabTableRow> param) {
-                final TreeTableRow<CheckedOutTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        //final int index = row.getIndex();
-                        if (event.getClickCount() == 2) {
-                            viewPart(row.getIndex());
-                        } else {
-                            final int index = row.getIndex();
-                            if (index >= 0 && index < checkedOutTable.getCurrentItemsCount() && checkedOutTable.getSelectionModel().isSelected(index)) {
-                                checkedOutTable.getSelectionModel().clearSelection();
-                                event.consume();
-                            }
-                        }
+        checkedOutTable.setRowFactory(param -> {
+            final TreeTableRow<CheckedOutTabTableRow> row = new TreeTableRow<>();
+            row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                //final int index = row.getIndex();
+                if (event.getClickCount() == 2) {
+                    viewPart(row.getIndex());
+                } else {
+                    final int index = row.getIndex();
+                    if (index >= 0 && index < checkedOutTable.getCurrentItemsCount() && checkedOutTable.getSelectionModel().isSelected(index)) {
+                        checkedOutTable.getSelectionModel().clearSelection();
+                        event.consume();
                     }
-                });
-                return row;
-            }
+                }
+            });
+            return row;
         });
     }
 
@@ -176,12 +155,12 @@ public class ControllerCheckedOutTab extends ControllerInventoryPage implements 
         checkedOutParts = new CheckedOutParts();
         ObservableList<CheckedOutItems> list = checkedOutParts.getCheckedOutItems(); //Queries database, populating the Observable Arraylist in that class
 
-        for (int i = 0; i < list.size(); i++) {
-            tableRows.add(new CheckedOutTabTableRow(list.get(i).getStudentName().getValue(),
-                    list.get(i).getStudentEmail().get(), list.get(i).getPartName().getValue(),
-                    Long.valueOf(list.get(i).getBarcode().getValue()), list.get(i).getSerialNumber().get(),
-                    list.get(i).getPartID().get(), list.get(i).getCheckedOutDate().get(),
-                    list.get(i).getDueDate().get(), list.get(i).getFee().getValue()));
+        for (CheckedOutItems checkedOutItems : list) {
+            tableRows.add(new CheckedOutTabTableRow(checkedOutItems.getStudentName().getValue(),
+                    checkedOutItems.getStudentEmail().get(), checkedOutItems.getPartName().getValue(),
+                    Long.parseLong(checkedOutItems.getBarcode().getValue()), checkedOutItems.getSerialNumber().get(),
+                    checkedOutItems.getPartID().get(), checkedOutItems.getCheckedOutDate().get(),
+                    checkedOutItems.getDueDate().get(), checkedOutItems.getFee().getValue()));
         }
 
         root = new RecursiveTreeItem<CheckedOutTabTableRow>(
@@ -222,22 +201,19 @@ public class ControllerCheckedOutTab extends ControllerInventoryPage implements 
 
     @FXML
     private void search() {
-        checkedOutTable.setPredicate(new Predicate<TreeItem<CheckedOutTabTableRow>>() {
-            @Override
-            public boolean test(TreeItem<CheckedOutTabTableRow> tableRow) {
-                String input = searchInput.getText().toLowerCase();
-                studentName = tableRow.getValue().getStudentName().getValue();
-                partName = tableRow.getValue().getPartName().getValue();
-                barcode = tableRow.getValue().getBarcode().getValue().toString();
-                checkedOutAt = tableRow.getValue().getCheckedOutAt().getValue().toString();
-                dueDate = tableRow.getValue().getDueDate().getValue().toString();
+        checkedOutTable.setPredicate(tableRow -> {
+            String input = searchInput.getText().toLowerCase();
+            studentName = tableRow.getValue().getStudentName().getValue();
+            partName = tableRow.getValue().getPartName().getValue();
+            barcode = tableRow.getValue().getBarcode().getValue().toString();
+            checkedOutAt = tableRow.getValue().getCheckedOutAt().getValue().toString();
+            dueDate = tableRow.getValue().getDueDate().getValue().toString();
 
-                return ((studentName != null && studentName.toLowerCase().contains(input))
-                        || (partName != null && partName.toLowerCase().contains(input))
-                        || (barcode != null && barcode.toLowerCase().contains(input))
-                        || (checkedOutAt != null && checkedOutAt.toLowerCase().contains(input))
-                        || (dueDate != null && dueDate.toLowerCase().contains(input)));
-            }
+            return ((studentName != null && studentName.toLowerCase().contains(input))
+                    || (partName != null && partName.toLowerCase().contains(input))
+                    || (barcode != null && barcode.toLowerCase().contains(input))
+                    || (checkedOutAt != null && checkedOutAt.toLowerCase().contains(input))
+                    || (dueDate != null && dueDate.toLowerCase().contains(input)));
         });
     }
 

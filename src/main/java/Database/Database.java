@@ -5,7 +5,7 @@ import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.DatabaseHelper;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
@@ -29,11 +29,11 @@ public class Database implements IController {
     public static final String password = "3l3ctr1c_B00gloo";
     static String host = "jdbc:mysql://localhost:3306";
     static final String dbdriver = "com.mysql.jdbc.Driver";
-    static final String dbname = "student_check_in";
+    static final String dbname = "/student_check_in";
     static Connection connection;
-    private DatabaseHelper databaseHelper = new DatabaseHelper();
+    private final DatabaseHelper databaseHelper = new DatabaseHelper();
     private Worker worker;
-    private StageWrapper stageWrapper = new StageWrapper();
+    private final StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * This creates a connection to the database
@@ -49,7 +49,7 @@ public class Database implements IController {
         }
         connection = null;
         try {
-            connection = DriverManager.getConnection((host + "/" + dbname),
+            connection = DriverManager.getConnection((host + dbname),
                     username, password);
             connection.setClientInfo("autoReconnect", "true");
         } catch (SQLException e) {
@@ -1052,12 +1052,12 @@ public class Database implements IController {
 
     public void updateStudent(Student s) {
         if(studentHasCheckedOutItems(s.getEmail())){
-            stageWrapper.errorAlert("Student has checked out items");
+            stageUtils.errorAlert("Student has checked out items");
             return;
         }
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
                 s.getName().replace("'", "\\'") + "', students.email = '" + s.getEmail().replace("'", "\\'") + "', students.updatedAt = date('" +
-                gettoday().toString() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
+                gettoday() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -1149,15 +1149,15 @@ public class Database implements IController {
 
     public void updateWorker(Worker w) {
         int admin = w.isAdmin() ? 1 : 0;
-        int over = w.isOver() ? 1 : 0;
-        int edit = w.isEdit() ? 1 : 0;
-        int remove = w.isRemove() ? 1 : 0;
-        int work = w.isWorker() ? 1 : 0;
+        int over = w.canOverrideOverdue() ? 1 : 0;
+        int edit = w.canEditParts() ? 1 : 0;
+        int remove = w.canRemoveParts() ? 1 : 0;
+        int work = w.canEditWorkers() ? 1 : 0;
         String query = "update workers set workers.workerName = '" + w.getName().replace("'", "\\'") + "', workers.pin = " +
                 w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.ID = " + w.getRIFD() + ", workers.isAdmin = " + admin + "," +
                 " workers.email = '" + w.getEmail().replace("'", "\\'") + "', workers.overdue = " + over + ", workers.editParts = " + edit +
                 ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
-                gettoday().toString() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
+                gettoday() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
                 w.getID() + ";";
         try {
             Statement statement = connection.createStatement();

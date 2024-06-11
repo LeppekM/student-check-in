@@ -4,9 +4,8 @@ import Database.*;
 import Database.ObjectClasses.CheckedOutPartsObject;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
-import HelperClasses.AdminPinRequestController;
 import HelperClasses.AutoCompleteTextField;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import InventoryController.ControllerMenu;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
@@ -16,20 +15,15 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -37,7 +31,6 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
 
 public class CheckOutController extends ControllerMenu implements IController, Initializable {
@@ -69,7 +62,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
 
     private CheckoutObject checkoutObject;
-    private final StageWrapper stageWrapper = new StageWrapper();
+    private final StageUtils stageUtils = StageUtils.getInstance();
     private final Database database = new Database();
     private final CheckingOutPart checkOut = new CheckingOutPart();
     private final StudentInfo student = new StudentInfo();
@@ -77,7 +70,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private final ExtendedCheckOut extendedCheckOut = new ExtendedCheckOut();
 
     private static String professor, course, dueDate;
-    private boolean isCheckedOutByOtherStudent = true;
     private boolean flag1, flag2, flag3, flag4, flag5 = true;
 
     private final List<String> id = new ArrayList<>();
@@ -94,7 +86,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         setItemStatus();
         initialBarodeFieldFunctions();
         initialStudentFieldFunctions();
-        studentID.initEntrySet(new TreeSet(database.getStudentEmails()));
+        studentID.initEntrySet(new TreeSet<>(database.getStudentEmails()));
         setLabelStatuses();
         getStudentName();
         unlockFields();
@@ -183,10 +175,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 || (!barcode4.getText().isEmpty() && !itemIsBeingCheckedIn(Long.parseLong(barcode4.getText())))
                 || (!barcode5.getText().isEmpty() && !itemIsBeingCheckedIn(Long.parseLong(barcode5.getText())))) {
             if (!student.getOverdueItems().isEmpty()) {
-                if ((worker != null && worker.isAdmin() || Objects.requireNonNull(worker).isOver())) {
+                if ((worker != null && worker.isAdmin() || Objects.requireNonNull(worker).canOverrideOverdue())) {
                     return ensureOverride();
                 } else {
-                    return requestAdminPin("override overdue");
+                    return stageUtils.requestAdminPin("override overdue", main);
                 }
             }
         }
@@ -226,7 +218,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         resetFlag();
         Student thisStudent = null;
         if (!statusError()) {
-            stageWrapper.errorAlert("Error, parts were not checked out because there are errors with them");
+            stageUtils.errorAlert("Error, parts were not checked out because there are errors with them");
             return;
         }
         if (containsNumber(getstudentID())) {
@@ -241,7 +233,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
             }
             if (extendedCheckoutIsSelected(getBarcode())) {
                 if (extendedFieldsNotFilled()) {
-                    stageWrapper.errorAlert("Some fields were not filled out for extended checkout");
+                    stageUtils.errorAlert("Some fields were not filled out for extended checkout");
                     return;
                 }
                 if (newStudentIsCheckingOutItem()) {
@@ -257,7 +249,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
             }
 
 
-            stageWrapper.checkoutAlert("Success", "Part(s) Checked in/out successfully");
+            stageUtils.checkoutAlert("Success", "Part(s) Checked in/out successfully");
 
             reset();
 
@@ -341,15 +333,15 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
                 } else {
                     if (counter ==0){
-                        flag1 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag1 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else if (counter ==1){
-                        flag2 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag2 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else if (counter ==2){
-                        flag3 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag3 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else if (counter ==3){
-                        flag4 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag4 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else {
-                        flag5 = isCheckedOutByOtherStudent = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
+                        flag5 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     }
                 }
             }
@@ -404,19 +396,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 return;
             }
         }
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
-            Parent root = loader.load();
-            IController controller = loader.<IController>getController();
-            controller.initWorker(worker);
-            main.getScene().setRoot(root);
-            ((IController) loader.getController()).initWorker(worker);
-        } catch (IOException invoke) {
-            StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-            invoke.printStackTrace();
-        }
+        stageUtils.newStage("/fxml/Menu.fxml", main, worker);
     }
 
     /**
@@ -434,7 +414,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                     studentName = student.getStudentNameFromEmail(studentID.getText());
                     if (student.getStudentIDFromEmail(studentID.getText().replace("'", "\\'"))) {
-                        stageWrapper.errorAlert("Student is checking out equipment for first time\n They must use their student ID to check out an item");
+                        stageUtils.errorAlert("Student is checking out equipment for first time\n They must use their student ID to check out an item");
                         reset();
                         return;
                     }
@@ -452,7 +432,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             if (studentName.contains(" ")) {
                                 student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail.replace("'", "\\'"), studentName.replace("'", "\\'"));
                             } else {
-                                stageWrapper.errorAlert("Error, student name must contain first and last name separated by a space");
+                                stageUtils.errorAlert("Error, student name must contain first and last name separated by a space");
                             }
                         }
 
@@ -513,7 +493,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Resets all fields
      */
     public void reset() {
-        newStage("/fxml/CheckOutPage.fxml");
+        stageUtils.newStage("/fxml/CheckOutPage.fxml", main, worker);
     }
 
 
@@ -596,7 +576,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 Parent root = loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(s);
-                sp.initWorker(worker);
                 checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), "1", extended.isSelected());
                 sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
@@ -608,7 +587,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 e.printStackTrace();
             }
         } else {
-            stageWrapper.errorAlert("No student found with asscoiated RFID");
+            stageUtils.errorAlert("No student found with asscoiated RFID");
         }
     }
 
@@ -616,8 +595,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method to set the validators for fields
      */
     private void setFieldValidator() {
-        stageWrapper.requiredInputValidator(studentID);
-        stageWrapper.requiredInputValidator(barcode);
+        stageUtils.requiredInputValidator(studentID);
+        stageUtils.requiredInputValidator(barcode);
         acceptIntegerOnlyCheckout(barcode);
         acceptIntegerOnlyCheckout(barcode2);
         acceptIntegerOnlyCheckout(barcode3);
@@ -662,8 +641,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     public void isExtended() {
         if (extended.isSelected()) {
-            stageWrapper.popupPage("fxml/ExtendedCheckout.fxml", main);
-            initExtendedCheckoutBoxes(true);
+            Stage stage = stageUtils.createPopupStage("fxml/ExtendedCheckout.fxml", main, "Part Information");
+            stage.showAndWait();
+            initExtendedCheckoutBoxes(true); // TODO figure out a way to hide these if window is closed w/o entering full info
         } else {
             initExtendedCheckoutBoxes(false);
         }
@@ -963,7 +943,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
             id.add(text);
-            if (stageWrapper.getStudentID(id).contains("rfid:")) {
+            if (stageUtils.getStudentID(id).contains("rfid:")) {
                 submit();
                 id.clear();
             }
@@ -991,22 +971,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
             }
         });
 
-    }
-
-    public void newStage(String fxml) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
-            IController controller = loader.<IController>getController();
-            controller.initWorker(worker);
-            main.getScene().setRoot(root);
-            ((IController) loader.getController()).initWorker(worker);
-        } catch (IOException invoke) {
-            StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-            invoke.printStackTrace();
-        }
     }
 
     /**
@@ -1106,61 +1070,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         return parsable;
     }
 
-
-    /**
-     * Request for admin pin.
-     *
-     * @param action Action required; pin to be entered
-     * @return True if pin is correct
-     */
-    public boolean requestAdminPin(String action) {
-        AtomicBoolean isValid = new AtomicBoolean(false);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
-            Parent root = loader.load();
-            ((AdminPinRequestController) loader.getController()).setAction(action);
-            Scene scene = new Scene(root, 400, 250);
-            Stage stage = new Stage();
-            stage.setTitle("Admin Pin Required");
-            stage.initOwner(main.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.setResizable(false);
-            stage.setOnCloseRequest(e -> {
-                // checks to see whether the pin was submitted or the window was just closed
-                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
-                    // checks to see if the input pin is empty. if empty, close pop up
-                    if (((AdminPinRequestController) loader.getController()).isNotEmpty()) {
-                        // checks to see whether the submitted pin matches one of the admin's pins
-                        if (((AdminPinRequestController) loader.getController()).isValid()) {
-                            stage.close();
-                            isValid.set(true);
-                        } else {
-                            stage.close();
-                            invalidAdminPinAlert();
-                            isValid.set(false);
-                        }
-                    } else {
-                        stage.close();
-                        isValid.set(false);
-                    }
-                }
-            });
-            stage.showAndWait();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
-            e.printStackTrace();
-        }
-        return isValid.get();
-    }
-
-    /**
-     * Alert that the pin entered does not match one of the admin pins.
-     */
-    private void invalidAdminPinAlert() {
-        stageWrapper.errorAlert("The entered pin is invalid");
-    }
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into

@@ -62,11 +62,11 @@ public class EditWorker implements IController {
         email.setText(w.getEmail());
         pass.setText(w.getPass());
         eRFIDw.setText(w.getRIFD() + "");
-        editParts.selectedProperty().setValue(w.isEdit());
-        overdue.selectedProperty().setValue(w.isOver());
-        removeParts.selectedProperty().setValue(w.isRemove());
-        workers.selectedProperty().setValue(w.isWorker());
-        if (w.isEdit() || w.isRemove() || w.isOver() || w.isWorker()){
+        editParts.selectedProperty().setValue(w.canEditParts());
+        overdue.selectedProperty().setValue(w.canOverrideOverdue());
+        removeParts.selectedProperty().setValue(w.canRemoveParts());
+        workers.selectedProperty().setValue(w.canEditWorkers());
+        if (w.canEditParts() || w.canRemoveParts() || w.canOverrideOverdue() || w.canEditWorkers()){
             admin.selectedProperty().setValue(true);
             editParts.setDisable(false);
             overdue.setDisable(false);
@@ -79,10 +79,10 @@ public class EditWorker implements IController {
         password = pass.getText();
         RFID = Integer.parseInt(eRFIDw.getText());
         priv = admin.isSelected();
-        edit = w.isEdit();
-        over = w.isOver();
-        work = w.isWorker();
-        remove = w.isRemove();
+        edit = w.canEditParts();
+        over = w.canOverrideOverdue();
+        work = w.canEditWorkers();
+        remove = w.canRemoveParts();
         unmasked.setManaged(false);
         unmasked.setVisible(false);
         unmasked.managedProperty().bind(showPass.selectedProperty());

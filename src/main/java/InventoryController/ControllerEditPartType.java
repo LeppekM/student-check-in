@@ -3,26 +3,16 @@ package InventoryController;
 import Database.EditPart;
 import Database.ObjectClasses.Part;
 import Database.VendorInformation;
-import HelperClasses.StageWrapper;
-import com.jfoenix.controls.JFXButton;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -46,16 +36,13 @@ public class ControllerEditPartType extends ControllerEditPart {
     @FXML
     private JFXSpinner loader;
 
-    @FXML
-    private JFXButton saveButton;
-
     private Part part;
 
-    private EditPart editPart = new EditPart();
+    private final EditPart editPart = new EditPart();
 
-    private VendorInformation vendorInformation = new VendorInformation();
+    private final VendorInformation vendorInformation = new VendorInformation();
 
-    StageWrapper stageWrapper = new StageWrapper();
+    StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * This method sets the data in the history page.
@@ -74,31 +61,17 @@ public class ControllerEditPartType extends ControllerEditPart {
      * input to look like a price, and requires that the editable fields not be blank.
      */
     private void setFieldValidator() {
-        stageWrapper.requiredInputValidator(nameField);
-        stageWrapper.acceptIntegerOnly(barcodeField);
-        stageWrapper.acceptIntegerOnly(serialField);
-        stageWrapper.requiredInputValidator(barcodeField);
-        stageWrapper.requiredInputValidator(priceField);
-        stageWrapper.requiredInputValidator(locationField);
-
-        //Not sure exactly what this is for. If to make sure price field entering is only integer, could just
-        //do a acceptIntegerOnly on the lines above for the price textfield.
-        //Otherwise could change regex so that numbers > 1000 aren't rejected.
-        //For now I commented it out.
-
-//        priceField.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                if (!newValue.matches("^\\$?[0-9]*\\.?[0-9]{0,2}$")) {
-//                    priceField.setText(oldValue);
-//                }
-//            }
-//        });
+        stageUtils.requiredInputValidator(nameField);
+        stageUtils.acceptIntegerOnly(barcodeField);
+        stageUtils.acceptIntegerOnly(serialField);
+        stageUtils.requiredInputValidator(barcodeField);
+        stageUtils.requiredInputValidator(priceField);
+        stageUtils.requiredInputValidator(locationField);
     }
 
     /**
      * This method is used to pass data into the tab to initialize the text representing the edited part
-     * @param part
+     * @param part the part that is being edited
      */
     @Override
     public void initPart(Part part) {
@@ -128,19 +101,15 @@ public class ControllerEditPartType extends ControllerEditPart {
         if (validateInput()) {
             loader.setVisible(true);
             String originalPartName = part.getPartName();
-            long originalBarcode = part.getBarcode();
             Part inputPart = updatePartFromInput();
             if (database.hasUniqueBarcodes(originalPartName)) {
-                if (!barcodeField.getText().equals(originalBarcode)) {
-                    editPart.editAllOfType(originalPartName, inputPart);
-                } else {
-                    uniqueBarcodeError(originalPartName);
-                }
+                barcodeField.getText();
+                editPart.editAllOfType(originalPartName, inputPart);
             } else {
                 editPart.editAllOfTypeCommonBarcode(originalPartName, inputPart);
             }
             close();
-            partEditedSuccess();
+            stageUtils.successAlert("All " + part.getPartName() + " parts edited successfully.");
         }
     }
 
@@ -195,16 +164,6 @@ public class ControllerEditPartType extends ControllerEditPart {
                 barcodeField.getText(), manufacturerField.getText(), vendor)) {
             isValid = false;
             fieldErrorAlert();
-//        } else {
-//            ArrayList<String> partNames = database.getUniquePartNames();
-//            if (!nameField.getText().equals(part.getPartName())) {
-//                for (String name: partNames){
-//                    if (name.equals(nameField.getText())){
-//                        //isValid = true;
-//                        //uniquePartNameError();
-//                        nameField.setText(part.getPartName());
-//                    }
-//                }
             } else if (!barcodeField.getText().equals(part.getBarcode().toString())) {
                 if (database.hasUniqueBarcodes(part.getPartName())) {
                     isValid = false;
@@ -219,6 +178,7 @@ public class ControllerEditPartType extends ControllerEditPart {
             for (String vendors : vendorInformation.getVendorList()) {
                 if (vendors.equals(vendor)) {
                     newVendor = false;
+                    break;
                 }
             }
             if (newVendor){
@@ -246,35 +206,26 @@ public class ControllerEditPartType extends ControllerEditPart {
      */
     protected boolean validateAllFieldsFilledIn(String partName, String price,
                                                 String location, String barcode, String manufacturer, String vendor) {
-        return partName != null && !partName.trim().equals("")
-                && price != null && !price.trim().equals("")
-                && location != null && !location.trim().equals("")
-                && barcode != null && !barcode.trim().equals("")
-                && manufacturer != null && !manufacturer.trim().equals("")
-                && vendor != null && !vendor.trim().equals("");
+        return partName != null && !partName.trim().isEmpty()
+                && price != null && !price.trim().isEmpty()
+                && location != null && !location.trim().isEmpty()
+                && barcode != null && !barcode.trim().isEmpty()
+                && manufacturer != null && !manufacturer.trim().isEmpty()
+                && vendor != null && !vendor.trim().isEmpty();
     }
 
     private boolean validateUnusedBarcode(int barcode) {
         boolean unique = true;
             ArrayList<Integer> barcodes = database.getAllBarcodes(barcode);
-            if (barcodes.size() > 0) {
+            if (!barcodes.isEmpty()) {
                 for (Integer barcd: barcodes) {
                     if (barcd == barcode) {
                         unique = false;
+                        break;
                     }
                 }
             }
         return unique;
-    }
-
-    /**
-     * This method throws an error that a part with the inputted name already exists.
-     */
-    private void uniquePartNameError() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("A part with that name already exists.");
-        alert.showAndWait();
     }
 
     /**
@@ -311,32 +262,6 @@ public class ControllerEditPartType extends ControllerEditPart {
     }
 
     /**
-     * Creates an alert informing user that part was edited successfully
-     * @author Matthew Karcz
-     */
-    private void partEditedSuccess(){
-        new Thread(new Runnable() {
-            @Override public void run() {
-                Platform.runLater(() -> {
-                    Stage owner = new Stage(StageStyle.TRANSPARENT);
-                    StackPane root = new StackPane();
-                    root.setStyle("-fx-background-color: TRANSPARENT");
-                    Scene scene = new Scene(root, 1, 1);
-                    owner.setScene(scene);
-                    owner.setWidth(1);
-                    owner.setHeight(1);
-                    owner.toBack();
-                    owner.show();
-                    Notifications.create().title("Successful!").text("All " + part.getPartName() + " parts edited successfully.").hideAfter(new Duration(5000)).show();
-                    PauseTransition delay = new PauseTransition(Duration.seconds(5));
-                    delay.setOnFinished( event -> owner.close() );
-                    delay.play();
-                });
-            }
-        }).start();
-    }
-
-    /**
      * Returns to main inventory page
      */
     public void goBack(){
@@ -348,7 +273,6 @@ public class ControllerEditPartType extends ControllerEditPart {
      * repopulates the table.
      */
     private void close(){
-        //sceneAddPart.getScene().getWindow().hide();
-        sceneEditPartType.fireEvent(new WindowEvent(((Node) sceneEditPartType).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        sceneEditPartType.fireEvent(new WindowEvent(sceneEditPartType.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 }

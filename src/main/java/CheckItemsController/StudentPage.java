@@ -3,7 +3,7 @@ package CheckItemsController;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import InventoryController.OverduePopUpController;
@@ -29,7 +29,6 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 
 public class StudentPage implements IController {
 
@@ -58,7 +57,7 @@ public class StudentPage implements IController {
 
     private static Student student;
     private CheckoutObject checkoutObject;
-    private StageWrapper stageWrapper = new StageWrapper();
+    private StageUtils stageUtils = StageUtils.getInstance();
 
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
@@ -165,7 +164,7 @@ public class StudentPage implements IController {
     }
 
     public void goHome() {
-        stageWrapper.newStage("/fxml/Menu.fxml", main, worker);
+        stageUtils.newStage("/fxml/Menu.fxml", main, worker);
     }
 
     public void coPopUp(MouseEvent event) {

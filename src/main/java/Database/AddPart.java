@@ -6,7 +6,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 
 public class AddPart {
-    private final String url = Database.host + "/student_check_in";
+    private final String url = Database.host + Database.dbname;
     private String addQuery = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
             " location, barcode, isCheckedOut, createdAt, createdBy)"+
             "VALUES(?,?,?,?,?,?,?,?,?,?)";
@@ -22,7 +22,6 @@ public class AddPart {
      * @param part Part to be added
      * @param database  Database
      * @param quantity Number of items to be added
-     * @return
      */
 
     public void addCommonItems(Part part, Database database, int quantity) {
@@ -31,7 +30,6 @@ public class AddPart {
                 for (int i = 0; i < quantity; i++) {
                     PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
                     insertQuery(part, preparedStatement).execute();
-                    vendorInformation.getVendorList();
                     preparedStatement.close();
             }
         } catch (SQLException e) {
@@ -59,7 +57,6 @@ public class AddPart {
 
                 PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
                 insertQuery(part, preparedStatement).execute();
-                vendorInformation.getVendorList();
                 preparedStatement.close();
             }
             return new long[]{inputBarcode, inputSerialNumber};

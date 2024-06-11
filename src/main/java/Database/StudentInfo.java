@@ -2,7 +2,7 @@ package Database;
 
 import Database.ObjectClasses.Student;
 import HelperClasses.DatabaseHelper;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import InventoryController.StudentCheckIn;
 
 import java.sql.*;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentInfo {
-    private final String url = Database.host + "/student_check_in";
+    private final String url = Database.host + Database.dbname;
     private final String getStudentNameFromIDQuery = "\n" +
             "select studentName from students\n" +
             "where studentID = ?";
@@ -19,7 +19,7 @@ public class StudentInfo {
     private final String getStudentNameFromEmailQuery = "select studentName from students where email = ?";
 
     private DatabaseHelper helper = new DatabaseHelper();
-    private StageWrapper stageWrapper = new StageWrapper();
+    private StageUtils stageUtils = StageUtils.getInstance();
 
 
     public Student selectStudentClean(String email) {
@@ -130,7 +130,7 @@ public class StudentInfo {
 
 
         if (studentHasCheckedOutItems2(studentEmail)) {
-            stageWrapper.errorAlert("User has parts already checked out, please resolve this issue before proceeding. IF YOU COMPLETE THIS TRANSACTION IT WILL NOT ACTUALLY GO THROUGH! TALK TO JIM");
+            stageUtils.errorAlert("User has parts already checked out, please resolve this issue before proceeding. IF YOU COMPLETE THIS TRANSACTION IT WILL NOT ACTUALLY GO THROUGH! TALK TO JIM");
             return;
         }
         String query = " update students\n" +

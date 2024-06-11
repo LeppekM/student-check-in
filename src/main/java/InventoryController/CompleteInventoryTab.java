@@ -18,14 +18,18 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.util.ArrayList;
 
 import static InventoryController.ControllerInventoryPage.database;
 
-public class CompleteInventoryTable extends InventoryTable {
 
-    public CompleteInventoryTable(String url, List columns, ControllerInventoryPage controller) {
-        super(url, columns, controller);
+/**
+ * This class manages backend functionality for the Tab labeled Total Inventory in the inventory page
+ */
+public class CompleteInventoryTab extends TSCTable {
+
+    public CompleteInventoryTab(TableScreensController controller) {
+        super(controller);
     }
 
     @Override
@@ -46,7 +50,7 @@ public class CompleteInventoryTable extends InventoryTable {
 
     @Override
     protected boolean isMatch(TableRow value, String filter) {
-        return false;
+        return false; //todo
     }
 
     /** TODO: fix/detatch from FXML

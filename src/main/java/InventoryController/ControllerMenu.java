@@ -2,11 +2,11 @@ package InventoryController;
 
 import Database.ObjectClasses.Worker;
 import HelperClasses.ImageViewPane;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,6 +33,8 @@ public class ControllerMenu implements IController, Initializable {
     private JFXButton manageWorkers;
 
     private Worker worker;
+
+    private final StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * Initializes the buttons and sets the MSOE logo as the background image
@@ -71,23 +73,23 @@ public class ControllerMenu implements IController, Initializable {
 
     @FXML
     private void openInventory(){
-        newStage("/fxml/InventoryPage.fxml");
+        stageUtils.newStage("/fxml/InventoryPage.fxml", mainMenuScene, worker);
     }
 
     @FXML
     private void openMangeStudents() {
-        newStage("/fxml/manageStudents.fxml");
+        stageUtils.newStage("/fxml/manageStudents.fxml", mainMenuScene, worker);
     }
 
     @FXML
     public void openCheckItemsPage(){
-        newStage("/fxml/CheckOutPage.fxml");
+        stageUtils.newStage("/fxml/CheckOutPage.fxml", mainMenuScene, worker);
     }
 
     private void openManageWorkers() {
         if (worker != null) {
             if (worker.isAdmin() || worker.canEditWorkers()) {
-                newStage("/fxml/manageWorkers.fxml");
+                stageUtils.newStage("/fxml/manageWorkers.fxml", mainMenuScene, worker);
             }
         }
     }
@@ -99,23 +101,6 @@ public class ControllerMenu implements IController, Initializable {
             Pane loginPane = loader.load();
             mainMenuScene.getScene().setRoot(loginPane);
         } catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
-            invoke.printStackTrace();
-        }
-    }
-
-    public void newStage(String fxml){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
-            IController controller = loader.<IController>getController();
-            controller.initWorker(worker);
-            mainMenuScene.getScene().setRoot(root);
-            ((IController) loader.getController()).initWorker(worker);
-        }
-        catch(IOException invoke){
-            StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
             alert.showAndWait();
             invoke.printStackTrace();

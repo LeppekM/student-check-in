@@ -1,9 +1,7 @@
 package InventoryController;
 
 import Database.ObjectClasses.DBObject;
-import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Worker;
-import HelperClasses.AdminPinRequestController;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -14,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -24,22 +21,19 @@ import javafx.stage.Window;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * This
+ */
+public abstract class TSCTable {
 
-public abstract class InventoryTable {
-
-    private final String url;
-
-    private static ControllerInventoryPage controller;
+    private static TableScreensController controller;
 
     private JFXTextField searchInput;
 
     protected final ArrayList<String> currentFilters = new ArrayList<>();
 
     private JFXTreeTableView table;
-
-    private List<JFXTreeTableColumn> columnList;
 
     public ObservableList<TableRow> data = FXCollections.observableArrayList();
 
@@ -49,10 +43,8 @@ public abstract class InventoryTable {
 
     private static int NUM_COLS;
 
-    public InventoryTable(String url, List columns, ControllerInventoryPage controller) {
-        this.url = url;
-        NUM_COLS = columns.size();
-        InventoryTable.controller = controller;
+    public TSCTable(TableScreensController controller) {
+        TSCTable.controller = controller;
     }
 
     public abstract ObservableList<DBObject> getParts();
@@ -93,84 +85,6 @@ public abstract class InventoryTable {
 //                serialNumberCol, locationCol, partIDCol);
 //        table.setRoot(root);
 //        table.setShowRoot(false);
-    }
-
-    /** TODO
-     * Asks the student worker to enter an admin pin if they try to do something they do
-     * not have the privilege to do
-     *
-     * @param action the privileged action that the worker tried to do
-     * @return true if the inputted admin pin is correct; false otherwise
-     */
-    public boolean requestAdminPin(String action, Window owner) {
-        AtomicBoolean isValid = new AtomicBoolean(false);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
-            Parent root = loader.load();
-            ((AdminPinRequestController) loader.getController()).setAction(action);
-            Scene scene = new Scene(root, 350, 250);
-            Stage stage = new Stage();
-            stage.setTitle("Admin Pin Required");
-            stage.initOwner(owner);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.setResizable(false);
-            stage.setOnCloseRequest(e -> {
-                // checks to see whether the pin was submitted or the window was just closed
-                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
-                    // checks to see if the input pin is empty. if empty, close pop up
-                    if (((AdminPinRequestController) loader.getController()).isNotEmpty()) {
-                        // checks to see whether the submitted pin matches one of the admin's pins
-                        if (((AdminPinRequestController) loader.getController()).isValid()) {
-                            stage.close();
-                            isValid.set(true);
-                        } else {
-                            stage.close();
-                            invalidAdminPinAlert();
-                            isValid.set(false);
-                        }
-                    } else {
-                        stage.close();
-                        isValid.set(false);
-                    }
-                }
-            });
-            stage.showAndWait();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
-            e.printStackTrace();
-        }
-        return isValid.get();
-    }
-
-    /**
-     * Updates the table based on the input text for the search TODO
-     */
-    protected void search() {
-        String filter = searchInput.getText();
-        String[] filters = filter.split(",");
-        if (filter.isEmpty()) {
-            table.setRoot(root);
-        } else {
-            TreeItem<TableRow> filteredRoot = new TreeItem<>();
-            currentFilters.removeAll(currentFilters.subList(0, currentFilters.size()));
-            for (String f : filters) {
-                f = f.trim();
-                if (f.equalsIgnoreCase("overdue") || f.equalsIgnoreCase("checked out")
-                        || f.equalsIgnoreCase("all")) {
-                    f = f.substring(0, 1).toUpperCase() + f.substring(1);
-                    if (f.length() > 7) {
-                        f = f.substring(0, 8) + f.substring(8, 9).toUpperCase() + f.substring(9);
-                    }
-                    currentFilters.add(f);
-                    populateTable();
-                } else {
-                    filter(root, f, filteredRoot);
-                    table.setRoot(filteredRoot);
-                }
-            }
-        }
     }
 
     /**
@@ -228,18 +142,6 @@ public abstract class InventoryTable {
         }
     }
 
-
-
-    /**
-     * Alert that the pin entered does not match one of the admin pins.
-     */
-    private void invalidAdminPinAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("The pin entered is invalid.");
-        StudentCheckIn.logger.error("The pin entered is invalid.");
-        alert.showAndWait();
-    }
 
     /**
      * Creates a new column for the table with

@@ -4,7 +4,7 @@ import Database.Database;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import Database.StudentInfo;
-import HelperClasses.AdminPinRequestController;
+import HelperClasses.StageUtils;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
@@ -17,8 +17,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -46,7 +44,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,18 +61,19 @@ public class ControllerManageStudents implements IController, Initializable {
 
     @FXML
     private JFXTreeTableView<ManageStudentsTabTableRow> manageStudentsTable;
-    private TreeItem<ManageStudentsTabTableRow> root;
 
     @FXML
     private JFXTextField searchInput;
 
     private JFXTreeTableColumn<ManageStudentsTabTableRow, String> firstNameCol, lastNameCol, idCol, emailCol;
 
-    private String name, id, email, firstName, lastName;
+    private String id, email, firstName, lastName;
 
-    private StudentInfo studentInfo = new StudentInfo();
+    private final StudentInfo studentInfo = new StudentInfo();
 
     private static ObservableList<Student> data = FXCollections.observableArrayList();
+
+    private final StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * This method sets the data in the Manage Students page.
@@ -95,97 +93,65 @@ public class ControllerManageStudents implements IController, Initializable {
         firstNameCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(4));
         firstNameCol.setStyle("-fx-font-size: 18px");
         firstNameCol.setResizable(false);
-        firstNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
-                return param.getValue().getValue().getFirstName();
-            }
-        });
+        firstNameCol.setCellValueFactory(param -> param.getValue().getValue().getFirstName());
 
         lastNameCol = new JFXTreeTableColumn<>("Last Name");
         lastNameCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(4));
         lastNameCol.setStyle("-fx-font-size: 18px");
         lastNameCol.setResizable(false);
-        lastNameCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
-                return param.getValue().getValue().getLastName();
-            }
-        });
+        lastNameCol.setCellValueFactory(param -> param.getValue().getValue().getLastName());
 
         idCol = new JFXTreeTableColumn<>("ID");
         idCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(4));
         idCol.setStyle("-fx-font-size: 18px");
         idCol.setResizable(false);
-        idCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
-                return param.getValue().getValue().getId();
-            }
-        });
+        idCol.setCellValueFactory(param -> param.getValue().getValue().getId());
 
         emailCol = new JFXTreeTableColumn<>("Email");
         emailCol.prefWidthProperty().bind(manageStudentsTable.widthProperty().divide(4));
         emailCol.setStyle("-fx-font-size: 18px");
         emailCol.setResizable(false);
-        emailCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ManageStudentsTabTableRow, String> param) {
-                return param.getValue().getValue().getEmail();
-            }
-        });
+        emailCol.setCellValueFactory(param -> param.getValue().getValue().getEmail());
 
         tableRows = FXCollections.observableArrayList();
-        searchInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                Pattern p = Pattern.compile("^(rfid:)");
-                Matcher m = p.matcher(searchInput.getText());
-                if (m.find()) {
-                    Platform.runLater(() -> {
-                        searchInput.setText(searchInput.getText().substring(5));
-                    });
-                }
-
-                manageStudentsTable.setPredicate(new Predicate<TreeItem<ManageStudentsTabTableRow>>() {
-                    @Override
-                    public boolean test(TreeItem<ManageStudentsTabTableRow> tableRow) {
-                        String input = newValue.toLowerCase();
-                        firstName = tableRow.getValue().getFirstName().getValue();
-                        lastName = tableRow.getValue().getLastName().getValue();
-                        id = tableRow.getValue().getId().getValue();
-                        email = tableRow.getValue().getEmail().getValue();
-
-                        return ((firstName != null && firstName.toLowerCase().contains(input))
-                                || (id != null && id.toLowerCase().contains(input))
-                                || (email != null && email.toLowerCase().contains(input)))
-                                || (lastName != null && lastName.toLowerCase().contains(input));
-                    }
+        searchInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            Pattern p = Pattern.compile("^(rfid:)");
+            Matcher m = p.matcher(searchInput.getText());
+            if (m.find()) {
+                Platform.runLater(() -> {
+                    searchInput.setText(searchInput.getText().substring(5));
                 });
             }
+
+            manageStudentsTable.setPredicate(tableRow -> {
+                String input = newValue.toLowerCase();
+                firstName = tableRow.getValue().getFirstName().getValue();
+                lastName = tableRow.getValue().getLastName().getValue();
+                id = tableRow.getValue().getId().getValue();
+                email = tableRow.getValue().getEmail().getValue();
+
+                return ((firstName != null && firstName.toLowerCase().contains(input))
+                        || (id != null && id.toLowerCase().contains(input))
+                        || (email != null && email.toLowerCase().contains(input)))
+                        || (lastName != null && lastName.toLowerCase().contains(input));
+            });
         });
 
 
-        manageStudentsTable.setRowFactory(new Callback<TreeTableView<ManageStudentsTabTableRow>, TreeTableRow<ManageStudentsTabTableRow>>() {
-            @Override
-            public TreeTableRow<ManageStudentsTabTableRow> call(TreeTableView<ManageStudentsTabTableRow> param) {
-                final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
-                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        if (event.getClickCount() == 2) {
-                            edit(row.getIndex());
-                        } else {
-                            final int index = row.getIndex();
-                            if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
-                                manageStudentsTable.getSelectionModel().clearSelection();
-                                event.consume();
-                            }
-                        }
+        manageStudentsTable.setRowFactory(param -> {
+            final TreeTableRow<ManageStudentsTabTableRow> row = new TreeTableRow<>();
+            row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                if (event.getClickCount() == 2) {
+                    edit(row.getIndex());
+                } else {
+                    final int index = row.getIndex();
+                    if (index >= 0 && index < manageStudentsTable.getCurrentItemsCount() && manageStudentsTable.getSelectionModel().isSelected(index)) {
+                        manageStudentsTable.getSelectionModel().clearSelection();
+                        event.consume();
                     }
-                });
-                return row;
-            }
+                }
+            });
+            return row;
         });
 
         populateTable();
@@ -197,16 +163,16 @@ public class ControllerManageStudents implements IController, Initializable {
     public void populateTable() {
         tableRows.clear();
         manageStudentsTable.getColumns().clear();
-        this.data.clear();
+        data.clear();
         database = new Database();
-        this.data = database.getStudents();
+        data = database.getStudents();
 
-        for (int i = 0; i < data.size(); i++) {
-            tableRows.add(new ManageStudentsTabTableRow(data.get(i).getFirstName(), data.get(i).getLastName(),
-                    "" + data.get(i).getRFID(), data.get(i).getEmail()));
+        for (Student datum : data) {
+            tableRows.add(new ManageStudentsTabTableRow(datum.getFirstName(), datum.getLastName(),
+                    "" + datum.getRFID(), datum.getEmail()));
         }
 
-        root = new RecursiveTreeItem<ManageStudentsTabTableRow>(
+        TreeItem<ManageStudentsTabTableRow> root = new RecursiveTreeItem<>(
                 tableRows, RecursiveTreeObject::getChildren
         );
 
@@ -303,7 +269,7 @@ public class ControllerManageStudents implements IController, Initializable {
             }
             populateTable();
 
-            if (failedImports.size() > 0) {
+            if (!failedImports.isEmpty()) {
                 failedImportAlert(failedImports);
             }
         } catch (IOException e) {
@@ -316,30 +282,17 @@ public class ControllerManageStudents implements IController, Initializable {
      */
     @FXML
     public void goBack() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
-            Parent root = loader.load();
-            IController controller = loader.<IController>getController();
-            controller.initWorker(worker);
-            manageStudentsScene.getScene().setRoot(root);
-            ((IController) loader.getController()).initWorker(worker);
-            manageStudentsScene.getChildren().clear();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            StudentCheckIn.logger.error("IOException: No valid stage was found to load");
-            alert.showAndWait();
-        }
+        stageUtils.goBack(manageStudentsScene, worker);
     }
 
     /**
      * Deletes a student
-     *
-     * @param actionEvent button event
      */
-    public void deleteStudent(ActionEvent actionEvent) {
-        if (manageStudentsTable.getSelectionModel().getSelectedCells().size() != 0) {
+    @FXML
+    public void deleteStudent() {
+        if (!manageStudentsTable.getSelectionModel().getSelectedCells().isEmpty()) {
             if ((worker != null && worker.isAdmin())
-                    || requestAdminPin("delete a student")) {
+                    || StageUtils.getInstance().requestAdminPin("delete a student", manageStudentsScene)) {
 
                 int row = manageStudentsTable.getSelectionModel().getFocusedIndex();
                 String email = emailCol.getCellData(row);
@@ -352,54 +305,6 @@ public class ControllerManageStudents implements IController, Initializable {
                 }
             }
         }
-    }
-
-    /**
-     * Brings up the request pin pop up
-     *
-     * @param action reason for pop up
-     * @return true if the pin is valid
-     */
-    public boolean requestAdminPin(String action) {
-        AtomicBoolean isValid = new AtomicBoolean(false);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
-            Parent root = loader.load();
-            ((AdminPinRequestController) loader.getController()).setAction(action);
-            Scene scene = new Scene(root, 400, 250);
-            Stage stage = new Stage();
-            stage.setTitle("Admin Pin Required");
-            stage.initOwner(manageStudentsScene.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.setResizable(false);
-            stage.setOnCloseRequest(e -> {
-                // checks to see whether the pin was submitted or the window was just closed
-                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
-                    // checks to see if the input pin is empty. if empty, close pop up
-                    if (((AdminPinRequestController) loader.getController()).isNotEmpty()) {
-                        // checks to see whether the submitted pin matches one of the admin's pins
-                        if (((AdminPinRequestController) loader.getController()).isValid()) {
-                            stage.close();
-                            isValid.set(true);
-                        } else {
-                            stage.close();
-                            invalidAdminPinAlert();
-                            isValid.set(false);
-                        }
-                    } else {
-                        stage.close();
-                        isValid.set(false);
-                    }
-                }
-            });
-            stage.showAndWait();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
-            e.printStackTrace();
-        }
-        return isValid.get();
     }
 
     /**
@@ -433,19 +338,7 @@ public class ControllerManageStudents implements IController, Initializable {
             stage.setOnHiding(event1 -> populateTable());
             stage.setResizable(false);
             if (sp.changed()) {
-                stage.setOnCloseRequest(event1 -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
-                    alert.setTitle("Confirm Close");
-                    alert.setHeaderText("If you leave now, unsaved changes could be lost.");
-                    alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-                    alert.showAndWait().ifPresent(buttonType -> {
-                        if (buttonType == ButtonType.YES) {
-                            stage.close();
-                        } else if (buttonType == ButtonType.NO) {
-                            event1.consume();
-                        }
-                    });
-                });
+                stageUtils.unsavedChangesAlert(stage);
             }
             stage.show();
             populateTable();
@@ -469,17 +362,6 @@ public class ControllerManageStudents implements IController, Initializable {
         if (this.worker == null) {
             this.worker = worker;
         }
-    }
-
-    /**
-     * Alert that the pin entered does not match one of the admin pins.
-     */
-    private void invalidAdminPinAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("The pin entered is invalid.");
-        StudentCheckIn.logger.error("The pin entered is invalid.");
-        alert.showAndWait();
     }
 
     /**

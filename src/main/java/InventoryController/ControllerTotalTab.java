@@ -4,6 +4,7 @@ import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Worker;
 import Database.TotalTab;
 import HelperClasses.AdminPinRequestController;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.collections.FXCollections;
@@ -62,6 +63,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
 
     private final ArrayList<String> selectedFilters = new ArrayList<>();
 
+    private final StageUtils stageUtils = StageUtils.getInstance();
+
     private final Image editOneImage = new Image("images/edit.png");
     private final Image editAllImage = new Image("images/editAll.png");
     private final Image deleteOneImage = new Image("images/delete.png");
@@ -75,8 +78,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * This method is called when the inventory is loaded. It populates the table and sets
      * listeners for clicking on rows or the edit/delete buttons.
      *
-     * @param location
-     * @param resources
+     * @param location unused, not to be confused with a part's location
+     * @param resources unused
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -109,51 +112,32 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 setGraphic(null);
                                 setText(null);
                             } else {
-                                ImageView editOneImageView = new ImageView(editOneImage);
-                                editOneImageView.setFitHeight(12);
-                                editOneImageView.setFitWidth(12);
-                                final JFXButton editOneButton = new JFXButton();
-                                editOneButton.setGraphic(editOneImageView);
-                                editOneButton.setButtonType(JFXButton.ButtonType.RAISED);
+                                final JFXButton editOneButton = getJfxButton(editOneImage, "Edit this part");
                                 editOneButton.setOnAction(event -> {
-                                    if (worker != null && worker.isEdit()) {
+                                    if (worker != null && (worker.canEditParts() || worker.isAdmin())) {
                                         editPart(getTreeTableRow().getItem().getPartID().getValue().toString(), false);
                                     } else {
-                                        if (worker != null && worker.isAdmin()
-                                                || requestAdminPin("edit a part")) {
+                                        if (stageUtils.requestAdminPin("edit a part", totalTabPage)) {
                                             editPart(getTreeTableRow().getItem().getPartID().getValue().toString(), false);
                                         }
                                     }
                                 });
-                                editOneButton.setTooltip(new Tooltip("Edit this part"));
 
-                                ImageView editAllImageView = new ImageView(editAllImage);
-                                editAllImageView.setFitHeight(12);
-                                editAllImageView.setFitWidth(12);
-                                final JFXButton editAllButton = new JFXButton();
-                                editAllButton.setGraphic(editAllImageView);
-                                editAllButton.setButtonType(JFXButton.ButtonType.RAISED);
+                                final JFXButton editAllButton = getJfxButton(editAllImage, "Edit all parts named: " + partNames.getText());
                                 editAllButton.setOnAction(event -> {
-                                    if (worker != null && worker.isEdit()) {
+                                    if (worker != null && worker.canEditParts()) {
                                         editPart(getTreeTableRow().getItem().getPartID().getValue().toString(), true);
                                     } else {
                                         if ((worker != null && worker.isAdmin())
-                                                || requestAdminPin("edit parts")) {
+                                                || stageUtils.requestAdminPin("edit parts", totalTabPage)) {
                                             editPart(getTreeTableRow().getItem().getPartID().getValue().toString(), true);
                                         }
                                     }
                                 });
-                                Tooltip editAllTip = new Tooltip("Edit all parts named: " + partNames.getText());
-                                editAllButton.setTooltip(editAllTip);
 
-                                ImageView deleteOneImageView = new ImageView(deleteOneImage);
-                                deleteOneImageView.setFitHeight(12);
-                                deleteOneImageView.setFitWidth(12);
-                                final JFXButton deleteOneButton = new JFXButton();
-                                deleteOneButton.setGraphic(deleteOneImageView);
-                                deleteOneButton.setButtonType(JFXButton.ButtonType.RAISED);
+                                final JFXButton deleteOneButton = getJfxButton(deleteOneImage, "Delete this Part");
                                 deleteOneButton.setOnAction(event -> {
-                                    if (worker != null && worker.isRemove()) {
+                                    if (worker != null && worker.canRemoveParts()) {
                                         if (!database.getIsCheckedOut("" + getTreeTableRow().getItem().getPartID().getValue())) {
                                             deletePart(getTreeTableRow().getItem().getPartID().getValue().toString());
                                         } else {
@@ -161,7 +145,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                         }
                                     } else {
                                         if ((worker != null && worker.isAdmin())
-                                                || requestAdminPin("Delete a Part")) {
+                                                || stageUtils.requestAdminPin("Delete a Part", totalTabPage)) {
                                             if (!database.getIsCheckedOut("" + getTreeTableRow().getItem().getPartID().getValue())) {
                                                 deletePart(getTreeTableRow().getItem().getPartID().getValue().toString());
                                             } else {
@@ -171,50 +155,19 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                     }
                                     populateTable();
                                 });
-                                Tooltip deleteOneTip = new Tooltip("Delete this part");
-                                deleteOneButton.setTooltip(deleteOneTip);
 
-                                ImageView deleteAllImageView = new ImageView(deleteAllImage);
-                                deleteAllImageView.setFitHeight(12);
-                                deleteAllImageView.setFitWidth(12);
-                                final JFXButton deleteAllButton = new JFXButton();
-                                deleteAllButton.setGraphic(deleteAllImageView);
-                                deleteAllButton.setButtonType(JFXButton.ButtonType.RAISED);
+                                final JFXButton deleteAllButton = getJfxButton(deleteAllImage, "Delete all parts named: " + partNames.getText());
                                 deleteAllButton.setOnAction(event -> {
-                                    if (worker != null && worker.isRemove()) {
-                                        boolean typeHasOneCheckedOut = false;
-                                        ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + getTreeTableRow().getItem().getPartID().getValue());
-                                        for (String id : partIDs) {
-                                            if (database.getIsCheckedOut(id)) {
-                                                typeHasOneCheckedOut = true;
-                                            }
-                                        }
-                                        if (!typeHasOneCheckedOut) {
-                                            deletePartType(getTreeTableRow().getItem().getPartName().getValue());
-                                        } else {
-                                            typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
-                                        }
+                                    if (worker != null && worker.canRemoveParts()) {
+                                        attemptToDeletePartType();
                                     } else {
                                         if ((worker != null && worker.isAdmin())
-                                                || requestAdminPin("delete parts")) {
-                                            boolean typeHasOneCheckedOut = false;
-                                            ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + getTreeTableRow().getItem().getPartID().getValue());
-                                            for (String id : partIDs) {
-                                                if (database.getIsCheckedOut(id)) {
-                                                    typeHasOneCheckedOut = true;
-                                                }
-                                            }
-                                            if (!typeHasOneCheckedOut) {
-                                                deletePartType(getTreeTableRow().getItem().getPartName().getValue());
-                                            } else {
-                                                typeHasOneCheckedOutError(getTreeTableRow().getItem().getPartName().getValue());
-                                            }
+                                                || stageUtils.requestAdminPin("delete parts", totalTabPage)) {
+                                            attemptToDeletePartType();
                                         }
                                     }
                                     populateTable();
                                 });
-                                Tooltip deleteAllTip = new Tooltip("Delete all parts named: " + partNames.getText());
-                                deleteAllButton.setTooltip(deleteAllTip);
 
                                 VBox column = new VBox();
                                 HBox actionButtons = new HBox();
@@ -222,7 +175,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                                 actionButtons.setAlignment(Pos.TOP_RIGHT);
                                 actionButtons.setOpacity(0);
                                 actionButtons.hoverProperty().addListener(observable -> {
-                                    if (actionButtons.isHover() && actionButtons != null) {
+                                    if (actionButtons.isHover()) {
                                         actionButtons.setOpacity(1);
                                     } else {
                                         actionButtons.setOpacity(0);
@@ -239,6 +192,34 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                             }
                         }
 
+                    }
+
+                    private JFXButton getJfxButton(Image image, String toolTip) {
+                        ImageView imageView = new ImageView(image);
+                        imageView.setFitHeight(12);
+                        imageView.setFitWidth(12);
+                        final JFXButton button = new JFXButton();
+                        button.setGraphic(imageView);
+                        button.setButtonType(JFXButton.ButtonType.RAISED);
+                        button.setTooltip(new Tooltip(toolTip));
+                        return button;
+                    }
+
+                    private void attemptToDeletePartType() {
+                        boolean typeHasOneCheckedOut = false;
+                        ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + getTreeTableRow().getItem().getPartID().getValue());
+                        for (String id : partIDs) {
+                            if (database.getIsCheckedOut(id)) {
+                                typeHasOneCheckedOut = true;
+                            }
+                        }
+                        if (!typeHasOneCheckedOut) {
+                            deletePartType(getTreeTableRow().getItem().getPartName().getValue());
+                        } else {
+                            String partName = getTreeTableRow().getItem().getPartName().getValue();
+                            stageUtils.errorAlert("At least one " + partName + " is currently checked out, so "
+                                    + partName + " parts cannot be deleted.");
+                        }
                     }
                 };
             }
@@ -396,8 +377,8 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
         return ((partName != null && partName.toLowerCase().contains(input))
                 || (serialNumber != null && serialNumber.toLowerCase().contains(input))
                 || (loc != null && loc.toLowerCase().contains(input))
-                || (barcode != null && barcode.toLowerCase().contains((input))
-                || (partID != null && partID.toLowerCase().contains(input))));
+                || barcode.toLowerCase().contains(input)
+                || partID.toLowerCase().contains(input));
     }
 
 
@@ -414,11 +395,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             tableRows.add(new TotalTabTableRow(
                     part.getPartID(), part.getBarcode(), part.getSerialNumber(), part.getLocation(), part.getPartName(), part.getPrice()));
         }
-        root = new RecursiveTreeItem<TotalTabTableRow>(
+        root = new RecursiveTreeItem<>(
                 tableRows, RecursiveTreeObject::getChildren
         );
-        totalTable.getColumns().setAll(partNameCol, barcodeCol,
-                serialNumberCol, locationCol, partIDCol);
+        totalTable.getColumns().setAll(partNameCol, barcodeCol, serialNumberCol, locationCol, partIDCol);
         totalTable.setRoot(root);
         totalTable.setShowRoot(false);
     }
@@ -429,76 +409,12 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      */
     @FXML
     public void addPart() {
-        Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/AddPart.fxml");
-            Parent root = FXMLLoader.load(myFxmlURL);
-            Scene scene = new Scene(root, 400, 450);
-            stage.setTitle("Add a Part");
-            stage.initOwner(totalTabPage.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent event) {
-                    populateTable();
-                    stage.close();
-                }
-            });
-            stage.show();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Add Part.");
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Asks the student worker to enter an admin pin if they try to do something they do
-     * not have the privilege to do
-     *
-     * @param action the privileged action that the worker tried to do
-     * @return true if the inputted admin pin is correct; false otherwise
-     */
-    public boolean requestAdminPin(String action) {
-        AtomicBoolean isValid = new AtomicBoolean(false);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
-            Parent root = loader.load();
-            ((AdminPinRequestController) loader.getController()).setAction(action);
-            Scene scene = new Scene(root, 350, 250);
-            Stage stage = new Stage();
-            stage.setTitle("Admin Pin Required");
-            stage.initOwner(totalTabPage.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.setResizable(false);
-            stage.setOnCloseRequest(e -> {
-                // checks to see whether the pin was submitted or the window was just closed
-                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
-                    // checks to see if the input pin is empty. if empty, close pop up
-                    if (((AdminPinRequestController) loader.getController()).isNotEmpty()) {
-                        // checks to see whether the submitted pin matches one of the admin's pins
-                        if (((AdminPinRequestController) loader.getController()).isValid()) {
-                            stage.close();
-                            isValid.set(true);
-                        } else {
-                            stage.close();
-                            invalidAdminPinAlert();
-                            isValid.set(false);
-                        }
-                    } else {
-                        stage.close();
-                        isValid.set(false);
-                    }
-                }
-            });
-            stage.showAndWait();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
-            e.printStackTrace();
-        }
-        return isValid.get();
+        Stage stage = StageUtils.getInstance().createPopupStage("fxml/AddPart.fxml", totalTabPage, "Add a Part");
+        stage.setOnCloseRequest(event -> {
+            populateTable();
+            stage.close();
+        });
+        stage.show();
     }
 
     /**
@@ -527,7 +443,7 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
                 stage.setTitle("Edit all " + part.getPartName());
             } else {
                 String partName = part.getPartName();
-                if (part.getPartName().substring(part.getPartName().length() - 1).equals("s")) {
+                if (part.getPartName().endsWith("s")) {
                     partName = part.getPartName().substring(0, part.getPartName().length() - 1);
                 }
                 stage.setTitle("Edit a " + partName);
@@ -536,13 +452,10 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             stage.getIcons().add(new Image("images/msoe.png"));
-            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent event) {
-                    selectedFilters.add("All");
-                    populateTable();
-                    stage.close();
-                }
+            stage.setOnCloseRequest(event -> {
+                selectedFilters.add("All");
+                populateTable();
+                stage.close();
             });
             stage.show();
         } catch (IOException e) {
@@ -593,51 +506,13 @@ public class ControllerTotalTab extends ControllerInventoryPage implements Initi
      * Alert that the part is currently checked out, so it cannot be deleted
      */
     private void deleteCheckedOutPartAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("This part is currently checked out and cannot be deleted.");
-        StudentCheckIn.logger.error("This part is currently checked out and cannot be deleted.");
-        alert.showAndWait();
-    }
-
-    /**
-     * Alert that the part is currently checked out, so it cannot be deleted
-     */
-    private void typeHasOneCheckedOutError(String partName) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("At least one " + partName + " is currently checked out, so " +
-                partName + " parts cannot be deleted.");
-        StudentCheckIn.logger.error("At least one {} is currently checked out, so {} parts cannot be deleted.", partName, partName);
-        alert.showAndWait();
-    }
-
-    /**
-     * Alert that the part is currently checked out, so it cannot be deleted
-     */
-    private void deleteAllCheckedOutPartAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("One part of this type is checked out. You cannot delete all of these parts.");
-        StudentCheckIn.logger.error("One part of this type is checked out. You cannot delete all of these parts.");
-        alert.showAndWait();
-    }
-
-    /**
-     * Alert that the pin entered does not match one of the admin pins.
-     */
-    private void invalidAdminPinAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("The pin entered is invalid.");
-        StudentCheckIn.logger.error("The pin entered is invalid.");
-        alert.showAndWait();
+        stageUtils.errorAlert("This part is currently checked out and cannot be deleted.");
     }
 
     /**
      * Creates a new column for the table with
-     * @param colName
-     * @return
+     * @param colName The title of the column
+     * @return the column that is set up in the method
      */
     private JFXTreeTableColumn createNewCol(String colName) {
         JFXTreeTableColumn tempCol = new JFXTreeTableColumn<>(colName);

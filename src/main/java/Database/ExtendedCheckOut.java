@@ -1,17 +1,17 @@
 package Database;
 
 import HelperClasses.DatabaseHelper;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import InventoryController.StudentCheckIn;
 
 import java.sql.*;
 
 public class ExtendedCheckOut {
 
-    private final String url = Database.host + "/student_check_in";
-    private CheckingOutPart checkHelper = new CheckingOutPart();
-    private DatabaseHelper helper = new DatabaseHelper();
-    private StageWrapper stageWrapper = new StageWrapper();
+    private final String url = Database.host + Database.dbname;
+    private final CheckingOutPart checkHelper = new CheckingOutPart();
+    private final DatabaseHelper helper = new DatabaseHelper();
+    private final StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * Adds a new checkout item to the database
@@ -29,7 +29,7 @@ public class ExtendedCheckOut {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         catch (NullPointerException e){
-            stageWrapper.errorAlert("Barcode " + barcode +" is already checked out by another student");
+            stageUtils.errorAlert("Barcode " + barcode +" is already checked out by another student");
             return false;
         }
         return true;

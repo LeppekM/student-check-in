@@ -3,7 +3,7 @@ package ManagePeople;
 import Database.Database;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
@@ -32,7 +32,7 @@ public class ControllerAddStudent implements Initializable, IController {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         database = new Database();
-        StageWrapper sw = new StageWrapper();
+        StageUtils sw = StageUtils.getInstance();
         sw.acceptIntegerOnly(rfid);
         // only allows user to enter 5 digits for rfid
         rfidFilter(rfid);
@@ -96,19 +96,14 @@ public class ControllerAddStudent implements Initializable, IController {
     /**
      * Filters for rfid
      *
-     * @param textField Textfield to be filtered
+     * @param textField TextField to be filtered
      */
     private void rfidFilter(JFXTextField textField) {
-        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    //in focus
-                } else {
-                    String id = textField.getText();
-                    if (textField.getText().contains("rfid:")) {
-                        textField.setText(id.substring(5));
-                    }
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                String id = textField.getText();
+                if (textField.getText().contains("rfid:")) {
+                    textField.setText(id.substring(5));
                 }
             }
         });

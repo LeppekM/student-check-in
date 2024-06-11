@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ExportToExcel {
-    StageWrapper helper = new StageWrapper();
 
     private void formatExcelFile(String[] columns, Workbook workbook, Sheet sheet) {
         Font headerFont = workbook.createFont();
@@ -45,8 +44,6 @@ public class ExportToExcel {
         String[] columns = {"Student Name", "Part Name", "Barcode", "Check Out Date", "Due Date"}; //Number of columns in tableview
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
-
-        CreationHelper createHelper = workbook.getCreationHelper();
 
         Sheet sheet = workbook.createSheet("Checked Out Items");
 
@@ -108,7 +105,7 @@ public class ExportToExcel {
         } catch (NullPointerException | IOException e) {
             return;
         }
-        helper.slidingAlert("Success", "File created successfully!");
+        StageUtils.getInstance().slidingAlert("Success", "File created successfully!");
     }
 
     /**
@@ -126,8 +123,6 @@ public class ExportToExcel {
         String[] columns = {"Part Name", "Serial Number", "Location", "Barcode"}; //Number of columns in tableview
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
-
-        CreationHelper createHelper = workbook.getCreationHelper();
 
         Sheet sheet = workbook.createSheet("Parts List");
 
@@ -158,8 +153,6 @@ public class ExportToExcel {
         String[] columns = {"Student Name", "Part Name", "Barcode", "Action", "Date"}; //Number of columns in tableview
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
-
-        CreationHelper createHelper = workbook.getCreationHelper();
 
         Sheet sheet = workbook.createSheet("Transaction History");
 

@@ -3,6 +3,7 @@ package InventoryController;
 import Database.Database;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
+import HelperClasses.StageUtils;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -42,7 +43,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     @FXML
     private ControllerOverdueTab overdueTabPageController;
 
-
     @FXML
     private Button back;
 
@@ -52,17 +52,14 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
-                // if the user was on the total tab
-                if (newTab == historyTab) {
-                    updateHistoryTab();
-                } else if (newTab == checkedOutTab) {
-                    updateCheckedOutTab();
-                } else if (newTab == overdueTab) {
-                    updateOverdueTab();
-                }
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            // if the user was on the total tab
+            if (newTab == historyTab) {
+                updateHistoryTab();
+            } else if (newTab == checkedOutTab) {
+                updateCheckedOutTab();
+            } else if (newTab == overdueTab) {
+                updateOverdueTab();
             }
         });
 
@@ -105,25 +102,9 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
         }
     }
 
-    /**
-     * Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
-     *
-     * @author Matthew Karcz
-     */
+
     @FXML
     public void goBack() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
-            Parent root = loader.load();
-            IController controller = loader.<IController>getController();
-            controller.initWorker(worker);
-            inventoryScene.getScene().setRoot(root);
-            ((IController) loader.getController()).initWorker(worker);
-            inventoryScene.getChildren().clear();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            StudentCheckIn.logger.error("IOException: No valid stage was found to load");
-            alert.showAndWait();
-        }
+        StageUtils.getInstance().goBack(inventoryScene, worker);
     }
 }

@@ -3,7 +3,7 @@ package InventoryController;
 import Database.EditPart;
 import Database.ObjectClasses.Part;
 import Database.VendorInformation;
-import HelperClasses.StageWrapper;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
@@ -50,7 +50,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
 
     private VendorInformation vendorInformation = new VendorInformation();
 
-    private StageWrapper stageWrapper = new StageWrapper();
+    private StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * This method sets the data in the history page.
@@ -79,10 +79,10 @@ public class ControllerEditOnePart extends ControllerEditPart {
      * the user to enter numbers into the barcode field.
      */
     private void setFieldValidator() {
-        stageWrapper.requiredInputValidator(serialField);
-        stageWrapper.requiredInputValidator(barcodeField);
-        stageWrapper.requiredInputValidator(locationField);
-        stageWrapper.acceptIntegerOnly(barcodeField);
+        stageUtils.requiredInputValidator(serialField);
+        stageUtils.requiredInputValidator(barcodeField);
+        stageUtils.requiredInputValidator(locationField);
+        stageUtils.acceptIntegerOnly(barcodeField);
     }
 
     /**
@@ -120,7 +120,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
             loader.setVisible(true);
             editPart.editItem(getPartFromInput());
             close();
-            partEditedSuccess();
+            stageUtils.successAlert("Part edited successfully.");
         }
     }
 
@@ -320,32 +320,6 @@ public class ControllerEditOnePart extends ControllerEditPart {
     }
 
     /**
-     * Creates an alert informing user that part was edited successfully
-     * @author Matthew Karcz
-     */
-    private void partEditedSuccess(){
-        new Thread(new Runnable() {
-            @Override public void run() {
-                Platform.runLater(() -> {
-                    Stage owner = new Stage(StageStyle.TRANSPARENT);
-                    StackPane root = new StackPane();
-                    root.setStyle("-fx-background-color: TRANSPARENT");
-                    Scene scene = new Scene(root, 1, 1);
-                    owner.setScene(scene);
-                    owner.setWidth(1);
-                    owner.setHeight(1);
-                    owner.toBack();
-                    owner.show();
-                    Notifications.create().title("Successful!").text("Part edited successfully.").hideAfter(new Duration(5000)).show();
-                    PauseTransition delay = new PauseTransition(Duration.seconds(5));
-                    delay.setOnFinished( event -> owner.close() );
-                    delay.play();
-                });
-            }
-        }).start();
-    }
-
-    /**
      * Returns to main inventory page
      */
     public void goBack(){
@@ -357,7 +331,6 @@ public class ControllerEditOnePart extends ControllerEditPart {
      * repopulates the table.
      */
     private void close(){
-        //sceneAddPart.getScene().getWindow().hide();
-        sceneEditOnePart.fireEvent(new WindowEvent(((Node) sceneEditOnePart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        sceneEditOnePart.fireEvent(new WindowEvent(sceneEditOnePart.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 }

@@ -24,11 +24,11 @@ public class Worker {
         this.RIFD = RFID;
         this.isAdmin = isAdmin;
         if (isAdmin){
-            edit = true;
-            worker = true;
-            remove = true;
-            over = true;
-        }else {
+            this.edit = true;
+            this.worker = true;
+            this.remove = true;
+            this.over = true;
+        } else {
             this.edit = edit;
             this.worker = worker;
             this.remove = remove;
@@ -101,7 +101,7 @@ public class Worker {
         isAdmin = admin;
     }
 
-    public boolean isEdit() {
+    public boolean canEditParts() {
         return edit;
     }
 
@@ -109,7 +109,7 @@ public class Worker {
         this.edit = edit;
     }
 
-    public boolean isWorker() {
+    public boolean canEditWorkers() {
         return worker;
     }
 
@@ -117,7 +117,7 @@ public class Worker {
         this.worker = worker;
     }
 
-    public boolean isRemove() {
+    public boolean canRemoveParts() {
         return remove;
     }
 
@@ -125,7 +125,7 @@ public class Worker {
         this.remove = remove;
     }
 
-    public boolean isOver() {
+    public boolean canOverrideOverdue() {
         return over;
     }
 

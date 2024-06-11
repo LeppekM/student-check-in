@@ -24,10 +24,10 @@ import java.util.regex.Pattern;
  * This class is a TextField which implements an "autocomplete" functionality,
  * based on a supplied list of entries.<p>
  *
- * If the entered text matches a part of any of the supplied entries these are
+ * If the entered text matches a part of the supplied entries these are
  * going to be displayed in a popup. Further the matching part of the entry is
  * going to be displayed in a special style, defined by
- * {@link #textOccurenceStyle textOccurenceStyle}. The maximum number of
+ * {@link #textOccurrenceStyle textOccurenceStyle}. The maximum number of
  * displayed entries in the popup is defined by
  * {@link #maxEntries maxEntries}.<br>
  * By default the pattern matching is not case-sensitive. This behaviour is
@@ -65,7 +65,7 @@ public class AutoCompleteTextField extends JFXTextField {
      * Equal to the search results if search results are not empty, equal to
      * {@link #entries entries} otherwise.
      */
-    private ObservableList<String> filteredEntries
+    private final ObservableList<String> filteredEntries
             = FXCollections.observableArrayList();
 
     /**
@@ -94,9 +94,9 @@ public class AutoCompleteTextField extends JFXTextField {
      * <p>
      * Note: This style is going to be applied on an
      * {@link javafx.scene.text.Text Text} instance. See the <i>JavaFX CSS
-     * Reference Guide</i> for available CSS Propeties.
+     * Reference Guide</i> for available CSS Properties.
      */
-    private String textOccurenceStyle = "-fx-font-weight: bold; "
+    private String textOccurrenceStyle = "-fx-font-weight: bold; "
             + "-fx-fill: red;";
 
     /**
@@ -105,85 +105,56 @@ public class AutoCompleteTextField extends JFXTextField {
      */
     private int maxEntries = 10;
 
-    public AutoCompleteTextField() {
-        super();
-        this.entries = null;
-    }
-
-    /**
-     * Construct a new AutoCompleteTextField.
-     */
-    public AutoCompleteTextField(SortedSet<String> entrySet) {
-        super();
-        initEntrySet(entrySet);
-    }
-
     public void initEntrySet(SortedSet<String> entrySet) {
-        this.entries = (entrySet == null ? new TreeSet<String>() : entrySet);
+        this.entries = (entrySet == null ? new TreeSet<>() : entrySet);
         this.filteredEntries.addAll(entries);
 
         entriesPopup = new ContextMenu();
-        textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
-                if (getText().length() == 0) {
-                    filteredEntries.clear();
-                    filteredEntries.addAll(entries);
-                    entriesPopup.hide();
+        textProperty().addListener((observableValue, s, s2) -> {
+            if (getText().isEmpty()) {
+                filteredEntries.clear();
+                filteredEntries.addAll(entries);
+                entriesPopup.hide();
+            } else {
+                LinkedList<String> searchResult = new LinkedList<>();
+
+                //Check if the entered Text is part of some entry
+                String text = getText();
+                Pattern pattern;
+                if (isCaseSensitive()) {
+                    pattern = Pattern.compile(".*" + text + ".*");
                 } else {
-                    LinkedList<String> searchResult = new LinkedList<>();
+                    pattern = Pattern.compile(".*" + text + ".*",
+                            Pattern.CASE_INSENSITIVE);
+                }
 
-                    //Check if the entered Text is part of some entry
-                    String text = getText();
-                    Pattern pattern;
-                    if (isCaseSensitive()) {
-                        pattern = Pattern.compile(".*" + text + ".*");
-                    } else {
-                        pattern = Pattern.compile(".*" + text + ".*",
-                                Pattern.CASE_INSENSITIVE);
+                for (String entry : entries) {
+                    Matcher matcher = pattern.matcher(entry);
+                    if (matcher.matches()) {
+                        searchResult.add(entry);
                     }
+                }
 
-                    for (String entry : entries) {
-                        Matcher matcher = pattern.matcher(entry);
-                        if (matcher.matches()) {
-                            searchResult.add(entry);
+                if (entrySet != null && !entrySet.isEmpty()) {
+                    filteredEntries.clear();
+                    filteredEntries.addAll(searchResult);
+
+                    //Only show popup if not in filter mode
+                    if (!isPopupHidden()) {
+                        populatePopup(searchResult, text);
+                        if (!entriesPopup.isShowing()) {
+                            entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
                         }
                     }
-
-                    if (entrySet.size() > 0) {
-                        filteredEntries.clear();
-                        filteredEntries.addAll(searchResult);
-
-                        //Only show popup if not in filter mode
-                        if (!isPopupHidden()) {
-                            populatePopup(searchResult, text);
-                            if (!entriesPopup.isShowing()) {
-                                entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
-                            }
-                        }
-                    } else {
-                        entriesPopup.hide();
-                    }
+                } else {
+                    entriesPopup.hide();
                 }
             }
         });
 
-        focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean aBoolean2) {
-                entriesPopup.hide();
-            }
-        });
+        focusedProperty().addListener((observableValue, aBoolean, aBoolean2) -> entriesPopup.hide());
     }
 
-    /**
-     * Get the existing set of autocomplete entries.
-     *
-     * @return The existing autocomplete entries.
-     */
-    public SortedSet<String> getEntries() {
-        return entries;
-    }
 
     /**
      * Populate the entry set with the given search results. Display is limited
@@ -196,33 +167,12 @@ public class AutoCompleteTextField extends JFXTextField {
         int count = Math.min(searchResult.size(), getMaxEntries());
         for (int i = 0; i < count; i++) {
             final String result = searchResult.get(i);
-            int occurence;
-
-            if (isCaseSensitive()) {
-                occurence = result.indexOf(text);
-            } else {
-                occurence = result.toLowerCase().indexOf(text.toLowerCase());
-            }
-
-            //Part before occurence (might be empty)
-            Text pre = new Text(result.substring(0, occurence));
-            //Part of (first) occurence
-            Text in = new Text(result.substring(occurence,
-                    occurence + text.length()));
-            in.setStyle(getTextOccurenceStyle());
-            //Part after occurence
-            Text post = new Text(result.substring(occurence + text.length(),
-                    result.length()));
-
-            TextFlow entryFlow = new TextFlow(pre, in, post);
+            TextFlow entryFlow = getTextFlow(text, result);
 
             CustomMenuItem item = new CustomMenuItem(entryFlow, true);
-            item.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    setText(result);
-                    entriesPopup.hide();
-                }
+            item.setOnAction(actionEvent -> {
+                setText(result);
+                entriesPopup.hide();
             });
             menuItems.add(item);
         }
@@ -231,20 +181,43 @@ public class AutoCompleteTextField extends JFXTextField {
 
     }
 
+    private TextFlow getTextFlow(String text, String result) {
+        int occurence;
+
+        if (isCaseSensitive()) {
+            occurence = result.indexOf(text);
+        } else {
+            occurence = result.toLowerCase().indexOf(text.toLowerCase());
+        }
+
+        //Part before occurence (might be empty)
+        Text pre = new Text(result.substring(0, occurence));
+        //Part of (first) occurence
+        Text in = new Text(result.substring(occurence,
+                occurence + text.length()));
+        in.setStyle(getTextOccurrenceStyle());
+        //Part after occurence
+        Text post = new Text(result.substring(occurence + text.length(),
+                result.length()));
+
+        TextFlow entryFlow = new TextFlow(pre, in, post);
+        return entryFlow;
+    }
+
     public boolean isCaseSensitive() {
         return caseSensitive;
     }
 
-    public String getTextOccurenceStyle() {
-        return textOccurenceStyle;
+    public String getTextOccurrenceStyle() {
+        return textOccurrenceStyle;
     }
 
     public void setCaseSensitive(boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
     }
 
-    public void setTextOccurenceStyle(String textOccurenceStyle) {
-        this.textOccurenceStyle = textOccurenceStyle;
+    public void setTextOccurrenceStyle(String textOccurrenceStyle) {
+        this.textOccurrenceStyle = textOccurrenceStyle;
     }
 
     public boolean isPopupHidden() {
