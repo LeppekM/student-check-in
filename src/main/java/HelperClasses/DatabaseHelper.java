@@ -17,7 +17,7 @@ public class DatabaseHelper {
         try {
             date = new SimpleDateFormat("d MMM yyyy hh:mm:ss a").parse(stringDate);
         } catch (ParseException e) {
-            e.printStackTrace();
+            System.out.println("Error parsing date: " + stringDate);
         } catch (NullPointerException e){
             StudentCheckIn.logger.error("Item is being checked out for first time; no checkout date");
             return null;
@@ -51,14 +51,8 @@ public class DatabaseHelper {
     public String setDueDate() {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-        dateFormat.setCalendar(calendar);
-        return dateFormat.format(calendar.getTime());
+        return setDueDate(calendar);
     }
 
     /**
@@ -68,25 +62,24 @@ public class DatabaseHelper {
      * @return Extended due date
      */
     public String setExtendedDuedate(LocalDate localDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
         calendar.set(localDate.getYear(), localDate.getMonthValue() - 1, localDate.getDayOfMonth());
+        return setDueDate(calendar);
+    }
+
+    /**
+     * Helper method to set the due date as the end of the calendar date for the selected date on the passed calendar
+     * @param calendar that is formatted to the correct date for the part to be due
+     * @return the DateFormat String of the end of the day
+     */
+    private String setDueDate(Calendar calendar) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         dateFormat.setCalendar(calendar);
         return dateFormat.format(calendar.getTime());
-    }
-
-    /**
-     * Helper method gets tomorrow's date.
-     *
-     * @return Tomorrow's date
-     */
-    public String getTomorrowDate() {
-        Date dt = new Date();
-        return LocalDateTime.from(dt.toInstant().atZone(ZoneId.of("UTC"))).plusDays(1).toString();
     }
 }

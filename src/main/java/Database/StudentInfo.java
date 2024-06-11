@@ -43,21 +43,6 @@ public class StudentInfo {
         return new Student(name, id, studentEmail);
     }
 
-    public String getStudentNameFromID(String studentID) {
-        String sName = "";
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement statement = connection.prepareStatement(getStudentNameFromIDQuery);
-            statement.setString(1, studentID);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                sName = rs.getString("studentName");
-            }
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-        return sName;
-    }
 
     public boolean studentHasItemsCheckedOut(int studentID) {
         String query = "select studentID from checkout where studentID =? and checkinAt is null";
@@ -186,10 +171,23 @@ public class StudentInfo {
     }
 
     public String getStudentNameFromEmail(String email) {
+        return getStudentName(email, false);
+    }
+
+    public String getStudentNameFromID(String studentID) {
+        return getStudentName(studentID, true);
+    }
+
+    private String getStudentName(String input, boolean isRFID) {
         String sName = "";
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement statement = connection.prepareStatement(getStudentNameFromEmailQuery);
-            statement.setString(1, email);
+            PreparedStatement statement;
+            if(isRFID){
+                statement = connection.prepareStatement(getStudentNameFromIDQuery);
+            } else {
+                statement = connection.prepareStatement(getStudentNameFromEmailQuery);
+            }
+            statement.setString(1, input);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 sName = rs.getString("studentName");

@@ -57,7 +57,6 @@ public class Database implements IController {
             StudentCheckIn.logger.error("SQLError: Can't connect to the database! Connection could not be established.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, could not connect to the database.");
             alert.showAndWait();
-//            System.exit(0);
         }
     }
 
@@ -114,7 +113,7 @@ public class Database implements IController {
      */
     public boolean isOverdue(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-        if (!date.isEmpty()) {
+        if (date != null && !date.isEmpty()) {
             try {
                 Date current = dateFormat.parse(databaseHelper.getCurrentDateTimeStamp());
                 Date dueDate = dateFormat.parse(date);
@@ -322,29 +321,6 @@ public class Database implements IController {
     }
 
     /**
-     * Gets the name of the part that the barcode corresponds to
-     *
-     * @param barcode the barcode for the part being checked
-     * @return the name of the part
-     */
-    public String getPartNameFromBarcode(int barcode) {
-        String query = "SELECT partName from parts where barcode = " + barcode + ";";
-        String partName = "";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                partName = resultSet.getString("partName");
-            }
-            statement.close();
-            resultSet.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return partName;
-    }
-
-    /**
      * Checks whether the part with the given part ID is currently checked out
      *
      * @param partID the part ID of the part being checked
@@ -357,9 +333,10 @@ public class Database implements IController {
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
             resultSet.next();
-//            statement.close();
-            if (resultSet.getInt(1) > 0) {
-                resultSet.close();
+            int result = resultSet.getInt(1);
+            statement.close();
+            resultSet.close();
+            if (result > 0) {
                 return true;
             }
         } catch (SQLException e) {
@@ -423,13 +400,11 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getAllBarcodesForPartName(String partName) {
-        //String query = "SELECT barcode FROM parts WHERE partName = '" + partName + "';";
         String query = "SELECT barcode FROM parts WHERE partName = ?";
         ArrayList<String> barcodes = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, partName);
-//            Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 barcodes.add(resultSet.getString("barcode"));
@@ -509,26 +484,6 @@ public class Database implements IController {
     }
 
     /**
-     * Checks whether the parts with the given part name have unique serial numbers
-     *
-     * @param partName the name of the parts being checked
-     * @return true if the part has unique serial numbers; false otherwise
-     */
-    public boolean hasUniqueSerialNumbers(String partName) {
-        ArrayList<String> serialNumbers = getAllSerialNumbersForPartName(partName);
-        if (countPartsOfType(partName) > 1) {
-            for (int i = 0; i < serialNumbers.size(); i++) {
-                for (int j = 0; j < serialNumbers.size(); j++) {
-                    if (i != j && serialNumbers.get(i).equals(serialNumbers.get(j))) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
      * Gets the number of parts that's part name matches the given part name
      *
      * @param partName the part name being checked
@@ -547,48 +502,6 @@ public class Database implements IController {
             e.printStackTrace();
         }
         return -1;
-    }
-
-    /**
-     * Gets a list of different part names for all parts. This is used for ensuring that when
-     * a part name is added, it is not already used.
-     *
-     * @return the list of distinct part names
-     */
-    public ArrayList<String> getUniquePartNames() {
-        String query = "SELECT distinct partName FROM parts;";
-        ArrayList<String> partNames = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                partNames.add(resultSet.getString("partName"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return partNames;
-    }
-
-    /**
-     * Gets a list of different barcodes for all parts. This is used for ensuring that when
-     * a barcode is added, it is not already used.
-     *
-     * @return the list of distinct barcodes
-     */
-    public ArrayList<String> getUniqueBarcodes() {
-        String query = "SELECT DISTINCT barcode FROM parts";
-        ArrayList<String> barcodes = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                barcodes.add(resultSet.getString("barcode"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return barcodes;
     }
 
     /**
@@ -864,7 +777,7 @@ public class Database implements IController {
             int adminPin;
             while (resultSet.next()) {
                 adminPin = resultSet.getInt("pin");
-                if (adminPin == pin) {
+                if (adminPin != 0 && adminPin == pin) {
                     return true;
                 }
             }
@@ -879,49 +792,33 @@ public class Database implements IController {
 
 
     /**
-     * Gets a student from the database based on their RFID
+     * Gets a student from the database based on their RFID or email
      *
      * @param ID RFID to search for
      * @return a student
      */
     public Student selectStudent(int ID, String studentEmail) {
-        String query = null;
-        String coList = null;
-        String oList = null;
-        if (studentEmail == null) {
-            query = "select * from students where studentID = " + ID;
-            coList = "select students.studentID, students.studentName, students.email, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
-                    "from students " +
-                    "left join checkout on students.studentID = checkout.studentID " +
-                    "left join parts on checkout.partID = parts.partID" +
-                    " where students.studentID = " + ID +
-                    " AND checkout.checkinAt is null;";
-            oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                    "parts.barcode, parts.price, checkout.dueAt, parts.price, checkout.checkoutID, checkout.checkinAt from checkout " +
-                    "inner join parts on checkout.partID = parts.partID " +
-                    "inner join students on checkout.studentID = students.studentID " +
-                    "where checkout.checkinAt is null";
-        } else if (ID == -1) {
+        String query;
+        String coList = "select students.studentID, students.studentName, students.email, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, checkout.studentID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
+                "from students " +
+                "left join checkout on students.studentID = checkout.studentID " +
+                "left join parts on checkout.partID = parts.partID";
+        if (ID == -1 && studentEmail != null) {
             studentEmail = studentEmail.replace("'", "\\'");
-            query = "select * from students where email = '" + studentEmail + "';";
-            coList = "select students.studentName, students.email, students.studentID, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
-                    "from students " +
-                    "left join checkout on students.studentID = checkout.studentID " +
-                    "left join parts on checkout.partID = parts.partID" +
-                    " where students.email = '" + studentEmail +
+            query = "select * from students where email = '" + studentEmail + "';"; // why is the ; on this but not the other
+            coList += " where students.email = '" + studentEmail +
                     "' AND checkout.checkinAt is null;";
-            oList = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName, " +
-                    "parts.barcode, parts.price, checkout.dueAt, checkout.checkoutID, checkout.checkinAt from checkout " +
-                    "inner join parts on checkout.partID = parts.partID " +
-                    "inner join students on checkout.studentID = students.studentID " +
-                    "where checkout.checkinAt is null";
+        } else if (ID != -1) {
+            query = "select * from students where studentID = " + ID;
+            coList += " where students.studentID = " + ID +
+                    " AND checkout.checkinAt is null;";
+        } else {
+            return null;  // if there's no ID or email
         }
         Student student = null;
-        String name = "";
-        String email = "";
+        String name = "", email = "";
         Date date = null;
-        int id = 0;
-        int uniqueID = 0;
+        int id = 0, uniqueID = 0;
         ObservableList<CheckedOutItems> checkedOutItems = FXCollections.observableArrayList();
         ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
         try {
@@ -952,18 +849,11 @@ public class Database implements IController {
                         databaseHelper.convertStringtoDate(resultSet.getString("checkout.checkoutAt")),
                         databaseHelper.convertStringtoDate(resultSet.getString("checkout.dueAt")),
                         resultSet.getString("parts.price")));
-            }
-            statement.close();
-            resultSet.close();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(oList);
-            resultSetMetaData = resultSet.getMetaData();
-            while (resultSet.next()) {
+
                 String dueAt = resultSet.getString("checkout.dueAt");
-                int studentID = resultSet.getInt("checkout.studentID");
-                if (isOverdue(dueAt) && (studentID == ID || email.equals(studentEmail))) {
+                if (isOverdue(dueAt)) {
                     overdueItems.add(new OverdueItem(
-                            resultSet.getInt("checkout.studentID"),
+                            resultSet.getInt("students.studentID"),
                             resultSet.getString("students.studentName"),
                             resultSet.getString("students.email"),
                             resultSet.getString("parts.partName"),
@@ -1076,7 +966,7 @@ public class Database implements IController {
     public boolean studentHasCheckedOutItems(String email) {
 
         Student s = selectStudent(-1, email);
-        if(s.getRFID() == 0){
+        if(s.getRFID() == 0 || s.getCheckedOut().isEmpty()){
             return false;
         }
         return !s.getCheckedOut().isEmpty();
