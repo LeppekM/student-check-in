@@ -419,26 +419,33 @@ public class CheckOutController extends ControllerMenu implements IController, I
                         return;
                     }
 
-                } else if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
+                } else if (studentID.getText().matches("^\\D*(?:\\d*){4,}$")) {
                     studentName = student.getStudentNameFromID(studentID.getText());
                 }
                 if (studentName.isEmpty()) { //If student ID isn't in DB, asks for email to attach the id to.
-                    String studentEmail = newStudentEmail();
-                    studentName = student.getStudentNameFromEmail(studentEmail);
-
-                    if (studentName.isEmpty()) {//Means student doesn't exist in database, so completely new one will be created
-                        studentName = newStudentName();
-                        if (studentName != null) {
-                            if (studentName.contains(" ")) {
-                                student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail.replace("'", "\\'"), studentName.replace("'", "\\'"));
-                            } else {
-                                stageUtils.errorAlert("Error, student name must contain first and last name separated by a space");
-                            }
-                        }
-
+                    String studentEmail = newStudentEmail(false);
+                    // re-prompt for email if not a validly formatted MSOE email, breaks loop if cancel is selected
+                    while (studentEmail != null && !studentEmail.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                        studentEmail = newStudentEmail(true);
                     }
                     if (studentEmail != null) {
-                        student.updateStudent(studentEmail.replace("'", "\\'"), Integer.parseInt(getstudentID()));
+                        studentName = student.getStudentNameFromEmail(studentEmail);
+
+                        if (studentName.isEmpty()) {  //Means student doesn't exist in database, so completely new one will be created
+                            studentName = newStudentName(false);
+                            // re-prompt for name if it doesn't contain a space
+                            while (studentName != null && !studentName.contains(" ")) {
+                                studentName = newStudentName(true);
+                            }
+                            if (studentName != null) {
+                                student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail.replace("'", "\\'"), studentName.replace("'", "\\'"));
+                                stageUtils.successAlert("New student created");
+                            }
+                        } else {
+                            student.updateStudent(studentEmail.replace("'", "\\'"), Integer.parseInt(getstudentID()));
+                            stageUtils.successAlert("Student updated");
+                        }
+
                     }
                 }
                 studentNameField.setText(studentName);
@@ -452,10 +459,14 @@ public class CheckOutController extends ControllerMenu implements IController, I
      *
      * @return Student name
      */
-    private String newStudentName() {
+    private String newStudentName(boolean wasInvalid) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Student Creation");
-        dialog.setHeaderText("Student Name is not in System.\n Please Enter Name to Continue ");
+        if (wasInvalid) {
+            dialog.setHeaderText("Student Name was not formatted correctly.\n Please Enter Name with space to Continue ");
+        } else {
+            dialog.setHeaderText("Student Name is not in System.\n Please Enter Name to Continue ");
+        }
         dialog.setContentText("First and last name\n Separate by space");
         dialog.showAndWait();
         return dialog.getResult();
@@ -463,14 +474,18 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
     /**
-     * Asks user for student email
+     * Asks user for student email, returns null if cancelled
      *
      * @return Student email
      */
-    private String newStudentEmail() {
+    private String newStudentEmail(boolean wasInvalid) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Student Creation");
-        dialog.setHeaderText("Student ID is not in system.\n Please enter email to continue ");
+        if (wasInvalid) {
+            dialog.setHeaderText("Invalid email entered.\n Please enter a valid MSOE email to continue ");
+        } else {
+            dialog.setHeaderText("Student ID is not in system.\n Please enter MSOE email to continue ");
+        }
         dialog.setContentText("Please enter Student Email");
         dialog.showAndWait();
         return dialog.getResult();

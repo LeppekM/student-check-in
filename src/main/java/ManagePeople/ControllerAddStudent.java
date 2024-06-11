@@ -45,8 +45,8 @@ public class ControllerAddStudent implements Initializable, IController {
     public void submit() {
         database.initWorker(worker);
         boolean isValid = true;
-        if (!first.getText().equals("") && !last.getText().equals("") &&
-                !email.getText().equals("") && !rfid.getText().equals("")) {
+        if (!first.getText().isEmpty() && !last.getText().isEmpty() &&
+                !email.getText().isEmpty() && !rfid.getText().isEmpty()) {
             if (rfid.getText().matches("[0-9]{4,}")) {
                 if (email.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                     if (database.getStudentEmails().contains(email.getText())) {
@@ -70,8 +70,8 @@ public class ControllerAddStudent implements Initializable, IController {
                     alert.showAndWait();
                 }
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "The rfid must be the students 5 digit RFID. Scan the student ID.");
-                StudentCheckIn.logger.warn("The rfid must be the students 5 digit rfid. Scan the student ID.");
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The rfid must be a validly formatted student RFID. Scan the student ID.");
+                StudentCheckIn.logger.warn("The rfid must be a validly formatted student RFID. Scan the student ID.");
                 alert.showAndWait();
             }
         } else {

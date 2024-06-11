@@ -24,5 +24,6 @@ Original developers are Daniel Lang, Matthew Karcz, Bailey Terry, and Joe Gilpin
 Product Owner: Jim Frommell
 
 ## Known Issues ##
-* Cannot delete student with no transaction history, shows up as having a part checked out
 * Sometimes inventory tables show parts with only name fields filled while everything else shows as null, these parts cannot be edited
+* Some parts do not have a popup when double-clicked in inventory screen, assumed due to deleting history associated with part
+* 

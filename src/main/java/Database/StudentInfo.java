@@ -159,17 +159,6 @@ public class StudentInfo {
         }
     }
 
-    public void createNewStudent(Student s) {
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement statement = connection.prepareStatement(createNewStudent);
-            createNewStudentHelper(s.getRFID(), s.getEmail(), s.getName(), statement);
-            statement.close();
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-    }
-
     public String getStudentNameFromEmail(String email) {
         return getStudentName(email, false);
     }

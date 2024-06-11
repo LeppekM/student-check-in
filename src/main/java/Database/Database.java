@@ -837,30 +837,32 @@ public class Database implements IController {
             resultSet = statement.executeQuery(coList);
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
-                checkedOutItems.add(new CheckedOutItems(
-                        resultSet.getInt("checkout.checkoutID"),
-                        resultSet.getString("students.studentName"),
-                        resultSet.getString("students.email"),
-                        resultSet.getInt("students.studentID"),
-                        resultSet.getString("parts.partName"),
-                        resultSet.getString("parts.barcode"),
-                        resultSet.getString("parts.serialNumber"),
-                        resultSet.getInt("parts.partID"),
-                        databaseHelper.convertStringtoDate(resultSet.getString("checkout.checkoutAt")),
-                        databaseHelper.convertStringtoDate(resultSet.getString("checkout.dueAt")),
-                        resultSet.getString("parts.price")));
-
-                String dueAt = resultSet.getString("checkout.dueAt");
-                if (isOverdue(dueAt)) {
-                    overdueItems.add(new OverdueItem(
-                            resultSet.getInt("students.studentID"),
+                if (resultSet.getInt("checkout.checkoutID") != 0) {
+                    checkedOutItems.add(new CheckedOutItems(
+                            resultSet.getInt("checkout.checkoutID"),
                             resultSet.getString("students.studentName"),
                             resultSet.getString("students.email"),
+                            resultSet.getInt("students.studentID"),
                             resultSet.getString("parts.partName"),
-                            resultSet.getLong("parts.barcode"),
-                            databaseHelper.convertStringtoDate(dueAt),
-                            resultSet.getString("checkout.checkoutID"),
-                            resultSet.getDouble("parts.price")));
+                            resultSet.getString("parts.barcode"),
+                            resultSet.getString("parts.serialNumber"),
+                            resultSet.getInt("parts.partID"),
+                            databaseHelper.convertStringtoDate(resultSet.getString("checkout.checkoutAt")),
+                            databaseHelper.convertStringtoDate(resultSet.getString("checkout.dueAt")),
+                            resultSet.getString("parts.price")));
+
+                    String dueAt = resultSet.getString("checkout.dueAt");
+                    if (isOverdue(dueAt)) {
+                        overdueItems.add(new OverdueItem(
+                                resultSet.getInt("students.studentID"),
+                                resultSet.getString("students.studentName"),
+                                resultSet.getString("students.email"),
+                                resultSet.getString("parts.partName"),
+                                resultSet.getLong("parts.barcode"),
+                                databaseHelper.convertStringtoDate(dueAt),
+                                resultSet.getString("checkout.checkoutID"),
+                                resultSet.getDouble("parts.price")));
+                    }
                 }
             }
             statement.close();
