@@ -42,7 +42,7 @@
                  HBox.hgrow="NEVER"/>
    </HBox>
    <HBox prefHeight="469.0" prefWidth="1150.0" VBox.vgrow="NEVER">
-      <GridPane prefHeight="397.0" prefWidth="1150.0" HBox.hgrow="ALWAYS">
+      <GridPane fx:id="gridPane" prefHeight="397.0" prefWidth="1150.0" HBox.hgrow="ALWAYS">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -57,14 +57,33 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
          </rowConstraints>
-         <StackPane fx:id="faultPane" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1"
-                    GridPane.rowIndex="4">
-            <TextArea prefHeight="200.0" prefWidth="383.0" promptText="Please enter a description of the fault"
-                      visible="false"/>
-         </StackPane>
-         <AutoCompleteTextField fx:id="studentID" focusColor="FIREBRICK" GridPane.columnIndex="1"/>
+         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+            <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Student ID  ">
+               <font>
+                  <Font size="24.0"/>
+               </font>
+            </Label>
+         </HBox>
+         <AutoCompleteTextField fx:id="studentIDField" focusColor="FIREBRICK" GridPane.columnIndex="1"/>
+
+         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+            <Label text="Student Name  ">
+               <font>
+                  <Font size="24.0"/>
+               </font>
+            </Label>
+         </HBox>
          <JFXTextField fx:id="studentNameField" disable="true" focusColor="FIREBRICK" GridPane.columnIndex="1"
                        GridPane.rowIndex="1"/>
+
+         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+            <Label text="Scan Barcodes  ">
+               <font>
+                  <Font size="24.0"/>
+               </font>
+            </Label>
+         </HBox>
+
          <JFXTextField fx:id="barcode" focusColor="FIREBRICK" onKeyTyped="#newBarcode1" GridPane.columnIndex="1"
                        GridPane.rowIndex="2"/>
          <HBox fx:id="HBoxBarcode" alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="155.0" translateX="10.0"
@@ -76,28 +95,9 @@
             <JFXCheckBox fx:id="extended1" checkedColor="FIREBRICK" text="Extended" translateX="20.0"
                          translateY="7.0" visible="false"/>
          </HBox>
-         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
-            <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Student ID  ">
-               <font>
-                  <Font size="24.0"/>
-               </font>
-            </Label>
-         </HBox>
 
-         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
-            <Label text="Student Name  ">
-               <font>
-                  <Font size="24.0"/>
-               </font>
-            </Label>
-         </HBox>
-         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
-            <Label text="Scan Barcodes  ">
-               <font>
-                  <Font size="24.0"/>
-               </font>
-            </Label>
-         </HBox>
+         <JFXTextField fx:id="barcode2" focusColor="FIREBRICK" onKeyTyped="#dropBarcode2" visible="false"
+                       GridPane.columnIndex="1" GridPane.rowIndex="3"/>
          <HBox fx:id="HBoxBarcode2" alignment="CENTER_LEFT" layoutX="777.0" layoutY="185.0" prefHeight="43.0"
                prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2"
                GridPane.rowIndex="3">
@@ -108,6 +108,9 @@
             <JFXCheckBox fx:id="extended2" checkedColor="FIREBRICK" text="Extended" translateX="20.0"
                          translateY="7.0" visible="false"/>
          </HBox>
+
+         <JFXTextField fx:id="barcode3" focusColor="FIREBRICK" onKeyTyped="#dropBarcode3" visible="false"
+                       GridPane.columnIndex="1" GridPane.rowIndex="4"/>
          <HBox fx:id="HBoxBarcode3" alignment="CENTER_LEFT" layoutX="777.0" layoutY="272.0" prefHeight="43.0"
                prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2"
                GridPane.rowIndex="4">
@@ -118,6 +121,9 @@
             <JFXCheckBox fx:id="extended3" checkedColor="FIREBRICK" text="Extended" translateX="20.0"
                          translateY="7.0" visible="false"/>
          </HBox>
+
+         <JFXTextField fx:id="barcode4" focusColor="FIREBRICK" onKeyTyped="#dropBarcode4" visible="false"
+                       GridPane.columnIndex="1" GridPane.rowIndex="5"/>
          <HBox fx:id="HBoxBarcode4" alignment="CENTER_LEFT" layoutX="777.0" layoutY="359.0" prefHeight="43.0"
                prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2"
                GridPane.rowIndex="5">
@@ -128,6 +134,9 @@
             <JFXCheckBox fx:id="extended4" checkedColor="FIREBRICK" text="Extended" translateX="20.0"
                          translateY="7.0" visible="false"/>
          </HBox>
+
+         <JFXTextField fx:id="barcode5" focusColor="FIREBRICK" visible="false" GridPane.columnIndex="1"
+                       GridPane.rowIndex="6"/>
          <HBox fx:id="HBoxBarcode5" alignment="CENTER_LEFT" layoutX="777.0" layoutY="446.0" prefHeight="43.0"
                prefWidth="155.0" translateX="10.0" translateY="3.0" visible="false" GridPane.columnIndex="2"
                GridPane.rowIndex="6">
@@ -138,6 +147,7 @@
             <JFXCheckBox fx:id="extended5" checkedColor="FIREBRICK" text="Extended" translateX="20.0"
                          translateY="7.0" visible="false"/>
          </HBox>
+
          <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER"
                     GridPane.rowIndex="3" GridPane.vgrow="NEVER">
             <HBox alignment="CENTER" prefHeight="170.0" prefWidth="1150.0" StackPane.alignment="CENTER">
@@ -160,27 +170,12 @@
                               <Font size="24.0"/>
                            </font>
                         </JFXCheckBox>
-                        <JFXCheckBox fx:id="faulty" checkedColor="FIREBRICK" prefHeight="35.0"
-                                     prefWidth="162.0" text="Faulty" translateY="-10.0"
-                                     visible="false">
-                           <font>
-                              <Font size="24.0"/>
-                           </font>
-                        </JFXCheckBox>
                      </StackPane>
                      <Pane prefHeight="42.0" prefWidth="263.0" HBox.hgrow="ALWAYS"/>
                   </HBox>
                </VBox>
             </HBox>
          </StackPane>
-         <JFXTextField fx:id="barcode2" focusColor="FIREBRICK" onKeyTyped="#dropBarcode2" visible="false"
-                       GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-         <JFXTextField fx:id="barcode3" focusColor="FIREBRICK" onKeyTyped="#dropBarcode3" visible="false"
-                       GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-         <JFXTextField fx:id="barcode4" focusColor="FIREBRICK" onKeyTyped="#dropBarcode4" visible="false"
-                       GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-         <JFXTextField fx:id="barcode5" focusColor="FIREBRICK" visible="false" GridPane.columnIndex="1"
-                       GridPane.rowIndex="6"/>
       </GridPane>
    </HBox>
 </VBox>

@@ -31,7 +31,6 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.function.UnaryOperator;
 
 public class CheckOutController extends ControllerMenu implements IController, Initializable {
 
@@ -39,11 +38,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private VBox main;
 
     @FXML
-
     private JFXTextField barcode, barcode2, barcode3, barcode4, barcode5, studentNameField;
 
     @FXML
-    private AutoCompleteTextField studentID;
+    private AutoCompleteTextField studentIDField;
 
     @FXML
     private JFXCheckBox extended, extended1, extended2, extended3, extended4, extended5;
@@ -72,21 +70,28 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private static String professor, course, dueDate;
     private boolean flag1, flag2, flag3, flag4, flag5 = true;
 
-    private final List<String> id = new ArrayList<>();
     private static final int PAUSE_DELAY = 5;
     private static final PauseTransition delay = new PauseTransition(Duration.minutes(PAUSE_DELAY));
     private Worker worker;
     private int counter = 0;
+    private Student currentStudent = null;
+    private List<HBox> barcodes = new LinkedList<>();
+
+    public static final int BARCODE_STRING_LENGTH = 6;
+    public static final String EMAIL_REGEX = "^\\w+[+.\\w'-]*@msoe\\.edu$";
+    public static final String RFID_REGEX = "^.*(\\d{4,})$";
+
+    //TODO: change logic so this has a student that it keeps track of and resets iff screen gets reset
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Platform.runLater(() -> studentID.requestFocus());
+        Platform.runLater(() -> studentIDField.requestFocus());
         this.worker = null;
         setFieldValidator();
         setItemStatus();
-        initialBarodeFieldFunctions();
+        initialBarcodeFieldFunctions();
         initialStudentFieldFunctions();
-        studentID.initEntrySet(new TreeSet<>(database.getStudentEmails()));
+        studentIDField.initEntrySet(new TreeSet<>(database.getStudentEmails()));
         setLabelStatuses();
         getStudentName();
         unlockFields();
@@ -129,7 +134,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         this.checkoutObject = checkoutObject;
-        studentID.setText(checkoutObject.getStudentID());
+        studentIDField.setText(checkoutObject.getStudentID());
 
         barcode.setText(checkoutObject.getBarcode());
 
@@ -139,7 +144,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
 
         // enable the switch to student info button iff the student ID field contains a student ID
-        studentInfo.setDisable(!studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") && !studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$"));
+        studentInfo.setDisable(!studentIDField.getText().matches(RFID_REGEX) && !studentIDField.getText().matches(EMAIL_REGEX));
     }
 
 
@@ -216,15 +221,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
     public void submit() {
         counter = 0;
         resetFlag();
-        Student thisStudent = null;
-        if (!statusError()) {
+        Student thisStudent = database.selectStudent(getstudentID(), null);
+        if (!statusError()) { // this does not reset the stage, but will not allow parts to get checked out if any have error, including if field was just deleted, have it update to reset if barcode erased
+            // and make it less required to have the first barcode scan box be filled, any should be allowed todo
             stageUtils.errorAlert("Error, parts were not checked out because there are errors with them");
             return;
-        }
-        if (containsNumber(getstudentID())) {
-            thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
-        } else {
-            thisStudent = database.selectStudent(-1, getstudentID());
         }
         database.initWorker(worker);
         if (ensureNotOverdue(thisStudent)) {
@@ -269,7 +270,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         List<MultipleCheckoutObject> barcodes = collectMultipleBarcodes();
         for (MultipleCheckoutObject barcode : barcodes) {
             if (barcode.isCheckedOut()) {
-                if(!flag1 || !flag2 || !flag3 || !flag4||!flag5){
+                if(!flag1 || !flag2 || !flag3 || !flag4|| !flag5){
                     return;
                 }
                 if (counter == 0) {
@@ -288,7 +289,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 counter++;
             } else {
                 for (int i = 0; i < barcode.getQuantity(); i++) {
-                    checkOut.setItemtoCheckedin(Integer.parseInt(getstudentID()), barcode.getBarcode());
+                    checkOut.setItemtoCheckedin(getstudentID(), barcode.getBarcode());
                 }
             }
         }
@@ -299,12 +300,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method to add barcodes
      */
     private void addBarcodes(int quantity, List<MultipleCheckoutObject> barcodes, Label status, long barcode, boolean extendedStatus) {
-        Student thisStudent = null;
-        if (containsNumber(getstudentID())) {
-            thisStudent = database.selectStudent(Integer.parseInt(getstudentID()), null);
-        } else {
-            thisStudent = database.selectStudent(-1, getstudentID());
-        }
+        Student thisStudent = database.selectStudent(getstudentID(), null);
+
         database.initWorker(worker);
         boolean checkStatus = status.getText().equals("Out");
 
@@ -319,26 +316,26 @@ public class CheckOutController extends ControllerMenu implements IController, I
         for (MultipleCheckoutObject barcode : collectMultipleBarcodes()) {
             for (int i = 0; i < barcode.getQuantity(); i++) {
                 if (barcode.isExtended()) {
-                    if (counter ==0){
+                    if (counter == 0){
                         flag1 =extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
-                    } else if (counter ==1){
+                    } else if (counter == 1){
                         flag2 = extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
-                    } else if (counter ==2){
+                    } else if (counter == 2){
                         flag3 =extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
-                    } else if (counter ==3){
+                    } else if (counter == 3){
                         flag4 =extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
                     } else {
                         flag5 =extendedCheckOut.addExtendedCheckout(barcode.getBarcode(), id, professor, course, dueDate);
                     }
 
                 } else {
-                    if (counter ==0){
+                    if (counter == 0){
                         flag1 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
-                    } else if (counter ==1){
+                    } else if (counter == 1){
                         flag2 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
-                    } else if (counter ==2){
+                    } else if (counter == 2){
                         flag3 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
-                    } else if (counter ==3){
+                    } else if (counter == 3){
                         flag4 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
                     } else {
                         flag5 = checkOut.addNewCheckoutItem(barcode.getBarcode(), id);
@@ -356,18 +353,12 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private boolean itemIsBeingCheckedIn(long barcode) {
         List<CheckedOutPartsObject> checkoutParts = checkOut.returnCheckedOutObjects();
-        int studentID = -1;
-        if (containsNumber(getstudentID())) {
-            studentID = Integer.parseInt(getstudentID());
-        }
+        int studentID = getstudentID();
 
-        // getStudentID returns -1 if the field does not contain a number
-
-        if (containsNumber(getstudentID())) {
-            CheckedOutPartsObject currentInfo = containsNumber(getstudentID()) ? new CheckedOutPartsObject(barcode,
-                    database.selectStudent(studentID, null).getRFID())
-                    : new CheckedOutPartsObject(barcode,
-                    database.selectStudent(studentID, getstudentID()).getRFID());
+        // getStudentID returns 0 if the field doesn't have valid student info
+        if (studentID != 0) {
+            CheckedOutPartsObject currentInfo =
+                    new CheckedOutPartsObject(barcode, database.selectStudent(studentID, null).getRFID());
             for (CheckedOutPartsObject checkoutPart : checkoutParts) {
                 if (checkoutPart.equals(currentInfo)) {
                     return true;
@@ -403,29 +394,35 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Gets student name. If no student name is found in database it will create a new student, or update student.
      */
     private void getStudentName() {
-        studentID.focusedProperty().addListener((ov, oldV, newV) -> {
-            if (studentID.getText().isEmpty()) {
+        studentIDField.focusedProperty().addListener((ov, oldV, newV) -> {
+            if (studentIDField.getText().isEmpty()) {
                 return;
             }
             if (!newV) {
                 extended.setDisable(false);
                 resetButton.setDisable(false);
                 String studentName = "";
-                if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-                    studentName = student.getStudentNameFromEmail(studentID.getText());
-                    if (student.getStudentIDFromEmail(studentID.getText().replace("'", "\\'"))) {
-                        stageUtils.errorAlert("Student is checking out equipment for first time\n They must use their student ID to check out an item");
+                if (studentIDField.getText().matches(EMAIL_REGEX)) {  // TODO: Fix this entire if statement logic branch
+                    // want to allow them to check out via email, excluding if they do not have their ID first checkout
+                    String studentEmail = studentIDField.getText().replace("'", "\\'");
+                    studentName = student.getStudentNameFromEmail(studentEmail);
+                    int sID = student.getStudentIDFromEmail(studentEmail);
+                    if (sID == 0) {
+                        stageUtils.errorAlert("Student is checking out equipment for first time/has no associated ID\n They must use their student ID to check out an item");
                         reset();
                         return;
                     }
-
-                } else if (studentID.getText().matches("^\\D*(?:\\d*){4,}$")) {
-                    studentName = student.getStudentNameFromID(studentID.getText());
+                } else if (studentIDField.getText().matches(RFID_REGEX)) {
+                    studentName = student.getStudentNameFromID(studentIDField.getText());
+                } else {
+                    stageUtils.errorAlert("Invalid student RFID or email address");
+                    reset();
+                    return;
                 }
                 if (studentName.isEmpty()) { //If student ID isn't in DB, asks for email to attach the id to.
                     String studentEmail = newStudentEmail(false);
                     // re-prompt for email if not a validly formatted MSOE email, breaks loop if cancel is selected
-                    while (studentEmail != null && !studentEmail.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                    while (studentEmail != null && !studentEmail.matches(EMAIL_REGEX)) {
                         studentEmail = newStudentEmail(true);
                     }
                     if (studentEmail != null) {
@@ -438,11 +435,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 studentName = newStudentName(true);
                             }
                             if (studentName != null) {
-                                student.createNewStudent(Integer.parseInt(getstudentID()), studentEmail.replace("'", "\\'"), studentName.replace("'", "\\'"));
+                                student.createNewStudent(getstudentID(), studentEmail.replace("'", "\\'"), studentName.replace("'", "\\'"));
                                 stageUtils.successAlert("New student created");
                             }
                         } else {
-                            student.updateStudent(studentEmail.replace("'", "\\'"), Integer.parseInt(getstudentID()));
+                            student.updateStudent(studentEmail.replace("'", "\\'"), getstudentID());
                             stageUtils.successAlert("Student updated");
                         }
 
@@ -496,11 +493,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Adds new student to database
      */
     private void noStudentError() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("No student found in the system with associated ID");
-
-        alert.showAndWait();
+        stageUtils.errorAlert("No student found in the system with associated ID");
     }
 
 
@@ -518,7 +511,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * @return True if fields are not empty
      */
     private boolean fieldsFilled() {
-        return !studentID.getText().isEmpty() | !barcode.getText().isEmpty();
+        return !studentIDField.getText().isEmpty() | !barcode.getText().isEmpty();
     }
 
     /**
@@ -526,7 +519,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private void unlockFields() {
         BooleanBinding binding;
-        binding = studentID.textProperty().isEmpty()
+        binding = studentIDField.textProperty().isEmpty()
                 .or(barcode.textProperty().isEmpty())
                 .or(studentNameField.textProperty().isEmpty());
         submitButton.disableProperty().bind(binding);
@@ -580,10 +573,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     public void goToStudent() {
         Student s = null;
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
-            s = database.selectStudent(Integer.parseInt(studentID.getText()), null);
-        } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-            s = database.selectStudent(-1, studentID.getText());
+        if (studentIDField.getText().matches(RFID_REGEX)) {
+            s = database.selectStudent(Integer.parseInt(studentIDField.getText()), null);
+        } else if (studentIDField.getText().matches(EMAIL_REGEX)) {
+            s = database.selectStudent(-1, studentIDField.getText());
         }
         if (s != null && !s.getName().isEmpty()) {
             try {
@@ -591,7 +584,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 Parent root = loader.load();
                 StudentPage sp = loader.getController();
                 sp.setStudent(s);
-                checkoutObject = new CheckoutObject(studentID.getText(), barcode.getText(), "1", extended.isSelected());
+                checkoutObject = new CheckoutObject(studentIDField.getText(), barcode.getText(), "1", extended.isSelected());
                 sp.initCheckoutObject(checkoutObject);
                 main.getScene().setRoot(root);
             } catch (IOException e) {
@@ -602,7 +595,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 e.printStackTrace();
             }
         } else {
-            stageUtils.errorAlert("No student found with asscoiated RFID");
+            stageUtils.errorAlert("No student found with associated RFID");
         }
     }
 
@@ -610,13 +603,16 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method to set the validators for fields
      */
     private void setFieldValidator() {
-        stageUtils.requiredInputValidator(studentID);
+        stageUtils.requiredInputValidator(studentIDField);
         stageUtils.requiredInputValidator(barcode);
-        acceptIntegerOnlyCheckout(barcode);
-        acceptIntegerOnlyCheckout(barcode2);
-        acceptIntegerOnlyCheckout(barcode3);
-        acceptIntegerOnlyCheckout(barcode4);
-        acceptIntegerOnlyCheckout(barcode5);
+        filterBarcodeText(barcode);
+        filterBarcodeText(barcode2);
+        filterBarcodeText(barcode3);
+        filterBarcodeText(barcode4);
+        filterBarcodeText(barcode5);
+        for (HBox hbox : barcodes){
+
+        }
     }
 
     /**
@@ -640,12 +636,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
      *
      * @return StudentID as integer
      */
-    private String getstudentID() {
-        String id = null;
-        if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
-            id = studentID.getText();
-        } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-            id = studentID.getText();
+    private int getstudentID() {
+        int id = 0;
+        if (studentIDField.getText().matches(RFID_REGEX)) {
+            // technically incorrect, but shouldn't be a problem unless some nonsense is entered IE: 297839RFID:8920
+            id = Integer.parseInt(studentIDField.getText().replaceAll("\\D", ""));
+        } else if (studentIDField.getText().matches(EMAIL_REGEX)) {
+            id = student.getStudentIDFromEmail(studentIDField.getText().replace("'", "\\'"));
         }
         return id;
     }
@@ -763,17 +760,17 @@ public class CheckOutController extends ControllerMenu implements IController, I
     /**
      * Helper method to initialize barcode field properties.
      */
-    private void initialBarodeFieldFunctions() {
+    private void initialBarcodeFieldFunctions() {
         barcode.setOnKeyReleased(event -> {
             statusLabel.setVisible(true);
         });
         barcode.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (newValue.length() == 6) {
+                    if (newValue.length() == BARCODE_STRING_LENGTH) {
                         if (itemIsBeingCheckedIn(getBarcode())) {
                             statusLabel.setText("In");
                         }
-                        else if (!checkOut.errorCheck(getBarcode(), Integer.parseInt(getstudentID()))){
+                        else if (!checkOut.errorCheck(getBarcode(), getstudentID())){
                             statusLabel.setText("Error");
                             extended1.setVisible(false);
                         }
@@ -790,6 +787,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             transitionHelper.spinnerInit(newQuantity);
                         }
                         barcode2.requestFocus();
+                    } else if (newValue.isEmpty()) {
+                        statusLabel.setText("--");
                     }
                 });
     }
@@ -801,12 +800,12 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
         barcode2.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (newValue.length() == 6) {
+                    if (newValue.length() == BARCODE_STRING_LENGTH) {
                         if (itemIsBeingCheckedIn(getBarcode2())) {
                             statusLabel2.setText("In");
                             extended.setDisable(true);
                         }
-                        else if (!checkOut.errorCheck(getBarcode2(), Integer.parseInt(getstudentID()))){
+                        else if (!checkOut.errorCheck(getBarcode2(), getstudentID())){
                             statusLabel2.setText("Error");
                             extended2.setVisible(false);
                         }
@@ -822,15 +821,17 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             transitionHelper.spinnerInit(newQuantity2);
                         }
                         barcode3.requestFocus();
+                    } else if (newValue.isEmpty()) {
+                        statusLabel.setText("--");
                     }
                 });
         barcode3.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (newValue.length() == 6) {
+                    if (newValue.length() == BARCODE_STRING_LENGTH) {
                         if (itemIsBeingCheckedIn(getBarcode3())) {
                             statusLabel3.setText("In");
                             extended.setDisable(true);
-                        } else if (!checkOut.errorCheck(getBarcode3(), Integer.parseInt(getstudentID()))) {
+                        } else if (!checkOut.errorCheck(getBarcode3(), getstudentID())) {
                             statusLabel3.setText("Error");
                             extended3.setVisible(false);
                         } else {
@@ -845,16 +846,18 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             transitionHelper.spinnerInit(newQuantity3);
                         }
                         barcode4.requestFocus();
+                    } else if (newValue.isEmpty()) {
+                        statusLabel.setText("--");
                     }
                 });
         barcode4.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (newValue.length() == 6) {
+                    if (newValue.length() == BARCODE_STRING_LENGTH) {
                         if (itemIsBeingCheckedIn(getBarcode4())) {
                             statusLabel4.setText("In");
                             extended.setDisable(true);
                         }
-                        else if (!checkOut.errorCheck(getBarcode4(), Integer.parseInt(getstudentID()))){
+                        else if (!checkOut.errorCheck(getBarcode4(), getstudentID())){
                             statusLabel4.setText("Error");
                             extended4.setVisible(false);
 
@@ -870,17 +873,19 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             transitionHelper.spinnerInit(newQuantity4);
                         }
                         barcode5.requestFocus();
+                    } else if (newValue.isEmpty()) {
+                        statusLabel.setText("--");
                     }
                 });
 
         barcode5.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (newValue.length() == 6) {
+                    if (newValue.length() == BARCODE_STRING_LENGTH) {
                         if (itemIsBeingCheckedIn(getBarcode5())) {
                             statusLabel5.setText("In");
                             extended.setDisable(true);
                         }
-                        else if (!checkOut.errorCheck(getBarcode5(), Integer.parseInt(getstudentID()))){
+                        else if (!checkOut.errorCheck(getBarcode5(), getstudentID())){
                             statusLabel5.setText("Error");
                             extended5.setVisible(false);
                         } else {
@@ -895,9 +900,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             transitionHelper.spinnerInit(newQuantity5);
                         }
 
+                    } else if (newValue.isEmpty()) {
+                        statusLabel.setText("--");
                     }
                 });
-
     }
 
 
@@ -905,22 +911,22 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Helper method to initialize student id field properties.
      */
     private void initialStudentFieldFunctions() {
-        studentInfo.setDisable(!studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$") && !studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$"));
+        studentInfo.setDisable(!studentIDField.getText().matches(RFID_REGEX) && !studentIDField.getText().matches(EMAIL_REGEX));
 
-        studentID.textProperty().addListener(
+        studentIDField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (studentID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
+                    if (studentIDField.getText().matches(RFID_REGEX)) {
                         studentInfo.setDisable(false);
-                    } else if (studentID.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                    } else if (studentIDField.getText().matches(EMAIL_REGEX)) {
                         studentInfo.setDisable(false);
-                        studentNameField.setText(student.getStudentNameFromEmail(studentID.getText().replace("'", "\\'")));
+                        studentNameField.setText(student.getStudentNameFromEmail(studentIDField.getText().replace("'", "\\'")));
                     } else {
                         studentInfo.setDisable(true);
                     }
                 }
         );
 
-        rfidFilter(studentID);
+        rfidFilter(studentIDField);
 
     }
 
@@ -949,26 +955,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
     /**
-     * If new rfid is scanned, submits the checkout
-     *
-     * @param textField Textfield for change to be applied to
+     * Prevents non-digits from being added to the barcode TextFields,
+     * and limits maximum characters to 6 (the barcode length)
+     * @param textField TextField for change to be applied to
      */
-    private void acceptIntegerOnlyCheckout(JFXTextField textField) {
-
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getText();
-            id.add(text);
-            if (stageUtils.getStudentID(id).contains("rfid:")) {
-                submit();
-                id.clear();
-            }
-            if (text.matches("[0-9]*")) {
-                return change;
-            }
-            return null;
-        };
-        TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-        textField.setTextFormatter(textFormatter);
+    private void filterBarcodeText(JFXTextField textField) {
+        stageUtils.acceptIntegerOnly(textField);
+        stageUtils.setMaxTextLength(textField, BARCODE_STRING_LENGTH);
     }
 
     /**
@@ -985,7 +978,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 }
             }
         });
-
     }
 
     /**
@@ -1067,22 +1059,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     private int getQuantitySpinner5() {
         return Integer.parseInt(newQuantity5.getValue().toString());
-    }
-
-    /**
-     * Checks if input contains number
-     *
-     * @param input Input string entered
-     * @return True if it input contains number
-     */
-    private static boolean containsNumber(String input) {
-        boolean parsable = true;
-        try {
-            Integer.parseInt(input);
-        } catch (Exception e) {
-            parsable = false;
-        }
-        return parsable;
     }
 
 

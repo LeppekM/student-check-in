@@ -170,6 +170,20 @@ public class StageUtils {
         textField.setTextFormatter(textFormatter);
     }
 
+    /**
+     * Does not allow more than max characters to be entered into textField
+     * @param textField TextField that the filter is applied to
+     * @param max the number of characters the textField cannot surpass
+     */
+    public void setMaxTextLength(TextField textField, int max) {
+        textField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue.length() > max) {
+                String copy = newValue.substring(0, max);
+                textField.setText(copy);
+            }
+        }));
+    }
+
 
     /**
      * Error pop-up

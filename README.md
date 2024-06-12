@@ -26,4 +26,5 @@ Product Owner: Jim Frommell
 ## Known Issues ##
 * Sometimes inventory tables show parts with only name fields filled while everything else shows as null, these parts cannot be edited
 * Some parts do not have a popup when double-clicked in inventory screen, assumed due to deleting history associated with part
+* Some tables auto-double click on single click or after sort function
 * 

@@ -44,7 +44,7 @@ public class StudentInfo {
     }
 
 
-    public boolean studentHasItemsCheckedOut(int studentID) {
+    public boolean hasCheckedOutItemsFromID(int studentID) {
         String query = "select studentID from checkout where studentID =? and checkinAt is null";
         List<Integer> checkouts = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
@@ -61,60 +61,38 @@ public class StudentInfo {
         return !checkouts.isEmpty();
     }
 
-    public String getStudentIDFromEmailActual(String email) {
-        String sName = "";
+    /**
+     * Returns the student ID associated with
+     * @param email the email, formatted correctly for db searching
+     * @return the ID associated with student's email, 0 if the student isn't in the db (might be 0 for imported students)
+     */
+    public int getStudentIDFromEmail(String email) {
+        int sID = 0;
         String query = "select studentID from students where email = ?";
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                sName = rs.getString("studentID");
+                sID = rs.getInt("studentID");
             }
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database to look for student.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
-        return sName;
+        return sID;
 
     }
 
-    public boolean getStudentIDFromEmail(String email) {
-        String sName = "";
-        String query = "select studentID from students where email = ?";
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, email);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                sName = rs.getString("studentID");
-            }
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-        if (sName == null) {
-            return true;
-        }
-        return false;
-
-    }
-
-    public boolean studentHasCheckedOutItems2(String email) {
-        int studentID = 0;
-
-        try {
-            studentID = Integer.parseInt(getStudentIDFromEmailActual(email));
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return studentHasItemsCheckedOut(studentID);
+    public boolean hasCheckedOutItemsFromEmail(String email) {
+        return hasCheckedOutItemsFromID(getStudentIDFromEmail(email));
     }
 
     public void updateStudent(String studentEmail, int studentID) {
 
-
-        if (studentHasCheckedOutItems2(studentEmail)) {
+        // this logic is present because the checkout entity has studentID associated with it instead of email
+        // when updating a student, all the checkout(s) without a checkin date transfer to the updated studentID
+        if (hasCheckedOutItemsFromEmail(studentEmail)) { // todo: fix this garbo
             stageUtils.errorAlert("User has parts already checked out, please resolve this issue before proceeding. IF YOU COMPLETE THIS TRANSACTION IT WILL NOT ACTUALLY GO THROUGH! TALK TO JIM");
             return;
         }
