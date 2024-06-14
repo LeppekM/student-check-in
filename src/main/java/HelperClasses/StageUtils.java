@@ -3,14 +3,10 @@ package HelperClasses;
 import Database.ObjectClasses.Worker;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
-import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -29,8 +25,8 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
 
@@ -228,6 +224,20 @@ public class StageUtils {
                 }
             });
         });
+    }
+
+    /**
+     * Alert if user tries to return home and fields are filled
+     *
+     * @return True if user pressed ok, false otherwise
+     */
+    public boolean missingFieldsAlert() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Information may be lost");
+        alert.setHeaderText("If you leave, unsubmitted information may be lost");
+        alert.setContentText("Are you ok with this?");
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.get() == ButtonType.OK;
     }
 
 

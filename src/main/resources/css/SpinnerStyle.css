@@ -3,7 +3,7 @@
     -fx-text-fill: black;
     -fx-background-color: none;
 
-    -fx-padding: 0 0 3 0;   
+    -fx-padding: 0 0 3 5;
 }
 .spinner .increment-arrow-button,
 .spinner .decrement-arrow-button {
@@ -20,4 +20,4 @@
     -fx-background-color: transparent;
     -fx-border-width: 0 0 1 0;
     -fx-border-color: #bdbdbd;
-} 
+}

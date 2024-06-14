@@ -790,12 +790,12 @@ public class Database implements IController {
         return false;
     }
 
-
     /**
      * Gets a student from the database based on their RFID or email
      *
-     * @param ID RFID to search for
-     * @return a student
+     * @param ID RFID to search for, -1 if no RFID being searched
+     * @param studentEmail the email being searched, null if no email being searched
+     * @return a student matching inputs if one exists in the db, null otherwise
      */
     public Student selectStudent(int ID, String studentEmail) {
         String query;
@@ -962,16 +962,22 @@ public class Database implements IController {
         }
     }
 
-
-
-
     public boolean studentHasCheckedOutItems(String email) {
-
         Student s = selectStudent(-1, email);
         if(s.getRFID() == 0 || s.getCheckedOut().isEmpty()){
             return false;
         }
         return !s.getCheckedOut().isEmpty();
+    }
+
+    public int amountOutByStudent(long barcode, Student s) {
+        // todo
+        return 0;
+    }
+
+    public int getNumPartsAvailableByBarcode(long barcode) {
+        // todo
+        return 0;
     }
 
     /**

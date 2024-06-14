@@ -63,7 +63,7 @@ public class StudentInfo {
 
     /**
      * Returns the student ID associated with
-     * @param email the email, formatted correctly for db searching
+     * @param email the email
      * @return the ID associated with student's email, 0 if the student isn't in the db (might be 0 for imported students)
      */
     public int getStudentIDFromEmail(String email) {
@@ -71,7 +71,7 @@ public class StudentInfo {
         String query = "select studentID from students where email = ?";
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, email);
+            statement.setString(1, email.replace("'", "\\'"));
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 sID = rs.getInt("studentID");
@@ -103,7 +103,7 @@ public class StudentInfo {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, studentID);
-            preparedStatement.setString(2, studentEmail);
+            preparedStatement.setString(2, studentEmail.replace("'", "\\'"));
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException e) {
@@ -118,7 +118,7 @@ public class StudentInfo {
             preparedStatement.setString(2, email);
             preparedStatement.setString(3, studentName);
             preparedStatement.setString(4, helper.getCurrentDate());
-            preparedStatement.setString(5, "Jim");//Hardcoded for now
+            preparedStatement.setString(5, "Jim");//Hardcoded for now todo
         } catch (SQLException e) {
             StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
             throw new IllegalStateException("Cannot connect to the database", e);
@@ -126,10 +126,16 @@ public class StudentInfo {
         return preparedStatement;
     }
 
+    /**
+     *
+     * @param studentID
+     * @param email
+     * @param studentName
+     */
     public void createNewStudent(int studentID, String email, String studentName) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             PreparedStatement statement = connection.prepareStatement(createNewStudent);
-            createNewStudentHelper(studentID, email, studentName, statement).execute();
+            createNewStudentHelper(studentID, email.replace("'", "\\'"), studentName.replace("'", "\\'"), statement).execute();
             statement.close();
         } catch (SQLException e) {
             StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
@@ -137,10 +143,18 @@ public class StudentInfo {
         }
     }
 
+    /**
+     * @param email the email that is being checked against all students in the database
+     * @return The student's name if there is a match, empty String otherwise
+     */
     public String getStudentNameFromEmail(String email) {
         return getStudentName(email, false);
     }
 
+    /**
+     * @param studentID the RFID that is being checked against all students in the database
+     * @return The student's name if there is a match, empty String otherwise
+     */
     public String getStudentNameFromID(String studentID) {
         return getStudentName(studentID, true);
     }
@@ -153,6 +167,7 @@ public class StudentInfo {
                 statement = connection.prepareStatement(getStudentNameFromIDQuery);
             } else {
                 statement = connection.prepareStatement(getStudentNameFromEmailQuery);
+                input = input.replace("'", "\\'");
             }
             statement.setString(1, input);
             ResultSet rs = statement.executeQuery();

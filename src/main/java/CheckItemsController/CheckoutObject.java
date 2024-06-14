@@ -16,16 +16,6 @@ public class CheckoutObject {
     /**
      * Constructor
      */
-    public CheckoutObject(String studentID, String barcode, String quantity, boolean isExtended) {
-        this.studentID = studentID;
-        this.barcode = barcode;
-        this.quantity = quantity;
-        this.isExtended = isExtended;
-    }
-
-    /**
-     * Constructor
-     */
     public CheckoutObject(String studentID, String barcode, String checkoutAt, String checkinAt, String dueAt) {
         this.studentID = studentID;
         this.barcode = barcode;
