@@ -70,7 +70,7 @@ public class Database implements IController {
     }
 
     /**
-     * This method uses an SQL query to get all items in the databse with a due date less than today's date
+     * This method uses an SQL query to get all items in the database with a due date less than today's date
      *
      * @return a list of overdue items
      */
@@ -558,8 +558,6 @@ public class Database implements IController {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students");
             String name;
-            String firstName;
-            String lastName;
             int id;
             String email;
             while (resultSet.next()) {
@@ -572,9 +570,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of students");
-            StudentCheckIn.logger.error("Could not retrieve the list of students");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not retrieve the list of students");
             e.printStackTrace();
         }
         return studentsList;
@@ -867,7 +863,7 @@ public class Database implements IController {
             }
             statement.close();
             resultSet.close();
-            if (checkedOutItems.size() > 0) {
+            if (!checkedOutItems.isEmpty()) {
                 date = checkedOutItems.get(0).getCheckedOutDate().get();
             }
             // date null if no checkouts
@@ -971,12 +967,41 @@ public class Database implements IController {
     }
 
     public int amountOutByStudent(long barcode, Student s) {
-        // todo
+        String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND barcode = " + barcode + " AND studentID = " + s.getRFID() + ";";
+        ResultSet resultSet;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            resultSet.next();
+            int result = resultSet.getInt(1);
+            statement.close();
+            resultSet.close();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
     public int getNumPartsAvailableByBarcode(long barcode) {
-        // todo
+        String query1 = "SELECT partID FROM parts WHERE barcode = " + barcode + ";";
+        ResultSet resultSet;
+        int result = 0;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(query1);
+            while(resultSet.next()) {
+                boolean checkedOut = getIsCheckedOut(resultSet.getString(1));
+                if (!checkedOut) {
+                    result++;
+                }
+            }
+            statement.close();
+            resultSet.close();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -1091,6 +1116,14 @@ public class Database implements IController {
             e.printStackTrace();
         }
         return barcodes;
+    }
+
+    public void checkInPart() {
+
+    }
+
+    public void bigFix(){
+        String q1 = "DROP TABLE fault;\nALTER TABLE parts ADD checkedOutBy INT;\nALTER TABLE parts DROP COLUMN isCheckedOut";
     }
 
     /**

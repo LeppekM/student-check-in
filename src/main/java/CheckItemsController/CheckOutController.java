@@ -159,6 +159,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         database.initWorker(worker); // kept for tracking purposes
 
         if (!fieldsFilled()) {
+            stageUtils.checkoutAlert("Unfilled Fields", "No parts checked in/out");
             return;
         }
         if (isStudentNameEmpty()) {
@@ -189,7 +190,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Submits (all) part(s)
      */
     private void submitParts() {
-
+        // todo this whole method
         for (HBox hbox : barcodes) {
             JFXTextField barcodeField = (JFXTextField) hbox.getChildren().get(0); // get the barcodeField
             Spinner<Integer> quantitySpinner = (Spinner<Integer>) hbox.getChildren().get(1);
@@ -238,7 +239,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
         Spinner<Integer> spinner = new Spinner<>();
         spinner.setMinHeight(20);
-        spinner.setMinWidth(50);
+        spinner.setMinWidth(60);
         spinnerInit(spinner, 1);
         spinner.setEditable(false);
         barcodeBox.getChildren().add(spinner);
@@ -256,6 +257,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
         extendedCheckBox.setText(EXTENDED_STR);
         extendedCheckBox.setVisible(extendedVisible);
         barcodeBox.getChildren().add(extendedCheckBox);
+
+        barcodes.add(barcodeBox);
+        barcodeVBox.getChildren().add(barcodeBox);
 
         barcodeField.setOnKeyReleased(event -> {
             statusLabel.setVisible(true);
@@ -278,7 +282,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             extendedCheckBox.setVisible(false);
                             spinner.setEditable(false);
                         }
-                        createBarcode().requestFocus();
+
+                        if (barcodeBox == barcodes.get(barcodes.size() - 1)) {
+                            createBarcode().requestFocus();
+                        } else {
+                            barcodes.get(barcodes.size() - 1).getChildren().get(0).requestFocus();
+                        }
+
 
                     } else {
                         statusLabel.setText(DEFAULT_STR);
@@ -286,8 +296,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     }
                 });
 
-        barcodes.add(barcodeBox);
-        barcodeVBox.getChildren().add(barcodeBox);
         return barcodeField;
     }
 
@@ -309,10 +317,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     public boolean setSpinnerWithAvailableParts(long barcode, Spinner<Integer> spinner) {
         int partsAvailable = database.getNumPartsAvailableByBarcode(barcode);
-        if (partsAvailable >= 1){
+        if (partsAvailable > 0){
             SpinnerValueFactory<Integer> valueFactory =
                     new SpinnerValueFactory.IntegerSpinnerValueFactory(1, partsAvailable, 1);
             spinner.setValueFactory(valueFactory);
+            return true;
         }
         return false;
     }
