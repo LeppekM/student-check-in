@@ -19,8 +19,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.*;
 import java.util.Date;
 
 public class Database implements IController {
@@ -66,6 +65,14 @@ public class Database implements IController {
      * @return the database connection
      */
     public Connection getConnection() {
+        try{
+            if (connection.isClosed()) {
+                connection = DriverManager.getConnection((host + dbname), username, password);
+            }
+        } catch (SQLException e) {
+
+        }
+
         return connection;
     }
 
@@ -206,6 +213,140 @@ public class Database implements IController {
             e.printStackTrace();
         }
         return part;
+    }
+
+    /**
+     * todo
+     * Checks if barcode exists
+     * @param barcode Barcode to be checked
+     * @return True if barcode exists
+     */
+    public boolean barcodeExists(long barcode) {
+        List<Long> barcodes = new LinkedList<>();
+        final String getAllBarcodes = "select barcode from parts";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(getAllBarcodes);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                barcodes.add(rs.getLong("barcode"));
+            }
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when checking if barcode exists.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return (barcodes.contains(barcode));
+    }
+
+    /**
+     * Sets part checkout status to 1 to signify the part is checked out
+     * @param partID Part ID of part
+     */
+    void setPartStatus(int partID, String status){
+        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(status);
+            preparedStatement.setInt(1,partID);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    /**
+     * This method takes a barcode as parameter and returns the corresponding partID to be added to checkout table.
+     * @param barcode barcode of part
+     * @return Part ID to return
+     */
+    int getPartIDFromBarcode(long barcode, String status){
+        int partID = 0;
+
+        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+            PreparedStatement statement = connection.prepareStatement(status);
+            statement.setLong(1, barcode);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                partID = rs.getInt("partID");
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting part ID from barcode.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return partID;
+    }
+
+    public int getCheckoutIDFromBarcodeAndRFID(int RFID, long barcode) {
+        int checkoutID = 0;
+        String query = "select checkoutID from checkout where studentID =? and barcode = ? and checkinAt IS NULL limit 1";
+        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, RFID);
+            statement.setLong(2, barcode);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                checkoutID = rs.getInt("checkoutID");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return checkoutID;
+    }
+
+    /**
+     * todo
+     * @return true if part successfully checked in
+     */
+    public boolean checkOutPart(long barcode, int RFID) {
+        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+            String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt) " +
+                    "VALUES(?,?,?,?,?);";
+            int partID = getPartIDFromBarcode(barcode, "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = 0 LIMIT 1");
+            if (partID == 0) {
+                stageUtils.errorAlert("Unable to find a valid partID for barcode");
+                return false;
+            }
+            PreparedStatement statement = connection.prepareStatement(addToCheckouts);
+            statement.setInt(1, partID);
+            statement.setInt(2, RFID);
+            statement.setLong(3, barcode);
+            statement.setString(4, databaseHelper.getCurrentDateTimeStamp());
+            statement.setString(5, databaseHelper.setDueDate());
+            String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
+            setPartStatus(partID, setPartStatusCheckedOut); //This will set the partID found above to a checked out status
+            statement.execute();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when adding new checkout item.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        } catch (NullPointerException e){
+            stageUtils.errorAlert("Part with barcode of " + barcode + " is already checked out");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * todo
+     */
+    public boolean checkInPart(long barcode, int RFID) {
+        String getPartIDtoCheckin = "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = 1 LIMIT 1";
+        int partID = getPartIDFromBarcode(barcode, getPartIDtoCheckin);
+        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+            String setDate = "update checkout set checkinAt = ? where checkoutID = ?";
+            PreparedStatement statement = connection.prepareStatement(setDate);
+            statement.setString(1, databaseHelper.getCurrentDateTimeStamp());
+            statement.setInt(2, getCheckoutIDFromBarcodeAndRFID(RFID, barcode));
+            statement.execute();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        String setPartStatusCheckedIn = "UPDATE parts SET isCheckedOut = 0 WHERE partID = ?";
+        setPartStatus(partID, setPartStatusCheckedIn); //Sets part to checkedin
+        return true;
     }
 
     /**

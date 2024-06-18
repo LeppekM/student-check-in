@@ -9,7 +9,6 @@ import java.sql.*;
 public class ExtendedCheckOut {
 
     private final String url = Database.host + Database.dbname;
-    private final CheckingOutPart checkHelper = new CheckingOutPart();
     private final DatabaseHelper helper = new DatabaseHelper();
     private final StageUtils stageUtils = StageUtils.getInstance();
 
@@ -84,7 +83,15 @@ public class ExtendedCheckOut {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
-        checkHelper.setPartStatus(partID, setPartStatusCheckedOut); //This will set the partID found above to a checked out status
+        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
+            PreparedStatement statement = connection.prepareStatement(setPartStatusCheckedOut);
+            statement.setInt(1,partID);
+            statement.execute();
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
         return preparedStatement;
     }
 }

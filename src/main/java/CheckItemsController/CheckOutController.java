@@ -7,6 +7,7 @@ import HelperClasses.AutoCompleteTextField;
 import HelperClasses.StageUtils;
 import InventoryController.ControllerMenu;
 import InventoryController.IController;
+import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
@@ -28,6 +29,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 import static javafx.scene.paint.Color.FIREBRICK;
@@ -97,6 +102,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     /**
      * If no movement is recorded on page for 5 minutes, item will submit automatically
+     * NOTE: this will run on any screen
      */
     private void submitTimer() {
         main.addEventFilter(InputEvent.ANY, evt -> delay.playFromStart());
@@ -191,23 +197,37 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private void submitParts() {
         // todo this whole method
+        ArrayList<Long> barcodesAlreadyChecked = new ArrayList<>();
         for (HBox hbox : barcodes) {
             JFXTextField barcodeField = (JFXTextField) hbox.getChildren().get(0); // get the barcodeField
             Spinner<Integer> quantitySpinner = (Spinner<Integer>) hbox.getChildren().get(1);
             Label statusLabel = (Label) hbox.getChildren().get(2);
             JFXCheckBox extendedCheckout = (JFXCheckBox) hbox.getChildren().get(3);
+            long barcode = 0;
+            if (barcodeField.getText().length() == BARCODE_STRING_LENGTH) {
+                barcode = Long.parseLong(barcodeField.getText());
+            }
+
             // want to d/c the logic from MultipleCheckoutObject and CheckingOutPart objects
 
             // stops incomplete barcodes from being submitted
-            if (barcodeField.getText().length() == BARCODE_STRING_LENGTH) {
-                int barcode = Integer.parseInt(barcodeField.getText());
+            if (barcodeField.getText().length() == BARCODE_STRING_LENGTH && !barcodesAlreadyChecked.contains(barcode)) {
                 if (statusLabel.getText().equals(CHECK_IN_STR)){
                     // check in
-
+                    for (int i = 0; i < quantitySpinner.getValue(); i++){
+                        database.checkInPart(barcode, currentStudent.getRFID());
+                    }
                 } else if (statusLabel.getText().equals(CHECK_OUT_STR)){
                     // check out a part with partID matching barcode, including a barcodes with many associated
                     // don't forget to check if extended checkout is selected
-
+                    for (int i = 0; i < quantitySpinner.getValue(); i++){
+                        if(database.barcodeExists(barcode)) {
+                            database.checkOutPart(barcode, currentStudent.getRFID());
+                        } else {
+                            stageUtils.errorAlert("Barcode " + barcode + " was not found in database, part was not checked out");
+                        }
+                    }
+                    barcodesAlreadyChecked.add(barcode);
                 } else {
                     // error: checked out by a different student or tried to check out more parts than available
                     // also should not be able to reach here
@@ -364,7 +384,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 } else {
                     currentStudent = database.selectStudent(-1, newV);
                 }
-                //  //want to do this, un sure if possible
             }
         });
 
@@ -418,6 +437,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
                 if (!studentNameField.getText().isEmpty()){
                     extended.setDisable(false);
+                    if (studentIDField.getText().matches(RFID_REGEX)) {
+                        currentStudent = database.selectStudent(getStudentID(), null);
+                    } else {
+                        currentStudent = database.selectStudent(-1, studentIDField.getText());
+                    }
                 }
             }
 
