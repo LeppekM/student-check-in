@@ -47,7 +47,6 @@ public class StudentPage implements IController {
     @FXML
     private JFXTreeTableView oTable;
 
-    @FXML
     private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
 
     @FXML

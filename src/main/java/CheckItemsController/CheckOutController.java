@@ -5,29 +5,37 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AutoCompleteTextField;
 import HelperClasses.StageUtils;
+import InventoryController.CheckedOutItems;
 import InventoryController.ControllerMenu;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -52,10 +60,16 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private JFXCheckBox extended;
 
     @FXML
-    private JFXButton studentInfo, submitButton, resetButton;
+    private JFXButton submitButton;
+
+    @FXML
+    JFXTreeTableView coTable;
 
     @FXML
     private VBox barcodeVBox;
+
+    @FXML
+    Label coLabel;
 
     private final StageUtils stageUtils = StageUtils.getInstance();
     private final Database database = new Database();
@@ -74,10 +88,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private static final String EXTENDED_STR = "Extended?";
     private static final PauseTransition delay = new PauseTransition(Duration.minutes(PAUSE_DELAY));
     private Worker worker;
-    private boolean extendedVisible = false;
     private Student currentStudent;
     private List<HBox> barcodes = new LinkedList<>(); // separately kept list because .getChildren() returns nodes
     private JFXTextField firstBarcodeField;
+    private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -86,6 +100,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         currentStudent = null;
         setFieldValidator();  // sets required fields and filters barcode fields
         firstBarcodeField = createBarcode();  // creates new barcode with listeners
+        setupCOTable(); // sets up the initial values for the sidebar table
         studentIDField.initEntrySet(new TreeSet<>(database.getStudentEmails()));  // sets up autofill for student ID field to take Emails
         getStudentName();  // sets listeners for
         submitTimer();  // starts the countdown timer for auto-clicking the submit button
@@ -131,7 +146,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
 
         // enable the switch to student info button iff the student ID field contains a student ID
-        studentInfo.setDisable(!studentIDField.getText().matches(RFID_REGEX) && !studentIDField.getText().matches(EMAIL_REGEX));
+        //studentInfo.setDisable(!studentIDField.getText().matches(RFID_REGEX) && !studentIDField.getText().matches(EMAIL_REGEX));
     }
 
     /**
@@ -219,7 +234,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     // don't forget to check if extended checkout is selected
                     for (int i = 0; i < quantitySpinner.getValue(); i++){
                         if(database.barcodeExists(barcode)) {
-                            database.checkOutPart(barcode, currentStudent.getRFID());
+                            if (extendedCheckout.isSelected()){
+                                database.checkOutPart(barcode, currentStudent.getRFID(), course, professor, dueDate);
+                            } else {
+                                database.checkOutPart(barcode, currentStudent.getRFID(), null, null, null);
+                            }
                         } else {
                             stageUtils.errorAlert("Barcode " + barcode + " was not found in database, part was not checked out");
                         }
@@ -272,7 +291,8 @@ public class CheckOutController extends ControllerMenu implements IController, I
         JFXCheckBox extendedCheckBox = new JFXCheckBox();
         extendedCheckBox.setCheckedColor(FIREBRICK);
         extendedCheckBox.setText(EXTENDED_STR);
-        extendedCheckBox.setVisible(extendedVisible);
+        extendedCheckBox.setVisible(false);
+        extendedCheckBox.setPrefSize(120, 40);
         barcodeBox.getChildren().add(extendedCheckBox);
 
         barcodes.add(barcodeBox);
@@ -293,7 +313,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             statusLabel.setText(CHECK_OUT_STR);
                             extendedCheckBox.setVisible(extended.isSelected());
                             extendedCheckBox.setDisable(false);
-                            extendedCheckBox.setText(EXTENDED_STR);
                         } else {
                             statusLabel.setText(ERROR_STR);
                             extendedCheckBox.setVisible(false);
@@ -364,6 +383,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
             studentNameField.setText("");
             currentStudent = null;
+            clearCOTable();
             extended.setDisable(true);
 
             if (newV.matches(RFID_REGEX)) {
@@ -439,6 +459,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                     } else {
                         currentStudent = database.selectStudent(-1, studentIDField.getText());
                     }
+                    populateCOTable();
                 }
             }
 
@@ -545,7 +566,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
             stageUtils.setMaxTextLength(textField, BARCODE_STRING_LENGTH);
         }
         // sets Student Info button enable/disable listener
-        studentInfo.disableProperty().bind(studentNameField.textProperty().isEmpty());
+        //studentInfo.disableProperty().bind(studentNameField.textProperty().isEmpty());
         // enables submit button when a valid student id/email is entered
         submitButton.disableProperty().bind(studentIDField.textProperty().isEmpty()
                 .or(studentNameField.textProperty().isEmpty()));
@@ -576,7 +597,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
             Stage stage = stageUtils.createPopupStage("fxml/ExtendedCheckout.fxml", main, "Part Information");
             stage.showAndWait();
             if (extendedFieldsNotFilled()) {
-                stageUtils.errorAlert("Process cancelled or fields were not filled out for extended checkout");
+                stageUtils.checkoutAlert("Extended Checkout","Process cancelled or fields were not filled out for extended checkout");
                 extended.setSelected(false);
                 setExtendedCheckboxesVisible(false);
                 return;
@@ -585,17 +606,69 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
     }
 
+    /**
+     * Helper method that shows/hides and resets the extended checkout boxes associated with each barcode
+     * @param value which determines whether to hide extended check boxes
+     */
     private void setExtendedCheckboxesVisible(boolean value) {
-        extendedVisible = value;
         for (HBox hBox : barcodes) {
             JFXCheckBox checkBox = (JFXCheckBox) hBox.getChildren().get(3);
             Label statusLabel = (Label) hBox.getChildren().get(2);
-            if (statusLabel.getText().equals(CHECK_IN_STR)) {
+            if (statusLabel.getText().equals(CHECK_OUT_STR)) {
                 checkBox.setVisible(value);
                 checkBox.setSelected(value);  // auto selected for every part that is being checked out currently
             } else {
                 checkBox.setVisible(false);
                 checkBox.setSelected(false);
+            }
+        }
+    }
+
+    private void setupCOTable() {
+        Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setStyle("-fx-text-fill: white");
+        emptyTableLabel.setFont(new Font(18));
+        coTable.setPlaceholder(emptyTableLabel);
+        coTableCol = new JFXTreeTableColumn<>("Part Name");
+        coTableCol.prefWidthProperty().bind(coTable.widthProperty());
+        coTableCol.setStyle("-fx-font-size: 18px");
+        coTableCol.setResizable(false);
+        coTableCol.setCellValueFactory(param -> param.getValue().getValue().getPartName());
+    }
+
+    private void populateCOTable() {
+        final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(currentStudent.getCheckedOut(), RecursiveTreeObject::getChildren);
+        coTable.getColumns().setAll(coTableCol);
+        coTable.setRoot(coItems);
+        coTable.setShowRoot(false);
+    }
+
+    private void clearCOTable() {
+        coTable.getColumns().setAll();
+    }
+
+    @FXML
+    public void coPopUp(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            Stage stage = new Stage();
+            try {
+                URL myFMLURL = ClassLoader.getSystemResource("fxml/StudentCheckPopUp.fxml");
+                FXMLLoader loader = new FXMLLoader(myFMLURL);
+                Parent root = loader.load();
+                ((IController) loader.getController()).initWorker(worker);
+                Scene scene = new Scene(root, 400, 300);
+                stage.setTitle("Checked Out Item");
+                stage.initOwner(main.getScene().getWindow());
+                stage.setScene(scene);
+                int index = coTable.getSelectionModel().getSelectedIndex();
+                if (index != -1) {
+                    CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
+                    ((CheckoutPopUp) loader.getController()).populate(item);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.showAndWait();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

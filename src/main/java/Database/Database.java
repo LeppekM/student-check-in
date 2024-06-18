@@ -301,10 +301,10 @@ public class Database implements IController {
      * todo
      * @return true if part successfully checked in
      */
-    public boolean checkOutPart(long barcode, int RFID) {
+    public boolean checkOutPart(long barcode, int RFID, String course, String prof, String dueDate) {
         try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
-            String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt) " +
-                    "VALUES(?,?,?,?,?);";
+            String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, prof, course) " +
+                    "VALUES(?,?,?,?,?,?,?);";
             int partID = getPartIDFromBarcode(barcode, "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = 0 LIMIT 1");
             if (partID == 0) {
                 stageUtils.errorAlert("Unable to find a valid partID for barcode");
@@ -315,7 +315,16 @@ public class Database implements IController {
             statement.setInt(2, RFID);
             statement.setLong(3, barcode);
             statement.setString(4, databaseHelper.getCurrentDateTimeStamp());
-            statement.setString(5, databaseHelper.setDueDate());
+            if (dueDate != null){
+                statement.setString(5, dueDate);
+                statement.setString(6, prof);
+                statement.setString(7, course);
+            } else {
+                statement.setString(5, databaseHelper.setDueDate());
+                statement.setString(6, "");
+                statement.setString(7, "");
+            }
+
             String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
             setPartStatus(partID, setPartStatusCheckedOut); //This will set the partID found above to a checked out status
             statement.execute();
