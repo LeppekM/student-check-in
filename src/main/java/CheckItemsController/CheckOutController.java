@@ -79,8 +79,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private List<HBox> barcodes = new LinkedList<>(); // separately kept list because .getChildren() returns nodes
     private JFXTextField firstBarcodeField;
 
-    //TODO: change logic so this has a student that it keeps track of and resets iff screen gets reset
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Platform.runLater(() -> studentIDField.requestFocus());
@@ -196,7 +194,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Submits (all) part(s)
      */
     private void submitParts() {
-        // todo this whole method
         ArrayList<Long> barcodesAlreadyChecked = new ArrayList<>();
         for (HBox hbox : barcodes) {
             JFXTextField barcodeField = (JFXTextField) hbox.getChildren().get(0); // get the barcodeField
