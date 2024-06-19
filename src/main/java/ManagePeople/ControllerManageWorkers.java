@@ -266,9 +266,21 @@ public class ControllerManageWorkers implements IController, Initializable {
             URL myFxmlURL = ClassLoader.getSystemResource(fxml);
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load();
-            EditAdmin ea = loader.getController();
-            ea.setAdmin(w);
-            ea.initWorker(worker);
+            if (w.isAdmin()) {
+                EditAdmin ea = loader.getController();
+                ea.setAdmin(w);
+                ea.initWorker(worker);
+                if (ea.changed()) {
+                    stageUtils.unsavedChangesAlert(stage);
+                }
+            } else {
+                EditWorker ew = loader.getController();
+                ew.setWorker(w);
+                ew.initWorker(worker);
+                if (ew.changed()) {
+                    stageUtils.unsavedChangesAlert(stage);
+                }
+            }
             Scene scene = new Scene(root, 790, 600);
             stage.setTitle("Edit " + w.getName());
             stage.initOwner(manageWorkersScene.getScene().getWindow());
@@ -276,9 +288,6 @@ public class ControllerManageWorkers implements IController, Initializable {
             stage.setScene(scene);
             stage.getIcons().add(new Image("images/msoe.png"));
             stage.setOnHiding(event1 -> populateTable());
-            if (ea.changed()) {
-                stageUtils.unsavedChangesAlert(stage);
-            }
             stage.show();
             populateTable();
         } catch (IOException e) {

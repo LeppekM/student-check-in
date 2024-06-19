@@ -32,7 +32,7 @@ public class EditWorker implements IController {
     private JFXPasswordField pass;
 
     @FXML
-    private JFXCheckBox admin, editParts, overdue, workers, removeParts;
+    private JFXCheckBox admin, editParts, workers, removeParts;
 
     @FXML
     private JFXCheckBox showPass;
@@ -41,7 +41,7 @@ public class EditWorker implements IController {
     private Database database;
     private static String name, workerEmail, password;
     private static int RFID;
-    private static boolean priv, edit, over, work, remove;
+    private static boolean priv, edit, work, remove;
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
@@ -63,13 +63,11 @@ public class EditWorker implements IController {
         pass.setText(w.getPass());
         eRFIDw.setText(w.getRIFD() + "");
         editParts.selectedProperty().setValue(w.canEditParts());
-        overdue.selectedProperty().setValue(w.canOverrideOverdue());
         removeParts.selectedProperty().setValue(w.canRemoveParts());
         workers.selectedProperty().setValue(w.canEditWorkers());
-        if (w.canEditParts() || w.canRemoveParts() || w.canOverrideOverdue() || w.canEditWorkers()){
+        if (w.canEditParts() || w.canRemoveParts() || w.canEditWorkers()){
             admin.selectedProperty().setValue(true);
             editParts.setDisable(false);
-            overdue.setDisable(false);
             workers.setDisable(false);
             removeParts.setDisable(false);
 
@@ -80,7 +78,6 @@ public class EditWorker implements IController {
         RFID = Integer.parseInt(eRFIDw.getText());
         priv = admin.isSelected();
         edit = w.canEditParts();
-        over = w.canOverrideOverdue();
         work = w.canEditWorkers();
         remove = w.canRemoveParts();
         unmasked.setManaged(false);
@@ -96,9 +93,10 @@ public class EditWorker implements IController {
     }
 
     public boolean changed(){
-        return !name.equals(workerName.getText()) || !password.equals(pass.getText()) || !workerEmail.equals(email.getText()) ||
-                priv != admin.isSelected() || edit != editParts.isSelected() || over != overdue.isSelected() ||
-                work != workers.isSelected() || remove != removeParts.isSelected() || RFID != Integer.parseInt(eRFIDw.getText());
+        return !name.equals(workerName.getText()) || !password.equals(pass.getText()) ||
+                !workerEmail.equals(email.getText()) || priv != admin.isSelected() || edit != editParts.isSelected() ||
+                work != workers.isSelected() || remove != removeParts.isSelected() ||
+                RFID != Integer.parseInt(eRFIDw.getText());
     }
 
     public void save(ActionEvent actionEvent) {
@@ -126,9 +124,6 @@ public class EditWorker implements IController {
             if (edit != editParts.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Edit Parts: " + edit + " --> Edit Parts: " + editParts.isSelected() + "\n");
             }
-            if (over != overdue.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Override Overdue: " + over + " --> Override Overdue: " + overdue.isSelected() + "\n");
-            }
             if (work != workers.isSelected()){
                 alert.setContentText(alert.getContentText() + "\t Manage Workers: " + work + " --> Manage Workers: " + workers.isSelected() + "\n");
             }
@@ -145,7 +140,6 @@ public class EditWorker implements IController {
                     worker.setPass(pass.getText());
                     worker.setAdmin(false);
                     worker.setRIFD(Integer.parseInt(eRFIDw.getText()));
-                    worker.setOver(overdue.isSelected());
                     worker.setEdit(editParts.isSelected());
                     worker.setRemove(removeParts.isSelected());
                     worker.setWorker(workers.isSelected());
@@ -167,16 +161,13 @@ public class EditWorker implements IController {
     public void unblock(ActionEvent actionEvent) {
         if (admin.isSelected()){
             editParts.setDisable(false);
-            overdue.setDisable(false);
             workers.setDisable(false);
             removeParts.setDisable(false);
         }else {
             editParts.selectedProperty().setValue(false);
-            overdue.selectedProperty().setValue(false);
             removeParts.selectedProperty().setValue(false);
             workers.selectedProperty().setValue(false);
             editParts.setDisable(true);
-            overdue.setDisable(true);
             workers.setDisable(true);
             removeParts.setDisable(true);
         }

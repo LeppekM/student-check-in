@@ -12,10 +12,9 @@ public class Worker {
     private boolean edit;
     private boolean worker;
     private boolean remove;
-    private boolean over;
 
     public Worker(String name, int ID, String email, String pass, int pin, int RFID, boolean isAdmin, boolean edit, boolean worker,
-                  boolean remove, boolean over){
+                  boolean remove){
         this.name = name;
         this.ID = ID;
         this.email = email;
@@ -27,12 +26,10 @@ public class Worker {
             this.edit = true;
             this.worker = true;
             this.remove = true;
-            this.over = true;
         } else {
             this.edit = edit;
             this.worker = worker;
             this.remove = remove;
-            this.over = over;
         }
     }
 
@@ -46,7 +43,6 @@ public class Worker {
         edit = false;
         worker = false;
         remove = false;
-        over = false;
     }
 
     public String getName() {
@@ -123,13 +119,5 @@ public class Worker {
 
     public void setRemove(boolean remove) {
         this.remove = remove;
-    }
-
-    public boolean canOverrideOverdue() {
-        return over;
-    }
-
-    public void setOver(boolean over) {
-        this.over = over;
     }
 }

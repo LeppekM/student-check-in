@@ -796,7 +796,6 @@ public class Database implements IController {
             int pin;
             boolean admin;
             boolean parts;
-            boolean over;
             boolean workers;
             boolean students;
             while (resultSet.next()) {
@@ -808,10 +807,9 @@ public class Database implements IController {
                 pin = resultSet.getInt("pin");
                 admin = resultSet.getByte("isAdmin") == 1;
                 parts = resultSet.getByte("editParts") == 1;
-                over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;
                 students = resultSet.getByte("removeParts") == 1;
-                workerList.add(new Worker(name, ID, email, pass, pin, RFID, admin, parts, workers, students, over));
+                workerList.add(new Worker(name, ID, email, pass, pin, RFID, admin, parts, workers, students));
             }
             resultSet.close();
             statement.close();
@@ -843,7 +841,6 @@ public class Database implements IController {
             int RFID;
             boolean isAdmin;
             boolean parts;
-            boolean over;
             boolean workers;
             boolean students;
             if (resultSet.next()) {
@@ -853,11 +850,10 @@ public class Database implements IController {
                 password = resultSet.getString("pass");
                 isAdmin = resultSet.getByte("isAdmin") == 1;
                 parts = resultSet.getByte("editParts") == 1;
-                over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;
                 students = resultSet.getByte("removeParts") == 1;
                 pin = resultSet.getInt("pin");
-                worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students, over);
+                worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students);
             }
             resultSet.close();
             statement.close();
@@ -883,7 +879,6 @@ public class Database implements IController {
             int pin;
             boolean isAdmin;
             boolean parts;
-            boolean over;
             boolean workers;
             boolean students;
             if (resultSet.next()) {
@@ -893,11 +888,10 @@ public class Database implements IController {
                 password = resultSet.getString("pass");
                 isAdmin = resultSet.getByte("isAdmin") == 1;
                 parts = resultSet.getByte("editParts") == 1;
-                over = resultSet.getByte("overdue") == 1;
                 workers = resultSet.getByte("workers") == 1;
                 students = resultSet.getByte("removeParts") == 1;
                 pin = resultSet.getInt("pin");
-                worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students, over);
+                worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students);
             }
             resultSet.close();
             statement.close();
@@ -1222,13 +1216,12 @@ public class Database implements IController {
 
     public void updateWorker(Worker w) {
         int admin = w.isAdmin() ? 1 : 0;
-        int over = w.canOverrideOverdue() ? 1 : 0;
         int edit = w.canEditParts() ? 1 : 0;
         int remove = w.canRemoveParts() ? 1 : 0;
         int work = w.canEditWorkers() ? 1 : 0;
         String query = "update workers set workers.workerName = '" + w.getName().replace("'", "\\'") + "', workers.pin = " +
                 w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.ID = " + w.getRIFD() + ", workers.isAdmin = " + admin + "," +
-                " workers.email = '" + w.getEmail().replace("'", "\\'") + "', workers.overdue = " + over + ", workers.editParts = " + edit +
+                " workers.email = '" + w.getEmail().replace("'", "\\'") + "', workers.editParts = " + edit +
                 ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
                 gettoday() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
                 w.getID() + ";";

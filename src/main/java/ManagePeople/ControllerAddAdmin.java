@@ -129,7 +129,7 @@ public class ControllerAddAdmin implements Initializable, IController {
             database.initWorker(worker);
             database.addWorker(new Worker(n.toString(), w.get(w.size() - 1).getID() + 1, email.getText(), pass.getText(),
                     Integer.parseInt(pin.getText()), Integer.parseInt(RFIDA.getText()), true, true, true,
-                    true, true));
+                    true));
             main.getScene().getWindow().hide();
         }
     }
