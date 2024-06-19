@@ -27,7 +27,7 @@ public class Database implements IController {
     public static final String username = "root";
     public static final String password = "3l3ctr1c_B00gloo";
     static String host = "jdbc:mysql://localhost:3306";
-    static final String dbdriver = "com.mysql.jdbc.Driver";
+    static final String dbDriver = "com.mysql.jdbc.Driver";
     static final String dbname = "/student_check_in";
     static Connection connection;
     private final DatabaseHelper databaseHelper = new DatabaseHelper();
@@ -41,7 +41,7 @@ public class Database implements IController {
         // Load the JDBC driver.
         // Library (.jar file) must be added to project build path.
         try {
-            Class.forName(dbdriver);
+            Class.forName(dbDriver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             System.exit(0);
@@ -134,7 +134,7 @@ public class Database implements IController {
      * Helper method to get the current date
      * @return today's date
      */
-    private static Date gettoday() {
+    private static Date getToday() {
         long date = System.currentTimeMillis();
         return new java.sql.Date(date);
     }
@@ -247,7 +247,7 @@ public class Database implements IController {
     }
 
     /**
-     * This method takes a barcode as parameter and returns the corresponding partID to be added to checkout table.
+     * This method takes a barcode as parameter and returns the corresponding partID to be added to check out table.
      * @param barcode barcode of part
      * @return Part ID to return
      */
@@ -348,7 +348,7 @@ public class Database implements IController {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         String setPartStatusCheckedIn = "UPDATE parts SET isCheckedOut = 0 WHERE partID = ?";
-        setPartStatus(partID, setPartStatusCheckedIn); //Sets part to checkedin
+        setPartStatus(partID, setPartStatusCheckedIn); //Sets part to checked in
         return true;
     }
 
@@ -721,7 +721,7 @@ public class Database implements IController {
     }
 
     /**
-     * This method returns a list of all of the student emails in the system
+     * This method returns a list of all student emails in the system
      *
      * @return the list of all student rfids
      */
@@ -747,8 +747,7 @@ public class Database implements IController {
     }
 
     /**
-     * This method returns a list of all of the student emails in the system
-     *
+     * This method returns a list of all student emails in the system
      * @return the list of all student emails
      */
     public ObservableList<String> getStudentEmails() {
@@ -939,11 +938,11 @@ public class Database implements IController {
                 "left join parts on checkout.partID = parts.partID";
         if (ID == -1 && studentEmail != null) {
             studentEmail = studentEmail.replace("'", "\\'");
-            query = "select * from students where email = '" + studentEmail + "';"; // why is the ; on this but not the other
+            query = "select * from students where email = '" + studentEmail + "';";
             coList += " where students.email = '" + studentEmail +
                     "' AND checkout.checkinAt is null;";
         } else if (ID != -1) {
-            query = "select * from students where studentID = " + ID;
+            query = "select * from students where studentID = " + ID + ";";
             coList += " where students.studentID = " + ID +
                     " AND checkout.checkinAt is null;";
         } else {
@@ -1031,7 +1030,7 @@ public class Database implements IController {
         String email = s.getEmail().replace("'", "\\'");
         String name = s.getName().replace("'", "\\'");
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + email + "', '" + name + "', date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                + ", '" + email + "', '" + name + "', date('" + getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1051,11 +1050,11 @@ public class Database implements IController {
      * @param s the student to be added
      */
     public boolean importStudent(Student s) {
-        // note: the controllermanagestudents class replaces "'" with "\\'" for this method,
+        // note: the controllerManageStudents class replaces "'" with "\\'" for this method,
         // but other methods in this class need to replace "'" with "\\'" so that it does not
         // mess up the database queries.
         String query = "insert into students (email, studentName, createdAt, createdBy) values ('" +
-                s.getEmail() + "', '" + s.getName() + "', date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                s.getEmail() + "', '" + s.getName() + "', date('" + getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1083,7 +1082,7 @@ public class Database implements IController {
         }
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
                 s.getName().replace("'", "\\'") + "', students.email = '" + s.getEmail().replace("'", "\\'") + "', students.updatedAt = date('" +
-                gettoday() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
+                getToday() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -1176,7 +1175,7 @@ public class Database implements IController {
     public void addWorker(Worker w) {
         int bit = w.isAdmin() ? 1 : 0;
         String query = "insert into workers (email, workerName, pin, pass, ID, isAdmin, createdAt, createdBy) values ('" + w.getEmail().replace("'", "\\'") +
-                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " + w.getRIFD() + "," + bit + ", date('" + gettoday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " + w.getRIFD() + "," + bit + ", date('" + getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1217,7 +1216,7 @@ public class Database implements IController {
                 w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.ID = " + w.getRIFD() + ", workers.isAdmin = " + admin + "," +
                 " workers.email = '" + w.getEmail().replace("'", "\\'") + "', workers.editParts = " + edit +
                 ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
-                gettoday() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
+                getToday() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
                 w.getID() + ";";
         try {
             Statement statement = connection.createStatement();
