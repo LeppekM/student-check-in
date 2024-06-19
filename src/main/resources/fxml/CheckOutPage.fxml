@@ -44,7 +44,7 @@
          </HBox>
          <HBox alignment="TOP_CENTER">
             <VBox alignment="TOP_RIGHT">
-               <Pane prefHeight="25.0" VBox.vgrow="NEVER"/>
+               <Pane prefHeight="18.0" VBox.vgrow="NEVER"/>
                <Label contentDisplay="BOTTOM" text="Student ID  " prefHeight="60.0">
                   <font>
                      <Font size="24.0"/>

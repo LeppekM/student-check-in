@@ -148,9 +148,9 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Submits the information entered to checkouts/checkoutParts table or removes if item is being checked back in.
      */
     public void submit() {
-        // todo make sure the error logic has a popup for what type of error (checked out by another student, unavailable quantity of parts)
         if (hasError()) {
-            stageUtils.errorAlert("Parts were not checked out because there are errors with at least one of them");
+            stageUtils.errorAlert("Parts were not checked out because there are errors with at least one of them " +
+                    "\n\nPart is either checked out under another students' name or no more available checkout slots in system");
             return;
         }
         database.initWorker(worker); // kept for tracking purposes
