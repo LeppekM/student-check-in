@@ -10,10 +10,6 @@ import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,7 +20,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -35,10 +30,6 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.*;
 
 import static javafx.scene.paint.Color.FIREBRICK;
@@ -84,7 +75,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private static final PauseTransition delay = new PauseTransition(Duration.minutes(PAUSE_DELAY));
     private Worker worker;
     private Student currentStudent;
-    private List<HBox> barcodes = new LinkedList<>(); // separately kept list because .getChildren() returns nodes
+    private final List<HBox> barcodes = new LinkedList<>(); // separately kept list because .getChildren() returns nodes
     private JFXTextField firstBarcodeField;
     private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
 
@@ -271,9 +262,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
         barcodes.add(barcodeBox);
         barcodeVBox.getChildren().add(barcodeBox);
 
-        barcodeField.setOnKeyReleased(event -> {
-            statusLabel.setVisible(true);
-        });
+        barcodeField.setOnKeyReleased(event -> statusLabel.setVisible(true));
         barcodeField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if (newValue.length() == BARCODE_STRING_LENGTH) {

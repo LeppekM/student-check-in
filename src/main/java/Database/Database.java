@@ -61,7 +61,6 @@ public class Database implements IController {
 
     /**
      * Returns the connection to the database created by constructor method
-     *
      * @return the database connection
      */
     public Connection getConnection() {
@@ -78,7 +77,6 @@ public class Database implements IController {
 
     /**
      * This method uses an SQL query to get all items in the database with a due date less than today's date
-     *
      * @return a list of overdue items
      */
     public ObservableList<OverdueItem> getOverdue() {
@@ -114,7 +112,6 @@ public class Database implements IController {
 
     /**
      * Helper method to determine if item is overdue
-     *
      * @param date Due date of item
      * @return true if item is overdue; false otherwise
      */
@@ -135,7 +132,6 @@ public class Database implements IController {
 
     /**
      * Helper method to get the current date
-     *
      * @return today's date
      */
     private static Date gettoday() {
@@ -145,7 +141,6 @@ public class Database implements IController {
 
     /**
      * Calculates the date that was 2 years ago from today
-     *
      * @return the date that was 2 years ago from today
      */
     private static Date getTwoYearsAgo() {
@@ -155,8 +150,7 @@ public class Database implements IController {
     }
 
     /**
-     * This uses an SQL query to soft delete an item from the database
-     *
+     * This uses an SQL query to delete a specific part from the database
      * @param partID a unique part id
      */
     public void deleteItem(int partID) {
@@ -168,14 +162,11 @@ public class Database implements IController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").hideAfter(new Duration(5000)).show();//.showWarning();
+        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").hideAfter(new Duration(5000)).show();
     }
 
     /**
-     * For each part that's name equals partName, this sets the "isDeleted" value to 1, which is
-     * true. This is called a soft delete, because the part is not actually removed from the
-     * database, but will not show up in anything, since it is marked as deleted.
-     *
+     * Removes all parts of the same name from the database
      * @param partName the name of the parts that are deleted
      */
     public void deleteParts(String partName) {
@@ -191,7 +182,6 @@ public class Database implements IController {
 
     /**
      * Gets a specific part from the database
-     *
      * @param partID unique id of the part
      * @return a Part
      */
@@ -204,7 +194,7 @@ public class Database implements IController {
             while (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getBoolean("isFaulty"), // Faulty functionality removed, included here to differ from other constructor
+                        resultSet.getString("location"), resultSet.getLong("barcode"), false, // Faulty functionality removed, included here to differ from other constructor
                         resultSet.getInt("partID"));
             }
             resultSet.close();
@@ -224,13 +214,14 @@ public class Database implements IController {
     public boolean barcodeExists(long barcode) {
         List<Long> barcodes = new LinkedList<>();
         final String getAllBarcodes = "select barcode from parts";
-        try (Connection connection = getConnection()) {
+        try {
             PreparedStatement statement = connection.prepareStatement(getAllBarcodes);
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
                 barcodes.add(rs.getLong("barcode"));
             }
             statement.close();
+            rs.close();
         } catch (SQLException e) {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database when checking if barcode exists.");
             throw new IllegalStateException("Cannot connect to the database", e);
@@ -239,11 +230,12 @@ public class Database implements IController {
     }
 
     /**
-     * Sets part checkout status to 1 to signify the part is checked out
+     * Sets part isCheckedOut status to 1 to signify the part is checked out or 0 to show that it is in
      * @param partID Part ID of part
+     * @param status the string that sets the part in/out
      */
     void setPartStatus(int partID, String status){
-        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(status);
             preparedStatement.setInt(1,partID);
             preparedStatement.execute();
@@ -261,8 +253,7 @@ public class Database implements IController {
      */
     int getPartIDFromBarcode(long barcode, String status){
         int partID = 0;
-
-        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+        try {
             PreparedStatement statement = connection.prepareStatement(status);
             statement.setLong(1, barcode);
             ResultSet rs = statement.executeQuery();
@@ -281,7 +272,7 @@ public class Database implements IController {
     public int getCheckoutIDFromBarcodeAndRFID(int RFID, long barcode) {
         int checkoutID = 0;
         String query = "select checkoutID from checkout where studentID =? and barcode = ? and checkinAt IS NULL limit 1";
-        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+        try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, RFID);
             statement.setLong(2, barcode);
@@ -289,6 +280,7 @@ public class Database implements IController {
             if(rs.next()){
                 checkoutID = rs.getInt("checkoutID");
             }
+            rs.close();
             statement.close();
         } catch (SQLException e) {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
@@ -302,7 +294,7 @@ public class Database implements IController {
      * @return true if part successfully checked in
      */
     public boolean checkOutPart(long barcode, int RFID, String course, String prof, String dueDate) {
-        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
+        try {
             String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, prof, course) " +
                     "VALUES(?,?,?,?,?,?,?);";
             int partID = getPartIDFromBarcode(barcode, "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = 0 LIMIT 1");
@@ -328,6 +320,7 @@ public class Database implements IController {
             String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
             setPartStatus(partID, setPartStatusCheckedOut); //This will set the partID found above to a checked out status
             statement.execute();
+            statement.close();
         } catch (SQLException e) {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database when adding new checkout item.");
             throw new IllegalStateException("Cannot connect to the database", e);
@@ -344,12 +337,13 @@ public class Database implements IController {
     public boolean checkInPart(long barcode, int RFID) {
         String getPartIDtoCheckin = "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = 1 LIMIT 1";
         int partID = getPartIDFromBarcode(barcode, getPartIDtoCheckin);
-        try (Connection connection = DriverManager.getConnection((host + dbname), username, password)) {
-            String setDate = "update checkout set checkinAt = ? where checkoutID = ?";
+        try {
+            String setDate = "UPDATE checkout SET checkinAt = ? WHERE checkoutID = ?;";
             PreparedStatement statement = connection.prepareStatement(setDate);
             statement.setString(1, databaseHelper.getCurrentDateTimeStamp());
             statement.setInt(2, getCheckoutIDFromBarcodeAndRFID(RFID, barcode));
             statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -1128,7 +1122,7 @@ public class Database implements IController {
     }
 
     public int getNumPartsAvailableByBarcode(long barcode) {
-        String query1 = "SELECT partID FROM parts WHERE barcode = " + barcode + ";";
+        String query1 = "SELECT partID FROM parts WHERE barcode = " + barcode + " AND isCheckedOut = 0;";
         ResultSet resultSet;
         int result = 0;
         try {

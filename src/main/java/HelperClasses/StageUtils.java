@@ -66,7 +66,6 @@ public class StageUtils {
         return stage;
     }
 
-
     /**
      * Helper method to make popup with worker initialized
      * @param fxml Name of FXML
@@ -88,21 +87,6 @@ public class StageUtils {
             invoke.printStackTrace();
         }
     }
-
-
-    /**
-     * Gets student ID
-     * @param list List of characters
-     * @return Student ID
-     */
-    public String getStudentID(List<String> list) {
-        StringBuilder studentID = new StringBuilder();
-        for (String s : list) {
-            studentID.append(s);
-        }
-        return studentID.toString();
-    }
-
 
     /**
      * Sliding alert maker
@@ -180,7 +164,6 @@ public class StageUtils {
         }));
     }
 
-
     /**
      * Error pop-up
      * @param errorText Error text
@@ -193,7 +176,6 @@ public class StageUtils {
 
         Platform.runLater(errorAlert2::showAndWait);
     }
-
 
     /**
      * This is the success alert that appears when editing/adding parts
@@ -209,7 +191,10 @@ public class StageUtils {
         })).start();
     }
 
-
+    /**
+     *
+     * @param stage
+     */
     public void unsavedChangesAlert(Stage stage) {
         stage.setOnCloseRequest(event1 -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
@@ -228,7 +213,6 @@ public class StageUtils {
 
     /**
      * Alert if user tries to return home and fields are filled
-     *
      * @return True if user pressed ok, false otherwise
      */
     public boolean missingFieldsAlert() {
@@ -244,7 +228,6 @@ public class StageUtils {
     /**
      * Asks the student worker to enter an admin pin if they try to do something they do
      * not have the privilege to do
-     *
      * @param action the privileged action that the worker tried to do
      * @param node the node that the request is being launched from
      * @return true if the inputted admin pin is correct; false otherwise
@@ -294,7 +277,6 @@ public class StageUtils {
 
     /**
      * Clears the current scene and loads the main menu. If no menu stage was found, sends an alert to user.
-     *
      * @author Matthew Karcz
      */
     public void goBack(Pane pane, Worker worker) {
@@ -313,8 +295,10 @@ public class StageUtils {
         }
     }
 
-
-
+    /**
+     *
+     * @return
+     */
     private Stage createAlert() {
         Stage owner = new Stage(StageStyle.TRANSPARENT);
         StackPane root = new StackPane();
