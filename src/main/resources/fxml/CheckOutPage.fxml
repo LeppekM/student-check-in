@@ -31,11 +31,14 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <Pane prefHeight="53.0" prefWidth="200.0" HBox.hgrow="SOMETIMES"/>
+            <Pane prefHeight="53.0" prefWidth="100.0" HBox.hgrow="SOMETIMES"/>
             <Label alignment="CENTER" contentDisplay="CENTER" text="Checkout/In Item" textAlignment="CENTER">
                <font>
                   <Font size="31.0"/>
                </font>
+               <padding>
+                  <Insets top="5.0"/>
+               </padding>
             </Label>
             <Pane prefHeight="53.0" prefWidth="200.0" HBox.hgrow="SOMETIMES"/>
          </HBox>

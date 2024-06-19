@@ -11,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.text.SimpleDateFormat;
 
-public class CheckoutPopUp extends StudentPage implements IController {
+public class CheckoutPopUp implements IController {
 
     @FXML
     private JFXTextField name, part, barcode, coDate, dueDate;

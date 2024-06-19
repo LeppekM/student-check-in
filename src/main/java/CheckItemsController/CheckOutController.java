@@ -128,18 +128,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
     /**
-     * Initialize checkout object when returning from student page
-     * @param checkoutObject Object to initialize
-     */
-    public void initCheckoutObject(CheckoutObject checkoutObject) {
-        studentIDField.setText(checkoutObject.getStudentID());
-        if (checkoutObject.isExtended()) {
-            extended.setSelected(true);
-            isExtended();
-        }
-    }
-
-    /**
      * Helper method to check if extended fields are filled out
      *
      * @return True if any of the fields are left empty
@@ -166,7 +154,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
             return;
         }
         database.initWorker(worker); // kept for tracking purposes
-
         if (!fieldsFilled()) {
             stageUtils.checkoutAlert("Unfilled Fields", "No parts checked in/out");
             return;
@@ -177,7 +164,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         } else {
             submitParts();
         }
-
         reset();
     }
 
@@ -580,15 +566,17 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
     }
 
+    /**
+     * This sets up the formatting and CellFactories for the checkout side table
+     */
     private void setupCOTable() {
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setStyle("-fx-text-fill: white");
         emptyTableLabel.setFont(new Font(18));
         coTable.setPlaceholder(emptyTableLabel);
+        coTable.setStyle("-fx-font-size: 16px");
         coTableCol = new JFXTreeTableColumn<>("Part Name");
         coTableCol.prefWidthProperty().bind(coTable.widthProperty().subtract(2));
-        coTableCol.setStyle("-fx-font-size: 18px");
-        coTableCol.setStyle("-fx-font-weight: bold");
         coTableCol.setResizable(false);
         coTableCol.setCellValueFactory(param -> param.getValue().getValue().getPartName());
 
@@ -611,11 +599,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                             Date currentDate = new Date();
                             CheckedOutItems model = getTreeTableRow().getItem();
                             if (model != null && model.getDueDate().get().before(currentDate)) {
-                                if (getTreeTableRow().getIndex() % 2 == 0){
-                                    setStyle("-fx-background-color: #d94949"); // Highlight cell
-                                } else {
-                                    setStyle("-fx-background-color: #f96969");
-                                }
+                                setStyle("-fx-text-fill: #920202");
                             } else {
                                 setStyle(""); // Reset to default style if condition is not met
                             }
@@ -627,18 +611,28 @@ public class CheckOutController extends ControllerMenu implements IController, I
         coTableCol.setCellFactory(cellFactory);
     }
 
+    /**
+     * This connects the student's checkedOut items list to the side table
+     */
     private void populateCOTable() {
-        final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(currentStudent.getCheckedOut(), RecursiveTreeObject::getChildren);
+        final TreeItem<CheckedOutItems> coItems =
+                new RecursiveTreeItem<>(currentStudent.getCheckedOut(), RecursiveTreeObject::getChildren);
         coTable.getColumns().setAll(coTableCol);
         coTable.setRoot(coItems);
-
         coTable.setShowRoot(false);
     }
 
+    /**
+     * This clears all columns the checkout Table has
+     */
     private void clearCOTable() {
         coTable.getColumns().setAll();
     }
 
+    /**
+     * Opens further part info associated with the part
+     * @param event MouseEvent that listens
+     */
     @FXML
     public void coPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
