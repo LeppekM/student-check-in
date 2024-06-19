@@ -5,15 +5,13 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AutoCompleteTextField;
 import HelperClasses.StageUtils;
-import InventoryController.CheckedOutItems;
-import InventoryController.ControllerMenu;
-import InventoryController.IController;
-import InventoryController.StudentCheckIn;
+import InventoryController.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -67,9 +65,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     @FXML
     private VBox barcodeVBox;
-
-    @FXML
-    Label coLabel;
 
     private final StageUtils stageUtils = StageUtils.getInstance();
     private final Database database = new Database();
@@ -138,15 +133,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     public void initCheckoutObject(CheckoutObject checkoutObject) {
         studentIDField.setText(checkoutObject.getStudentID());
-        //barcode.setText(checkoutObject.getBarcode());
-
         if (checkoutObject.isExtended()) {
             extended.setSelected(true);
             isExtended();
         }
-
-        // enable the switch to student info button iff the student ID field contains a student ID
-        //studentInfo.setDisable(!studentIDField.getText().matches(RFID_REGEX) && !studentIDField.getText().matches(EMAIL_REGEX));
     }
 
     /**
@@ -219,9 +209,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
             if (barcodeField.getText().length() == BARCODE_STRING_LENGTH) {
                 barcode = Long.parseLong(barcodeField.getText());
             }
-
-            // want to d/c the logic from MultipleCheckoutObject and CheckingOutPart objects
-
             // stops incomplete barcodes from being submitted
             if (barcodeField.getText().length() == BARCODE_STRING_LENGTH && !barcodesAlreadyChecked.contains(barcode)) {
                 if (statusLabel.getText().equals(CHECK_IN_STR)){
@@ -524,35 +511,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
     }
 
     /**
-     * Changes to student info tab
-     *
-     * @author Bailey Terry
-     */
-    public void goToStudent() {
-//        Student s = null;
-//        if (studentIDField.getText().matches(RFID_REGEX)) {
-//            s = database.selectStudent(Integer.parseInt(studentIDField.getText()), null);
-//        } else if (studentIDField.getText().matches(EMAIL_REGEX)) {
-//            s = database.selectStudent(-1, studentIDField.getText());
-//        }
-//        if (s != null && !s.getName().isEmpty()) {
-//            try {
-//                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Student.fxml"));
-//                Parent root = loader.load();
-//                StudentPage sp = loader.getController();
-//                sp.setStudent(s);
-//                checkoutObject = new CheckoutObject(studentIDField.getText(), barcode.getText(), "1", extended.isSelected());
-//                sp.initCheckoutObject(checkoutObject);
-//                main.getScene().setRoot(root);
-//            } catch (IOException e) {
-//                stageUtils.errorAlert("Couldn't load student page");
-//            }
-//        } else {
-//            stageUtils.errorAlert("No student found with associated RFID");
-//        }
-    }
-
-    /**
      * Helper method to set the validators & filters for fields and disable/enable for submit button
      */
     private void setFieldValidator() {
@@ -565,8 +523,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
             stageUtils.acceptIntegerOnly(textField);
             stageUtils.setMaxTextLength(textField, BARCODE_STRING_LENGTH);
         }
-        // sets Student Info button enable/disable listener
-        //studentInfo.disableProperty().bind(studentNameField.textProperty().isEmpty());
         // enables submit button when a valid student id/email is entered
         submitButton.disableProperty().bind(studentIDField.textProperty().isEmpty()
                 .or(studentNameField.textProperty().isEmpty()));
@@ -630,16 +586,52 @@ public class CheckOutController extends ControllerMenu implements IController, I
         emptyTableLabel.setFont(new Font(18));
         coTable.setPlaceholder(emptyTableLabel);
         coTableCol = new JFXTreeTableColumn<>("Part Name");
-        coTableCol.prefWidthProperty().bind(coTable.widthProperty());
+        coTableCol.prefWidthProperty().bind(coTable.widthProperty().subtract(2));
         coTableCol.setStyle("-fx-font-size: 18px");
+        coTableCol.setStyle("-fx-font-weight: bold");
         coTableCol.setResizable(false);
         coTableCol.setCellValueFactory(param -> param.getValue().getValue().getPartName());
+
+        // this is why jfx is a crime against my sanity in particular
+        Callback<TreeTableColumn<CheckedOutItems, String>, TreeTableCell<CheckedOutItems, String>> cellFactory =
+                new Callback<TreeTableColumn<CheckedOutItems, String>, TreeTableCell<CheckedOutItems, String>>() {
+            @Override
+            public TreeTableCell<CheckedOutItems, String> call(TreeTableColumn<CheckedOutItems, String> param) {
+                return new TreeTableCell<CheckedOutItems, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                            setStyle("");
+                        } else {
+                            setText(item);
+
+                            // if the part is overdue
+                            Date currentDate = new Date();
+                            CheckedOutItems model = getTreeTableRow().getItem();
+                            if (model != null && model.getDueDate().get().before(currentDate)) {
+                                if (getTreeTableRow().getIndex() % 2 == 0){
+                                    setStyle("-fx-background-color: #d94949"); // Highlight cell
+                                } else {
+                                    setStyle("-fx-background-color: #f96969");
+                                }
+                            } else {
+                                setStyle(""); // Reset to default style if condition is not met
+                            }
+                        }
+                    }
+                };
+            }
+        };
+        coTableCol.setCellFactory(cellFactory);
     }
 
     private void populateCOTable() {
         final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(currentStudent.getCheckedOut(), RecursiveTreeObject::getChildren);
         coTable.getColumns().setAll(coTableCol);
         coTable.setRoot(coItems);
+
         coTable.setShowRoot(false);
     }
 

@@ -38,7 +38,6 @@ public class StudentPage implements IController {
     @FXML
     private VBox vbox = new VBox();
 
-    @FXML
     private Label studentName, email, RFID, fees, date;
 
     @FXML
@@ -49,18 +48,12 @@ public class StudentPage implements IController {
 
     private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
 
-    @FXML
     private JFXTreeTableColumn<OverdueItem, String> oTableCol;
 
     private Worker worker;
 
     private static Student student;
-    private CheckoutObject checkoutObject;
     private StageUtils stageUtils = StageUtils.getInstance();
-
-    public void initCheckoutObject(CheckoutObject checkoutObject) {
-        this.checkoutObject = checkoutObject;
-    }
 
     public void setStudent(Student s) {
         student = s;
@@ -110,12 +103,7 @@ public class StudentPage implements IController {
         coTableCol.prefWidthProperty().bind(coTable.widthProperty());
         coTableCol.setStyle("-fx-font-size: 18px");
         coTableCol.setResizable(false);
-        coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutItems, String> param) {
-                return param.getValue().getValue().getPartName();
-            }
-        });
+        coTableCol.setCellValueFactory(param -> param.getValue().getValue().getPartName());
 
         Label emptyTableLabel2 = new Label("No parts found.");
         emptyTableLabel2.setStyle("-fx-text-fill: white");
@@ -125,12 +113,7 @@ public class StudentPage implements IController {
         oTableCol.prefWidthProperty().bind(oTable.widthProperty());
         oTableCol.setStyle("-fx-font-size: 18px");
         oTableCol.setResizable(false);
-        oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueItem, String> param) {
-                return param.getValue().getValue().getPart();
-            }
-        });
+        oTableCol.setCellValueFactory(param -> param.getValue().getValue().getPart());
 
         Label emptyTableLabel3 = new Label("No parts found.");
         emptyTableLabel3.setStyle("-fx-text-fill: white");
@@ -155,7 +138,6 @@ public class StudentPage implements IController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CheckOutPage.fxml"));
             Parent root = loader.load();
             main.getScene().setRoot(root);
-            ((CheckOutController) loader.getController()).initCheckoutObject(checkoutObject);
             ((CheckOutController) loader.getController()).initWorker(worker);
         } catch (IOException e) {
             e.printStackTrace();

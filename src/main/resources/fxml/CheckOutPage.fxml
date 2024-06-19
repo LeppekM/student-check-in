@@ -19,7 +19,9 @@
       prefHeight="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="CheckItemsController.CheckOutController" stylesheets="@../css/SpinnerStyle.css">
    <HBox VBox.vgrow="ALWAYS">
-      <VBox prefWidth="800.0" alignment="TOP_CENTER">
+      <Pane prefWidth="40.0" HBox.hgrow="SOMETIMES"/>
+
+      <VBox prefWidth="800.0" alignment="TOP_CENTER" HBox.hgrow="SOMETIMES">
          <HBox prefHeight="106.0" prefWidth="1150.0" VBox.vgrow="NEVER">
             <JFXButton onAction="#returnHome" stylesheets="@../css/CheckButton.css" translateX="25.0"
                        translateY="10.0" HBox.hgrow="NEVER">
@@ -39,7 +41,7 @@
          </HBox>
          <HBox alignment="TOP_CENTER">
             <VBox alignment="TOP_RIGHT">
-               <Pane prefHeight="15.0" VBox.vgrow="NEVER"/>
+               <Pane prefHeight="25.0" VBox.vgrow="NEVER"/>
                <Label contentDisplay="BOTTOM" text="Student ID  " prefHeight="60.0">
                   <font>
                      <Font size="24.0"/>
@@ -91,18 +93,20 @@
             </HBox>
          </StackPane>
       </VBox>
+
       <Pane prefWidth="20.0" HBox.hgrow="SOMETIMES"/>
-      <VBox alignment="TOP_RIGHT">
-         <Label stylesheets="@../css/HeaderStyleSmall.css" text="Checked Out" VBox.vgrow="ALWAYS" fx:id="coLabel">
-            <padding>
-               <Insets bottom="10.0" top="5.0" left="30.0" right="30.0"/>
-            </padding>
-         </Label>
+
+      <VBox alignment="TOP_RIGHT" prefWidth="350">
+         <HBox alignment="CENTER">
+            <Label stylesheets="@../css/HeaderStyleSmall.css" text="Checked Out" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="10.0" top="5.0" left="30.0" right="30.0"/>
+               </padding>
+            </Label>
+         </HBox>
+
          <JFXTreeTableView fx:id="coTable" layoutX="20.0" onMouseClicked="#coPopUp"
                            stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS">
-            <VBox.margin>
-               <Insets bottom="10.0"/>
-            </VBox.margin>
          </JFXTreeTableView>
       </VBox>
    </HBox>

@@ -18,11 +18,6 @@ public class CheckoutPopUp extends StudentPage implements IController {
 
     @FXML
     private Label cID;
-
-    @FXML
-    private AnchorPane main;
-
-    private Database database;
     private Worker worker;
 
     /**

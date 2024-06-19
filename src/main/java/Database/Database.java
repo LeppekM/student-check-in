@@ -1268,14 +1268,6 @@ public class Database implements IController {
         return barcodes;
     }
 
-    public void checkInPart() {
-
-    }
-
-    public void bigFix(){
-        String q1 = "DROP TABLE fault;\nALTER TABLE parts ADD checkedOutBy INT;\nALTER TABLE parts DROP COLUMN isCheckedOut";
-    }
-
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each class.
