@@ -215,17 +215,7 @@ public class ControllerEditPartType extends ControllerEditPart {
     }
 
     private boolean validateUnusedBarcode(int barcode) {
-        boolean unique = true;
-            ArrayList<Integer> barcodes = database.getAllBarcodes(barcode);
-            if (!barcodes.isEmpty()) {
-                for (Integer barcd: barcodes) {
-                    if (barcd == barcode) {
-                        unique = false;
-                        break;
-                    }
-                }
-            }
-        return unique;
+        return database.barcodeExists(barcode);
     }
 
     /**

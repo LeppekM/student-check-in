@@ -1,6 +1,6 @@
 package Database;
 
-import HelperClasses.DatabaseHelper;
+import HelperClasses.TimeUtils;
 import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
@@ -23,7 +23,7 @@ public class CheckedOutParts {
     private int checkoutID, studentID, partID;
     private long barcode;
     private String studentName, studentEmail, partName, serialNumber, checkedOutAt, dueDate, fee;
-    private DatabaseHelper helper = new DatabaseHelper();
+    private TimeUtils helper = new TimeUtils();
 
     public ObservableList<CheckedOutItems> data = FXCollections.observableArrayList();
 

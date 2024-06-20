@@ -1,6 +1,6 @@
 package Database;
 
-import HelperClasses.DatabaseHelper;
+import HelperClasses.TimeUtils;
 import InventoryController.HistoryTabTableRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,7 +33,7 @@ public class HistoryParts {
 
     private long barcode;
 
-    private final DatabaseHelper helper = new DatabaseHelper();
+    private final TimeUtils helper = new TimeUtils();
 
     public ObservableList<HistoryTabTableRow> data = FXCollections.observableArrayList();
 

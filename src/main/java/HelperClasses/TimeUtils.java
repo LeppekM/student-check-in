@@ -6,11 +6,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DatabaseHelper {
+public class TimeUtils {
 
     public Date convertStringtoDate(String stringDate) {
         Date date = null;
@@ -41,6 +40,15 @@ public class DatabaseHelper {
      */
     public String getCurrentDate() {
         return LocalDateTime.now().toString();
+    }
+
+    /**
+     * Helper method to get the current date
+     * @return today's date
+     */
+    public static Date getToday() {
+        long date = System.currentTimeMillis();
+        return new java.sql.Date(date);
     }
 
     /**
@@ -81,5 +89,15 @@ public class DatabaseHelper {
         calendar.set(Calendar.MILLISECOND, 999);
         dateFormat.setCalendar(calendar);
         return dateFormat.format(calendar.getTime());
+    }
+
+    /**
+     * Calculates the date that was 2 years ago from today
+     * @return the date that was 2 years ago from today
+     */
+    public static Date getTwoYearsAgo() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -2);
+        return cal.getTime();
     }
 }

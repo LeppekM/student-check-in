@@ -87,21 +87,19 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
         }
     }
 
+    // todo: change how s/n indexes when adding many ex: have 4 in system, want to add 15 more, go from 5-19 instead of 1-15
+
     /**
      * Helper method that runs when adding a new part
      */
     private void submitTasks(){
-        String partName = nameField.getText();
+        long barcode = Long.parseLong(barcodeField.getText());
         int quantity = Integer.parseInt(quantityField.getText());
-        if (database.hasPartName(partName)) {
-            Part existing = database.selectPartByPartName(setPartFields().getPartName());
-            if (quantity > 1) {
-                if (barcodeField.getText().equals(existing.getBarcode())) {
-                    mustBeCommonBarcodeError(partName);
-                } else if (duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
-                    barcodeAlreadyExistsError();
-                } else if (serialField.getText().equals(existing.getSerialNumber())) {
-                    mustBeCommonSerialNumberError(partName);
+        if (database.barcodeExists(barcode)) {
+            Part existing = database.selectPartByBarcode(barcode);
+            if (quantity > 1) {  // todo: check if barcode and s/n, d/c from partname; though would be good to check that the partname is same at end if adding more parts
+                if (serialField.getText().equals(existing.getSerialNumber())) {
+                    mustBeCommonSerialNumberError(nameField.getText());
                 }
                 else {
                     addPart.addCommonItems(setPartFields(), database, quantity);
@@ -109,16 +107,16 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                     close();
                 }
             } else {
-                if (!database.hasUniqueBarcodes(partName) && (barcodeField.getText().equals(existing.getBarcode()) || serialField.getText().equals(existing.getSerialNumber()))) {
+                if (!database.hasUniqueBarcodes(nameField.getText()) && (barcodeField.getText().equals(existing.getBarcode()) || serialField.getText().equals(existing.getSerialNumber()))) {
                     barcodeAndSerialNumberMustBothBeUniqueOrCommonError();
                 } else {
-                    if (database.countPartsOfType(partName) == 1) {
+                    if (database.countPartsOfType(nameField.getText()) == 1) {
                         if (barcodeField.getText().equals(existing.getBarcode()) && (
                                 !serialField.getText().equals(existing.getSerialNumber()))) {
-                            commonBarcodeRequiresCommonSerialNumberError(partName);
+                            commonBarcodeRequiresCommonSerialNumberError(nameField.getText());
                         } else if (serialField.getText().equals(existing.getSerialNumber()) &&
                                 !barcodeField.getText().equals(existing.getBarcode())) {
-                            commonSerialNumberRequiresCommonBarcodeError(partName);
+                            commonSerialNumberRequiresCommonBarcodeError(nameField.getText());
                         }
                     } else {
                         addPart.addUniqueItems(setPartFields(), database, quantity);
@@ -128,24 +126,24 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
                 }
             }
         } else {
-            //db does not have a part with this name, add it unless duplicate part
-            if (quantity > 1) {
-                if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
-                    addPart.addCommonItems(setPartFields(), database, quantity);
-                    partAddedSuccess();
-                    close();
-                } else {
-                    barcodeAlreadyExistsError();
-                }
-            } else {
-                if (!duplicateBarcode(partName, Long.parseLong(barcodeField.getText()))) {
-                    addPart.addUniqueItems(setPartFields(), database, quantity);
-                    partAddedSuccess();
-                    close();
-                } else {
-                    barcodeAlreadyExistsError();
-                }
-            }
+            //db does not have a part with this barcode, add it unless duplicate part
+//            if (quantity > 1) {  // todo this logic sucks lol
+//                if (!duplicateBarcode(partName, Integer.parseInt(barcodeField.getText()))) {
+//                    addPart.addCommonItems(setPartFields(), database, quantity);
+//                    partAddedSuccess();
+//                    close();
+//                } else {
+//                    barcodeAlreadyExistsError();
+//                }
+//            } else {
+//                if (!duplicateBarcode(partName, Long.parseLong(barcodeField.getText()))) {
+//                    addPart.addUniqueItems(setPartFields(), database, quantity);
+//                    partAddedSuccess();
+//                    close();
+//                } else {
+//                    barcodeAlreadyExistsError();
+//                }
+//            }
 
         }
     }

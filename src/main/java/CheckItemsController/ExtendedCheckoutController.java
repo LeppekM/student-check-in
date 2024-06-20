@@ -1,6 +1,6 @@
 package CheckItemsController;
 
-import HelperClasses.DatabaseHelper;
+import HelperClasses.TimeUtils;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
@@ -34,7 +34,7 @@ public class ExtendedCheckoutController implements Initializable {
     JFXButton submitButton;
 
     private ExtendedCheckoutObject checkout;
-    private DatabaseHelper dbHelp = new DatabaseHelper();
+    private TimeUtils dbHelp = new TimeUtils();
 
     /**
      * Gets extended due date

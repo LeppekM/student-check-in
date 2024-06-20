@@ -2,7 +2,7 @@ package InventoryController;
 
 import Database.HistoryParts;
 import Database.ObjectClasses.Worker;
-import HelperClasses.DatabaseHelper;
+import HelperClasses.TimeUtils;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.value.ObservableValue;
@@ -58,7 +58,7 @@ public class ControllerHistoryTab extends ControllerInventoryPage implements Ini
     private JFXTreeTableColumn<HistoryTabTableRow, Date> dateCol;
 
     private JFXTreeTableColumn<HistoryTabTableRow, Long> barcodeCol;
-    private DatabaseHelper helper;
+    private TimeUtils helper;
 
     @FXML
     private JFXButton searchButton, clearOldHistory;

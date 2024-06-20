@@ -1,7 +1,7 @@
 package Database;
 
 import Database.ObjectClasses.Student;
-import HelperClasses.DatabaseHelper;
+import HelperClasses.TimeUtils;
 import HelperClasses.StageUtils;
 import InventoryController.StudentCheckIn;
 
@@ -18,7 +18,7 @@ public class StudentInfo {
             "values(?,?,?,?,?);";
     private final String getStudentNameFromEmailQuery = "select studentName from students where email = ?";
 
-    private DatabaseHelper helper = new DatabaseHelper();
+    private TimeUtils helper = new TimeUtils();
     private StageUtils stageUtils = StageUtils.getInstance();
 
 

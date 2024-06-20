@@ -7,8 +7,6 @@ import HelperClasses.StageUtils;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
 import com.jfoenix.controls.JFXTextField;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -54,7 +52,7 @@ public class ControllerAddStudent implements Initializable, IController {
                         Alert alert = new Alert(Alert.AlertType.ERROR, "A student with that email already exists.");
                         StudentCheckIn.logger.warn("A student with that email already exists.");
                         alert.showAndWait();
-                    } else if (database.getStudentRFIDs().contains(rfid.getText())) {
+                    } else if (database.studentRFIDExists(Integer.parseInt(rfid.getText()))) {
                         isValid = false;
                         Alert alert = new Alert(Alert.AlertType.ERROR, "A student with that rfid already exists.");
                         StudentCheckIn.logger.warn("A student with that rfid already exists.");

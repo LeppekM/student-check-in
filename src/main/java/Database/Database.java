@@ -4,7 +4,7 @@ import CheckItemsController.CheckoutObject;
 import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
-import HelperClasses.DatabaseHelper;
+import HelperClasses.TimeUtils;
 import HelperClasses.StageUtils;
 import InventoryController.CheckedOutItems;
 import InventoryController.IController;
@@ -30,7 +30,7 @@ public class Database implements IController {
     static final String dbDriver = "com.mysql.jdbc.Driver";
     static final String dbname = "/student_check_in";
     static Connection connection;
-    private final DatabaseHelper databaseHelper = new DatabaseHelper();
+    private final TimeUtils timeUtils = new TimeUtils();
     private Worker worker;
     private final StageUtils stageUtils = StageUtils.getInstance();
 
@@ -68,8 +68,9 @@ public class Database implements IController {
             if (connection.isClosed()) {
                 connection = DriverManager.getConnection((host + dbname), username, password);
             }
-        } catch (SQLException e) {
-
+        } catch (SQLException ignored) {
+            StudentCheckIn.logger.error("SQLError: Can't connect to the database! Problem establishing a new " +
+                    "connection after previous was closed.");
         }
 
         return connection;
@@ -82,12 +83,12 @@ public class Database implements IController {
     public ObservableList<OverdueItem> getOverdue() {
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
 
-        databaseHelper.getCurrentDateTimeStamp();
-        String overdue = "select checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
-                " parts.serialNumber, parts.barcode, checkout.dueAt, checkout.checkoutID from checkout " +
-                "left join parts on checkout.partID = parts.partID " +
-                "left join students on checkout.studentID = students.studentID " +
-                "where checkout.checkinAt is null";
+        timeUtils.getCurrentDateTimeStamp();
+        String overdue = "SELECT checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
+                " parts.serialNumber, parts.barcode, checkout.dueAt, checkout.checkoutID FROM checkout " +
+                "LEFT JOIN parts ON checkout.partID = parts.partID " +
+                "LEFT JOIN students ON checkout.studentID = students.studentID " +
+                "WHERE checkout.checkinAt IS NULL;";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(overdue);
@@ -97,14 +98,14 @@ public class Database implements IController {
                     data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
                             resultSet.getString("students.email"), resultSet.getString("parts.partName"),
                             resultSet.getString("parts.serialNumber"),
-                            resultSet.getLong("parts.barcode"), databaseHelper.convertStringtoDate(dueAt),
+                            resultSet.getLong("parts.barcode"), timeUtils.convertStringtoDate(dueAt),
                             resultSet.getString("checkout.checkoutID")));
                 }
             }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQL Error: " + e.getLocalizedMessage());
+            StudentCheckIn.logger.error("SQL Error: {}", e.getLocalizedMessage());
             e.printStackTrace();
         }
         return data;
@@ -119,34 +120,15 @@ public class Database implements IController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         if (date != null && !date.isEmpty()) {
             try {
-                Date current = dateFormat.parse(databaseHelper.getCurrentDateTimeStamp());
+                Date current = dateFormat.parse(timeUtils.getCurrentDateTimeStamp());
                 Date dueDate = dateFormat.parse(date);
                 return current.after(dueDate);
             } catch (ParseException e) {
-                StudentCheckIn.logger.error("Parse Error: " + e.getLocalizedMessage());
+                StudentCheckIn.logger.error("Parse Error: {}", e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
         return false;
-    }
-
-    /**
-     * Helper method to get the current date
-     * @return today's date
-     */
-    private static Date getToday() {
-        long date = System.currentTimeMillis();
-        return new java.sql.Date(date);
-    }
-
-    /**
-     * Calculates the date that was 2 years ago from today
-     * @return the date that was 2 years ago from today
-     */
-    private static Date getTwoYearsAgo() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -2);
-        return cal.getTime();
     }
 
     /**
@@ -171,7 +153,7 @@ public class Database implements IController {
      */
     public void deleteParts(String partName) {
         try {
-            String deleteQuery = "delete from parts WHERE partName = '" + partName + "';";
+            String deleteQuery = "DELETE FROM parts WHERE partName = '" + partName + "';";
             Statement statement = connection.createStatement();
             statement.executeUpdate(deleteQuery);
             statement.close();
@@ -186,12 +168,12 @@ public class Database implements IController {
      * @return a Part
      */
     public Part selectPart(int partID) {
-        String query = "select * from parts where partID = " + partID;
+        String query = "SELECT * FROM parts WHERE partID = " + partID + ";";
         Part part = null;
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getLong("barcode"), false, // Faulty functionality removed, included here to differ from other constructor
@@ -206,19 +188,18 @@ public class Database implements IController {
     }
 
     /**
-     * todo
      * Checks if barcode exists
      * @param barcode Barcode to be checked
      * @return True if barcode exists
      */
     public boolean barcodeExists(long barcode) {
-        List<Long> barcodes = new LinkedList<>();
-        final String getAllBarcodes = "select barcode from parts";
+        long bc = 0;
+        final String getAllBarcodes = "SELECT barcode FROM parts WHERE barcode = " + barcode + ";";
         try {
             PreparedStatement statement = connection.prepareStatement(getAllBarcodes);
             ResultSet rs = statement.executeQuery();
-            while(rs.next()){
-                barcodes.add(rs.getLong("barcode"));
+            if (rs.next()) {
+                bc = rs.getLong("barcode");
             }
             statement.close();
             rs.close();
@@ -226,47 +207,7 @@ public class Database implements IController {
             StudentCheckIn.logger.error("SQLException: Can't connect to the database when checking if barcode exists.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
-        return (barcodes.contains(barcode));
-    }
-
-    /**
-     * Sets part isCheckedOut status to 1 to signify the part is checked out or 0 to show that it is in
-     * @param partID Part ID of part
-     * @param status the string that sets the part in/out
-     */
-    void setPartStatus(int partID, String status){
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(status);
-            preparedStatement.setInt(1,partID);
-            preparedStatement.execute();
-            preparedStatement.close();
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-    }
-
-    /**
-     * This method takes a barcode as parameter and returns the corresponding partID to be added to check out table.
-     * @param barcode barcode of part
-     * @return Part ID to return
-     */
-    int getPartIDFromBarcode(long barcode, String status){
-        int partID = 0;
-        try {
-            PreparedStatement statement = connection.prepareStatement(status);
-            statement.setLong(1, barcode);
-            ResultSet rs = statement.executeQuery();
-            if(rs.next()){
-                partID = rs.getInt("partID");
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting part ID from barcode.");
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-        return partID;
+        return bc == 0;
     }
 
     public int getCheckoutIDFromBarcodeAndRFID(int RFID, long barcode) {
@@ -290,14 +231,13 @@ public class Database implements IController {
     }
 
     /**
-     * todo
-     * @return true if part successfully checked in
+     * Inserts new checkout entity into the database, and changes the associated part.isCheckedOut to 1
      */
     public boolean checkOutPart(long barcode, int RFID, String course, String prof, String dueDate) {
         try {
             String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, prof, course) " +
                     "VALUES(?,?,?,?,?,?,?);";
-            int partID = getPartIDFromBarcode(barcode, "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = 0 LIMIT 1");
+            int partID = getPartIDFromBarcode(barcode, false);
             if (partID == 0) {
                 stageUtils.errorAlert("Unable to find a valid partID for barcode");
                 return false;
@@ -306,19 +246,17 @@ public class Database implements IController {
             statement.setInt(1, partID);
             statement.setInt(2, RFID);
             statement.setLong(3, barcode);
-            statement.setString(4, databaseHelper.getCurrentDateTimeStamp());
+            statement.setString(4, timeUtils.getCurrentDateTimeStamp());
             if (dueDate != null){
                 statement.setString(5, dueDate);
                 statement.setString(6, prof);
                 statement.setString(7, course);
             } else {
-                statement.setString(5, databaseHelper.setDueDate());
+                statement.setString(5, timeUtils.setDueDate());
                 statement.setString(6, "");
                 statement.setString(7, "");
             }
-
-            String setPartStatusCheckedOut = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?";
-            setPartStatus(partID, setPartStatusCheckedOut); //This will set the partID found above to a checked out status
+            setPartStatus(partID, false); //This will set the partID found above to a checked out status
             statement.execute();
             statement.close();
         } catch (SQLException e) {
@@ -332,46 +270,96 @@ public class Database implements IController {
     }
 
     /**
-     * todo
+     * Updates the checkout entity checkinAt to current time, and changes the associated part.isCheckedOut to 0
      */
     public boolean checkInPart(long barcode, int RFID) {
-        String getPartIDtoCheckin = "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = 1 LIMIT 1";
-        int partID = getPartIDFromBarcode(barcode, getPartIDtoCheckin);
+        int partID = getPartIDFromBarcode(barcode, true);
         try {
             String setDate = "UPDATE checkout SET checkinAt = ? WHERE checkoutID = ?;";
             PreparedStatement statement = connection.prepareStatement(setDate);
-            statement.setString(1, databaseHelper.getCurrentDateTimeStamp());
+            statement.setString(1, timeUtils.getCurrentDateTimeStamp());
             statement.setInt(2, getCheckoutIDFromBarcodeAndRFID(RFID, barcode));
             statement.execute();
             statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
-        String setPartStatusCheckedIn = "UPDATE parts SET isCheckedOut = 0 WHERE partID = ?";
-        setPartStatus(partID, setPartStatusCheckedIn); //Sets part to checked in
+        setPartStatus(partID, true); //Sets part to checked in
         return true;
     }
 
     /**
+     * Sets part isCheckedOut status to 1 to signify the part is checked out or 0 to show that it is in
+     * @param partID Part ID of part as an int
+     * @param isCheckIn boolean true if status is being set to checked in, false if checked out
+     */
+    private void setPartStatus(int partID, boolean isCheckIn){
+        String status;
+        if (isCheckIn) {
+            status = "UPDATE parts SET isCheckedOut = 0 WHERE partID = ?;";
+        } else {
+            status = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?;";
+        }
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(status);
+            preparedStatement.setInt(1,partID);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    /**
+     * This method takes a barcode as parameter and returns the corresponding partID to be added to check out table.
+     * @param barcode barcode of part
+     * @param isCheckIn whether the desired part is checked in
+     * @return Part ID as int
+     */
+    private int getPartIDFromBarcode(long barcode, boolean isCheckIn){
+        int partID = 0;
+        String status = "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = ? LIMIT 1;";
+        try {
+            PreparedStatement statement = connection.prepareStatement(status);
+            statement.setLong(1, barcode);
+            statement.setBoolean(2, isCheckIn);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                partID = rs.getInt("partID");
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting part ID from barcode.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return partID;
+    }
+
+    /**
      * Gets info about the student who most recently checked a part in or out
-     *
      * @param partID the part ID of the part being checked
      * @return a Student object that represents the student who last checked the part in or out
      */
     public Student getStudentToLastCheckout(int partID) {
-        String query = "SELECT * FROM checkout INNER JOIN students ON checkout.studentID = students.studentID WHERE partID = " + partID + ";";
+        String query = "SELECT c.*, s.* FROM checkout c\n" +
+                "INNER JOIN students s \n" +
+                "ON c.studentID = s.studentID \n" +
+                "INNER JOIN (SELECT MAX(checkoutID) AS max_checkoutID FROM checkout WHERE partID = " + partID +
+                ") max_c on c.checkoutID = max_c.max_checkoutID;";
         int studentID = -1;
         Student student = null;
         String studentName = "";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 studentID = resultSet.getInt("studentID");
                 studentName = resultSet.getString("studentName");
             }
             student = selectStudent(studentID, null);
-            if (student.getName().equals("")) {
+            if (student.getName().isEmpty()) {
                 student.setName(studentName);
             }
             resultSet.close();
@@ -384,12 +372,13 @@ public class Database implements IController {
 
     /**
      * Gets info about the most recent checkin/out transaction for the part with the matching part ID
-     *
      * @param partID the part ID of the part being checked
      * @return a CheckoutObject object that represents info about the part's last checkout
      */
     public CheckoutObject getLastCheckoutOf(int partID) {
-        String query = "SELECT * FROM checkout WHERE partID = " + partID + ";";
+        String query = "SELECT c.* FROM checkout c\n" +
+                "INNER JOIN (SELECT MAX(checkoutID) AS max_checkoutID FROM checkout WHERE partID = " + partID +
+                ") max_c on c.checkoutID = max_c.max_checkoutID;";
         CheckoutObject checkoutObject = null;
         String studentID = "", barcode = "", dueAt = "";
         String checkoutAt = null, checkinAt = null;
@@ -397,7 +386,7 @@ public class Database implements IController {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 studentID = "" + resultSet.getInt("studentID");
                 barcode = "" + resultSet.getLong("barcode");
                 checkoutAt = resultSet.getString("checkoutAt");
@@ -414,6 +403,7 @@ public class Database implements IController {
     }
 
     /**
+     * todo: Make this smarter, don't want to delete checkout(s) on parts that are out, also delete students that have no transaction history for 4+ years
      * This method clears the checkout data that is over 2 years old
      */
     public void clearOldHistory() {
@@ -427,7 +417,7 @@ public class Database implements IController {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
             DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-            String formattedDate = target.format(getTwoYearsAgo());
+            String formattedDate = target.format(timeUtils.getTwoYearsAgo());
             preparedStatement.setString(1, formattedDate);
             preparedStatement.execute();
             preparedStatement.close();
@@ -439,18 +429,17 @@ public class Database implements IController {
 
     /**
      * Gets a part that has the matching part name
-     *
-     * @param partName the name of the part being checked
-     * @return the part with the matching part name
+     * @param barcode of the part being checked
+     * @return a part with the matching barcode, if it exists
      */
-    public Part selectPartByPartName(String partName) {
-        String query = "select * from parts where partName = ?";
+    public Part selectPartByBarcode(long barcode) {
+        String query = "select * from parts where barcode = ?;";
         Part part = null;
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, partName);
+            statement.setLong(1, barcode);
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
                         resultSet.getString("location"), resultSet.getLong("barcode"), false,
@@ -466,7 +455,7 @@ public class Database implements IController {
 
     /**
      * Checks whether the part with the given part ID is currently checked out
-     *
+     * It is checking this via checkout table, not parts table
      * @param partID the part ID of the part being checked
      * @return true if the matching part is checked out; false otherwise
      */
@@ -491,26 +480,23 @@ public class Database implements IController {
 
     /**
      * Gets a list of serial numbers used by a part with a given name, except for the part with the given part ID
-     *
      * @param partName the name of parts being checked
      * @param partID   the part ID of the part exempt from the search
      * @return the list of serial numbers
      */
     public ArrayList<String> getOtherSerialNumbersForPartName(String partName, String partID) {
         String query = "SELECT serialNumber FROM parts WHERE partName = '" + partName + "' AND partID != " + partID + ";";
-        ArrayList<String> serialNumbers = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                serialNumbers.add(resultSet.getString("serialNumber"));
-            }
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return serialNumbers;
+        return collectFromOneCol(query, "serialNumber");
+    }
+
+    /**
+     * Gets a list of all serial numbers used by parts with the given name
+     * @param partName name of the part being checked
+     * @return the list of serial numbers
+     */
+    public ArrayList<String> getAllSerialNumbersForPartName(String partName) {
+        String query = "SELECT serialNumber FROM parts WHERE partName = '" + partName + "';";
+        return collectFromOneCol(query, "serialNumber");
     }
 
     /**
@@ -522,94 +508,50 @@ public class Database implements IController {
      */
     public ArrayList<String> getOtherBarcodesForPartName(String partName, String partID) {
         String query = "SELECT barcode FROM parts WHERE partName = '" + partName + "' AND partID != " + partID + ";";
-        ArrayList<String> barcodes = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                barcodes.add(resultSet.getString("barcode"));
-            }
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return barcodes;
+        return collectFromOneCol(query, "barcode");
     }
 
     /**
      * Gets a list of all barcodes used by parts with the given name
-     *
      * @param partName name of the part being checked
      * @return the list of barcodes
      */
     public ArrayList<String> getAllBarcodesForPartName(String partName) {
-        String query = "SELECT barcode FROM parts WHERE partName = ?";
-        ArrayList<String> barcodes = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, partName);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                barcodes.add(resultSet.getString("barcode"));
-            }
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return barcodes;
+        String query = "SELECT barcode FROM parts WHERE partName = " + partName + ";";
+        return collectFromOneCol(query, "barcode");
     }
 
     /**
      * Gets a list of all part IDs used by parts with the given name
-     *
      * @param partName name of the part being checked
      * @return the list of part IDs
      */
     public ArrayList<String> getAllPartIDsForPartName(String partName) {
         String query = "SELECT partID FROM parts WHERE partName = '" + partName + "';";
-        ArrayList<String> partIDs = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                partIDs.add(resultSet.getString("partID"));
-            }
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return partIDs;
+        return collectFromOneCol(query, "partID");
     }
 
     /**
-     * Gets a list of all serial numbers used by parts with the given name
-     *
-     * @param partName name of the part being checked
-     * @return the list of serial numbers
+     * Helper method to collect many of one column from a specific table
      */
-    public ArrayList<String> getAllSerialNumbersForPartName(String partName) {
-        String query = "SELECT serialNumber FROM parts WHERE partName = '" + partName + "';";
-        ArrayList<String> serialNumbers = new ArrayList<>();
+    private ArrayList<String> collectFromOneCol(String query, String column) {
+        ArrayList<String> list = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
-                serialNumbers.add(resultSet.getString("serialNumber"));
+                list.add(resultSet.getString(column));
             }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return serialNumbers;
+        return list;
     }
 
     /**
      * Checks whether the parts with the given part name have unique barcodes
-     *
      * @param partName the name of the parts being checked
      * @return true if the part has unique barcodes; false otherwise
      */
@@ -628,13 +570,12 @@ public class Database implements IController {
     }
 
     /**
-     * Gets the number of parts that's part name matches the given part name
-     *
+     * Gets the number of parts which have the given part name
      * @param partName the part name being checked
      * @return the number of parts
      */
     public int countPartsOfType(String partName) {
-        String query = "SELECT COUNT(*) FROM parts WHERE partName =?";
+        String query = "SELECT COUNT(*) FROM parts WHERE partName = ?;";
         ResultSet resultSet;
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -652,34 +593,21 @@ public class Database implements IController {
      * This method returns a list of all distinct barcodes in the database, except for the ones
      * that belong to a part with the passed in part name. This is used for making sure not to
      * use an already existing barcode when adding parts.
-     *
      * @param partName the part name that is an exception
      * @return the list of barcodes
      */
     public ArrayList<String> getUniqueBarcodesBesidesPart(String partName) {
-        String query = "SELECT DISTINCT barcode FROM parts WHERE partName != ?";
-        ArrayList<String> barcodes = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, partName);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                barcodes.add(resultSet.getString("barcode"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return barcodes;
+        String query = "SELECT DISTINCT barcode FROM parts WHERE partName != " + partName + ";";
+        return collectFromOneCol(query, "barcode");
     }
 
     /**
      * This method checks to see whether the database contains a part with a passed in part name
-     *
      * @param partName the name of the part being checked
      * @return true if the database contains a part with part name that equals partName; false otherwise
      */
     public boolean hasPartName(String partName) {
-        String query = "SELECT * from parts where partName = ?";
+        String query = "SELECT * from parts where partName = ?;";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, partName);
@@ -693,7 +621,6 @@ public class Database implements IController {
 
     /**
      * Gets the list of students from the database
-     *
      * @return observable list of students
      */
     public ObservableList<Student> getStudents() {
@@ -721,20 +648,14 @@ public class Database implements IController {
     }
 
     /**
-     * This method returns a list of all student emails in the system
-     *
-     * @return the list of all student rfids
+     * @return true if a student has RFID, false otherwise
      */
-    public ObservableList<String> getStudentRFIDs() {
-        ObservableList<String> rfids = FXCollections.observableArrayList();
+    public boolean studentRFIDExists(int rfid) {
+        int studentRFID = 0;
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT studentID FROM students");
-            String rfid;
-            while (resultSet.next()) {
-                rfid = resultSet.getString("studentID");
-                rfids.add(rfid);
-            }
+            ResultSet resultSet = statement.executeQuery("SELECT studentID FROM students where studentID = " + rfid + ";");
+            studentRFID = resultSet.getInt("studentID");
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
@@ -743,7 +664,7 @@ public class Database implements IController {
             alert.showAndWait();
             e.printStackTrace();
         }
-        return rfids;
+        return studentRFID != 0;
     }
 
     /**
@@ -751,29 +672,12 @@ public class Database implements IController {
      * @return the list of all student emails
      */
     public ObservableList<String> getStudentEmails() {
-        ObservableList<String> emails = FXCollections.observableArrayList();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT email FROM students");
-            String email;
-            while (resultSet.next()) {
-                email = resultSet.getString("email");
-                emails.add(email);
-            }
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of students");
-            StudentCheckIn.logger.error("Could not retrieve the list of students");
-            alert.showAndWait();
-            e.printStackTrace();
-        }
-        return emails;
+        String query = "SELECT email FROM students;";
+        return FXCollections.observableArrayList(collectFromOneCol(query, "email"));
     }
 
     /**
-     * Gets the list of workers from the database
-     *
+     * Gets the list of workers from the database todo: see if any worker getter can be cleaned
      * @return observable list of workers
      */
     public ObservableList<Worker> getWorkers() {
@@ -899,33 +803,29 @@ public class Database implements IController {
 
     /**
      * This method checks whether pin matches one of the administrators' pins
-     *
      * @param pin the inputted pin that is being checked
      * @return true if pin is one of the administrators' pins; false otherwise
      */
     public boolean isValidPin(int pin) {
+        int adminPin = 0;
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT pin FROM workers;");
-            int adminPin;
-            while (resultSet.next()) {
-                adminPin = resultSet.getInt("pin");
-                if (adminPin != 0 && adminPin == pin) {
-                    return true;
-                }
-            }
+            ResultSet resultSet = statement.executeQuery("SELECT pin FROM workers WHERE pin = " + pin + ";");
+            adminPin = resultSet.getInt("adminPin");
+            resultSet.close();
+            statement.close();
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of admin pins");
             StudentCheckIn.logger.error("Could not retrieve the list of admin pins");
             alert.showAndWait();
             e.printStackTrace();
         }
-        return false;
+        return adminPin == pin;
     }
 
     /**
      * Gets a student from the database based on their RFID or email
-     *
+     * todo: simplify, if possible
      * @param ID RFID to search for, -1 if no RFID being searched
      * @param studentEmail the email being searched, null if no email being searched
      * @return a student matching inputs if one exists in the db, null otherwise
@@ -980,8 +880,8 @@ public class Database implements IController {
                             resultSet.getString("parts.barcode"),
                             resultSet.getString("parts.serialNumber"),
                             resultSet.getInt("parts.partID"),
-                            databaseHelper.convertStringtoDate(resultSet.getString("checkout.checkoutAt")),
-                            databaseHelper.convertStringtoDate(resultSet.getString("checkout.dueAt")),
+                            timeUtils.convertStringtoDate(resultSet.getString("checkout.checkoutAt")),
+                            timeUtils.convertStringtoDate(resultSet.getString("checkout.dueAt")),
                             resultSet.getString("parts.price")));
 
                     String dueAt = resultSet.getString("checkout.dueAt");
@@ -992,7 +892,7 @@ public class Database implements IController {
                                 resultSet.getString("students.email"),
                                 resultSet.getString("parts.partName"),
                                 resultSet.getLong("parts.barcode"),
-                                databaseHelper.convertStringtoDate(dueAt),
+                                timeUtils.convertStringtoDate(dueAt),
                                 resultSet.getString("checkout.checkoutID"),
                                 resultSet.getDouble("parts.price")));
                     }
@@ -1023,14 +923,13 @@ public class Database implements IController {
 
     /**
      * Adds a new student to the database
-     *
      * @param s student to be added
      */
     public void addStudent(Student s) {
         String email = s.getEmail().replace("'", "\\'");
         String name = s.getName().replace("'", "\\'");
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + email + "', '" + name + "', date('" + getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                + ", '" + email + "', '" + name + "', date('" + timeUtils.getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1046,7 +945,6 @@ public class Database implements IController {
     /**
      * Adds a student to the database without the student's rfid. This is used for
      * importing a bunch of students when the rfid is unknown.
-     *
      * @param s the student to be added
      */
     public boolean importStudent(Student s) {
@@ -1054,7 +952,7 @@ public class Database implements IController {
         // but other methods in this class need to replace "'" with "\\'" so that it does not
         // mess up the database queries.
         String query = "insert into students (email, studentName, createdAt, createdBy) values ('" +
-                s.getEmail() + "', '" + s.getName() + "', date('" + getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                s.getEmail() + "', '" + s.getName() + "', date('" + TimeUtils.getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1075,14 +973,14 @@ public class Database implements IController {
         return true;
     }
 
-    public void updateStudent(Student s) {
+    public void updateStudent(Student s) {  // todo: associated with parts of code I need to fix
         if(studentHasCheckedOutItems(s.getEmail())){
             stageUtils.errorAlert("Student has checked out items");
             return;
         }
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
                 s.getName().replace("'", "\\'") + "', students.email = '" + s.getEmail().replace("'", "\\'") + "', students.updatedAt = date('" +
-                getToday() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
+                TimeUtils.getToday() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -1103,6 +1001,9 @@ public class Database implements IController {
         return !s.getCheckedOut().isEmpty();
     }
 
+    /**
+     * @return the number of parts with the same barcode that the selected student does not have returned
+     */
     public int amountOutByStudent(long barcode, Student s) {
         String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND barcode = " + barcode + " AND studentID = " + s.getRFID() + ";";
         ResultSet resultSet;
@@ -1120,6 +1021,9 @@ public class Database implements IController {
         return 0;
     }
 
+    /**
+     * @return the number of parts associated with one barcode that is not currently checked out
+     */
     public int getNumPartsAvailableByBarcode(long barcode) {
         String query1 = "SELECT partID FROM parts WHERE barcode = " + barcode + " AND isCheckedOut = 0;";
         ResultSet resultSet;
@@ -1143,8 +1047,7 @@ public class Database implements IController {
     }
 
     /**
-     * Deletes a student from the database
-     *
+     * Deletes a student from the database todo fix logic
      * @param email students email
      */
     public void deleteStudent(String email) {
@@ -1169,13 +1072,12 @@ public class Database implements IController {
 
     /**
      * Adds a new worker to the database
-     *
      * @param w worker to be added
      */
     public void addWorker(Worker w) {
         int bit = w.isAdmin() ? 1 : 0;
         String query = "insert into workers (email, workerName, pin, pass, ID, isAdmin, createdAt, createdBy) values ('" + w.getEmail().replace("'", "\\'") +
-                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " + w.getRIFD() + "," + bit + ", date('" + getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " + w.getRIFD() + "," + bit + ", date('" + TimeUtils.getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1190,7 +1092,6 @@ public class Database implements IController {
 
     /**
      * Deletes a worker from the database
-     *
      * @param name workers name
      */
     public void deleteWorker(String name) {
@@ -1216,7 +1117,7 @@ public class Database implements IController {
                 w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.ID = " + w.getRIFD() + ", workers.isAdmin = " + admin + "," +
                 " workers.email = '" + w.getEmail().replace("'", "\\'") + "', workers.editParts = " + edit +
                 ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
-                getToday() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
+                TimeUtils.getToday() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
                 w.getID() + ";";
         try {
             Statement statement = connection.createStatement();
@@ -1228,30 +1129,6 @@ public class Database implements IController {
             alert.showAndWait();
             e.printStackTrace();
         }
-    }
-
-    /**
-     * This it to verify if the barcode is unused
-     *
-     * @param barcode to check against
-     * @return list of barcodes that match
-     */
-    public ArrayList<Integer> getAllBarcodes(int barcode) {
-        String query = "select * from parts where barcode = " + barcode + ";";
-        ArrayList<Integer> barcodes = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                barcodes.add(resultSet.getInt("barcode"));
-            }
-            statement.close();
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't retrieve the list of barcodes");
-            alert.showAndWait();
-            e.printStackTrace();
-        }
-        return barcodes;
     }
 
     /**

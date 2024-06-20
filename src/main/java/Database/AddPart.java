@@ -26,7 +26,6 @@ public class AddPart {
 
     public void addCommonItems(Part part, Database database, int quantity) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            Part existing = database.selectPartByPartName(part.getPartName());
                 for (int i = 0; i < quantity; i++) {
                     PreparedStatement preparedStatement = connection.prepareStatement(addQuery);
                     insertQuery(part, preparedStatement).execute();
