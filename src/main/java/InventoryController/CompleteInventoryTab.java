@@ -33,6 +33,11 @@ public class CompleteInventoryTab extends TSCTable {
     }
 
     @Override
+    public void initialize() {
+
+    }
+
+    @Override
     public ObservableList<DBObject> getParts() {
         return null;
     }

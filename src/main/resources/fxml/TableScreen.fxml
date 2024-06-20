@@ -14,14 +14,17 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.layout.VBox?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.scene.control.Tab?>
 <StackPane fx:id="scene" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="InventoryController.TableScreensController">
-    <HBox>
-        <Button fx:id="completeInventoryButton">Total Inventory</Button>
-        <Button fx:id="historyButton">Transaction History</Button>
-        <Button fx:id="checkedOutButton">Checked Out</Button>
-        <Button fx:id="overdueButton">Overdue</Button>
-    </HBox>
+    <JFXTabPane fx:id="tabPane" stylesheets="@../css/TabStyle.css"
+                tabClosingPolicy="UNAVAILABLE">
+        <Tab text="Total Inventory"> </Tab>
+        <Tab text="Transaction History"> </Tab>
+        <Tab text="Checked Out"> </Tab>
+        <Tab text="Overdue"> </Tab>
+    </JFXTabPane>
     <VBox>
         <HBox>
             <Label fx:id="titleLabel" text="Title">
@@ -51,7 +54,7 @@
             </HBox>
         </HBox>
         <JFXTreeTableView fx:id="table" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS"/>
-        <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="200.0">
+        <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="200.0" stylesheets="@../css/ButtonStyle.css">
             <opaqueInsets>
                 <Insets bottom="14.0" right="20.0"/>
             </opaqueInsets>

@@ -49,6 +49,8 @@ public abstract class TSCTable {
 
     public abstract ObservableList<DBObject> getParts();
 
+    public abstract void initialize();
+
     /**
      * This method exports the table as an Excel spreadsheet
      * @param exportToExcel the helper class made to export the

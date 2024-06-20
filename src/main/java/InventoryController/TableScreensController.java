@@ -6,8 +6,9 @@ import Database.ObjectClasses.Worker;
 import HelperClasses.AdminPinRequestController;
 import HelperClasses.ExportToExcel;
 import HelperClasses.StageUtils;
+import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTreeTableView;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,15 +31,10 @@ public class TableScreensController extends ControllerMenu implements IControlle
 
     @FXML
     public Label titleLabel;
+    public JFXTabPane tabPane;
 
     @FXML
     private StackPane scene;
-
-    @FXML // replacing tabs with these
-    private Button completeInventoryButton, historyButton, checkedOutButton, overdueButton;
-
-    @FXML // replace with HistoryTab
-    private ControllerHistoryTab historyTabPageController;
 
     @FXML
     TextField searchInput;
@@ -62,37 +58,49 @@ public class TableScreensController extends ControllerMenu implements IControlle
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-//            // if the user was on the total tab
-//            if (newTab == historyTab) {
-//                updateHistoryTab();
-//            } else if (newTab == checkedOutTab) {
-//                updateCheckedOutTab();
-//            } else if (newTab == overdueTab) {
-//                updateOverdueTab();
-//            }
-//        }); gets replaced with what button was last clicked
+        // init tabPane listeners
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.getText().equals("Total Inventory")) {
+                    screen = "completeInventory";
+                } else if (newValue.getText().equals("Transaction History")) {
+                    screen = "history";
+                } else if (newValue.getText().equals("Checked Out")) {
+                    screen = "checkedOut";
+                } else {
+                    screen = "overdue";
+                }
+            }
+            showCorrectButtons();
+        });
+        tabPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            tabPane.setTabMinWidth(tabPane.getWidth() / 5.05);
+            tabPane.setTabMaxWidth(tabPane.getWidth() / 5.05);
+        });
+        //  todo setup getters for what screen this is
 
-
-        backButton.getStylesheets().add("/css/CheckButton.css");
-
-//        tabPane.widthProperty().addListener((observable, oldValue, newValue) ->
-//        {
-//            tabPane.setTabMinWidth(tabPane.getWidth() / 5.05);
-//            tabPane.setTabMaxWidth(tabPane.getWidth() / 5.05);
-//        });
+        //updateTable();
+        backButton.getStylesheets().add("/css/CheckButton.css");  // set button style
+        //tscTable.initialize();  // set up table
+        showCorrectButtons();  // show buttons
 
     }
 
     private void updateTable() {
-        historyTabPageController.populateTable();
+        switch (screen) {
+            case "completeInventory":
+                tscTable = new CompleteInventoryTab(this);
+                break;
+            case "history":
+                break;
+        }  // todo: finish this once the other classes are set up
+        tscTable.populateTable();
     }
 
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each necessary class
-     *
      * @param worker the currently logged in worker
      */
     @Override
@@ -196,31 +204,6 @@ public class TableScreensController extends ControllerMenu implements IControlle
     }
 
 
-    /** todo, might not even be in this section of code
-     * Sets the last clicked/default the button in the Inventory page as selected, resets the formatting for the others
-     */
-    private void setSelectedButton() {
-        // default formatting for all 4 tab buttons
-        // change formatting to selected for passed button
-        switch (screen) {
-            case "completeInventory":
-                break;
-            case "history":
-                break;
-            case "checkedOut":
-                break;
-            case "overdue":
-                break;
-            default:
-                completeInventoryButton.setVisible(false);
-                historyButton.setVisible(false);
-                overdueButton.setVisible(false);
-                checkedOutButton.setVisible(false);
-                break;
-        }
-    }
-
-
     /**
      * This method shows/hides the buttons on the bottom bar depending on what screen the user is on.
      * The back button is always shown so its value is unchanged
@@ -271,6 +254,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     }
 
 
+
     @FXML
     public void goBack() {
         stageUtils.goBack(scene, worker);
@@ -285,8 +269,63 @@ public class TableScreensController extends ControllerMenu implements IControlle
         tscTable.export(export);
     }
 
+    @FXML
+    public void addPart(ActionEvent event) {
 
+    }
 
+    @FXML
+    public void deleteManyParts(ActionEvent event) {
 
+    }
 
+    @FXML
+    public void deletePart() {
+
+    }
+
+    @FXML
+    public void editManyParts(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void editPart(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void clearHistory(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void importStudents(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void addStudent(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void deleteStudent(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void addEmployee(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void addAdmin(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void deleteEmployee(ActionEvent event) {
+
+    }
 }
