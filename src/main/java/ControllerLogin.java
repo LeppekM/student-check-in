@@ -59,7 +59,7 @@ public class ControllerLogin implements Initializable {
         msoeBackgroundImage = new ImageViewPane(imageView);
         msoeBackgroundImage.setPrefWidth(591);
         msoeBackgroundImage.setPrefHeight(789);
-        msoeBackgroundImage.setOpacity(0.55);
+        msoeBackgroundImage.setOpacity(0.68);
         loginScene.getChildren().add(msoeBackgroundImage);
         msoeBackgroundImage.toBack();
         emailInputLoginPage.setOnKeyReleased(event -> {

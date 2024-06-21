@@ -51,7 +51,7 @@ public class ControllerMenu implements IController, Initializable {
         ImageViewPane msoeBackgroundImage = new ImageViewPane(imageView);
         msoeBackgroundImage.setPrefWidth(591);
         msoeBackgroundImage.setPrefHeight(789);
-        msoeBackgroundImage.setOpacity(0.55);
+        msoeBackgroundImage.setOpacity(0.68);
         pane.getChildren().add(msoeBackgroundImage);
         msoeBackgroundImage.toBack();
     }
