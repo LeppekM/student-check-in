@@ -3,7 +3,6 @@ package ManagePeople;
 import Database.Database;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
-import Database.StudentInfo;
 import HelperClasses.StageUtils;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
@@ -13,8 +12,6 @@ import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -31,7 +28,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -44,7 +40,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,8 +63,6 @@ public class ControllerManageStudents implements IController, Initializable {
     private JFXTreeTableColumn<ManageStudentsTabTableRow, String> firstNameCol, lastNameCol, idCol, emailCol;
 
     private String id, email, firstName, lastName;
-
-    private final StudentInfo studentInfo = new StudentInfo();
 
     private static ObservableList<Student> data = FXCollections.observableArrayList();
 
@@ -317,7 +310,7 @@ public class ControllerManageStudents implements IController, Initializable {
         ManageStudentsTabTableRow r = manageStudentsTable.getSelectionModel().getModelItem(row).getValue();
         Student s = null;
         if (Integer.parseInt(r.getId().get()) == 0) {
-            s = studentInfo.selectStudentClean(r.getEmail().get());
+            s = database.selectStudentWithoutLists(r.getEmail().get());
         } else {
             s = database.selectStudent(Integer.parseInt(r.getId().get()), null);
         }

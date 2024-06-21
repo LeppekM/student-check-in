@@ -231,6 +231,53 @@ public class Database implements IController {
     }
 
     /**
+     * Returns the student ID associated with
+     * @param email the email
+     * @return the ID associated with student's email, 0 if the student isn't in the db (might be 0 for imported students)
+     */
+    public int getStudentIDFromEmail(String email) {
+        int sID = 0;
+        String query = "SELECT studentID FROM students WHERE email = ?;";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email.replace("'", "\\'"));
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                sID = rs.getInt("studentID");
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database to look for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return sID;
+    }
+
+    public boolean hasCheckedOutItemsFromID(int studentID) {
+        String query = "SELECT studentID FROM checkout WHERE studentID = ? AND checkinAt IS NULL;";
+        List<Integer> checkouts = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, studentID);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                checkouts.add(rs.getInt("studentID"));
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return !checkouts.isEmpty();
+    }
+
+    public boolean hasCheckedOutItemsFromEmail(String email) {
+        return hasCheckedOutItemsFromID(getStudentIDFromEmail(email));
+    }
+
+    /**
      * Inserts new checkout entity into the database, and changes the associated part.isCheckedOut to 1
      */
     public boolean checkOutPart(long barcode, int RFID, String course, String prof, String dueDate) {
@@ -896,6 +943,71 @@ public class Database implements IController {
         return student;
     }
 
+    public Student selectStudentWithoutLists(String email) {
+        String query = "Select studentName, email, studentID from students where email = ?;";
+        String studentEmail = "";
+        String name = "";
+        int id = 0;
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                studentEmail = rs.getString("email");
+                name = rs.getString("studentName");
+                id = rs.getInt("studentID");
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+        }
+        return new Student(name, id, studentEmail);
+    }
+
+    /**
+     * @param email the email that is being checked against all students in the database
+     * @return The student's name if there is a match, empty String otherwise
+     */
+    public String getStudentNameFromEmail(String email) {
+        return getStudentName(email, false);
+    }
+
+    /**
+     * @param studentID the RFID that is being checked against all students in the database
+     * @return The student's name if there is a match, empty String otherwise
+     */
+    public String getStudentNameFromID(String studentID) {
+        return getStudentName(studentID, true);
+    }
+
+    private String getStudentName(String input, boolean isRFID) {
+        String sName = "";
+        try {
+            PreparedStatement statement;
+            if(isRFID){
+                String getStudentNameFromIDQuery = "\n" +
+                        "select studentName from students\n" +
+                        "where studentID = ?";
+                statement = connection.prepareStatement(getStudentNameFromIDQuery);
+            } else {
+                String getStudentNameFromEmailQuery = "select studentName from students where email = ?";
+                statement = connection.prepareStatement(getStudentNameFromEmailQuery);
+                input = input.replace("'", "\\'");
+            }
+            statement.setString(1, input);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                sName = rs.getString("studentName");
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return sName;
+    }
+
     /**
      * Adds a new student to the database
      * @param s student to be added
@@ -948,10 +1060,9 @@ public class Database implements IController {
         return true;
     }
 
-    public void updateStudent(Student s) {
+    public void updateStudent(Student s, int oldRFID) {
         if(studentHasCheckedOutItems(s.getEmail())){
-            stageUtils.errorAlert("Student has checked out items");
-            return;
+            updateCheckedOutPartsRFID(s, oldRFID);
         }
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
                 s.getName().replace("'", "\\'") + "', students.email = '" + s.getEmail().replace("'", "\\'") + "', students.updatedAt = date('" +
@@ -965,6 +1076,25 @@ public class Database implements IController {
             StudentCheckIn.logger.error("Could not update student, SQL Exception");
             alert.showAndWait();
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Helper method for updateStudent that alters the RFID associated with checkouts if it is being changed
+     * @param s the student being updated, with all the information changed
+     * @param oldRFID the RFID the checkouts are associated with
+     */
+    public void updateCheckedOutPartsRFID(Student s, int oldRFID){
+        if (s.getRFID() != oldRFID) {  // won't update if no change is made with the RFID
+            String query = "UPDATE checkout SET checkout.studentID = " + s.getRFID() + " WHERE checkout.studentID = " + oldRFID + ";";
+            try {
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(query);
+                statement.close();
+            } catch (SQLException e) {
+                stageUtils.errorAlert("Issue updating checked out parts for student that was being updated, SQL exception");
+                e.printStackTrace();
+            }
         }
     }
 

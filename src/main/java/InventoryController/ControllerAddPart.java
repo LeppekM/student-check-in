@@ -306,84 +306,49 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
      * Creates an alert informing user to fill out all fields
      */
     private void fieldErrorAlert(){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Please fill out all fields before submitting info.");
-
-        alert.showAndWait();
+        stageUtils.errorAlert("Please fill out all fields before submitting info.");
     }
 
     private void barcodeAlreadyExistsError() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("A part with that barcode already exists.");
-
-        alert.showAndWait();
+        stageUtils.errorAlert("A part with that barcode already exists.");
     }
 
     private void barcodeAndSerialNumberMustBothBeUniqueOrCommonError() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Barcodes and serial numbers for parts must be all the same or all different.");
-
-        alert.showAndWait();
+        stageUtils.errorAlert("Barcodes and serial numbers for parts must be all the same or all different.");
     }
 
     private void commonBarcodeRequiresCommonSerialNumberError(String partName) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText(partName + " parts have the same barcode, so the serial number must be the same.");
-
-        alert.showAndWait();
+        stageUtils.errorAlert(partName + " parts have the same barcode, so the serial number must be the same.");
     }
 
     private void commonSerialNumberRequiresCommonBarcodeError(String partName) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText(partName + " parts have the same serial number, so the barcode must be the same.");
-
-        alert.showAndWait();
+        stageUtils.errorAlert(partName + " parts have the same serial number, so the barcode must be the same.");
     }
 
     /**
      * Creates alert that informs user invalid input was entered into price or quantity field
      */
     private void invalidNumberAlert(){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("Please make sure you are entering numbers into price and quantity fields, and that they are not negative");
+        stageUtils.errorAlert("Please make sure you are entering numbers into price and quantity fields, and that they are not negative");
         StudentCheckIn.logger.error("Please make sure you are entering numbers into price and quantity fields, and that they are not negative.");
-        alert.showAndWait();
     }
 
     private void mustBeCommonBarcodeError(String partName) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("All " + partName + " parts must have the same barcode.");
-        StudentCheckIn.logger.error("All " + partName + " parts must have the same barcode.");
-        alert.showAndWait();
+        stageUtils.errorAlert("All " + partName + " parts must have the same barcode.");
+        StudentCheckIn.logger.error("All {} parts must have the same barcode.", partName);
     }
 
     private void mustBeCommonSerialNumberError(String partName) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("All " + partName + " parts must have the same serial number.");
+        stageUtils.errorAlert("All " + partName + " parts must have the same serial number.");
         StudentCheckIn.logger.error("All {} parts must have the same serial number.", partName);
-        alert.showAndWait();
     }
     private void mustBeCommonBarcodeAndSerialNumberError(String partName) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("All " + partName + " parts must have the same barcode and serial number.");
+        stageUtils.errorAlert("All " + partName + " parts must have the same barcode and serial number.");
         StudentCheckIn.logger.error("All {} parts must have the same barcode and serial number.", partName);
-        alert.showAndWait();
     }
     private void commonFieldsError(String partName) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText(partName + " parts have the same barcode and serial number, so their other fields must also be the same.");
+        stageUtils.errorAlert(partName + " parts have the same barcode and serial number, so their other fields must also be the same.");
         StudentCheckIn.logger.error("{} parts have the same barcode and serial number, so their other fields must also be the same.", partName);
-        alert.showAndWait();
     }
 
     /**

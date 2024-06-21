@@ -59,7 +59,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
     private final StageUtils stageUtils = StageUtils.getInstance();
     private final Database database = new Database();
-    private final StudentInfo student = new StudentInfo();
 
     private static String professor, course, dueDate;
 
@@ -359,10 +358,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
             // get name
             String studentName = "";
             if (input.matches(RFID_REGEX)) {
-                studentName = student.getStudentNameFromID(input);
+                studentName = database.getStudentNameFromID(input);
             } else if (input.matches(EMAIL_REGEX)) {
                 // want to allow them to check out via email, excluding if they do not have their ID first checkout
-                studentName = student.getStudentNameFromEmail(input);
+                studentName = database.getStudentNameFromEmail(input);
             }
             studentNameField.setText(studentName);
             if (!studentName.isEmpty()) {
@@ -377,7 +376,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
             if (!newV) {  // if no longer in focus
                 if (input.matches(EMAIL_REGEX)) {
-                    int sID = student.getStudentIDFromEmail(input);
+                    int sID = database.getStudentIDFromEmail(input);
                     if (sID == 0) {
                         stageUtils.errorAlert("Student is checking out equipment for first time/has no associated ID\n They must use their student ID to check out an item");
                         reset();
@@ -394,7 +393,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                         studentEmail = newStudentEmail(true);
                     }
                     if (studentEmail != null) {
-                        studentName = student.getStudentNameFromEmail(studentEmail);
+                        studentName = database.getStudentNameFromEmail(studentEmail);
 
                         if (studentName.isEmpty()) {  //Means student doesn't exist in database, so completely new one will be created
                             studentName = newStudentName(false);
@@ -403,11 +402,13 @@ public class CheckOutController extends ControllerMenu implements IController, I
                                 studentName = newStudentName(true);
                             }
                             if (studentName != null) {
-                                student.createNewStudent(getStudentID(), studentEmail, studentName);
+                                database.addStudent(new Student(studentName, Integer.parseInt(input), studentEmail));
                                 stageUtils.successAlert("New student created");
                             }
                         } else {
-                            student.updateStudent(studentEmail, getStudentID());
+                            Student s = database.selectStudent(-1, studentEmail);
+                            s.setRFID(getStudentID());
+                            database.updateStudent(s, s.getRFID());
                             stageUtils.successAlert("Student updated");
                         }
                     }
@@ -513,7 +514,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
             // technically incorrect, but shouldn't be a problem unless some nonsense is entered IE: 297839RFID:8920
             id = Integer.parseInt(studentIDField.getText().replaceAll("\\D", ""));
         } else if (studentIDField.getText().matches(EMAIL_REGEX)) {
-            id = student.getStudentIDFromEmail(studentIDField.getText());
+            id = database.getStudentIDFromEmail(studentIDField.getText());
         }
         return id;
     }

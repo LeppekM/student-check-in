@@ -237,10 +237,11 @@ public class EditStudent implements IController {
             alert.showAndWait().ifPresent(buttonType -> {
                 if (buttonType == ButtonType.OK){
                     student.setName(studentName.getText());
+                    int oldRFID = student.getRFID();
                     student.setRFID(Integer.parseInt(RFID.getText()));
                     student.setEmail(email.getText());
                     database.initWorker(worker);
-                    database.updateStudent(student);
+                    database.updateStudent(student, oldRFID);
                     Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
                     alert1.showAndWait();
                     main.getScene().getWindow().hide();
