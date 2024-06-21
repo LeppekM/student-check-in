@@ -84,7 +84,7 @@
                      <StackPane prefHeight="150.0" prefWidth="200.0">
                         <JFXCheckBox fx:id="extended" checkedColor="FIREBRICK" disable="true"
                                      onAction="#isExtended" prefHeight="35.0" prefWidth="162.0"
-                                     text="Extended?" translateY="-10.0">
+                                     text="Extended Checkout" translateY="-10.0">
                            <font>
                               <Font size="24.0"/>
                            </font>

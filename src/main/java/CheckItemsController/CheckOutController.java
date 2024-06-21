@@ -341,29 +341,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
      */
     private void getStudentName() {
         studentIDField.textProperty().addListener((ov, oldV, newV) -> {
-            String studentName = "";
-
             studentNameField.setText("");
             currentStudent = null;
             clearCOTable();
             extended.setDisable(true);
-
-            if (newV.matches(RFID_REGEX)) {
-                studentName = student.getStudentNameFromID(newV);
-            } else if (newV.matches(EMAIL_REGEX)) {
-                // want to allow them to check out via email, excluding if they do not have their ID first checkout
-                studentName = student.getStudentNameFromEmail(newV);
-            }
-            studentNameField.setText(studentName);
-
-            if (!studentName.isEmpty()) {
-                extended.setDisable(false);
-                if (newV.matches(RFID_REGEX)) {
-                    currentStudent = database.selectStudent(getStudentID(), null);
-                } else {
-                    currentStudent = database.selectStudent(-1, newV);
-                }
-            }
         });
 
         studentIDField.setOnKeyPressed(event -> {
@@ -374,7 +355,26 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
         studentIDField.focusedProperty().addListener((ov, oldV, newV) -> {
             String input = studentIDField.getText();
-            String studentName = studentNameField.getText();
+
+            // get name
+            String studentName = "";
+            if (input.matches(RFID_REGEX)) {
+                studentName = student.getStudentNameFromID(input);
+            } else if (input.matches(EMAIL_REGEX)) {
+                // want to allow them to check out via email, excluding if they do not have their ID first checkout
+                studentName = student.getStudentNameFromEmail(input);
+            }
+            studentNameField.setText(studentName);
+            if (!studentName.isEmpty()) {
+                extended.setDisable(false);
+                if (input.matches(RFID_REGEX)) {
+                    currentStudent = database.selectStudent(getStudentID(), null);
+                } else {
+                    currentStudent = database.selectStudent(-1, input);
+                }
+            }
+            studentName = studentNameField.getText();
+
             if (!newV) {  // if no longer in focus
                 if (input.matches(EMAIL_REGEX)) {
                     int sID = student.getStudentIDFromEmail(input);
@@ -503,7 +503,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 .or(studentNameField.textProperty().isEmpty()));
     }
 
-
     /**
      * Gets studentID as text, returns as int
      * @return StudentID as integer
@@ -518,7 +517,6 @@ public class CheckOutController extends ControllerMenu implements IController, I
         }
         return id;
     }
-
 
     /**
      * If extended is selected, more items will be displayed

@@ -677,7 +677,7 @@ public class Database implements IController {
     }
 
     /**
-     * Gets the list of workers from the database todo: see if any worker getter can be cleaned
+     * Gets the list of workers from the database
      * @return observable list of workers
      */
     public ObservableList<Worker> getWorkers() {
@@ -685,28 +685,8 @@ public class Database implements IController {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM workers");
-            String name;
-            String email;
-            String pass;
-            int ID;
-            int RFID;
-            int pin;
-            boolean admin;
-            boolean parts;
-            boolean workers;
-            boolean students;
             while (resultSet.next()) {
-                name = resultSet.getString("workerName");
-                ID = resultSet.getInt("workerID");
-                pass = resultSet.getString("pass");
-                RFID = resultSet.getInt("ID");
-                email = resultSet.getString("email");
-                pin = resultSet.getInt("pin");
-                admin = resultSet.getByte("isAdmin") == 1;
-                parts = resultSet.getByte("editParts") == 1;
-                workers = resultSet.getByte("workers") == 1;
-                students = resultSet.getByte("removeParts") == 1;
-                workerList.add(new Worker(name, ID, email, pass, pin, RFID, admin, parts, workers, students));
+                workerList.add(buildWorker(resultSet));
             }
             resultSet.close();
             statement.close();
@@ -721,7 +701,6 @@ public class Database implements IController {
 
     /**
      * This method gets a Worker object for the worker that has the passed in email
-     *
      * @param email the email of the worker to be retrieved
      * @return the Worker with the matching email
      */
@@ -729,29 +708,9 @@ public class Database implements IController {
         Worker worker = null;
         try {
             Statement statement = connection.createStatement();
-
             ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + email.replace("'", "\\'") + "';");
-            String name;
-            String password;
-            int ID;
-            int pin;
-            int RFID;
-            boolean isAdmin;
-            boolean parts;
-            boolean workers;
-            boolean students;
-            if (resultSet.next()) {
-                name = resultSet.getString("workerName");
-                ID = resultSet.getInt("workerID");
-                RFID = resultSet.getInt("ID");
-                password = resultSet.getString("pass");
-                isAdmin = resultSet.getByte("isAdmin") == 1;
-                parts = resultSet.getByte("editParts") == 1;
-                workers = resultSet.getByte("workers") == 1;
-                students = resultSet.getByte("removeParts") == 1;
-                pin = resultSet.getInt("pin");
-                worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students);
-            }
+            resultSet.next();
+            worker = buildWorker(resultSet);
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
@@ -769,32 +728,48 @@ public class Database implements IController {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
+            resultSet.next();
+            worker = buildWorker(resultSet);
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
+            StudentCheckIn.logger.error("Could not retrieve the list of workers");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        return worker;
+    }
+
+    private Worker buildWorker(ResultSet resultSet) {
+        Worker worker = null;
+        try {
             String name;
             String password;
             int ID;
+            int RFID;
             String email;
             int pin;
             boolean isAdmin;
             boolean parts;
             boolean workers;
             boolean students;
-            if (resultSet.next()) {
-                name = resultSet.getString("workerName");
-                ID = resultSet.getInt("workerID");
-                email = resultSet.getString("email");
-                password = resultSet.getString("pass");
-                isAdmin = resultSet.getByte("isAdmin") == 1;
-                parts = resultSet.getByte("editParts") == 1;
-                workers = resultSet.getByte("workers") == 1;
-                students = resultSet.getByte("removeParts") == 1;
-                pin = resultSet.getInt("pin");
+            name = resultSet.getString("workerName");
+            ID = resultSet.getInt("workerID");
+            RFID = resultSet.getInt("ID");
+            email = resultSet.getString("email");
+            password = resultSet.getString("pass");
+            isAdmin = resultSet.getByte("isAdmin") == 1;
+            parts = resultSet.getByte("editParts") == 1;
+            workers = resultSet.getByte("workers") == 1;
+            students = resultSet.getByte("removeParts") == 1;
+            pin = resultSet.getInt("pin");
+            if (!email.isEmpty() && RFID != 0) {
                 worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students);
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
-            StudentCheckIn.logger.error("Could not retrieve the list of workers");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the worker from database");
+            StudentCheckIn.logger.error("Could not retrieve workers");
             alert.showAndWait();
             e.printStackTrace();
         }
@@ -973,7 +948,7 @@ public class Database implements IController {
         return true;
     }
 
-    public void updateStudent(Student s) {  // todo: associated with parts of code I need to fix
+    public void updateStudent(Student s) {
         if(studentHasCheckedOutItems(s.getEmail())){
             stageUtils.errorAlert("Student has checked out items");
             return;
@@ -1047,7 +1022,7 @@ public class Database implements IController {
     }
 
     /**
-     * Deletes a student from the database todo fix logic
+     * Deletes a student from the database
      * @param email students email
      */
     public void deleteStudent(String email) {
@@ -1056,7 +1031,7 @@ public class Database implements IController {
             alert.showAndWait();
             return;
         }
-        String query = "delete from students where email = ?";
+        String query = "delete from students where email = ?;";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
@@ -1134,7 +1109,6 @@ public class Database implements IController {
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each class.
-     *
      * @param worker the currently logged in worker
      */
     @Override
