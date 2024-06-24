@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.net.URL;
@@ -263,6 +264,7 @@ public class ControllerEditPartType extends ControllerEditPart {
      * repopulates the table.
      */
     private void close(){
-        sceneEditPartType.fireEvent(new WindowEvent(sceneEditPartType.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        Stage stage = (Stage) sceneEditPartType.getScene().getWindow();
+        stage.close();
     }
 }

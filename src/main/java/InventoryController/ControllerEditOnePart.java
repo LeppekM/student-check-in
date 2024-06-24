@@ -331,6 +331,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
      * repopulates the table.
      */
     private void close(){
-        sceneEditOnePart.fireEvent(new WindowEvent(sceneEditOnePart.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        Stage stage = (Stage) sceneEditOnePart.getScene().getWindow();
+        stage.close();
     }
 }

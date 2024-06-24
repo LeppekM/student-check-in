@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -33,18 +34,21 @@ public abstract class TSCTable {
 
     protected final ArrayList<String> currentFilters = new ArrayList<>();
 
-    private JFXTreeTableView table;
+    protected JFXTreeTableView<TableRow> table;
+    protected Label emptyTableLabel = new Label("No parts found.");
 
-    public ObservableList<TableRow> data = FXCollections.observableArrayList();
+    public ObservableList<TableRow> rows = FXCollections.observableArrayList();
 
-    private TreeItem<TableRow> root;
+    protected TreeItem<TableRow> root;
 
     protected Worker worker;
 
-    private static int NUM_COLS;
+    protected static int NUM_COLS;
+    protected static int SCROLLBAR_BUFFER = 2;
 
     public TSCTable(TableScreensController controller) {
         TSCTable.controller = controller;
+        table = controller.table;
     }
 
     public abstract ObservableList<DBObject> getParts();
@@ -73,21 +77,7 @@ public abstract class TSCTable {
     /**
      * Sets the values for each table column, empties the current table, then calls selectParts to populate it.
      */
-    public void populateTable() {
-        data.clear();
-        table.getColumns().clear();
-        ObservableList<DBObject> list = getParts();
-//        for (Part part : list) {
-//            data.add(new TableRow());
-//        }
-//        root = new RecursiveTreeItem<>(
-//                data, RecursiveTreeObject::getChildren
-//        );
-//        table.getColumns().setAll(partNameCol, barcodeCol,
-//                serialNumberCol, locationCol, partIDCol);
-//        table.setRoot(root);
-//        table.setShowRoot(false);
-    }
+    public abstract void populateTable();
 
     /**
      * Determines which rows fit the search input
@@ -119,21 +109,21 @@ public abstract class TSCTable {
      * TODO FIX
      * @param index index in the table for the part to be viewed
      */
-    private void viewPart(int index, Window owner) {
+    protected void viewPart(int index) {
         Stage stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewTotalPart.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setTitle("View Part");
-            stage.initOwner(owner);
+            stage.initOwner(scene.getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
             if (index != -1) {
                 TreeItem item = table.getSelectionModel().getModelItem(index);
                 // null if user clicks on empty row
                 if (item != null) {
-                    TotalTabTableRow row = ((TotalTabTableRow) item.getValue());
+                    CompleteInventoryTable.CIRow row = ((CompleteInventoryTable.CIRow) item.getValue());
                     ((ControllerViewTotalPart) loader.getController()).populate(row);
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.show();
@@ -150,9 +140,9 @@ public abstract class TSCTable {
      * @param colName
      * @return
      */
-    private JFXTreeTableColumn createNewCol(String colName) {
+    protected JFXTreeTableColumn createNewCol(String colName) {
         JFXTreeTableColumn tempCol = new JFXTreeTableColumn<>(colName);
-        tempCol.prefWidthProperty().bind(table.widthProperty().divide(NUM_COLS));
+        tempCol.prefWidthProperty().bind(table.widthProperty().subtract(SCROLLBAR_BUFFER).divide(NUM_COLS));
         tempCol.setStyle("-fx-font-size: 18px");
         tempCol.setResizable(false);
 

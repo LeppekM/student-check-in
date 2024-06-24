@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.net.URL;
@@ -363,10 +364,10 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     }
 
     /**
-     * Helper method to send close request to total tab, which receives the request and
-     * repopulates the table.
+     * Helper method that closes the popup stage
      */
     private void close(){
-        sceneAddPart.fireEvent(new WindowEvent(sceneAddPart.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        Stage stage = (Stage) sceneAddPart.getScene().getWindow();
+        stage.close();
     }
 }

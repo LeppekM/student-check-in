@@ -3,9 +3,9 @@ package InventoryController;
 import Database.Database;
 import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Worker;
-import HelperClasses.AdminPinRequestController;
 import HelperClasses.ExportToExcel;
 import HelperClasses.StageUtils;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTreeTableView;
 import javafx.event.ActionEvent;
@@ -16,16 +16,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import static InventoryController.ControllerInventoryPage.database;
 
 public class TableScreensController extends ControllerMenu implements IController, Initializable {
 
@@ -42,7 +44,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     private TSCTable tscTable;
     private TreeItem<TSCTable.TableRow> root;
     @FXML
-    private JFXTreeTableView<TSCTable.TableRow> table;
+    public JFXTreeTableView<TSCTable.TableRow> table;
     private final ArrayList<String> selectedFilters = new ArrayList<>();
 
     @FXML
@@ -54,7 +56,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     private StageUtils stageUtils = StageUtils.getInstance();
     private Worker worker;
     ExportToExcel export = new ExportToExcel();
-    private String screen = "completeInventory";
+    private TableScreen screen = TableScreen.COMPLETE_INVENTORY;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,13 +64,13 @@ public class TableScreensController extends ControllerMenu implements IControlle
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue.getText().equals("Total Inventory")) {
-                    screen = "completeInventory";
+                    screen = TableScreen.COMPLETE_INVENTORY;
                 } else if (newValue.getText().equals("Transaction History")) {
-                    screen = "history";
+                    screen = TableScreen.HISTORY;
                 } else if (newValue.getText().equals("Checked Out")) {
-                    screen = "checkedOut";
+                    screen = TableScreen.CHECKED_OUT;
                 } else {
-                    screen = "overdue";
+                    screen = TableScreen.OVERDUE;
                 }
             }
             showCorrectButtons();
@@ -79,24 +81,37 @@ public class TableScreensController extends ControllerMenu implements IControlle
         });
         //  todo setup getters for what screen this is
 
-        //updateTable();
+        updateTable();
         backButton.getStylesheets().add("/css/CheckButton.css");  // set button style
-        //tscTable.initialize();  // set up table
+        tscTable.initialize();  // set up table
         showCorrectButtons();  // show buttons
 
+        // Updates the search if the user presses enter with the cursor in the search field
+        searchInput.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                search();
+            }
+        });
     }
 
     private void updateTable() {
         switch (screen) {
-            case "completeInventory":
-                tscTable = new CompleteInventoryTab(this);
+            case COMPLETE_INVENTORY:
+                tscTable = new CompleteInventoryTable(this);
                 break;
-            case "history":
+            case HISTORY:
+                break;
+            case CHECKED_OUT:
+                break;
+            case OVERDUE:
+                break;
+            case STUDENTS:
+                break;
+            case EMPLOYEES:
                 break;
         }  // todo: finish this once the other classes are set up
         tscTable.populateTable();
     }
-
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
@@ -109,69 +124,6 @@ public class TableScreensController extends ControllerMenu implements IControlle
             this.worker = worker;
         }
     }
-
-
-    /**
-     * Asks the student worker to enter an admin pin if they try to do something they do
-     * not have the privilege to do
-     *
-     * @param action the privileged action that the worker tried to do
-     * @return true if the inputted admin pin is correct; false otherwise
-     */
-    public boolean requestAdminPin(String action, Window owner) {
-        AtomicBoolean isValid = new AtomicBoolean(false);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminPinRequest.fxml"));
-            Parent root = loader.load();
-            ((AdminPinRequestController) loader.getController()).setAction(action);
-            Scene scene = new Scene(root, 350, 250);
-            Stage stage = new Stage();
-            stage.setTitle("Admin Pin Required");
-            stage.initOwner(owner);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.setResizable(false);
-            stage.setOnCloseRequest(e -> {
-                // checks to see whether the pin was submitted or the window was just closed
-                if (((AdminPinRequestController) loader.getController()).isSubmitted()) {
-                    // checks to see if the input pin is empty. if empty, close pop up
-                    if (((AdminPinRequestController) loader.getController()).isNotEmpty()) {
-                        // checks to see whether the submitted pin matches one of the admins' pins
-                        if (((AdminPinRequestController) loader.getController()).isValid()) {
-                            stage.close();
-                            isValid.set(true);
-                        } else {
-                            stage.close();
-                            invalidAdminPinAlert();
-                            isValid.set(false);
-                        }
-                    } else {
-                        stage.close();
-                        isValid.set(false);
-                    }
-                }
-            });
-            stage.showAndWait();
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
-            e.printStackTrace();
-        }
-        return isValid.get();
-    }
-
-
-    /**
-     * Alert that the pin entered does not match one of the admin pins.
-     */
-    private void invalidAdminPinAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setContentText("The pin entered is invalid.");
-        StudentCheckIn.logger.error("The pin entered is invalid.");
-        alert.showAndWait();
-    }
-
 
     /**
      * Updates the table based on the input text for the search
@@ -203,7 +155,6 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-
     /**
      * This method shows/hides the buttons on the bottom bar depending on what screen the user is on.
      * The back button is always shown so its value is unchanged
@@ -223,7 +174,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
         addStudentButton.setVisible(false);
         deleteStudentButton.setVisible(false);
         switch (screen) {
-            case "completeInventory":
+            case COMPLETE_INVENTORY:
                 excelButton.setVisible(true);
                 addPartButton.setVisible(true);
                 editPartButton.setVisible(true);
@@ -231,20 +182,20 @@ public class TableScreensController extends ControllerMenu implements IControlle
                 deletePartButton.setVisible(true);
                 deleteManyPartButton.setVisible(true);
                 break;
-            case "history":
+            case HISTORY:
                 excelButton.setVisible(true);
                 clearHistoryButton.setVisible(true);
                 break;
-            case "checkedOut":  // both cases only have export as Excel document button enabled
-            case "overdue":
+            case CHECKED_OUT:  // both cases only have export as Excel document button enabled
+            case OVERDUE:
                 excelButton.setVisible(true);
                 break;
-            case "employees":
+            case EMPLOYEES:
                 addEmployeeButton.setVisible(true);
                 addAdminButton.setVisible(true);
                 deleteEmployeeButton.setVisible(true);
                 break;
-            case "students":
+            case STUDENTS:
                 importStudentsButton.setVisible(true);
                 addStudentButton.setVisible(true);
                 deleteStudentButton.setVisible(true);
@@ -253,13 +204,10 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-
-
     @FXML
     public void goBack() {
         stageUtils.goBack(scene, worker);
     }
-
 
     /**
      * This exports the current table of the inventory as an Excel file
@@ -270,62 +218,261 @@ public class TableScreensController extends ControllerMenu implements IControlle
     }
 
     @FXML
-    public void addPart(ActionEvent event) {
-
+    public void addPart(ActionEvent e) {
+        if (screen == TableScreen.COMPLETE_INVENTORY) {
+            Stage stage = StageUtils.getInstance().createPopupStage("fxml/AddPart.fxml", scene, "Add a Part");
+            stage.setOnCloseRequest(event -> {
+                tscTable.populateTable();
+                stage.close();
+            });
+            stage.show();
+        } else {
+            impossibleOperation("add part");
+        }
     }
 
     @FXML
     public void deleteManyParts(ActionEvent event) {
+        if (screen == TableScreen.COMPLETE_INVENTORY) {
+            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+                int row = table.getSelectionModel().getFocusedIndex();
+                CompleteInventoryTable temp = (CompleteInventoryTable) tscTable;
+                int partID = temp.getRowPartID(row);
+                Part part = database.selectPart(partID);
 
+                if ((worker != null && (worker.canRemoveParts() || worker.isAdmin())) || stageUtils.requestAdminPin("delete parts", scene)) {
+                    boolean typeHasOneCheckedOut = false;
+                    ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + part.getPartID());
+                    for (String id : partIDs) {
+                        if (database.getIsCheckedOut(id)) {
+                            typeHasOneCheckedOut = true;
+                        }
+                    }
+                    String partName = part.getPartName();
+                    if (!typeHasOneCheckedOut) {
+                        database.initWorker(worker);
+                        try {
+                            if (database.hasPartName(partName)) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete all parts named: " + partName + "?", ButtonType.YES, ButtonType.NO);
+                                alert.showAndWait();
+                                if (alert.getResult() == ButtonType.YES) {
+                                    database.deleteParts(partName);
+                                    tscTable.populateTable();
+                                }
+                            }
+                        } catch (Exception e) {
+                            StudentCheckIn.logger.error("Exception while deleting part type.");
+                            e.printStackTrace();
+                        }
+                    } else {
+                        stageUtils.errorAlert("At least one " + partName + " is currently checked out, so "
+                                + partName + " parts cannot be deleted.");
+                    }
+                }
+            }
+        } else {
+            impossibleOperation("delete many parts");
+        }
     }
 
     @FXML
     public void deletePart() {
+        if (screen == TableScreen.COMPLETE_INVENTORY) {
+            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+                int row = table.getSelectionModel().getFocusedIndex();
+                CompleteInventoryTable temp = (CompleteInventoryTable) tscTable;
+                int partID = temp.getRowPartID(row);
+                Part part = database.selectPart(partID);
 
+                if ((worker != null && (worker.canRemoveParts() || worker.isAdmin())) || stageUtils.requestAdminPin("Delete a Part", scene) ) {
+                    if (!part.getCheckedOut()) {
+                        database.initWorker(worker);
+                        try {
+                            if (database.selectPart(partID) != null) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete the part with ID = " + partID + "?", ButtonType.YES, ButtonType.NO);
+                                alert.showAndWait();
+                                if (alert.getResult() == ButtonType.YES) {
+                                    database.deleteItem(partID);
+                                    tscTable.populateTable();
+                                }
+                            }
+                        } catch (Exception e) {
+                            StudentCheckIn.logger.error("Exception while deleting part.");
+                            e.printStackTrace();
+                        }
+                    } else {
+                        deleteCheckedOutPartAlert();
+                    }
+                }
+            }
+        } else {
+            impossibleOperation("delete part");
+        }
+    }
+
+    /**
+     * Alert that the part is currently checked out, so it cannot be deleted
+     */
+    private void deleteCheckedOutPartAlert() {
+        stageUtils.errorAlert("This part is currently checked out and cannot be deleted.");
     }
 
     @FXML
     public void editManyParts(ActionEvent event) {
+        if (screen == TableScreen.COMPLETE_INVENTORY) {
+            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+                int row = table.getSelectionModel().getFocusedIndex();
+                CompleteInventoryTable temp = (CompleteInventoryTable) tscTable;
+                int partID = temp.getRowPartID(row);
+                Part part = database.selectPart(partID);
 
+                if ((worker != null && (worker.canEditParts() || worker.isAdmin()))
+                        || StageUtils.getInstance().requestAdminPin("edit all parts named " + part.getPartName(), scene)) {
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditPartType.fxml"));
+                    try {
+                        Parent root = loader.load();
+                        ((ControllerEditPart) loader.getController()).initPart(part);
+                        Scene scene = new Scene(root, 400, 500);
+                        Stage stage = new Stage();
+                        stage.setMinWidth(400);
+                        stage.setMaxWidth(400);
+                        stage.setMaxHeight(550);
+                        stage.setMinHeight(550);
+                        stage.setTitle("Edit all " + part.getPartName());
+                        stage.initOwner(this.scene.getScene().getWindow());
+                        stage.initModality(Modality.WINDOW_MODAL);
+                        stage.setScene(scene);
+                        stage.getIcons().add(new Image("images/msoe.png"));
+                        stage.setOnCloseRequest(ev -> {
+                            selectedFilters.add("All");
+                            tscTable.populateTable();
+                            stage.close();
+                        });
+                        stage.show();
+                    } catch (IOException e) {
+                        StudentCheckIn.logger.error("IOException: Loading Edit Part.");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            impossibleOperation("edit many parts");
+        }
     }
 
     @FXML
     public void editPart(ActionEvent event) {
+        if (screen == TableScreen.COMPLETE_INVENTORY) {
+            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+                if ((worker != null && (worker.canEditParts() || worker.isAdmin()))
+                        || StageUtils.getInstance().requestAdminPin("edit a part", scene)) {
 
+                    int row = table.getSelectionModel().getFocusedIndex();
+                    CompleteInventoryTable temp = (CompleteInventoryTable) tscTable;
+                    int partID = temp.getRowPartID(row);
+                    Part part = database.selectPart(partID);
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditOnePart.fxml"));
+
+                    try {
+                        Parent root = loader.load();
+                        ((ControllerEditPart) loader.getController()).initPart(part);
+                        Scene scene = new Scene(root, 400, 500);
+                        Stage stage = new Stage();
+                        stage.setMinWidth(400);
+                        stage.setMaxWidth(400);
+                        stage.setMaxHeight(550);
+                        stage.setMinHeight(550);
+                        String partName = part.getPartName();
+                        if (part.getPartName().endsWith("s")) {
+                            partName = part.getPartName().substring(0, part.getPartName().length() - 1);
+                        }
+                        stage.setTitle("Edit a " + partName);
+                        stage.initOwner(this.scene.getScene().getWindow());
+                        stage.initModality(Modality.WINDOW_MODAL);
+                        stage.setScene(scene);
+                        stage.getIcons().add(new Image("images/msoe.png"));
+                        stage.setOnCloseRequest(ev -> {
+                            selectedFilters.add("All");
+                            tscTable.populateTable();
+                            stage.close();
+                        });
+                        stage.show();
+                    } catch (IOException e) {
+                        StudentCheckIn.logger.error("IOException: Loading Edit Part.");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            impossibleOperation("edit part");
+        }
     }
 
     @FXML
     public void clearHistory(ActionEvent event) {
+        if (screen == TableScreen.HISTORY) {
 
+        } else {
+            impossibleOperation("clear history");
+        }
     }
 
     @FXML
     public void importStudents(ActionEvent event) {
+        if (screen == TableScreen.STUDENTS) {
 
+        } else {
+            impossibleOperation("import students");
+        }
     }
 
     @FXML
     public void addStudent(ActionEvent event) {
+        if (screen == TableScreen.STUDENTS) {
 
+        } else {
+            impossibleOperation("add student");
+        }
     }
 
     @FXML
     public void deleteStudent(ActionEvent event) {
+        if (screen == TableScreen.STUDENTS) {
 
+        } else {
+            impossibleOperation("delete student");
+        }
     }
 
     @FXML
     public void addEmployee(ActionEvent event) {
+        if (screen == TableScreen.EMPLOYEES) {
 
+        } else {
+            impossibleOperation("add employee");
+        }
     }
 
     @FXML
     public void addAdmin(ActionEvent event) {
+        if (screen == TableScreen.EMPLOYEES) {
 
+        } else {
+            impossibleOperation("add admin");
+        }
     }
 
     @FXML
     public void deleteEmployee(ActionEvent event) {
+        if (screen == TableScreen.EMPLOYEES) {
 
+        } else {
+            impossibleOperation("delete employee");
+        }
+    }
+
+    private void impossibleOperation(String operation) {
+        stageUtils.errorAlert("It should be impossible to access " + operation + " from " + screen);
     }
 }
