@@ -29,7 +29,6 @@ Product Owner: Jim Frommell
 * Some tables auto-double click on single click or after sort function
 
 ## Priority List ##
-* Reconnect AddPart so it is functional
 * allow smarter clear history
   * Potentially allow adjustable dates for this
 * Finish table overhaul

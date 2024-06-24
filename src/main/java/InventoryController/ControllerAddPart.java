@@ -12,7 +12,6 @@ import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -34,22 +33,16 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public JFXCheckBox differentBarcodes; // disables barcode field when checked
 
     VendorInformation vendorInformation = new VendorInformation();
-    private ArrayList <String> vendors = vendorInformation.getVendorList();
+    private final ArrayList <String> vendors = vendorInformation.getVendorList();
 
-    private StageUtils stageUtils = StageUtils.getInstance();
+    private final StageUtils stageUtils = StageUtils.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showVendors();
         stageUtils.acceptIntegerOnly(barcodeField);
-        setFieldValidator();
+        setFieldValidator();  // make sure that the fields only accepts a valid integers
 
-        // make sure that the price field only accepts a valid price
-        priceField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\$?[0-9]*\\.?[0-9]{0,2}$")) {
-                priceField.setText(oldValue);
-            }
-        });
         differentBarcodes.selectedProperty().addListener((observable, oldValue, newValue) -> {
             barcodeField.setDisable(newValue);
         });
@@ -58,6 +51,8 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private void setFieldValidator() {
         stageUtils.acceptIntegerOnly(barcodeField);
         stageUtils.acceptIntegerOnly(quantityField);
+        stageUtils.acceptIntegerOnly(priceField);
+        stageUtils.acceptIntegerOnly(serialField);
     }
 
     /**
