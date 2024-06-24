@@ -25,7 +25,6 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
@@ -216,9 +215,13 @@ public class StageUtils {
      * @return True if user pressed ok, false otherwise
      */
     public boolean missingFieldsAlert() {
+        return confirmationAlert("Information may be lost", "If you leave, unsubmitted information may be lost");
+    }
+
+    public boolean confirmationAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Information may be lost");
-        alert.setHeaderText("If you leave, unsubmitted information may be lost");
+        alert.setTitle(title);
+        alert.setHeaderText(content);
         alert.setContentText("Are you ok with this?");
         Optional<ButtonType> result = alert.showAndWait();
         return result.get() == ButtonType.OK;

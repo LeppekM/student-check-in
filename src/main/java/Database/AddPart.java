@@ -1,20 +1,17 @@
 package Database;
 
 import Database.ObjectClasses.Part;
+import HelperClasses.TimeUtils;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 
 public class AddPart {
     private final String url = Database.host + Database.dbname;
     private String addQuery = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
             " location, barcode, isCheckedOut, createdAt, createdBy)"+
             "VALUES(?,?,?,?,?,?,?,?,?,?)";
-    private String getpartIDQuery = "SELECT partID\n" +
-            "FROM parts\n" +
-            "ORDER BY partID DESC\n" +
-            "LIMIT 1";
 
+    TimeUtils timeUtils = new TimeUtils();
     VendorInformation vendorInformation = new VendorInformation();
 
     /**
@@ -23,7 +20,6 @@ public class AddPart {
      * @param database  Database
      * @param quantity Number of items to be added
      */
-
     public void addCommonItems(Part part, Database database, int quantity) {
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
                 for (int i = 0; i < quantity; i++) {
@@ -89,42 +85,12 @@ public class AddPart {
             preparedStatement.setString(6, part.getLocation());
             preparedStatement.setLong(7, part.getBarcode());
             preparedStatement.setInt(8, 0);
-            preparedStatement.setString(9,getCurrentDate());
+            preparedStatement.setString(9,timeUtils.getCurrentDate());
             preparedStatement.setString(10, "Jim");
             //Hardcoded created by because we don't have workers setup yet
         }catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return preparedStatement;
-    }
-
-    /**
-     * This method gets the current date
-     * @return Current date
-     */
-    private String getCurrentDate(){
-        return LocalDateTime.now().toString();
-    }
-
-    /**
-     * This method queries the database and finds the max ID. It then increments this id to return
-     * the next partID when adding a part
-     * @return The new part ID to be added to the database for the corresponding part
-     */
-    public int getPartID(){
-        int partID = 0;
-        try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(getpartIDQuery);
-            while(rs.next()){
-                partID = rs.getInt("partID");
-            }
-            statement.close();
-
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-        //Gets max id from table, then increments to create new partID
-        return partID;
     }
 }

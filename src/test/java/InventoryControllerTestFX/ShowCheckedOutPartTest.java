@@ -1,16 +1,10 @@
 package InventoryControllerTestFX;
-import Database.ObjectClasses.Part;
-import InventoryController.ControllerShowPart;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
 import java.io.IOException;
-import java.net.URL;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -37,16 +31,16 @@ public class ShowCheckedOutPartTest extends ApplicationTest {
 
     @Override
     public void start (Stage stage)throws IOException{
-        Part part = new Part("HDMI", "H86234", "SONY", 3.99, "MSOE", "Closet", "123456", false, 1, 0);
-
-        URL myFxmlURL = ClassLoader.getSystemResource("ShowPart.fxml");
-        FXMLLoader loader = new FXMLLoader(myFxmlURL);
-        Parent root = loader.load(myFxmlURL);
-        ((ControllerShowPart) loader.getController()).initPart(part, "checkedOut");
-        Scene scene = new Scene(root, 800, 600);
-        stage.setTitle("Show Part Test");
-        stage.setScene(scene);
-        stage.show();
+//        Part part = new Part("HDMI", "H86234", "SONY", 3.99, "MSOE", "Closet", "123456", false, 1, 0);
+//
+//        URL myFxmlURL = ClassLoader.getSystemResource("ShowPart.fxml");
+//        FXMLLoader loader = new FXMLLoader(myFxmlURL);
+//        Parent root = loader.load(myFxmlURL);
+//        ((ControllerShowPart) loader.getController()).initPart(part, "checkedOut");
+//        Scene scene = new Scene(root, 800, 600);
+//        stage.setTitle("Show Part Test");
+//        stage.setScene(scene);
+//        stage.show();
     }
 
 

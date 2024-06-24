@@ -246,8 +246,7 @@ public class ControllerManageStudents implements IController, Initializable {
                             failedImports.add(new Student(firstName + " " + lastName, email));
                         } else {
                             if (!database.getStudentEmails().contains(email)) {
-                                email = email.replace("'", "\\'");
-                                if (!database.importStudent(new Student((firstName + " " + lastName).replace("'", "\\'"), email))) {
+                                if (!database.importStudent(new Student((firstName + " " + lastName), email))) {
                                     failedImports.add(new Student(firstName + " " + lastName, email));
                                 }
                             }

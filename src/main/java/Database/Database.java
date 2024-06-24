@@ -153,7 +153,7 @@ public class Database implements IController {
      */
     public void deleteParts(String partName) {
         try {
-            String deleteQuery = "DELETE FROM parts WHERE partName = '" + partName + "';";
+            String deleteQuery = "DELETE FROM parts WHERE partName = '" + cleanString(partName) + "';";
             Statement statement = connection.createStatement();
             statement.executeUpdate(deleteQuery);
             statement.close();
@@ -176,8 +176,7 @@ public class Database implements IController {
             if (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getLong("barcode"), false, // Faulty functionality removed, included here to differ from other constructor
-                        resultSet.getInt("partID"));
+                        resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getInt("partID"));
             }
             resultSet.close();
             statement.close();
@@ -210,6 +209,24 @@ public class Database implements IController {
         return bc == 0;
     }
 
+    public boolean partNameExists(String partName) {
+        String name = "";
+        String query = "SELECT parts.partName from parts WHERE partName = " + cleanString(partName) + ";";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                name = rs.getString("partName");
+            }
+            statement.close();
+            rs.close();
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQLException: Can't connect to the database when checking if part name exists.");
+            stageUtils.errorAlert("SQLException: Can't connect to the database when checking if part name exists.");
+        }
+        return !name.isEmpty();
+    }
+
     public int getCheckoutIDFromBarcodeAndRFID(int RFID, long barcode) {
         int checkoutID = 0;
         String query = "select checkoutID from checkout where studentID =? and barcode = ? and checkinAt IS NULL limit 1";
@@ -240,7 +257,7 @@ public class Database implements IController {
         String query = "SELECT studentID FROM students WHERE email = ?;";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, email.replace("'", "\\'"));
+            statement.setString(1, cleanString(email));
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 sID = rs.getInt("studentID");
@@ -295,9 +312,9 @@ public class Database implements IController {
             statement.setLong(3, barcode);
             statement.setString(4, timeUtils.getCurrentDateTimeStamp());
             if (dueDate != null){
-                statement.setString(5, dueDate);
-                statement.setString(6, prof);
-                statement.setString(7, course);
+                statement.setString(5, cleanString(dueDate));
+                statement.setString(6, cleanString(prof));
+                statement.setString(7, cleanString(course));
             } else {
                 statement.setString(5, timeUtils.setDueDate());
                 statement.setString(6, "");
@@ -489,8 +506,7 @@ public class Database implements IController {
             if (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getLong("barcode"), false,
-                        resultSet.getInt("partID"));
+                        resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getInt("partID"));
             }
             resultSet.close();
             statement.close();
@@ -507,7 +523,7 @@ public class Database implements IController {
      * @return true if the matching part is checked out; false otherwise
      */
     public boolean getIsCheckedOut(String partID) {
-        String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND partID = " + partID + ";";
+        String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND partID = " + cleanString(partID) + ";";
         ResultSet resultSet;
         try {
             Statement statement = connection.createStatement();
@@ -532,7 +548,7 @@ public class Database implements IController {
      * @return the list of serial numbers
      */
     public ArrayList<String> getOtherSerialNumbersForPartName(String partName, String partID) {
-        String query = "SELECT serialNumber FROM parts WHERE partName = '" + partName + "' AND partID != " + partID + ";";
+        String query = "SELECT serialNumber FROM parts WHERE partName = '" + cleanString(partName) + "' AND partID != " + cleanString(partID) + ";";
         return collectFromOneCol(query, "serialNumber");
     }
 
@@ -542,7 +558,7 @@ public class Database implements IController {
      * @return the list of serial numbers
      */
     public ArrayList<String> getAllSerialNumbersForPartName(String partName) {
-        String query = "SELECT serialNumber FROM parts WHERE partName = '" + partName + "';";
+        String query = "SELECT serialNumber FROM parts WHERE partName = '" + cleanString(partName) + "';";
         return collectFromOneCol(query, "serialNumber");
     }
 
@@ -554,7 +570,7 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getOtherBarcodesForPartName(String partName, String partID) {
-        String query = "SELECT barcode FROM parts WHERE partName = '" + partName + "' AND partID != " + partID + ";";
+        String query = "SELECT barcode FROM parts WHERE partName = '" + cleanString(partName) + "' AND partID != " + cleanString(partID) + ";";
         return collectFromOneCol(query, "barcode");
     }
 
@@ -564,7 +580,7 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getAllBarcodesForPartName(String partName) {
-        String query = "SELECT barcode FROM parts WHERE partName = " + partName + ";";
+        String query = "SELECT barcode FROM parts WHERE partName = " + cleanString(partName) + ";";
         return collectFromOneCol(query, "barcode");
     }
 
@@ -574,7 +590,7 @@ public class Database implements IController {
      * @return the list of part IDs
      */
     public ArrayList<String> getAllPartIDsForPartName(String partName) {
-        String query = "SELECT partID FROM parts WHERE partName = '" + partName + "';";
+        String query = "SELECT partID FROM parts WHERE partName = '" + cleanString(partName) + "';";
         return collectFromOneCol(query, "partID");
     }
 
@@ -626,7 +642,7 @@ public class Database implements IController {
         ResultSet resultSet;
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, partName);
+            statement.setString(1, cleanString(partName));
             resultSet = statement.executeQuery();
             resultSet.next();
             return resultSet.getInt(1);
@@ -644,7 +660,7 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getUniqueBarcodesBesidesPart(String partName) {
-        String query = "SELECT DISTINCT barcode FROM parts WHERE partName != " + partName + ";";
+        String query = "SELECT DISTINCT barcode FROM parts WHERE partName != " + cleanString(partName) + ";";
         return collectFromOneCol(query, "barcode");
     }
 
@@ -657,13 +673,59 @@ public class Database implements IController {
         String query = "SELECT * from parts where partName = ?;";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, partName);
+            statement.setString(1, cleanString(partName));
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * This method queries the database and finds the max part ID in the database
+     * @return The max part ID already in the database
+     */
+    public int getMaxPartID(){
+        int partID = 0;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT partID FROM parts ORDER BY partID DESC LIMIT 1");
+            while(rs.next()){
+                partID = rs.getInt("partID");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return partID;
+    }
+
+    /**
+     * Add part to database
+     */
+    public void addPart(Part p){
+        String query = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
+                " location, barcode, isCheckedOut, createdAt, createdBy)"+
+                "VALUES(?,?,?,?,?,?,?,?,?,?)";
+        VendorInformation vendorInformation = new VendorInformation();  //todo: remove this
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, cleanString(p.getPartName()));
+            preparedStatement.setString(2, p.getSerialNumber());
+            preparedStatement.setString(3, cleanString(p.getManufacturer()));
+            preparedStatement.setDouble(4, p.getPrice());
+            preparedStatement.setInt(5, vendorInformation.getVendorIDFromVendor(p.getVendor()));
+            preparedStatement.setString(6, cleanString(p.getLocation()));
+            preparedStatement.setLong(7, p.getBarcode());
+            preparedStatement.setInt(8, 0);
+            preparedStatement.setString(9, timeUtils.getCurrentDate());
+            preparedStatement.setString(10, cleanString(this.worker.getName()));
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
     }
 
     /**
@@ -755,7 +817,7 @@ public class Database implements IController {
         Worker worker = null;
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + email.replace("'", "\\'") + "';");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + cleanString(email) + "';");
             resultSet.next();
             worker = buildWorker(resultSet);
             resultSet.close();
@@ -859,7 +921,7 @@ public class Database implements IController {
                 "left join checkout on students.studentID = checkout.studentID " +
                 "left join parts on checkout.partID = parts.partID";
         if (ID == -1 && studentEmail != null) {
-            studentEmail = studentEmail.replace("'", "\\'");
+            studentEmail = cleanString(studentEmail);
             query = "select * from students where email = '" + studentEmail + "';";
             coList += " where students.email = '" + studentEmail +
                     "' AND checkout.checkinAt is null;";
@@ -950,7 +1012,7 @@ public class Database implements IController {
         int id = 0;
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, email);
+            statement.setString(1, cleanString(email));
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 studentEmail = rs.getString("email");
@@ -992,7 +1054,7 @@ public class Database implements IController {
             } else {
                 String getStudentNameFromEmailQuery = "select studentName from students where email = ?";
                 statement = connection.prepareStatement(getStudentNameFromEmailQuery);
-                input = input.replace("'", "\\'");
+                input = cleanString(input);
             }
             statement.setString(1, input);
             ResultSet rs = statement.executeQuery();
@@ -1013,10 +1075,8 @@ public class Database implements IController {
      * @param s student to be added
      */
     public void addStudent(Student s) {
-        String email = s.getEmail().replace("'", "\\'");
-        String name = s.getName().replace("'", "\\'");
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + email + "', '" + name + "', date('" + timeUtils.getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                + ", '" + cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) + "', date('" + timeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1039,20 +1099,14 @@ public class Database implements IController {
         // but other methods in this class need to replace "'" with "\\'" so that it does not
         // mess up the database queries.
         String query = "insert into students (email, studentName, createdAt, createdBy) values ('" +
-                s.getEmail() + "', '" + s.getName() + "', date('" + TimeUtils.getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+                cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) + "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
-            StudentCheckIn.logger.error("Could not add student " + s.getName().replace("'", "\\'") + ", SQL Exception");
-            alert.showAndWait();
-            e.printStackTrace();
-            return false;
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
-            StudentCheckIn.logger.error("Could not add student " + s.getName().replace("'", "\\'") + ", SQL Exception");
+            StudentCheckIn.logger.error("Could not add student {}, SQL Exception", s.getName());
             alert.showAndWait();
             e.printStackTrace();
             return false;
@@ -1065,8 +1119,8 @@ public class Database implements IController {
             updateCheckedOutPartsRFID(s, oldRFID);
         }
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
-                s.getName().replace("'", "\\'") + "', students.email = '" + s.getEmail().replace("'", "\\'") + "', students.updatedAt = date('" +
-                TimeUtils.getToday() + "'), students.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where students.uniqueID = " + s.getUniqueID() + ";";
+                cleanString(s.getName()) + "', students.email = '" + cleanString(s.getEmail()) + "', students.updatedAt = date('" +
+                TimeUtils.getToday() + "'), students.updatedBy = '" + cleanString(this.worker.getName()) + "' where students.uniqueID = " + s.getUniqueID() + ";";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -1164,7 +1218,7 @@ public class Database implements IController {
         String query = "delete from students where email = ?;";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, email);
+            statement.setString(1, cleanString(email));
             statement.execute();
             statement.close();
         } catch (SQLException e) {
@@ -1181,8 +1235,8 @@ public class Database implements IController {
      */
     public void addWorker(Worker w) {
         int bit = w.isAdmin() ? 1 : 0;
-        String query = "insert into workers (email, workerName, pin, pass, ID, isAdmin, createdAt, createdBy) values ('" + w.getEmail().replace("'", "\\'") +
-                "', '" + w.getName().replace("'", "\\'") + "', " + w.getPin() + ", '" + w.getPass() + "', " + w.getRIFD() + "," + bit + ", date('" + TimeUtils.getToday() + "'), '" + this.worker.getName().replace("'", "\\'") + "');";
+        String query = "insert into workers (email, workerName, pin, pass, ID, isAdmin, createdAt, createdBy) values ('" + cleanString(w.getEmail()) +
+                "', '" + cleanString(w.getName()) + "', " + w.getPin() + ", '" + cleanString(w.getPass()) + "', " + w.getRIFD() + "," + bit + ", date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1200,7 +1254,7 @@ public class Database implements IController {
      * @param name workers name
      */
     public void deleteWorker(String name) {
-        String query = "delete from workers where workers.workerName = '" + name.replace("'", "\\'") + "';";
+        String query = "delete from workers where workers.workerName = '" + cleanString(name) + "';";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
@@ -1218,11 +1272,11 @@ public class Database implements IController {
         int edit = w.canEditParts() ? 1 : 0;
         int remove = w.canRemoveParts() ? 1 : 0;
         int work = w.canEditWorkers() ? 1 : 0;
-        String query = "update workers set workers.workerName = '" + w.getName().replace("'", "\\'") + "', workers.pin = " +
-                w.getPin() + ", workers.pass = '" + w.getPass() + "', workers.ID = " + w.getRIFD() + ", workers.isAdmin = " + admin + "," +
-                " workers.email = '" + w.getEmail().replace("'", "\\'") + "', workers.editParts = " + edit +
+        String query = "update workers set workers.workerName = '" + cleanString(w.getName()) + "', workers.pin = " +
+                w.getPin() + ", workers.pass = '" + cleanString(w.getPass()) + "', workers.ID = " + w.getRIFD() + ", workers.isAdmin = " + admin + "," +
+                " workers.email = '" + cleanString(w.getEmail()) + "', workers.editParts = " + edit +
                 ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
-                TimeUtils.getToday() + "'), workers.updatedBy = '" + this.worker.getName().replace("'", "\\'") + "' where workers.workerID = " +
+                TimeUtils.getToday() + "'), workers.updatedBy = '" + cleanString(this.worker.getName()) + "' where workers.workerID = " +
                 w.getID() + ";";
         try {
             Statement statement = connection.createStatement();
@@ -1234,6 +1288,17 @@ public class Database implements IController {
             alert.showAndWait();
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Helper method meant to prevent errors with strings being injected into sql
+     */
+    private String cleanString(String s) {
+        // check that string isn't trying to escape
+        if (s.endsWith("\\") && !s.endsWith("\\\\")) {
+            s += "\\";
+        }
+        return s.replace("'", "\\'");
     }
 
     /**

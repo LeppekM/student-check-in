@@ -1,6 +1,6 @@
 package Database.ObjectClasses;
 
-import Database.AddPart;
+import Database.Database;
 import javafx.beans.property.*;
 
 public class Part implements DBObject{
@@ -8,9 +8,8 @@ public class Part implements DBObject{
     private SimpleStringProperty partName, serialNumber, manufacturer, vendor, location;
     private final SimpleLongProperty barcode;
     private SimpleDoubleProperty price;
-    private SimpleIntegerProperty partID, quantity;
+    private SimpleIntegerProperty partID;
     private final SimpleBooleanProperty checkedOut = new SimpleBooleanProperty(false);
-    AddPart addPart = new AddPart();
 
 
     public Part(String partName, String serialNumber, double price, String location, long barcode) {
@@ -21,22 +20,21 @@ public class Part implements DBObject{
         this.barcode = new SimpleLongProperty(barcode);
     }
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, boolean toMakeConstructorsDifferent, int partID) {
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, int partID) {
         this(partName, serialNumber, price, location, barcode);
         this.manufacturer = new SimpleStringProperty(manufacturer);
         this.vendor = new SimpleStringProperty(vendor);
         this.partID = new SimpleIntegerProperty(partID);
-        this.quantity = new SimpleIntegerProperty(0);
     }
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, int quantity) {
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode) {
         this(partName, serialNumber, price, location, barcode);
         this.manufacturer = new SimpleStringProperty(manufacturer);
         this.vendor = new SimpleStringProperty(vendor);
         this.location = new SimpleStringProperty(location);
-        this.quantity = new SimpleIntegerProperty(quantity);
         //Returns the next part id
-        this.partID = new SimpleIntegerProperty(addPart.getPartID());
+        Database database = new Database();
+        this.partID = new SimpleIntegerProperty(database.getMaxPartID() + 1);
     }
 
     public Part(String partName, String serialNumber, String location, long barcode, int partID, double price) {
@@ -115,18 +113,6 @@ public class Part implements DBObject{
 
     public void setPartID(int partId) {
         this.partID.set(partId);
-    }
-
-    public int getQuantity() {
-        return quantity.get();
-    }
-
-    public SimpleIntegerProperty quantityProperty() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity.set(quantity);
     }
 
     @Override
