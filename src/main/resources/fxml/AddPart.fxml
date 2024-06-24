@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import com.jfoenix.controls.JFXCheckBox?>
 <VBox id="root" fx:id="sceneAddPart" prefHeight="450.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/10.0.1"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerAddPart">
     <AnchorPane prefHeight="468.0" prefWidth="410.0">
@@ -33,6 +34,8 @@
             <JFXTextField fx:id="quantityField" focusColor="FIREBRICK" layoutX="193.0" layoutY="193.0"/>
             <JFXTextField fx:id="priceField" focusColor="FIREBRICK" layoutX="193.0" layoutY="235.0"/>
             <JFXTextField fx:id="locationField" focusColor="FIREBRICK" layoutX="193.0" layoutY="324.0"/>
+            <JFXTextField fx:id="suffixField" focusColor="FIREBRICK" layoutX="250.0" layoutY="56.0"/>
+            <JFXCheckBox fx:id="differentBarcodes" layoutY="104" layoutX="10" text="Different barcode?" checkedColor="FIREBRICK" unCheckedColor="FIREBRICK"/>
             <JFXButton layoutX="206.0" layoutY="378.0" onAction="#submitItem" ripplerFill="BLACK"
                        stylesheets="@../css/CheckButton.css" text="Submit" textOverrun="CLIP">
                 <effect>

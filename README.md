@@ -27,4 +27,16 @@ Product Owner: Jim Frommell
 * Sometimes inventory tables show parts with only name fields filled while everything else shows as null, these parts cannot be edited
 * Some parts do not have a popup when double-clicked in inventory screen, assumed due to deleting history associated with part
 * Some tables auto-double click on single click or after sort function
-* 
+
+## Priority List ##
+* Reconnect AddPart so it is functional
+* allow smarter clear history
+  * Potentially allow adjustable dates for this
+* Finish table overhaul
+  * Fix leading 00s in one of the table searches
+  * Fix double click issues (Overdue table specifically)
+* Testing suite
+* Documentation, for the love of god
+* improve autofill for checkin/out to allow tab to autofill rest of top email
+* Create generic popups for fill (?)
+* Clean formatting / code conformity

@@ -31,7 +31,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     public JFXSpinner loadNotification;
 
     @FXML
-    public JFXCheckBox differentBarcodes; // hides barcode field when checked
+    public JFXCheckBox differentBarcodes; // disables barcode field when checked
 
     VendorInformation vendorInformation = new VendorInformation();
     private ArrayList <String> vendors = vendorInformation.getVendorList();
@@ -49,6 +49,9 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
             if (!newValue.matches("^\\$?[0-9]*\\.?[0-9]{0,2}$")) {
                 priceField.setText(oldValue);
             }
+        });
+        differentBarcodes.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            barcodeField.setDisable(newValue);
         });
     }
 
