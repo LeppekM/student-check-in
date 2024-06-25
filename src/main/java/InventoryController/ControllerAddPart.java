@@ -2,7 +2,6 @@ package InventoryController;
 
 import Database.Database;
 import Database.ObjectClasses.Part;
-import Database.VendorInformation;
 import HelperClasses.StageUtils;
 import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
@@ -10,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,12 +31,9 @@ public class ControllerAddPart implements Initializable {
 
     @FXML
     public JFXCheckBox differentBarcodes; // disables barcode field when checked
-
-    VendorInformation vendorInformation = new VendorInformation();
-    private final ArrayList <String> vendors = vendorInformation.getVendorList();
-
     private final StageUtils stageUtils = StageUtils.getInstance();
     private final Database database = Database.getInstance();
+    private final ArrayList <String> vendors = database.getVendorList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,7 +59,7 @@ public class ControllerAddPart implements Initializable {
     public boolean submitItem(){
         if(validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()){
             if(!vendorExists(getVendorName())){
-                vendorInformation.createNewVendor(getVendorName(), vendorInformation());
+                database.createNewVendor(getVendorName(), vendorInformation());
             }
         submitTasks();
         return true;

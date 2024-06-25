@@ -139,7 +139,7 @@ public class Database implements IController {
      * This uses an SQL query to delete a specific part from the database
      * @param partID a unique part id
      */
-    public void deleteItem(int partID) {
+    public void deletePart(int partID) {
         try {
             String delete = "delete from parts where partID = " + partID + ";";
             Statement statement = connection.createStatement();
@@ -762,14 +762,13 @@ public class Database implements IController {
         String query = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
                 " location, barcode, isCheckedOut, createdAt, createdBy)"+
                 "VALUES(?,?,?,?,?,?,?,?,?,?)";
-        VendorInformation vendorInformation = new VendorInformation();  //todo: remove this
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, cleanString(p.getPartName()));
             preparedStatement.setString(2, p.getSerialNumber());
             preparedStatement.setString(3, cleanString(p.getManufacturer()));
             preparedStatement.setDouble(4, p.getPrice());
-            preparedStatement.setInt(5, vendorInformation.getVendorIDFromVendor(p.getVendor()));
+            preparedStatement.setInt(5, getVendorIDFromVendor(p.getVendor()));
             preparedStatement.setString(6, cleanString(p.getLocation()));
             preparedStatement.setLong(7, p.getBarcode());
             preparedStatement.setInt(8, 0);
@@ -815,7 +814,7 @@ public class Database implements IController {
                 preparedStatement.setDouble(2, updatedPart.getPrice());
                 preparedStatement.setString(3, updatedPart.getLocation());
                 preparedStatement.setString(4, updatedPart.getManufacturer());
-                preparedStatement.setInt(5, new VendorInformation().getVendorIDFromVendor(updatedPart.getVendor()));
+                preparedStatement.setInt(5, getVendorIDFromVendor(updatedPart.getVendor()));
                 preparedStatement.setString(6, timeUtils.getCurrentDate());
                 preparedStatement.setString(7, originalPartName);
                 preparedStatement.execute();
@@ -838,7 +837,7 @@ public class Database implements IController {
                 preparedStatement.setString(3, updatedPart.getLocation());
                 preparedStatement.setLong(4, updatedPart.getBarcode());
                 preparedStatement.setString(5, updatedPart.getManufacturer());
-                preparedStatement.setInt(6, new VendorInformation().getVendorIDFromVendor(updatedPart.getVendor()));
+                preparedStatement.setInt(6, getVendorIDFromVendor(updatedPart.getVendor()));
                 preparedStatement.setString(7, timeUtils.getCurrentDate());
                 preparedStatement.setString(8, id);
                 preparedStatement.execute();
@@ -1409,6 +1408,116 @@ public class Database implements IController {
             alert.showAndWait();
             e.printStackTrace();
         }
+    }
+
+    /**
+     * This method queries the database to get the vendor corresponding to a particular vendorID.
+     * @param vendorID the vendorID of the vendor to be returned
+     * @return the vendor corresponding to the vendorID
+     */
+    public String getVendorFromID(String vendorID){
+        String result = null;
+        try {
+            String getVendorFromIDQuery = "SELECT vendor FROM vendors WHERE vendorID = ?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(getVendorFromIDQuery);
+            preparedStatement.setString(1, vendorID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getString(1);
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return result;
+    }
+
+    /**
+     * This method queries the database to get the vendorID corresponding to a particular vendor.
+     * @param vendor the vendorID of the vendor to be returned
+     * @return the vendorID corresponding to the vendor
+     */
+    public int getVendorIDFromVendor(String vendor) {
+        int result = -1;
+        try {
+            String getVendorIDFromVendorQuery = "SELECT vendorID FROM vendors WHERE vendor = ?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(getVendorIDFromVendorQuery);
+            preparedStatement.setString(1, vendor);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return result;
+    }
+
+    /**
+     * Creates a new vendor
+     * @param vendorName Name of vendor
+     */
+    public void createNewVendor(String vendorName, String description){
+        try {
+            String createNewVendorQuery = "INSERT INTO vendors(vendorID, vendor, description)\n" +
+                    " values (?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(createNewVendorQuery);
+            preparedStatement.setInt(1, getNewVendorID());
+            preparedStatement.setString(2, vendorName);
+            preparedStatement.setString(3, description);
+            preparedStatement.execute();
+
+        } catch (SQLException e){
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    /**
+     * Gets max vendor ID, adds one to it to generate a new vendor id
+     * @return Vendor ID
+     */
+    private int getNewVendorID(){
+        int vendorID = 0;
+        try {
+            Statement statement = connection.createStatement();
+            String getVendorIDQuery = "SELECT vendorID\n" +
+                    "FROM vendors\n" +
+                    "ORDER BY vendorID DESC\n" +
+                    "LIMIT 1";
+            ResultSet rs = statement.executeQuery(getVendorIDQuery);
+            while(rs.next()){
+                vendorID = rs.getInt("vendorID");
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        //Gets max id from table, then increments to create new partID
+        return vendorID + 1;
+    }
+
+    /**
+     * This method queries the database to get a list of all vendors
+     * @return the list of vendors
+     */
+    public ArrayList<String> getVendorList() {
+        ArrayList<String> vendors = null;
+        try {
+            String getVendorListQuery = "SELECT vendor FROM vendors;";
+            PreparedStatement preparedStatement = connection.prepareStatement(getVendorListQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            vendors = new ArrayList<>();
+            while (resultSet.next()) {
+                for (int i = 1; i < rsmd.getColumnCount() + 1; i++) {
+                    vendors.add(resultSet.getString(i));
+                }
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+        return vendors;
     }
 
     /**

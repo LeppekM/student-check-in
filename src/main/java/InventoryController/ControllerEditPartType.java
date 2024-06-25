@@ -2,7 +2,6 @@ package InventoryController;
 
 import Database.Database;
 import Database.ObjectClasses.Part;
-import Database.VendorInformation;
 import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSpinner;
@@ -37,8 +36,6 @@ public class ControllerEditPartType extends ControllerEditPart {
     private JFXSpinner loader;
 
     private Part part;
-
-    private final VendorInformation vendorInformation = new VendorInformation();
 
     private final StageUtils stageUtils = StageUtils.getInstance();
     private final Database database = Database.getInstance();
@@ -82,10 +79,10 @@ public class ControllerEditPartType extends ControllerEditPart {
             serialField.setText(part.getSerialNumber());
             manufacturerField.setText(part.getManufacturer());
             priceField.setText(price);
-            ArrayList<String> vendors = vendorInformation.getVendorList();
+            ArrayList<String> vendors = database.getVendorList();
             if (vendors != null) {
                 editVendorField.setItems(FXCollections.observableList(vendors));
-                editVendorField.getSelectionModel().select(vendorInformation.getVendorFromID(part.getVendor()));
+                editVendorField.getSelectionModel().select(database.getVendorFromID(part.getVendor()));
             }
             locationField.setText(part.getLocation());
             barcodeField.setText(part.getBarcode().toString());
@@ -174,14 +171,14 @@ public class ControllerEditPartType extends ControllerEditPart {
                 }
             }
             boolean newVendor = true;
-            for (String vendors : vendorInformation.getVendorList()) {
+            for (String vendors : database.getVendorList()) {
                 if (vendors.equals(vendor)) {
                     newVendor = false;
                     break;
                 }
             }
             if (newVendor){
-                vendorInformation.createNewVendor(vendor, vendorInformation());
+                database.createNewVendor(vendor, vendorInformation());
             }
         return isValid;
     }

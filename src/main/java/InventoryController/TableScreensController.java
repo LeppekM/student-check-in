@@ -280,7 +280,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete the part with ID = " + partID + "?", ButtonType.YES, ButtonType.NO);
                                 alert.showAndWait();
                                 if (alert.getResult() == ButtonType.YES) {
-                                    database.deleteItem(partID);
+                                    database.deletePart(partID);
                                     tscTable.populateTable();
                                 }
                             }

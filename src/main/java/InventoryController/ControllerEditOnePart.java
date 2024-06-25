@@ -2,7 +2,6 @@ package InventoryController;
 
 import Database.Database;
 import Database.ObjectClasses.Part;
-import Database.VendorInformation;
 import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
@@ -36,8 +35,6 @@ public class ControllerEditOnePart extends ControllerEditPart {
     private JFXButton saveButton;
 
     private Part part;
-
-    private VendorInformation vendorInformation = new VendorInformation();
 
     private StageUtils stageUtils = StageUtils.getInstance();
     private Database database = Database.getInstance();
@@ -91,11 +88,11 @@ public class ControllerEditOnePart extends ControllerEditPart {
             // Note: price divided by 100, because it is stored in the database as an integer 100 times
             // larger than actual value.
             priceField.setText("$" + df.format(part.getPrice()));
-            ArrayList<String> vendors = vendorInformation.getVendorList();
+            ArrayList<String> vendors = database.getVendorList();
             if (vendors != null) {
 //                vendorList.getItems().addAll(vendors);
             }
-            vendorField.setText(vendorInformation.getVendorFromID(part.getVendor()));
+            vendorField.setText(database.getVendorFromID(part.getVendor()));
             locationField.setText(part.getLocation());
             barcodeField.setText(part.getBarcode().toString());
         }

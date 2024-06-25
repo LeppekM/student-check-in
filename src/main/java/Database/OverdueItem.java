@@ -42,10 +42,6 @@ public class OverdueItem extends RecursiveTreeObject {
         return ID;
     }
 
-    public SimpleIntegerProperty IDProperty() {
-        return ID;
-    }
-
     public void setID(int ID) {
         this.ID.set(ID);
     }
@@ -54,12 +50,7 @@ public class OverdueItem extends RecursiveTreeObject {
         return price;
     }
 
-
     public SimpleStringProperty getPart() {
-        return part;
-    }
-
-    public SimpleStringProperty partProperty() {
         return part;
     }
 
@@ -79,10 +70,6 @@ public class OverdueItem extends RecursiveTreeObject {
         return name;
     }
 
-    public SimpleStringProperty nameProperty() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name.set(name);
     }
@@ -91,24 +78,8 @@ public class OverdueItem extends RecursiveTreeObject {
         return email;
     }
 
-    public SimpleStringProperty emailProperty() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email.set(email);
-    }
-
-    public String getCheckID() {
-        return checkID.get();
-    }
-
-    public SimpleStringProperty checkIDProperty() {
-        return checkID;
-    }
-
-    public void setCheckID(String checkID) {
-        this.checkID.set(checkID);
     }
 
     public SimpleStringProperty getSerialNumber() {

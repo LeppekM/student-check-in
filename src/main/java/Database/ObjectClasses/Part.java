@@ -3,7 +3,7 @@ package Database.ObjectClasses;
 import Database.Database;
 import javafx.beans.property.*;
 
-public class Part implements DBObject{
+public class Part {
 
     private SimpleStringProperty partName, serialNumber, manufacturer, vendor, location;
     private final SimpleLongProperty barcode;
@@ -63,10 +63,6 @@ public class Part implements DBObject{
         return manufacturer.get();
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer.set(manufacturer);
-    }
-
     public double getPrice() {
         return price.get();
     }
@@ -77,10 +73,6 @@ public class Part implements DBObject{
 
     public String getVendor() {
         return vendor.get();
-    }
-
-    public void setVendor(String vendor) {
-        this.vendor.set(vendor);
     }
 
     public String getLocation() {
@@ -99,10 +91,6 @@ public class Part implements DBObject{
         this.barcode.set(barcode);
     }
 
-    public void setCheckedOut(int checkedOut) {
-        this.checkedOut.set(checkedOut == 1);
-    }
-
     public boolean getCheckedOut() {
         return checkedOut.get();
     }
@@ -111,11 +99,6 @@ public class Part implements DBObject{
         return partID.get();
     }
 
-    public void setPartID(int partId) {
-        this.partID.set(partId);
-    }
-
-    @Override
     public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode) {
         this.partName.set(partName);
         this.serialNumber.set(serialNumber);
