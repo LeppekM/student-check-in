@@ -34,8 +34,9 @@ Product Owner: Jim Frommell
 * Double check leading 00s in table searches / improve searches with space delim
 * Make date format for tables more concise
 * Fix visual errors being caused from the revamps
+* Actually finish table revamp (oops, students and workers tabs need work too)
 * Testing suite
 * Documentation, for the love of god
 * improve autofill for checkin/out to allow tab to autofill rest of top email
-* Create generic popups for fill (?)
+* scrollbar for checkin/out page (or other fix to infinite barcode smush problem) (like if you press enter on empty barcodefield it submits)
 * Clean formatting / code conformity

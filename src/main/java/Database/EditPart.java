@@ -115,7 +115,6 @@ public class EditPart {
      */
     private PreparedStatement editAllCommonBarcodeQuery(String originalPartName, Part part, String partID, PreparedStatement preparedStatement){
         try {
-//            ArrayList<String> partIDsForPart = new Database().getAllPartIDsForPartName(originalPartName);
             preparedStatement.setString(1, part.getPartName());
             preparedStatement.setDouble(2, part.getPrice());
             preparedStatement.setString(3, part.getLocation());
@@ -139,7 +138,6 @@ public class EditPart {
                 preparedStatement.execute();
             }
             preparedStatement.close();
-            vendorInformation.getVendorList(); //NEEDED?
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -154,7 +152,6 @@ public class EditPart {
                 preparedStatement.execute();
             }
             preparedStatement.close();
-            vendorInformation.getVendorList(); //NEEDED?
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }

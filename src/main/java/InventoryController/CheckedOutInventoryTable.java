@@ -1,6 +1,5 @@
 package InventoryController;
 
-import Database.CheckedOutParts;
 import Database.Database;
 import Database.ObjectClasses.Checkout;
 import HelperClasses.ExportToExcel;
@@ -56,9 +55,8 @@ public class CheckedOutInventoryTable extends TSCTable {
     }
 
     @Override
-    public void export(ExportToExcel exportToExcel) {  // todo fix
-        CheckedOutParts checkedOutParts = new CheckedOutParts();
-        ObservableList<Checkout> list = checkedOutParts.getCheckedOutItems();
+    public void export(ExportToExcel exportToExcel) {
+        ObservableList<Checkout> list = database.getAllCurrentlyCheckedOut();
         exportToExcel.exportCheckedOut(list);
     }
 

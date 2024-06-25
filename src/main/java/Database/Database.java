@@ -543,7 +543,7 @@ public class Database implements IController {
         return data;
     }
 
-    public ObservableList<Checkout> getAllCheckoutHistory() {
+    public ObservableList<Checkout> getAllCheckoutHistory() {  //todo: improve this, there's 100% a more efficient way
         ObservableList<Checkout> data = FXCollections.observableArrayList();
         try {
             Statement statement = connection.createStatement();
