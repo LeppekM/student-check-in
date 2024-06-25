@@ -990,7 +990,7 @@ public class Database implements IController {
         String name = "", email = "";
         Date date = null;
         int id = 0, uniqueID = 0;
-        ObservableList<CheckedOutItems> checkedOutItems = FXCollections.observableArrayList();
+        ObservableList<Checkout> checkedOutItems = FXCollections.observableArrayList();
         ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
         try {
             Statement statement = connection.createStatement();
@@ -1009,13 +1009,13 @@ public class Database implements IController {
             resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 if (resultSet.getInt("checkout.checkoutID") != 0) {
-                    checkedOutItems.add(new CheckedOutItems(
+                    checkedOutItems.add(new Checkout(
                             resultSet.getInt("checkout.checkoutID"),
                             resultSet.getString("students.studentName"),
                             resultSet.getString("students.email"),
                             resultSet.getInt("students.studentID"),
                             resultSet.getString("parts.partName"),
-                            resultSet.getString("parts.barcode"),
+                            resultSet.getLong("parts.barcode"),
                             resultSet.getString("parts.serialNumber"),
                             resultSet.getInt("parts.partID"),
                             timeUtils.convertStringtoDate(resultSet.getString("checkout.checkoutAt")),

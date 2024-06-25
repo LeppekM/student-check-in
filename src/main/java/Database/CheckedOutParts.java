@@ -1,7 +1,7 @@
 package Database;
 
+import Database.ObjectClasses.Checkout;
 import HelperClasses.TimeUtils;
-import InventoryController.CheckedOutItems;
 import InventoryController.StudentCheckIn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,18 +25,18 @@ public class CheckedOutParts {
     private String studentName, studentEmail, partName, serialNumber, checkedOutAt, dueDate, fee;
     private TimeUtils helper = new TimeUtils();
 
-    public ObservableList<CheckedOutItems> data = FXCollections.observableArrayList();
+    public ObservableList<Checkout> data = FXCollections.observableArrayList();
 
     /**
      * Queries the database for items that are checked out.
      */
-    public ObservableList<CheckedOutItems> getCheckedOutItems(){
+    public ObservableList<Checkout> getCheckedOutItems(){
         try (Connection connection = DriverManager.getConnection(url, Database.username, Database.password)) {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECTQUERY);
             while(resultSet.next()){
                 setVariables(resultSet);
-                CheckedOutItems checkedOutItems = new CheckedOutItems(checkoutID, studentName, studentEmail, studentID, partName, "" + barcode,
+                Checkout checkedOutItems = new Checkout(checkoutID, studentName, studentEmail, studentID, partName, barcode,
                         serialNumber, partID, helper.convertStringtoDate(checkedOutAt), helper.convertStringtoDate(dueDate), fee);
                 data.add(checkedOutItems);
             }

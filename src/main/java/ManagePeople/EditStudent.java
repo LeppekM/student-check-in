@@ -2,11 +2,11 @@ package ManagePeople;
 
 import CheckItemsController.CheckoutPopUp;
 import Database.Database;
+import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
 import HelperClasses.StageUtils;
-import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import InventoryController.OverduePopUpController;
 import com.jfoenix.controls.JFXTextField;
@@ -47,7 +47,7 @@ public class EditStudent implements IController {
     @FXML
     private JFXTreeTableView coTable, oTable;
 
-    private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
+    private JFXTreeTableColumn<Checkout, String> coTableCol;
 
     private JFXTreeTableColumn<OverdueItem, String> oTableCol;
 
@@ -90,9 +90,9 @@ public class EditStudent implements IController {
         coTableCol.prefWidthProperty().bind(coTable.widthProperty());
         coTableCol.setStyle("-fx-font-size: 18px");
         coTableCol.setResizable(false);
-        coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<CheckedOutItems, String>, ObservableValue<String>>() {
+        coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<Checkout, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<CheckedOutItems, String> param) {
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<Checkout, String> param) {
                 return param.getValue().getValue().getPartName();
             }
         });
@@ -123,7 +123,7 @@ public class EditStudent implements IController {
             return;
         }
 
-        final TreeItem<CheckedOutItems> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
+        final TreeItem<Checkout> coItems = new RecursiveTreeItem<>(student.getCheckedOut(), RecursiveTreeObject::getChildren);
         final TreeItem<OverdueItem> oItems = new RecursiveTreeItem<>(student.getOverdueItems(), RecursiveTreeObject::getChildren);
         coTable.getColumns().setAll(coTableCol);
         coTable.setRoot(coItems);
@@ -149,7 +149,7 @@ public class EditStudent implements IController {
                 stage.setScene(scene);
                 int index = coTable.getSelectionModel().getSelectedIndex();
                 if (index != -1) {
-                    CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
+                    Checkout item = ((Checkout) coTable.getSelectionModel().getModelItem(index).getValue());
                     ((CheckoutPopUp) loader.getController()).populate(item);
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.show();

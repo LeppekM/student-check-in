@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import Database.ObjectClasses.Part;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -18,8 +19,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static InventoryController.ControllerInventoryPage.database;
-
 
 /**
  * This class manages backend functionality for the Tab labeled Total Inventory in the inventory page
@@ -29,6 +28,7 @@ public class CompleteInventoryTable extends TSCTable {
     private JFXTreeTableColumn<CIRow, String> partNameCol, locationCol, serialNumberCol;
     private JFXTreeTableColumn<CIRow, Integer> partIDCol;
     private JFXTreeTableColumn<CIRow, Long> barcodeCol;
+    private final Database database = Database.getInstance();
 
     public CompleteInventoryTable(TableScreensController controller) {
         super(controller);

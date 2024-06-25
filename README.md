@@ -31,9 +31,9 @@ Product Owner: Jim Frommell
 ## Priority List ##
 * allow smarter clear history
   * Potentially allow adjustable dates for this
-* Finish table overhaul
-  * Fix leading 00s in one of the table searches
-  * Fix double click issues (Overdue table specifically)
+* Double check leading 00s in table searches / improve searches with space delim
+* Make date format for tables more concise
+* Fix visual errors being caused from the revamps
 * Testing suite
 * Documentation, for the love of god
 * improve autofill for checkin/out to allow tab to autofill rest of top email

@@ -1,10 +1,11 @@
 package Database.ObjectClasses;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 
 import java.util.Date;
 
-public class Checkout {
+public class Checkout extends RecursiveTreeObject {
     private StringProperty studentName, studentEmail, partName, action, serialNumber, fee;
     private LongProperty barcode;
     private IntegerProperty checkoutID, studentID, partID;

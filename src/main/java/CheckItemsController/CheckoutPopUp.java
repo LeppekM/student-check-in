@@ -1,13 +1,11 @@
 package CheckItemsController;
 
-import Database.Database;
+import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Worker;
-import InventoryController.CheckedOutItems;
 import InventoryController.IController;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 
 import java.text.SimpleDateFormat;
 
@@ -32,7 +30,7 @@ public class CheckoutPopUp implements IController {
         }
     }
 
-    public void populate(CheckedOutItems checked){
+    public void populate(Checkout checked){
         name.setText(checked.getStudentName().get());
         part.setText(checked.getPartName().get());
         barcode.setText(checked.getBarcode().get() + "");

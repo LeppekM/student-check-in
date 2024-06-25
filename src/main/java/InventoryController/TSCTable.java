@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 public abstract class TSCTable {
 
-    private static TableScreensController controller;
+    protected static TableScreensController controller;
 
     protected JFXTreeTableView<TableRow> table;
     protected ObservableList<TableRow> rows = FXCollections.observableArrayList();

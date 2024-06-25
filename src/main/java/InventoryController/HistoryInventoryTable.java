@@ -1,8 +1,7 @@
 package InventoryController;
 
-import Database.HistoryParts;
+import Database.Database;
 import Database.ObjectClasses.Checkout;
-import Database.ObjectClasses.Part;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
@@ -22,13 +21,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Date;
 
-import static InventoryController.ControllerInventoryPage.database;
-
 public class HistoryInventoryTable extends TSCTable {
 
     private JFXTreeTableColumn<HIRow, String> studentNameCol, partNameCol, actionCol;
     private JFXTreeTableColumn<HIRow, Date> dateCol;
     private JFXTreeTableColumn<HIRow, Long> barcodeCol;
+    private final Database database = Database.getInstance();
 
     public HistoryInventoryTable(TableScreensController controller) {
         super(controller);
@@ -56,7 +54,7 @@ public class HistoryInventoryTable extends TSCTable {
     @Override
     public void export(ExportToExcel exportToExcel) {
         ObservableList<Checkout> list = database.getAllCheckoutHistory();
-        exportToExcel.exportTransactionHistory(list, false);
+        exportToExcel.exportTransactionHistory(list);
     }
 
     @Override

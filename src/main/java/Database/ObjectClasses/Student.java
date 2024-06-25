@@ -1,7 +1,6 @@
 package Database.ObjectClasses;
 
 import Database.OverdueItem;
-import InventoryController.CheckedOutItems;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,10 +14,10 @@ public class Student {
     private int RFID;
     private String email, firstName, lastName;
     private String date;
-    private ObservableList<CheckedOutItems> checkedOut;
+    private ObservableList<Checkout> checkedOut;
     private ObservableList<OverdueItem> overdueItems;
 
-    public Student(String name, int uniqueID, int RFID, String email, String date, ObservableList<CheckedOutItems> checkedOut,
+    public Student(String name, int uniqueID, int RFID, String email, String date, ObservableList<Checkout> checkedOut,
                    ObservableList<OverdueItem> overdueItems){
         this.name = name;
         this.uniqueID = uniqueID;
@@ -91,11 +90,11 @@ public class Student {
         return date;
     }
 
-    public ObservableList<CheckedOutItems> getCheckedOut() {
+    public ObservableList<Checkout> getCheckedOut() {
         return checkedOut;
     }
 
-    public void setCheckedOut(ObservableList<CheckedOutItems> checkedOut) {
+    public void setCheckedOut(ObservableList<Checkout> checkedOut) {
         this.checkedOut = FXCollections.observableArrayList(checkedOut);
     }
 

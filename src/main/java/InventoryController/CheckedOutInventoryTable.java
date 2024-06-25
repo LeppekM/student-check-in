@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.CheckedOutParts;
+import Database.Database;
 import Database.ObjectClasses.Checkout;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -21,13 +22,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Date;
 
-import static InventoryController.ControllerInventoryPage.database;
-
 public class CheckedOutInventoryTable extends TSCTable {
 
     private JFXTreeTableColumn<CORow, String> studentNameCol, partNameCol;
     private JFXTreeTableColumn<CORow, Long> barcodeCol;
     private JFXTreeTableColumn<CORow, Date> checkOutDateCol, dueDateCol;
+    private final Database database = Database.getInstance();
 
     public CheckedOutInventoryTable(TableScreensController controller) {
         super(controller);
@@ -58,7 +58,7 @@ public class CheckedOutInventoryTable extends TSCTable {
     @Override
     public void export(ExportToExcel exportToExcel) {  // todo fix
         CheckedOutParts checkedOutParts = new CheckedOutParts();
-        ObservableList<CheckedOutItems> list = checkedOutParts.getCheckedOutItems();
+        ObservableList<Checkout> list = checkedOutParts.getCheckedOutItems();
         exportToExcel.exportCheckedOut(list);
     }
 

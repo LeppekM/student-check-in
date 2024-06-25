@@ -3,8 +3,6 @@ package HelperClasses;
 import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Part;
 import Database.OverdueItem;
-import InventoryController.CheckedOutItems;
-import InventoryController.HistoryTabTableRow;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import org.apache.poi.ss.usermodel.*;
@@ -35,7 +33,7 @@ public class ExportToExcel {
      *
      * @param list List of checked out items and their information
      */
-    public void exportCheckedOut(ObservableList<CheckedOutItems> list) {
+    public void exportCheckedOut(ObservableList<Checkout> list) {
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
         fileChooserSave.getExtensionFilters().addAll(
@@ -50,7 +48,7 @@ public class ExportToExcel {
 
         formatExcelFile(columns, workbook, sheet);
 
-        for (CheckedOutItems items : list) {
+        for (Checkout items : list) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getStudentName().getValue());
             row.createCell(1).setCellValue(items.getPartName().getValue());
@@ -144,38 +142,7 @@ public class ExportToExcel {
      *
      * @param list List of transactions
      */
-    public void exportTransactionHistory(ObservableList<HistoryTabTableRow> list) {
-        FileChooser fileChooserSave = new FileChooser();
-        fileChooserSave.setTitle("Save File");
-        fileChooserSave.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
-
-
-        String[] columns = {"Student Name", "Part Name", "Barcode", "Action", "Date"}; //Number of columns in tableview
-        int rowNum = 1;
-        Workbook workbook = new XSSFWorkbook();
-
-        Sheet sheet = workbook.createSheet("Transaction History");
-
-        formatExcelFile(columns, workbook, sheet);
-
-        for (HistoryTabTableRow items : list) {
-            Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(items.getStudentName().get());
-            row.createCell(1).setCellValue(items.getPartName().get());
-            row.createCell(2).setCellValue(items.getBarcode().get());
-            row.createCell(3).setCellValue(items.getAction().get());
-            row.createCell(4).setCellValue(items.getDate().get().toString());
-        }
-        buildExcelFile(fileChooserSave, columns, workbook, sheet);
-    }
-
-    /**
-     * Exports transaction history to excel
-     *
-     * @param list List of transactions
-     */
-    public void exportTransactionHistory(ObservableList<Checkout> list, boolean placeholder) {
+    public void exportTransactionHistory(ObservableList<Checkout> list) {
         FileChooser fileChooserSave = new FileChooser();
         fileChooserSave.setTitle("Save File");
         fileChooserSave.getExtensionFilters().addAll(

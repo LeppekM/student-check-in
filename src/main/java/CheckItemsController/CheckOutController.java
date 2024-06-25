@@ -1,6 +1,7 @@
 package CheckItemsController;
 
 import Database.*;
+import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AutoCompleteTextField;
@@ -76,7 +77,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private Student currentStudent;
     private final List<HBox> barcodes = new LinkedList<>(); // separately kept list because .getChildren() returns nodes
     private JFXTextField firstBarcodeField;
-    private JFXTreeTableColumn<CheckedOutItems, String> coTableCol;
+    private JFXTreeTableColumn<Checkout, String> coTableCol;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -569,11 +570,11 @@ public class CheckOutController extends ControllerMenu implements IController, I
         coTableCol.setCellValueFactory(param -> param.getValue().getValue().getPartName());
 
         // this is why jfx is a crime against my sanity in particular
-        Callback<TreeTableColumn<CheckedOutItems, String>, TreeTableCell<CheckedOutItems, String>> cellFactory =
-                new Callback<TreeTableColumn<CheckedOutItems, String>, TreeTableCell<CheckedOutItems, String>>() {
+        Callback<TreeTableColumn<Checkout, String>, TreeTableCell<Checkout, String>> cellFactory =
+                new Callback<TreeTableColumn<Checkout, String>, TreeTableCell<Checkout, String>>() {
             @Override
-            public TreeTableCell<CheckedOutItems, String> call(TreeTableColumn<CheckedOutItems, String> param) {
-                return new TreeTableCell<CheckedOutItems, String>() {
+            public TreeTableCell<Checkout, String> call(TreeTableColumn<Checkout, String> param) {
+                return new TreeTableCell<Checkout, String>() {
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -585,7 +586,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
 
                             // if the part is overdue
                             Date currentDate = new Date();
-                            CheckedOutItems model = getTreeTableRow().getItem();
+                            Checkout model = getTreeTableRow().getItem();
                             if (model != null && model.getDueDate().get().before(currentDate)) {
                                 setStyle("-fx-text-fill: #920202");
                             } else {
@@ -603,7 +604,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * This connects the student's checkedOut items list to the side table
      */
     private void populateCOTable() {
-        final TreeItem<CheckedOutItems> coItems =
+        final TreeItem<Checkout> coItems =
                 new RecursiveTreeItem<>(currentStudent.getCheckedOut(), RecursiveTreeObject::getChildren);
         coTable.getColumns().setAll(coTableCol);
         coTable.setRoot(coItems);
@@ -636,7 +637,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 stage.setScene(scene);
                 int index = coTable.getSelectionModel().getSelectedIndex();
                 if (index != -1) {
-                    CheckedOutItems item = ((CheckedOutItems) coTable.getSelectionModel().getModelItem(index).getValue());
+                    Checkout item = ((Checkout) coTable.getSelectionModel().getModelItem(index).getValue());
                     ((CheckoutPopUp) loader.getController()).populate(item);
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.showAndWait();

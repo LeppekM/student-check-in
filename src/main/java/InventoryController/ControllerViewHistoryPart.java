@@ -16,15 +16,6 @@ public class ControllerViewHistoryPart {
     @FXML
     private JFXTextField studentNameField, studentEmailField, partNameField, serialNumberField, actionField, dateField;
 
-    public void populate(HistoryTabTableRow row) {
-        studentNameField.setText(row.getStudentName().get());
-        studentEmailField.setText(row.getStudentEmail().get());
-        partNameField.setText(row.getPartName().get());
-        serialNumberField.setText(String.valueOf(row.getBarcode().get()));
-        actionField.setText(row.getAction().get());
-        dateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDate().get()));
-    }
-
     public void populate(HistoryInventoryTable.HIRow row) {
         studentNameField.setText(row.getStudentName().get());
         studentEmailField.setText(row.getStudentEmail().get());
