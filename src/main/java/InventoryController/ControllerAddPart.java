@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import Database.ObjectClasses.Part;
 import Database.VendorInformation;
 import HelperClasses.StageUtils;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class ControllerAddPart extends ControllerInventoryPage implements Initializable {
+public class ControllerAddPart implements Initializable {
     @FXML
     public VBox sceneAddPart;
 
@@ -37,6 +38,7 @@ public class ControllerAddPart extends ControllerInventoryPage implements Initia
     private final ArrayList <String> vendors = vendorInformation.getVendorList();
 
     private final StageUtils stageUtils = StageUtils.getInstance();
+    private final Database database = Database.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

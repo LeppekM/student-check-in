@@ -1,5 +1,6 @@
 package InventoryController;
 
+import Database.Database;
 import Database.EditPart;
 import Database.ObjectClasses.Part;
 import Database.VendorInformation;
@@ -51,6 +52,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
     private VendorInformation vendorInformation = new VendorInformation();
 
     private StageUtils stageUtils = StageUtils.getInstance();
+    private Database database = Database.getInstance();
 
     /**
      * This method sets the data in the history page.

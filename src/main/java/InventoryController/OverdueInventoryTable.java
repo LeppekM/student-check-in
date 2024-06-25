@@ -131,7 +131,7 @@ public class OverdueInventoryTable extends TSCTable {
                 if (item != null) {
                     OverdueInventoryTable.OIRow row = (OverdueInventoryTable.OIRow) item.getValue();
                     ((OverduePopUpController) loader.getController()).populate(null,
-                            new OverdueTabTableRow(row.getStudentName().get(), row.getStudentID().get(),
+                            new OIRow(row.getStudentName().get(), row.getStudentID().get(),
                                     row.getPartName().get(), row.getSerialNumber().get(), row.getBarcode().get(),
                                     row.getDueDate().get()));
                     stage.getIcons().add(new Image("images/msoe.png"));

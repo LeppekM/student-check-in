@@ -32,18 +32,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     private Tab totalTab, historyTab, checkedOutTab, overdueTab;
 
     @FXML
-    private ControllerTotalTab totalTabPageController;
-
-    @FXML
-    private ControllerHistoryTab historyTabPageController;
-
-    @FXML
-    private ControllerCheckedOutTab checkedOutTabPageController;
-
-    @FXML
-    private ControllerOverdueTab overdueTabPageController;
-
-    @FXML
     private Button back;
 
     protected static Database database = Database.getInstance();
@@ -52,16 +40,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            // if the user was on the total tab
-            if (newTab == historyTab) {
-                updateHistoryTab();
-            } else if (newTab == checkedOutTab) {
-                updateCheckedOutTab();
-            } else if (newTab == overdueTab) {
-                updateOverdueTab();
-            }
-        });
 
 
         back.getStylesheets().add("/css/CheckButton.css");
@@ -74,18 +52,6 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
 
     }
 
-    private void updateHistoryTab() {
-        historyTabPageController.populateTable();
-    }
-
-    private void updateCheckedOutTab() {
-        checkedOutTabPageController.populateTable();
-    }
-
-    private void updateOverdueTab() {
-        overdueTabPageController.populateTable();
-    }
-
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
@@ -96,10 +62,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     @Override
     public void initWorker(Worker worker) {
         if (this.worker == null) {
-            this.worker = worker;
-            totalTabPageController.initWorker(worker);
-            historyTabPageController.initWorker(worker);
-        }
+            this.worker = worker;        }
     }
 
 
