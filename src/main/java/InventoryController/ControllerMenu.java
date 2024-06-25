@@ -73,7 +73,7 @@ public class ControllerMenu implements IController, Initializable {
 
     @FXML
     private void openInventory(){
-        stageUtils.newStage("/fxml/InventoryPage.fxml", mainMenuScene, worker);
+        stageUtils.newStage("/fxml/TableScreen.fxml", mainMenuScene, worker);
     }
 
     @FXML

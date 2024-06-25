@@ -103,6 +103,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
                 tscTable = new CheckedOutInventoryTable(this);
                 break;
             case OVERDUE:
+                tscTable = new OverdueInventoryTable(this);
                 break;
             case STUDENTS:
                 break;

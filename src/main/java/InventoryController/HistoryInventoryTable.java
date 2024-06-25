@@ -55,8 +55,8 @@ public class HistoryInventoryTable extends TSCTable {
 
     @Override
     public void export(ExportToExcel exportToExcel) {
-        ObservableList<Part> list = database.getAllParts();  //todo: this is wrong
-        exportToExcel.exportPartList(list);
+        ObservableList<Checkout> list = database.getAllCheckoutHistory();
+        exportToExcel.exportTransactionHistory(list, false);
     }
 
     @Override

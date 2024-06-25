@@ -1,5 +1,6 @@
 package HelperClasses;
 
+import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Part;
 import Database.OverdueItem;
 import InventoryController.CheckedOutItems;
@@ -159,6 +160,37 @@ public class ExportToExcel {
         formatExcelFile(columns, workbook, sheet);
 
         for (HistoryTabTableRow items : list) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(items.getStudentName().get());
+            row.createCell(1).setCellValue(items.getPartName().get());
+            row.createCell(2).setCellValue(items.getBarcode().get());
+            row.createCell(3).setCellValue(items.getAction().get());
+            row.createCell(4).setCellValue(items.getDate().get().toString());
+        }
+        buildExcelFile(fileChooserSave, columns, workbook, sheet);
+    }
+
+    /**
+     * Exports transaction history to excel
+     *
+     * @param list List of transactions
+     */
+    public void exportTransactionHistory(ObservableList<Checkout> list, boolean placeholder) {
+        FileChooser fileChooserSave = new FileChooser();
+        fileChooserSave.setTitle("Save File");
+        fileChooserSave.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
+
+
+        String[] columns = {"Student Name", "Part Name", "Barcode", "Action", "Date"}; //Number of columns in tableview
+        int rowNum = 1;
+        Workbook workbook = new XSSFWorkbook();
+
+        Sheet sheet = workbook.createSheet("Transaction History");
+
+        formatExcelFile(columns, workbook, sheet);
+
+        for (Checkout items : list) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(items.getStudentName().get());
             row.createCell(1).setCellValue(items.getPartName().get());
