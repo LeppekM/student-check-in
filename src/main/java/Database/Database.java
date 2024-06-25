@@ -495,32 +495,6 @@ public class Database implements IController {
         }
     }
 
-
-    /**
-     * Gets a part that has the matching part name
-     * @param barcode of the part being checked
-     * @return a part with the matching barcode, if it exists
-     */
-    public Part selectPartByBarcode(long barcode) {
-        String query = "select * from parts where barcode = ?;";
-        Part part = null;
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, barcode);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
-                        resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getInt("partID"));
-            }
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return part;
-    }
-
     /**
      * Checks whether the part with the given part ID is currently checked out
      * It is checking this via checkout table, not parts table
@@ -544,6 +518,30 @@ public class Database implements IController {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public ObservableList<Part> getAllParts() {
+        String query ="select partName, serialNumber, barcode, location, partID, price from parts;";
+        ObservableList<Part> data = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next()){
+                String partName = resultSet.getString("partName");
+                long barcode = resultSet.getLong("barcode");
+                String serialNumber = resultSet.getString("serialNumber");
+                String location = resultSet.getString("location");
+                int partID = resultSet.getInt("parts.partID");
+                int price = resultSet.getInt("price");
+                Part part = new Part(partName, serialNumber, location, barcode, partID, price);
+                data.add(part);
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQL Error: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+
+        }
+        return data;
     }
 
     /**
@@ -655,18 +653,6 @@ public class Database implements IController {
             e.printStackTrace();
         }
         return -1;
-    }
-
-    /**
-     * This method returns a list of all distinct barcodes in the database, except for the ones
-     * that belong to a part with the passed in part name. This is used for making sure not to
-     * use an already existing barcode when adding parts.
-     * @param partName the part name that is an exception
-     * @return the list of barcodes
-     */
-    public ArrayList<String> getUniqueBarcodesBesidesPart(String partName) {
-        String query = "SELECT DISTINCT barcode FROM parts WHERE partName != " + cleanString(partName) + ";";
-        return collectFromOneCol(query, "barcode");
     }
 
     /**

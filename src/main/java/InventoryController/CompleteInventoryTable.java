@@ -42,9 +42,7 @@ import static InventoryController.ControllerInventoryPage.database;
 public class CompleteInventoryTable extends TSCTable {
 
     private JFXTreeTableColumn<CIRow, String> partNameCol, locationCol, serialNumberCol;
-
     private JFXTreeTableColumn<CIRow, Integer> partIDCol;
-
     private JFXTreeTableColumn<CIRow, Long> barcodeCol;
 
     public CompleteInventoryTable(TableScreensController controller) {
@@ -92,29 +90,26 @@ public class CompleteInventoryTable extends TSCTable {
     }
 
     @Override
-    public ObservableList<DBObject> getParts() {
-        return null;
-    }
-
-    @Override
     public void export(ExportToExcel exportToExcel) {
-
+        ObservableList<Part> list = database.getAllParts();  //todo: this is questionable, want to export current view w filters or all?
+        exportToExcel.exportPartList(list);
     }
 
     @Override
     public void populateTable() {
+        // clear previous data
         rows.clear();
         table.getColumns().clear();
-        //stuff
-        TotalTab totalTab = new TotalTab();
-        ObservableList<Part> list = totalTab.getTotalTabParts();
+        // get and add all rows
+        // todo add cache
+        ObservableList<Part> list = database.getAllParts();
         for (Part part : list) {
-            rows.add(new CIRow(
-                    part.getPartID(), part.getBarcode(), part.getSerialNumber(), part.getLocation(), part.getPartName(), part.getPrice()));
+            rows.add(new CIRow(part.getPartID(), part.getBarcode(), part.getSerialNumber(), part.getLocation(),
+                    part.getPartName(), part.getPrice()));
         }
-        root = new RecursiveTreeItem<>(
-                rows, RecursiveTreeObject::getChildren
-        );
+        root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
+
+        // unfortunately, this cast needs to be here to add the cols to the table
         TreeTableColumn<TableRow, String> partNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) partNameCol;
         TreeTableColumn<TableRow, Long> barcodeTemp = (TreeTableColumn<TableRow, Long>) (TreeTableColumn) barcodeCol;
         TreeTableColumn<TableRow, String> serialNumberTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) serialNumberCol;
@@ -123,6 +118,7 @@ public class CompleteInventoryTable extends TSCTable {
 
         table.getColumns().setAll(partNameTemp, barcodeTemp, serialNumberTemp, locationTemp, partIDTemp);
         table.setRoot(root);
+        // needs to be false so that it doesn't group all elements, effectively hiding them until you drop them down
         table.setShowRoot(false);
     }
 

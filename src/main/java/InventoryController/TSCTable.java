@@ -31,16 +31,9 @@ public abstract class TSCTable {
 
     private static TableScreensController controller;
 
-    private JFXTextField searchInput;
-
-    protected final ArrayList<String> currentFilters = new ArrayList<>();
-
     protected JFXTreeTableView<TableRow> table;
-
-    public ObservableList<TableRow> rows = FXCollections.observableArrayList();
-
+    protected ObservableList<TableRow> rows = FXCollections.observableArrayList();
     protected TreeItem<TableRow> root;
-
     protected Worker worker;
 
     protected static double NUM_COLS;
@@ -50,8 +43,6 @@ public abstract class TSCTable {
         TSCTable.controller = controller;
         table = controller.table;
     }
-
-    public abstract ObservableList<DBObject> getParts();
 
     public abstract void initialize();
 

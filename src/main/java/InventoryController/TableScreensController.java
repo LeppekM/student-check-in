@@ -5,7 +5,6 @@ import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
 import HelperClasses.StageUtils;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTreeTableView;
 import javafx.event.ActionEvent;
@@ -24,15 +23,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.ResourceBundle;
-
-import static InventoryController.ControllerInventoryPage.database;
 
 public class TableScreensController extends ControllerMenu implements IController, Initializable {
 
     @FXML
     public Label titleLabel;
+
+    @FXML
     public JFXTabPane tabPane;
 
     @FXML
@@ -41,7 +39,6 @@ public class TableScreensController extends ControllerMenu implements IControlle
     @FXML
     TextField searchInput;
 
-    private TSCTable tscTable;
     @FXML
     public JFXTreeTableView<TSCTable.TableRow> table;
 
@@ -50,6 +47,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
             deletePartButton, deleteManyPartButton, importStudentsButton, addStudentButton, deleteStudentButton,
             addEmployeeButton, addAdminButton, deleteEmployeeButton;
 
+    private TSCTable tscTable;
     protected static Database database = Database.getInstance();
     private StageUtils stageUtils = StageUtils.getInstance();
     private Worker worker;
