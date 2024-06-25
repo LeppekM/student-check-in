@@ -574,6 +574,39 @@ public class Database implements IController {
         return data;
     }
 
+    public ObservableList<Checkout> getAllCurrentlyCheckedOut() {
+        ObservableList<Checkout> data = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT students.studentName, students.email, students.studentID, parts.partName, parts.barcode, parts.serialNumber, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.partID, parts.price\n" +
+                    "FROM checkout\n" +
+                    "INNER JOIN parts on checkout.partID = parts.partID\n" +
+                    "INNER JOIN students on checkout.studentID = students.studentID\n" +
+                    "WHERE checkout.checkinAt IS NULL");
+            while(resultSet.next()){
+                int checkoutID = resultSet.getInt("checkoutID");
+                String studentName = resultSet.getString("studentName");
+                String studentEmail = resultSet.getString("email");
+                int studentID = resultSet.getInt("studentID");
+                String partName = resultSet.getString("partName");
+                long barcode = resultSet.getLong("barcode");
+                String serialNumber = resultSet.getString("serialNumber");
+                String checkedOutAt = resultSet.getString("checkoutAt");
+                String dueDate = resultSet.getString("dueAt");
+                int partID = resultSet.getInt("parts.partID");
+                String fee = resultSet.getString("price");
+                Checkout checkedOut = new Checkout(checkoutID, studentName, studentEmail, studentID, partName, barcode,
+                        serialNumber, partID, timeUtils.convertStringtoDate(checkedOutAt), timeUtils.convertStringtoDate(dueDate), fee);
+                data.add(checkedOut);
+            }
+        } catch (SQLException e) {
+            StudentCheckIn.logger.error("SQL Error: Can't connect to the database.");
+            throw new IllegalStateException("Cannot connect the database", e);
+
+        }
+        return data;
+    }
+
     /**
      * Gets a list of serial numbers used by a part with a given name, except for the part with the given part ID
      * @param partName the name of parts being checked

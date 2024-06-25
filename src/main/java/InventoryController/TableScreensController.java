@@ -100,6 +100,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
                 tscTable = new HistoryInventoryTable(this);
                 break;
             case CHECKED_OUT:
+                tscTable = new CheckedOutInventoryTable(this);
                 break;
             case OVERDUE:
                 break;

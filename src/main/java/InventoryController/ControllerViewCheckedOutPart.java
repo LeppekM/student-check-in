@@ -52,6 +52,26 @@ public class ControllerViewCheckedOutPart {
         }
     }
 
+    public void populate(CheckedOutInventoryTable.CORow row) {
+        studentNameField.setText(row.getStudentName().get());
+        studentEmailField.setText(row.getStudentEmail().get());
+        partNameField.setText(row.getPartName().get());
+        barcodeField.setText(row.getBarcode().getValue().toString());
+        serialNumberField.setText(row.getSerialNumber().get());
+        partIDField.setText("" + row.getPartID().get());
+        checkedOutDateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getCheckedOutAt().get()));
+        dueDateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDueDate().get()));
+        Database database = Database.getInstance();
+        if (database.isOverdue(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDueDate().get()))) {
+            dueDatePrompt.setStyle("-fx-text-fill: red");
+            Label feeLabel = new Label("Fee:");
+            feeLabel.setFont(x1);
+            JFXTextField feeField = new JFXTextField("$" + df.format(Long.parseLong(row.getFee().get())/100));
+            grid.add(feeLabel, 0, 8);
+            grid.add(feeField, 1, 8);
+        }
+    }
+
     public void goBack() {
         sceneViewCheckedOutPart.fireEvent(new WindowEvent(((Node) sceneViewCheckedOutPart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
