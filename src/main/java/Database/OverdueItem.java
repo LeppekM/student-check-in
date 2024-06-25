@@ -7,32 +7,32 @@ import java.util.Date;
 
 public class OverdueItem extends RecursiveTreeObject {
     private SimpleIntegerProperty ID;
-    private SimpleStringProperty part;
+    private SimpleStringProperty partName;
     private SimpleLongProperty barcode;
-    private ObjectProperty<Date> date;
+    private ObjectProperty<Date> dueDate;
     private SimpleDoubleProperty price;
-    private SimpleStringProperty name;
+    private SimpleStringProperty studentName;
     private SimpleStringProperty email;
     private SimpleStringProperty checkID;
     private SimpleStringProperty serialNumber;
 
-    public OverdueItem(int studentID, String name, String email, String partCon, String serialNumber, long barcodeCon, Date date, String checkID) {
+    public OverdueItem(int studentID, String studentName, String email, String partName, String serialNumber, long barcodeCon, Date dueDate, String checkID) {
         this.ID = new SimpleIntegerProperty(studentID);
-        this.part = new SimpleStringProperty(partCon);
+        this.partName = new SimpleStringProperty(partName);
         this.barcode = new SimpleLongProperty(barcodeCon);
-        this.date = new SimpleObjectProperty<>(date);
-        this.name = new SimpleStringProperty(name);
+        this.dueDate = new SimpleObjectProperty<>(dueDate);
+        this.studentName = new SimpleStringProperty(studentName);
         this.email = new SimpleStringProperty(email);
         this.checkID = new SimpleStringProperty(checkID);
         this.serialNumber = new SimpleStringProperty(serialNumber);
     }
 
-    public OverdueItem(int studentID, String name, String email, String partCon, long barcodeCon, Date date, String checkID, double price) {
+    public OverdueItem(int studentID, String studentName, String email, String partName, long barcodeCon, Date dueDate, String checkID, double price) {
         this.ID = new SimpleIntegerProperty(studentID);
-        this.part = new SimpleStringProperty(partCon);
+        this.partName = new SimpleStringProperty(partName);
         this.barcode = new SimpleLongProperty(barcodeCon);
-        this.date = new SimpleObjectProperty<>(date);
-        this.name = new SimpleStringProperty(name);
+        this.dueDate = new SimpleObjectProperty<>(dueDate);
+        this.studentName = new SimpleStringProperty(studentName);
         this.email = new SimpleStringProperty(email);
         this.checkID = new SimpleStringProperty(checkID);
         this.price = new SimpleDoubleProperty(price);
@@ -50,28 +50,28 @@ public class OverdueItem extends RecursiveTreeObject {
         return price;
     }
 
-    public SimpleStringProperty getPart() {
-        return part;
+    public SimpleStringProperty getPartName() {
+        return partName;
     }
 
-    public void setPart(String part) {
-        this.part.set(part);
+    public void setPartName(String partName) {
+        this.partName.set(partName);
     }
 
     public SimpleLongProperty getBarcode() {
         return barcode;
     }
 
-    public ObjectProperty<Date> getDate() {
-        return date;
+    public ObjectProperty<Date> getDueDate() {
+        return dueDate;
     }
 
-    public SimpleStringProperty getName() {
-        return name;
+    public SimpleStringProperty getStudentName() {
+        return studentName;
     }
 
-    public void setName(String name) {
-        this.name.set(name);
+    public void setStudentName(String studentName) {
+        this.studentName.set(studentName);
     }
 
     public SimpleStringProperty getEmail() {

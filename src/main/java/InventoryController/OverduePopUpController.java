@@ -33,12 +33,12 @@ public class OverduePopUpController {
     public void populate(OverdueItem overdueItems, OverdueInventoryTable.OIRow overdueTabTableRow) {
 
         if (overdueTabTableRow == null && overdueItems != null) {
-            nameField.setText(overdueItems.getName().get());
+            nameField.setText(overdueItems.getStudentName().get());
             idField.setText(String.valueOf(overdueItems.getID().get()));
             emailField.setText(overdueItems.getEmail().get());
             barcode.setText(String.valueOf(overdueItems.getBarcode().get()));
-            partName.setText(overdueItems.getPart().get());
-            dueDate.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(overdueItems.getDate().get()));
+            partName.setText(overdueItems.getPartName().get());
+            dueDate.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(overdueItems.getDueDate().get()));
         } else if (overdueItems == null && overdueTabTableRow != null) {
             partName.setText(overdueTabTableRow.getPartName().get());
             barcode.setText(overdueTabTableRow.getBarcode().getValue().toString());

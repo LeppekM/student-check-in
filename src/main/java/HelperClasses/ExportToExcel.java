@@ -81,12 +81,12 @@ public class ExportToExcel {
 
         for (OverdueItem items : list) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(items.getName().getValue());
+            row.createCell(0).setCellValue(items.getStudentName().getValue());
             row.createCell(1).setCellValue(items.getID().getValue());
-            row.createCell(2).setCellValue(items.getPart().getValue());
+            row.createCell(2).setCellValue(items.getPartName().getValue());
             row.createCell(3).setCellValue(items.getSerialNumber().getValue());
             row.createCell(4).setCellValue(items.getBarcode().getValue());
-            row.createCell(5).setCellValue(items.getDate().getValue().toString());
+            row.createCell(5).setCellValue(items.getDueDate().getValue().toString());
         }
         buildExcelFile(fileChooserSave, columns, workbook, sheet);
     }

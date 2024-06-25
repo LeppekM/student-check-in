@@ -71,12 +71,12 @@ public class OverdueInventoryTable extends TSCTable {
         // todo add cache
         ObservableList<OverdueItem> list = database.getOverdue();
         for (OverdueItem overdueItem : list) {
-            rows.add(new OIRow(overdueItem.getName().get(),
+            rows.add(new OIRow(overdueItem.getStudentName().get(),
                             overdueItem.getID().get(),
-                            overdueItem.getPart().get(),
+                            overdueItem.getPartName().get(),
                             overdueItem.getSerialNumber().get(),
                             overdueItem.getBarcode().get(),
-                            overdueItem.getDate().get()));
+                            overdueItem.getDueDate().get()));
         }
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 

@@ -108,7 +108,7 @@ public class EditStudent implements IController {
         oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueItem, String> param) {
-                return param.getValue().getValue().getPart();
+                return param.getValue().getValue().getPartName();
             }
         });
 
