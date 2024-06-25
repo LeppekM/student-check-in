@@ -1,37 +1,22 @@
 package InventoryController;
 
-import Database.ObjectClasses.DBObject;
 import Database.ObjectClasses.Part;
-import Database.TotalTab;
 import HelperClasses.ExportToExcel;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import static InventoryController.ControllerInventoryPage.database;
 
@@ -71,22 +56,7 @@ public class CompleteInventoryTable extends TSCTable {
 
         rows = FXCollections.observableArrayList();
 
-        // Click to select if unselected and unselect if selected
-        table.setRowFactory(param -> {
-            final TreeTableRow<TableRow> row = new TreeTableRow<>();
-            row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-                if (event.getClickCount() == 2) {
-                    viewPart(row.getIndex());
-                } else {
-                    final int index = row.getIndex();
-                    if (index >= 0 && index < table.getCurrentItemsCount() && table.getSelectionModel().isSelected(index)) {
-                        table.getSelectionModel().clearSelection();
-                        event.consume();
-                    }
-                }
-            });
-            return row;
-        });
+        setDoubleClickBehavior();
     }
 
     @Override
@@ -137,6 +107,32 @@ public class CompleteInventoryTable extends TSCTable {
                 || (loc != null && loc.toLowerCase().contains(input))
                 || barcode.toLowerCase().contains(input)
                 || partID.toLowerCase().contains(input));
+    }
+
+    @Override
+    protected void popupRow(int index) {
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewTotalPart.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            stage.setTitle("View Part");
+            stage.initOwner(scene.getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            if (index != -1) {
+                TreeItem item = table.getSelectionModel().getModelItem(index);
+                // null if user clicks on empty row
+                if (item != null) {
+                    CompleteInventoryTable.CIRow row = ((CompleteInventoryTable.CIRow) item.getValue());
+                    ((ControllerViewTotalPart) loader.getController()).populate(row);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.show();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getRowPartID(int row) {

@@ -1,9 +1,7 @@
 package InventoryController;
 
-import Database.ObjectClasses.DBObject;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
-import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -14,15 +12,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This
@@ -101,33 +98,9 @@ public abstract class TSCTable {
 
     /**
      * Displays a pop-up for viewing everything about the part
-     * TODO FIX
      * @param index index in the table for the part to be viewed
      */
-    protected void viewPart(int index) {
-        Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewTotalPart.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            stage.setTitle("View Part");
-            stage.initOwner(scene.getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            if (index != -1) {
-                TreeItem item = table.getSelectionModel().getModelItem(index);
-                // null if user clicks on empty row
-                if (item != null) {
-                    CompleteInventoryTable.CIRow row = ((CompleteInventoryTable.CIRow) item.getValue());
-                    ((ControllerViewTotalPart) loader.getController()).populate(row);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    protected abstract void popupRow(int index);
 
 
     /**
@@ -149,6 +122,24 @@ public abstract class TSCTable {
         emptyTableLabel.setStyle("-fx-text-fill: white");
         emptyTableLabel.setFont(new Font(18));
         return emptyTableLabel;
+    }
+
+    protected void setDoubleClickBehavior() {
+        table.setRowFactory(param -> {
+            final TreeTableRow<TableRow> row = new TreeTableRow<>();
+            row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                if (event.getClickCount() == 2) {
+                    popupRow(row.getIndex());
+                } else {
+                    final int index = row.getIndex();
+                    if (index >= 0 && index < table.getCurrentItemsCount() && table.getSelectionModel().isSelected(index)) {
+                        table.getSelectionModel().clearSelection();
+                        event.consume();
+                    }
+                }
+            });
+            return row;
+        });
     }
 
     public class TableRow extends RecursiveTreeObject<TableRow> {

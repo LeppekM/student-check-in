@@ -25,6 +25,15 @@ public class ControllerViewHistoryPart {
         dateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDate().get()));
     }
 
+    public void populate(HistoryInventoryTable.HIRow row) {
+        studentNameField.setText(row.getStudentName().get());
+        studentEmailField.setText(row.getStudentEmail().get());
+        partNameField.setText(row.getPartName().get());
+        serialNumberField.setText(String.valueOf(row.getBarcode().get()));
+        actionField.setText(row.getAction().get());
+        dateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDate().get()));
+    }
+
     public void goBack() {
         sceneViewHistoryPart.fireEvent(new WindowEvent(((Node) sceneViewHistoryPart).getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }

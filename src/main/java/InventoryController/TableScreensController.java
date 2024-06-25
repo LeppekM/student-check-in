@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class TableScreensController extends ControllerMenu implements IController, Initializable {
@@ -47,11 +48,11 @@ public class TableScreensController extends ControllerMenu implements IControlle
             deletePartButton, deleteManyPartButton, importStudentsButton, addStudentButton, deleteStudentButton,
             addEmployeeButton, addAdminButton, deleteEmployeeButton;
 
-    private TSCTable tscTable;
     protected static Database database = Database.getInstance();
-    private StageUtils stageUtils = StageUtils.getInstance();
+    private final StageUtils stageUtils = StageUtils.getInstance();
+    private final ExportToExcel export = new ExportToExcel();
     private Worker worker;
-    ExportToExcel export = new ExportToExcel();
+    private TSCTable tscTable;
     private TableScreen screen = TableScreen.COMPLETE_INVENTORY;
 
     @Override
@@ -70,6 +71,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
                 }
             }
             showCorrectButtons();
+            updateTable();
         });
         tabPane.widthProperty().addListener((observable, oldValue, newValue) -> {
             tabPane.setTabMinWidth(tabPane.getWidth() / 4.5);
@@ -95,6 +97,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
                 tscTable = new CompleteInventoryTable(this);
                 break;
             case HISTORY:
+                tscTable = new HistoryInventoryTable(this);
                 break;
             case CHECKED_OUT:
                 break;
@@ -393,6 +396,17 @@ public class TableScreensController extends ControllerMenu implements IControlle
     @FXML
     public void clearHistory(ActionEvent event) {
         if (screen == TableScreen.HISTORY) {
+            if (this.worker != null && this.worker.isAdmin()) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirm Delete Old History");
+                alert.setContentText("Are you sure you want to clear the transaction history for parts older than 2 years?");
+                alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.YES) {
+                    database.clearOldHistory();
+                    tscTable.populateTable();
+                }
+            }
 
         } else {
             impossibleOperation("clear history");
