@@ -1,6 +1,7 @@
 package InventoryController;
 
 import Database.HistoryParts;
+import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Part;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -64,15 +65,12 @@ public class HistoryInventoryTable extends TSCTable {
         rows.clear();
         table.getColumns().clear();
         // get and add all rows
-        HistoryParts historyParts = new HistoryParts();
-        ObservableList<HistoryTabTableRow> list = historyParts.getHistoryItems();
+        ObservableList<Checkout> list = database.getAllCheckoutHistory();
         rows = FXCollections.observableArrayList();
 
-        for (HistoryTabTableRow historyTabTableRow : list) {
-            rows.add(new HIRow(historyTabTableRow.getStudentName().get(),
-                    historyTabTableRow.getStudentEmail().get(), historyTabTableRow.getPartName().get(),
-                    historyTabTableRow.getBarcode().get(), historyTabTableRow.getAction().get(),
-                    historyTabTableRow.getDate().get()));
+        for (Checkout c : list) {
+            rows.add(new HIRow(c.getStudentName().get(), c.getStudentEmail().get(), c.getPartName().get(),
+                    c.getBarcode().get(), c.getAction().get(), c.getDate().get()));
         }
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 

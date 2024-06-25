@@ -1,14 +1,13 @@
 package Database;
 
 import CheckItemsController.CheckoutObject;
+import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.TimeUtils;
 import HelperClasses.StageUtils;
-import InventoryController.CheckedOutItems;
-import InventoryController.IController;
-import InventoryController.StudentCheckIn;
+import InventoryController.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -540,6 +539,37 @@ public class Database implements IController {
             StudentCheckIn.logger.error("SQL Error: Can't connect to the database.");
             throw new IllegalStateException("Cannot connect the database", e);
 
+        }
+        return data;
+    }
+
+    public ObservableList<Checkout> getAllCheckoutHistory() {
+        ObservableList<Checkout> data = FXCollections.observableArrayList();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT studentName, email, partName, parts.barcode, " +
+                    "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
+                    "THEN 'Checked In' ELSE 'Checked Out' END AS 'Action', " +
+                    "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
+                    "THEN checkout.checkinAt ELSE checkout.checkoutAt END AS 'Date' " +
+                    "FROM parts " +
+                    "INNER JOIN checkout ON parts.partID = checkout.partID " +
+                    "INNER JOIN students ON checkout.studentID = students.studentID " +
+                    "ORDER BY CASE " +
+                    "WHEN checkout.checkoutAt < checkout.checkinAt " +
+                    "THEN checkout.checkinAt ELSE checkout.checkoutAt END DESC;");
+            while(resultSet.next()){
+                String studentName = resultSet.getString("studentName");
+                String studentEmail = resultSet.getString("email");
+                String partName = resultSet.getString("partName");
+                long barcode = resultSet.getLong("barcode");
+                String action = resultSet.getString("Action");
+                String date = resultSet.getString("Date");
+                Checkout historyItems = new Checkout(studentName, studentEmail, partName, barcode, action, timeUtils.convertStringtoDate(date));
+                data.add(historyItems);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database", e);
         }
         return data;
     }
