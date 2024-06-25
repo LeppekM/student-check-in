@@ -38,7 +38,7 @@ public class ControllerViewTotalPart {
     @FXML
     private JFXTextField partNameField, barcodeField, serialNumberField, partIDField, priceField;
 
-    private Database database = new Database();
+    private Database database = Database.getInstance();
 
     /**
      * Adds a label and text field value to a specified row in the last transaction

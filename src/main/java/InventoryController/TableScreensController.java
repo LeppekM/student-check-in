@@ -42,17 +42,15 @@ public class TableScreensController extends ControllerMenu implements IControlle
     TextField searchInput;
 
     private TSCTable tscTable;
-    private TreeItem<TSCTable.TableRow> root;
     @FXML
     public JFXTreeTableView<TSCTable.TableRow> table;
-    private final ArrayList<String> selectedFilters = new ArrayList<>();
 
     @FXML
     private Button backButton, excelButton, clearHistoryButton, addPartButton, editPartButton, editManyPartButton,
             deletePartButton, deleteManyPartButton, importStudentsButton, addStudentButton, deleteStudentButton,
             addEmployeeButton, addAdminButton, deleteEmployeeButton;
 
-    protected static Database database = new Database();
+    protected static Database database = Database.getInstance();
     private StageUtils stageUtils = StageUtils.getInstance();
     private Worker worker;
     ExportToExcel export = new ExportToExcel();
@@ -76,14 +74,13 @@ public class TableScreensController extends ControllerMenu implements IControlle
             showCorrectButtons();
         });
         tabPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-            tabPane.setTabMinWidth(tabPane.getWidth() / 5.05);
-            tabPane.setTabMaxWidth(tabPane.getWidth() / 5.05);
+            tabPane.setTabMinWidth(tabPane.getWidth() / 4.5);
+            tabPane.setTabMaxWidth(tabPane.getWidth() / 4.5);
         });
         //  todo setup getters for what screen this is
 
         updateTable();
         backButton.getStylesheets().add("/css/CheckButton.css");  // set button style
-        tscTable.initialize();  // set up table
         showCorrectButtons();  // show buttons
 
         // Updates the search if the user presses enter with the cursor in the search field
@@ -110,6 +107,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
             case EMPLOYEES:
                 break;
         }  // todo: finish this once the other classes are set up
+        tscTable.initialize();
         tscTable.populateTable();
     }
 
@@ -131,26 +129,13 @@ public class TableScreensController extends ControllerMenu implements IControlle
     @FXML
     private void search() {
         String filter = searchInput.getText();
-        String[] filters = filter.split(",");
-        if (filter.isEmpty()) {
-            table.setRoot(root);
-        } else {
+        String[] filters = filter.split(" ");
+        if (!filter.isEmpty()) {
             TreeItem<TSCTable.TableRow> filteredRoot = new TreeItem<>();
-            selectedFilters.removeAll(selectedFilters.subList(0, selectedFilters.size()));
             for (String f : filters) {
                 f = f.trim();
-                if (f.equalsIgnoreCase("overdue") || f.equalsIgnoreCase("checked out")
-                        || f.equalsIgnoreCase("all")) {
-                    f = f.substring(0, 1).toUpperCase() + f.substring(1);
-                    if (f.length() > 7) {
-                        f = f.substring(0, 8) + f.substring(8, 9).toUpperCase() + f.substring(9);
-                    }
-                    selectedFilters.add(f);
-                    tscTable.populateTable();
-                } else {
-                    tscTable.filter(root, f, filteredRoot);
-                    table.setRoot(filteredRoot);
-                }
+                tscTable.filter(f, filteredRoot);
+                table.setRoot(filteredRoot);
             }
         }
     }
@@ -345,7 +330,6 @@ public class TableScreensController extends ControllerMenu implements IControlle
                         stage.setScene(scene);
                         stage.getIcons().add(new Image("images/msoe.png"));
                         stage.setOnCloseRequest(ev -> {
-                            selectedFilters.add("All");
                             tscTable.populateTable();
                             stage.close();
                         });
@@ -393,7 +377,6 @@ public class TableScreensController extends ControllerMenu implements IControlle
                         stage.setScene(scene);
                         stage.getIcons().add(new Image("images/msoe.png"));
                         stage.setOnCloseRequest(ev -> {
-                            selectedFilters.add("All");
                             tscTable.populateTable();
                             stage.close();
                         });

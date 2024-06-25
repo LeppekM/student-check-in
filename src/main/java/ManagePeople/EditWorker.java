@@ -57,7 +57,7 @@ public class EditWorker implements IController {
 
     public void setWorker(Worker w) {
         worker = w;
-        database = new Database();
+        database = Database.getInstance();
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());

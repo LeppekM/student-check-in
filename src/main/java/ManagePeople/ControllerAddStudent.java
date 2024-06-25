@@ -29,7 +29,7 @@ public class ControllerAddStudent implements Initializable, IController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        database = new Database();
+        database = Database.getInstance();
         StageUtils sw = StageUtils.getInstance();
         sw.acceptIntegerOnly(rfid);
         // only allows user to enter 5 digits for rfid

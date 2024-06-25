@@ -64,7 +64,7 @@ public class EditStudent implements IController {
      */
     public void setStudent(Student s) {
         student = s;
-        database = new Database();
+        database = Database.getInstance();
         studentName.setText(student.getName());
         email.setText(student.getEmail());
         RFID.setText(student.getRFID() + "");

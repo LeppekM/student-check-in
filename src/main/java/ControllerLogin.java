@@ -52,7 +52,7 @@ public class ControllerLogin implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rfidFilter(RFID);
-        database = new Database();
+        database = Database.getInstance();
         Image image = new Image("images/msoeBackgroundImage.png");
         ImageView imageView = new ImageView();
         imageView.setImage(image);

@@ -24,7 +24,7 @@ public class EditPart {
             "updatedAt = ? WHERE partName = ?;";
 
     private VendorInformation vendorInformation = new VendorInformation();
-    private Database database = new Database();
+    private Database database = Database.getInstance();
 
     public boolean barcodeUsed(long barcode){
         String query = "SELECT barcode from parts";

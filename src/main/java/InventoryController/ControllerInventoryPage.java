@@ -46,7 +46,7 @@ public class ControllerInventoryPage extends ControllerMenu implements IControll
     @FXML
     private Button back;
 
-    protected static Database database = new Database();
+    protected static Database database = Database.getInstance();
     private Worker worker;
     ExportToExcel export = new ExportToExcel();
 

@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -35,7 +36,6 @@ public abstract class TSCTable {
     protected final ArrayList<String> currentFilters = new ArrayList<>();
 
     protected JFXTreeTableView<TableRow> table;
-    protected Label emptyTableLabel = new Label("No parts found.");
 
     public ObservableList<TableRow> rows = FXCollections.observableArrayList();
 
@@ -43,8 +43,8 @@ public abstract class TSCTable {
 
     protected Worker worker;
 
-    protected static int NUM_COLS;
-    protected static int SCROLLBAR_BUFFER = 2;
+    protected static double NUM_COLS;
+    protected static double SCROLLBAR_BUFFER = 15;
 
     public TSCTable(TableScreensController controller) {
         TSCTable.controller = controller;
@@ -79,10 +79,14 @@ public abstract class TSCTable {
      */
     public abstract void populateTable();
 
+    public void filter(String filter, TreeItem<TableRow> filteredRoot) {
+        filter(root, filter, filteredRoot);
+    }
+
     /**
      * Determines which rows fit the search input
      */
-    protected void filter(TreeItem<TableRow> root, String filter, TreeItem<TableRow> filteredRoot) {
+    private void filter(TreeItem<TableRow> root, String filter, TreeItem<TableRow> filteredRoot) {
         TreeItem<TableRow> filteredChild;
         for (TreeItem<TableRow> child : root.getChildren()) {
             filteredChild = new TreeItem<>();
@@ -147,6 +151,13 @@ public abstract class TSCTable {
         tempCol.setResizable(false);
 
         return tempCol;
+    }
+
+    protected Label getEmptyTableLabel() {
+        Label emptyTableLabel = new Label("No parts found.");
+        emptyTableLabel.setStyle("-fx-text-fill: white");
+        emptyTableLabel.setFont(new Font(18));
+        return emptyTableLabel;
     }
 
     public class TableRow extends RecursiveTreeObject<TableRow> {

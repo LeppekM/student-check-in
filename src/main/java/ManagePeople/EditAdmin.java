@@ -45,7 +45,7 @@ public class EditAdmin implements IController {
      */
     public void setAdmin(Worker w) {
         worker = w;
-        database = new Database();
+        database = Database.getInstance();
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());

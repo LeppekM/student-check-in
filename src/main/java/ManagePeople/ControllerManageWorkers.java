@@ -135,7 +135,7 @@ public class ControllerManageWorkers implements IController, Initializable {
         tableRows.clear();
         manageWorkersTable.getColumns().clear();
         data.clear();
-        database = new Database();
+        database = Database.getInstance();
         data = database.getWorkers();
 
         for (Worker datum : data) {

@@ -41,7 +41,7 @@ public class ControllerAddAdmin implements Initializable, IController {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        database = new Database();
+        database = Database.getInstance();
         rfidFilter(RFIDA);
     }
 

@@ -54,10 +54,7 @@ public class CompleteInventoryTable extends TSCTable {
     @Override
     public void initialize() {
         NUM_COLS = 5;
-        Label emptyTableLabel = new Label("No parts found.");
-        emptyTableLabel.setStyle("-fx-text-fill: white");
-        emptyTableLabel.setFont(new Font(18));
-        table.setPlaceholder(emptyTableLabel);
+        table.setPlaceholder(getEmptyTableLabel());
 
         partNameCol = createNewCol("Part Name");
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
@@ -92,8 +89,6 @@ public class CompleteInventoryTable extends TSCTable {
             });
             return row;
         });
-
-        populateTable();
     }
 
     @Override
@@ -128,7 +123,7 @@ public class CompleteInventoryTable extends TSCTable {
 
         table.getColumns().setAll(partNameTemp, barcodeTemp, serialNumberTemp, locationTemp, partIDTemp);
         table.setRoot(root);
-        table.setShowRoot(true);
+        table.setShowRoot(false);
     }
 
     @Override
@@ -153,16 +148,10 @@ public class CompleteInventoryTable extends TSCTable {
     }
 
     public class CIRow extends TableRow {
-        private StringProperty studentName, studentEmail, partName,  location,
-                status, dueDate, className, professorName, serialNumber, fee;
-
+        private StringProperty partName,  location, serialNumber;
         private IntegerProperty partID;
         private DoubleProperty price;
         private LongProperty barcode;
-
-        private String actionType;
-
-        private String action;
 
         public CIRow(int partID, long barcode, String serialNumber, String location, String partName, double price){
             this.partID = new SimpleIntegerProperty(partID);
@@ -173,18 +162,8 @@ public class CompleteInventoryTable extends TSCTable {
             this.price = new SimpleDoubleProperty(price);
         }
 
-        public DoubleProperty getPrice() {return price;}
-
-        public void initFee(String fee) {
-            this.fee = new SimpleStringProperty(fee);
-        }
-
-        public StringProperty getStudentName() {
-            return studentName;
-        }
-
-        public StringProperty getStudentEmail() {
-            return studentEmail;
+        public DoubleProperty getPrice() {
+            return price;
         }
 
         public StringProperty getPartName() {
@@ -203,36 +182,8 @@ public class CompleteInventoryTable extends TSCTable {
             return location;
         }
 
-        public StringProperty getStatus() {
-            return status;
-        }
-
-        public String getAction() {
-            return action;
-        }
-
-        public StringProperty getDueDate() {
-            return dueDate;
-        }
-
-        public StringProperty getFee() {
-            return fee;
-        }
-
         public IntegerProperty getPartID() {
             return partID;
-        }
-
-        public String getActionType() {
-            return actionType;
-        }
-
-        public StringProperty getClassName() {
-            return className;
-        }
-
-        public StringProperty getProfessorName() {
-            return professorName;
         }
     }
 }

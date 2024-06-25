@@ -41,7 +41,7 @@ public class ControllerViewCheckedOutPart {
         partIDField.setText("" + row.getPartID().get());
         checkedOutDateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getCheckedOutAt().get()));
         dueDateField.setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDueDate().get()));
-        Database database = new Database();
+        Database database = Database.getInstance();
         if (database.isOverdue(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDueDate().get()))) {
             dueDatePrompt.setStyle("-fx-text-fill: red");
             Label feeLabel = new Label("Fee:");

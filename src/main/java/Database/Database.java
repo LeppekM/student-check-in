@@ -34,10 +34,11 @@ public class Database implements IController {
     private Worker worker;
     private final StageUtils stageUtils = StageUtils.getInstance();
 
+    private static final Database database = new Database();
     /**
      * This creates a connection to the database
      */
-    public Database() {
+    private Database() {
         // Load the JDBC driver.
         // Library (.jar file) must be added to project build path.
         try {
@@ -57,6 +58,10 @@ public class Database implements IController {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, could not connect to the database.");
             alert.showAndWait();
         }
+    }
+
+    public static Database getInstance() {
+        return database;
     }
 
     /**

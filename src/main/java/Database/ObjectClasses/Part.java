@@ -33,7 +33,7 @@ public class Part implements DBObject{
         this.vendor = new SimpleStringProperty(vendor);
         this.location = new SimpleStringProperty(location);
         //Returns the next part id
-        Database database = new Database();
+        Database database = Database.getInstance();
         this.partID = new SimpleIntegerProperty(database.getMaxPartID() + 1);
     }
 

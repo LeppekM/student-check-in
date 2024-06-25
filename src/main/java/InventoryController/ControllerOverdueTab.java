@@ -177,7 +177,7 @@ public class ControllerOverdueTab extends ControllerInventoryPage implements Ini
         tableRows.clear();
         overdueTable.getColumns().clear();
         list.clear();
-        database = new Database();
+        database = Database.getInstance();
         list = database.getOverdue();
 
         for (OverdueItem overdueItem : list) {

@@ -28,7 +28,7 @@ public class OverduePopUpController {
     @FXML
     private JFXTextField dueDate;
 
-    private Database database = new Database();
+    private Database database = Database.getInstance();
 
     public void populate(OverdueItem overdueItems, OverdueTabTableRow overdueTabTableRow) {
 

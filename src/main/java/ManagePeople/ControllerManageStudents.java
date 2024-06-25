@@ -157,7 +157,7 @@ public class ControllerManageStudents implements IController, Initializable {
         tableRows.clear();
         manageStudentsTable.getColumns().clear();
         data.clear();
-        database = new Database();
+        database = Database.getInstance();
         data = database.getStudents();
 
         for (Student datum : data) {

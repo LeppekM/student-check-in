@@ -58,7 +58,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
     private VBox barcodeVBox;
 
     private final StageUtils stageUtils = StageUtils.getInstance();
-    private final Database database = new Database();
+    private final Database database = Database.getInstance();
 
     private static String professor, course, dueDate;
 
