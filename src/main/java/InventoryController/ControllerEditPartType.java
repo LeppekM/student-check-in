@@ -1,7 +1,6 @@
 package InventoryController;
 
 import Database.Database;
-import Database.EditPart;
 import Database.ObjectClasses.Part;
 import Database.VendorInformation;
 import HelperClasses.StageUtils;
@@ -14,7 +13,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -39,8 +37,6 @@ public class ControllerEditPartType extends ControllerEditPart {
     private JFXSpinner loader;
 
     private Part part;
-
-    private final EditPart editPart = new EditPart();
 
     private final VendorInformation vendorInformation = new VendorInformation();
 
@@ -107,9 +103,9 @@ public class ControllerEditPartType extends ControllerEditPart {
             Part inputPart = updatePartFromInput();
             if (database.hasUniqueBarcodes(originalPartName)) {
                 barcodeField.getText();
-                editPart.editAllOfType(originalPartName, inputPart);
+                database.editAllOfPartName(originalPartName, inputPart);
             } else {
-                editPart.editAllOfTypeCommonBarcode(originalPartName, inputPart);
+                database.editAllOfPartNameCommonBarcode(originalPartName, inputPart);
             }
             close();
             stageUtils.successAlert("All " + part.getPartName() + " parts edited successfully.");

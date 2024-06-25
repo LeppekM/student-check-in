@@ -1,26 +1,16 @@
 package InventoryController;
 
 import Database.Database;
-import Database.EditPart;
 import Database.ObjectClasses.Part;
 import Database.VendorInformation;
 import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
-import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -46,8 +36,6 @@ public class ControllerEditOnePart extends ControllerEditPart {
     private JFXButton saveButton;
 
     private Part part;
-
-    private EditPart editPart = new EditPart();
 
     private VendorInformation vendorInformation = new VendorInformation();
 
@@ -120,7 +108,7 @@ public class ControllerEditOnePart extends ControllerEditPart {
     public void updateItem(){
         if (validateInput()) {
             loader.setVisible(true);
-            editPart.editItem(getPartFromInput());
+            database.editPart(getPartFromInput());
             close();
             stageUtils.successAlert("Part edited successfully.");
         }
@@ -182,9 +170,9 @@ public class ControllerEditOnePart extends ControllerEditPart {
             fieldErrorAlert();
         } else {
 
-            // if parts with the given name do not have a unique barcode, error occurs.
+            // if parts with the given name do not have a unique barcode, error occurs. todo fix logic, it's not doing what it says it should be
             if (originalBarcode!= Long.parseLong(barcodeField.getText())) {
-                if (editPart.barcodeUsed(Long.parseLong(barcodeField.getText()))) {
+                if (database.barcodeExists(Long.parseLong(barcodeField.getText()))) {
                     isValid = false;
                     barcodeExistsError();
                 }

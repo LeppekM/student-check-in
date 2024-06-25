@@ -783,6 +783,73 @@ public class Database implements IController {
     }
 
     /**
+     * This method edits an item in the database
+     * @param part The part to be edited
+     */
+    public void editPart(Part part){
+        try {
+            String editQuery = "UPDATE parts SET serialNumber = ?, barcode = ?, price = ?, location = ?, " +
+                    "updatedAt = ? WHERE partID = ?;";
+            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editQuery);
+            preparedStatement.setString(1, part.getSerialNumber());
+            preparedStatement.setLong(2, part.getBarcode());
+            preparedStatement.setDouble(3, part.getPrice());
+            preparedStatement.setString(4, part.getLocation());
+            preparedStatement.setString(5, timeUtils.getCurrentDate());
+            preparedStatement.setString(6, "" + part.getPartID());
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    public void editAllOfPartName(String originalPartName, Part updatedPart) {
+        try {
+            String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, vendorID = ?, " +
+                    "updatedAt = ? WHERE partName = ?;";
+            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllQuery);
+            ArrayList<String> partIDsForPart = database.getAllPartIDsForPartName(originalPartName);
+            for (String id: partIDsForPart) {
+                preparedStatement.setString(1, updatedPart.getPartName());
+                preparedStatement.setDouble(2, updatedPart.getPrice());
+                preparedStatement.setString(3, updatedPart.getLocation());
+                preparedStatement.setString(4, updatedPart.getManufacturer());
+                preparedStatement.setInt(5, new VendorInformation().getVendorIDFromVendor(updatedPart.getVendor()));
+                preparedStatement.setString(6, timeUtils.getCurrentDate());
+                preparedStatement.setString(7, originalPartName);
+                preparedStatement.execute();
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    public void editAllOfPartNameCommonBarcode(String originalPartName, Part updatedPart) {
+        try {
+            String editAllCommonBarcodeQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, " +
+                    "barcode = ?, manufacturer = ?, vendorID = ?, updatedAt = ? WHERE partID = ?;";
+            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllCommonBarcodeQuery);
+            ArrayList<String> partIDsForPart = database.getAllPartIDsForPartName(originalPartName);
+            for (String id: partIDsForPart) {
+                preparedStatement.setString(1, updatedPart.getPartName());
+                preparedStatement.setDouble(2, updatedPart.getPrice());
+                preparedStatement.setString(3, updatedPart.getLocation());
+                preparedStatement.setLong(4, updatedPart.getBarcode());
+                preparedStatement.setString(5, updatedPart.getManufacturer());
+                preparedStatement.setInt(6, new VendorInformation().getVendorIDFromVendor(updatedPart.getVendor()));
+                preparedStatement.setString(7, timeUtils.getCurrentDate());
+                preparedStatement.setString(8, id);
+                preparedStatement.execute();
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect to the database", e);
+        }
+    }
+
+    /**
      * Gets the list of students from the database
      * @return observable list of students
      */
