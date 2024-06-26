@@ -89,7 +89,7 @@ public class ControllerMenu implements IController, Initializable {
     private void openManageWorkers() {
         if (worker != null) {
             if (worker.isAdmin() || worker.canEditWorkers()) {
-                stageUtils.newStage("/fxml/TableScreen.fxml", mainMenuScene, worker, TableScreen.EMPLOYEES);
+                stageUtils.newStage("/fxml/TableScreen.fxml", mainMenuScene, worker, TableScreen.WORKERS);
             }
         }
     }

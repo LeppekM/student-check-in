@@ -54,65 +54,62 @@
         </HBox>
     </HBox>
     <JFXTreeTableView fx:id="table" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS"/>
-    <HBox style="-fx-background-color: red">
+    <HBox>
         <JFXButton fx:id="backButton" mnemonicParsing="false" onAction="#goBack">
             <graphic>
                 <ImageView fitHeight="35.0" fitWidth="39.0">
                     <Image url="@../images/home.png"/>
                 </ImageView>
             </graphic>
-            <StackPane.margin>
-                <Insets bottom="10.0" left="20.0"/>
-            </StackPane.margin>
+            <HBox.margin>
+                <Insets topRightBottomLeft="5.0"/>
+            </HBox.margin>
         </JFXButton>
 
-        <Region style="-fx-background-color: orange" prefWidth="100000" HBox.hgrow="ALWAYS"/>
+        <Region HBox.hgrow="ALWAYS"/>
 
-        <HBox alignment="CENTER_RIGHT" HBox.hgrow="NEVER" style="-fx-background-color: cyan">
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="SOMETIMES">
+            <JFXButton fx:id="menuButton5" mnemonicParsing="false" onAction="#addPart" prefHeight="45.0"
+                       minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css" text="Add">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="menuButton4" mnemonicParsing="false" onAction="#editPart"
+                       prefHeight="45.0" minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css"
+                       text="Edit">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="menuButton3" mnemonicParsing="false" prefHeight="45.0"
+                       minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="menuButton2" mnemonicParsing="false" prefHeight="45.0"
+                       minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="menuButton1" mnemonicParsing="false" prefHeight="45.0"
+                       minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
+            </JFXButton>
             <JFXButton fx:id="excelButton" onAction="#export" prefHeight="0.0" prefWidth="50.0"
                        stylesheets="@../css/CheckButton.css">
                 <graphic>
-                    <ImageView fitHeight="33.0" fitWidth="34.0">
+                    <ImageView fitHeight="30.0" fitWidth="32.0">
                         <Image url="@../images/sheetDownload.png"/>
                     </ImageView>
                 </graphic>
-            </JFXButton>
-            <JFXButton fx:id="addPartButton" mnemonicParsing="false" onAction="#addPart" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Add">
-            </JFXButton>
-            <JFXButton fx:id="deleteManyPartButton" mnemonicParsing="false" onAction="#deleteManyParts"
-                       prefHeight="45.0" prefWidth="1.0" stylesheets="@../css/CheckButton.css"
-                       text="Delete All Type">
-            </JFXButton>
-            <JFXButton fx:id="deletePartButton" mnemonicParsing="false" onAction="#deletePart" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Delete">
-            </JFXButton>
-            <JFXButton fx:id="editManyPartButton" mnemonicParsing="false" onAction="#editManyParts" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Edit All Type">
-            </JFXButton>
-            <JFXButton fx:id="editPartButton" mnemonicParsing="false" onAction="#editPart" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Edit">
-            </JFXButton>
-            <JFXButton fx:id="clearHistoryButton" mnemonicParsing="false" onAction="#clearHistory" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Clear History">
-            </JFXButton>
-            <JFXButton fx:id="importStudentsButton" mnemonicParsing="false" onAction="#importStudents"
-                       prefHeight="45.0" prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Import Students">
-            </JFXButton>
-            <JFXButton fx:id="addStudentButton" mnemonicParsing="false" onAction="#addStudent" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Add">
-            </JFXButton>
-            <JFXButton fx:id="deleteStudentButton" mnemonicParsing="false" onAction="#deleteStudent" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Delete">
-            </JFXButton>
-            <JFXButton fx:id="addEmployeeButton" mnemonicParsing="false" onAction="#addEmployee" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Add Student Employee">
-            </JFXButton>
-            <JFXButton fx:id="addAdminButton" mnemonicParsing="false" onAction="#addAdmin" prefHeight="45.0"
-                       prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Add Admin">
-            </JFXButton>
-            <JFXButton fx:id="deleteEmployeeButton" mnemonicParsing="false" onAction="#deleteEmployee"
-                       prefHeight="45.0" prefWidth="1.0" stylesheets="@../css/CheckButton.css" text="Delete">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
             </JFXButton>
         </HBox>
     </HBox>

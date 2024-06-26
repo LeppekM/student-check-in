@@ -84,7 +84,7 @@ public class StageUtils {
             ((IController) loader.getController()).initWorker(worker);
             if (tableScreen != null) {
                 ((TableScreensController) loader.getController()).setScreen(tableScreen);
-                // add binding here
+                // This prevents horizontal overflow/visual errors in the table scenes
                 VBox vBox = (VBox) root.lookup("#scene");
                 if (vBox != null) {
                     Stage stage = (Stage) node.getScene().getWindow();

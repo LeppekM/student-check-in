@@ -17,7 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -54,9 +53,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     public JFXTreeTableView<TSCTable.TableRow> table;
 
     @FXML
-    private Button backButton, excelButton, clearHistoryButton, addPartButton, editPartButton, editManyPartButton,
-            deletePartButton, deleteManyPartButton, importStudentsButton, addStudentButton, deleteStudentButton,
-            addEmployeeButton, addAdminButton, deleteEmployeeButton;
+    private Button backButton, excelButton, menuButton1, menuButton2, menuButton3, menuButton4, menuButton5;
 
     protected static Database database = Database.getInstance();
     private final StageUtils stageUtils = StageUtils.getInstance();
@@ -68,7 +65,6 @@ public class TableScreensController extends ControllerMenu implements IControlle
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // init tabPane listeners
-        //scene.maxWidthProperty().bind(scene.getScene().getWindow().widthProperty());
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue.getText().equals("Total Inventory")) {
@@ -90,6 +86,39 @@ public class TableScreensController extends ControllerMenu implements IControlle
 
         backButton.getStylesheets().add("/css/CheckButton.css");  // set button style
 
+        // pairing button onAction behavior to correct methods
+        menuButton1.setOnAction(event -> {
+            if (screen == TableScreen.COMPLETE_INVENTORY) {
+                deleteManyParts();
+            } else if (screen == TableScreen.HISTORY) {
+                clearHistory();
+            } else if (screen == TableScreen.STUDENTS) {
+                deleteStudent();
+            } else if (screen == TableScreen.WORKERS) {
+                deleteEmployee();
+            }
+        });
+
+        menuButton2.setOnAction(event -> {
+            if (screen == TableScreen.COMPLETE_INVENTORY) {
+                deletePart();
+            } else if (screen == TableScreen.STUDENTS) {
+                addAdmin();
+            } else if (screen == TableScreen.WORKERS) {
+                addStudent();
+            }
+        });
+
+        menuButton3.setOnAction(event -> {
+            if (screen == TableScreen.COMPLETE_INVENTORY) {
+                editManyParts();
+            } else if (screen == TableScreen.STUDENTS) {
+                importStudents();
+            } else if (screen == TableScreen.WORKERS) {
+                addWorker();
+            }
+        });
+
         // Updates the search if the user presses enter with the cursor in the search field
         searchInput.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -99,7 +128,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     }
 
     private void reloadScreen() {
-        if (screen == TableScreen.STUDENTS || screen == TableScreen.EMPLOYEES) {
+        if (screen == TableScreen.STUDENTS || screen == TableScreen.WORKERS) {
             tabPane.setVisible(false);
             tabPane.setMaxHeight(0);
         } else {
@@ -107,76 +136,82 @@ public class TableScreensController extends ControllerMenu implements IControlle
             tabPane.setMaxHeight(42);
         }
 
-        setDisplay(excelButton, false);
-        setDisplay(addPartButton, false);
-        setDisplay(editPartButton, false);
-        setDisplay(editManyPartButton, false);
-        setDisplay(deletePartButton, false);
-        setDisplay(deleteManyPartButton, false);
-        setDisplay(clearHistoryButton, false);
-        setDisplay(addEmployeeButton, false);
-        setDisplay(addAdminButton, false);
-        setDisplay(deleteEmployeeButton, false);
-        setDisplay(importStudentsButton, false);
-        setDisplay(addStudentButton, false);
-        setDisplay(deleteStudentButton, false);
         switch (screen) {
             case COMPLETE_INVENTORY:
                 tscTable = new CompleteInventoryTable(this);
                 titleLabel.setText("Total Inventory");
-                setDisplay(excelButton, true);
-                setDisplay(addPartButton, true);
-                setDisplay(editPartButton, true);
-                setDisplay(editManyPartButton, true);
-                setDisplay(deletePartButton, true);
-                setDisplay(deleteManyPartButton, true);
+                excelButton.setVisible(true);
+                menuButton1.setVisible(true);
+                menuButton1.setText("Delete Part Type");
+                menuButton2.setVisible(true);
+                menuButton2.setText("Delete");
+                menuButton3.setVisible(true);
+                menuButton3.setText("Edit Part Type");
+                menuButton4.setVisible(true);
+                menuButton4.setText("Edit");
+                menuButton5.setVisible(true);
+                menuButton5.setText("Add");
                 break;
             case HISTORY:
                 tscTable = new HistoryInventoryTable(this);
                 titleLabel.setText("Transaction History");
-                setDisplay(excelButton, true);
-                setDisplay(clearHistoryButton, true);
+                excelButton.setVisible(true);
+                menuButton1.setVisible(true);
+                menuButton1.setText("Clear History");
+                menuButton2.setVisible(false);
+                menuButton3.setVisible(false);
+                menuButton4.setVisible(false);
+                menuButton5.setVisible(false);
                 break;
             case CHECKED_OUT:
                 tscTable = new CheckedOutInventoryTable(this);
                 titleLabel.setText("Checked Out");
-                setDisplay(excelButton, true);
+                excelButton.setVisible(true);
+                menuButton1.setVisible(false);
+                menuButton2.setVisible(false);
+                menuButton3.setVisible(false);
+                menuButton4.setVisible(false);
+                menuButton5.setVisible(false);
                 break;
             case OVERDUE:
                 tscTable = new OverdueInventoryTable(this);
                 titleLabel.setText("Overdue Parts");
-                setDisplay(excelButton, true);
+                excelButton.setVisible(true);
+                menuButton1.setVisible(false);
+                menuButton2.setVisible(false);
+                menuButton3.setVisible(false);
+                menuButton4.setVisible(false);
+                menuButton5.setVisible(false);
                 break;
-            case EMPLOYEES:
+            case WORKERS:
                 tscTable = new ManageEmployeesTable(this);
                 titleLabel.setText("Manage Employees");
-                setDisplay(addEmployeeButton, true);
-                setDisplay(addAdminButton, true);
-                setDisplay(deleteEmployeeButton, true);
+                excelButton.setVisible(false);
+                menuButton1.setVisible(true);
+                menuButton1.setText("Delete");
+                menuButton2.setVisible(true);
+                menuButton2.setText("Add Admin");
+                menuButton3.setVisible(true);
+                menuButton3.setText("Add Worker");
+                menuButton4.setVisible(false);
+                menuButton5.setVisible(false);
                 break;
             case STUDENTS:
                 tscTable = new ManageStudentsTable(this);
                 titleLabel.setText("Manage Students");
-                setDisplay(importStudentsButton, true);
-                setDisplay(addStudentButton, true);
-                setDisplay(deleteStudentButton, true);
+                excelButton.setVisible(false);
+                menuButton1.setVisible(true);
+                menuButton1.setText("Delete");
+                menuButton2.setVisible(true);
+                menuButton2.setText("Add");
+                menuButton3.setVisible(true);
+                menuButton3.setText("Import Students");
+                menuButton4.setVisible(false);
+                menuButton5.setVisible(false);
                 break;
         }
         tscTable.initialize();
         tscTable.populateTable();
-    }
-
-    private void setDisplay(Button button, boolean bool) {
-        if (bool) {
-            button.setVisible(true);
-            button.setMinWidth(150);
-            if (button == excelButton) {
-                button.setMaxWidth(75);
-            }
-        } else {
-            button.setVisible(false);
-            button.setMaxWidth(0);
-        }
     }
 
     /**
@@ -235,8 +270,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
-    public void deleteManyParts(ActionEvent event) {
+    public void deleteManyParts() {
         if (screen == TableScreen.COMPLETE_INVENTORY) {
             if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
                 int row = table.getSelectionModel().getFocusedIndex();
@@ -279,7 +313,6 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
     public void deletePart() {
         if (screen == TableScreen.COMPLETE_INVENTORY) {
             if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
@@ -321,8 +354,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
         stageUtils.errorAlert("This part is currently checked out and cannot be deleted.");
     }
 
-    @FXML
-    public void editManyParts(ActionEvent event) {
+    public void editManyParts() {
         if (screen == TableScreen.COMPLETE_INVENTORY) {
             if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
                 int row = table.getSelectionModel().getFocusedIndex();
@@ -365,7 +397,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     }
 
     @FXML
-    public void editPart(ActionEvent event) {
+    public void editPart() {
         if (screen == TableScreen.COMPLETE_INVENTORY) {
             if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
                 if ((worker != null && (worker.canEditParts() || worker.isAdmin()))
@@ -411,8 +443,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
-    public void clearHistory(ActionEvent event) {
+    public void clearHistory() {
         if (screen == TableScreen.HISTORY) {
             if (this.worker != null && this.worker.isAdmin()) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -431,8 +462,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
-    public void importStudents(ActionEvent event) {
+    public void importStudents() {
         if (screen == TableScreen.STUDENTS) {
             database.initWorker(worker);
             try {
@@ -505,8 +535,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
-    public void addStudent(ActionEvent event) {
+    public void addStudent() {
         if (screen == TableScreen.STUDENTS) {
             Stage stage = new Stage();
             try {
@@ -535,8 +564,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
-    public void deleteStudent(ActionEvent event) {
+    public void deleteStudent() {
         if (screen == TableScreen.STUDENTS) {
             if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
                 if ((worker != null && worker.isAdmin())
@@ -556,9 +584,8 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
-    public void addEmployee(ActionEvent event) {
-        if (screen == TableScreen.EMPLOYEES) {
+    public void addWorker() {
+        if (screen == TableScreen.WORKERS) {
             Stage stage = new Stage();
             try {
                 URL myFxmlURL = ClassLoader.getSystemResource("fxml/addWorker.fxml");
@@ -586,9 +613,8 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
-    public void addAdmin(ActionEvent event) {
-        if (screen == TableScreen.EMPLOYEES) {
+    public void addAdmin() {
+        if (screen == TableScreen.WORKERS) {
             Stage stage = new Stage();
             try {
                 URL myFxmlURL = ClassLoader.getSystemResource("fxml/addAdmin.fxml");
@@ -613,9 +639,8 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    @FXML
-    public void deleteEmployee(ActionEvent event) {
-        if (screen == TableScreen.EMPLOYEES) {
+    public void deleteEmployee() {
+        if (screen == TableScreen.WORKERS) {
             int admins = database.getNumAdmins();
             if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
                 ManageEmployeesTable temp = (ManageEmployeesTable) tscTable;

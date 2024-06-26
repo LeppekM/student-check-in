@@ -5,6 +5,6 @@ public enum TableScreen {
     HISTORY,
     CHECKED_OUT,
     OVERDUE,
-    EMPLOYEES,
+    WORKERS,
     STUDENTS
 }
