@@ -8,6 +8,8 @@ import HelperClasses.ExportToExcel;
 import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTreeTableView;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -103,9 +105,9 @@ public class TableScreensController extends ControllerMenu implements IControlle
             if (screen == TableScreen.COMPLETE_INVENTORY) {
                 deletePart();
             } else if (screen == TableScreen.STUDENTS) {
-                addAdmin();
-            } else if (screen == TableScreen.WORKERS) {
                 addStudent();
+            } else if (screen == TableScreen.WORKERS) {
+                addAdmin();
             }
         });
 
@@ -117,6 +119,11 @@ public class TableScreensController extends ControllerMenu implements IControlle
             } else if (screen == TableScreen.WORKERS) {
                 addWorker();
             }
+        });
+
+        // add deactivate/activate behavior for buttons which need it
+        table.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            disableButtons(false);
         });
 
         // Updates the search if the user presses enter with the cursor in the search field
@@ -135,6 +142,8 @@ public class TableScreensController extends ControllerMenu implements IControlle
             tabPane.setVisible(true);
             tabPane.setMaxHeight(42);
         }
+
+        disableButtons(true);
 
         switch (screen) {
             case COMPLETE_INVENTORY:
@@ -214,6 +223,19 @@ public class TableScreensController extends ControllerMenu implements IControlle
         tscTable.populateTable();
     }
 
+    private void disableButtons(boolean bool) {
+        if (screen == TableScreen.COMPLETE_INVENTORY) {
+            menuButton1.setDisable(bool);
+            menuButton2.setDisable(bool);
+            menuButton3.setDisable(bool);
+            menuButton4.setDisable(bool);
+        } else if (screen == TableScreen.STUDENTS) {
+            menuButton1.setDisable(bool);
+        } else if (screen == TableScreen.WORKERS) {
+            menuButton1.setDisable(bool);
+        }
+    }
+
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
      * each necessary class
@@ -241,6 +263,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
                 table.setRoot(filteredRoot);
             }
         }
+        disableButtons(true);
     }
 
     @FXML
@@ -257,7 +280,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     }
 
     @FXML
-    public void addPart(ActionEvent e) {
+    public void addPart() {
         if (screen == TableScreen.COMPLETE_INVENTORY) {
             Stage stage = StageUtils.getInstance().createPopupStage("fxml/AddPart.fxml", scene, "Add a Part");
             stage.setOnCloseRequest(event -> {
