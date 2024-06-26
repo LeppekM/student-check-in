@@ -3,6 +3,8 @@ package HelperClasses;
 import Database.ObjectClasses.Worker;
 import InventoryController.IController;
 import InventoryController.StudentCheckIn;
+import InventoryController.TableScreen;
+import InventoryController.TableScreensController;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.animation.PauseTransition;
@@ -71,7 +73,7 @@ public class StageUtils {
      * @param node The root scene to use
      * @param worker Worker name
      */
-    public void newStage(String fxml, Node node, Worker worker) {
+    public void newStage(String fxml, Node node, Worker worker, TableScreen tableScreen) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
@@ -79,6 +81,9 @@ public class StageUtils {
             controller.initWorker(worker);
             node.getScene().setRoot(root);
             ((IController) loader.getController()).initWorker(worker);
+            if (tableScreen != null) {
+                ((TableScreensController) loader.getController()).setScreen(tableScreen);
+            }
         } catch (IOException invoke) {
             StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");

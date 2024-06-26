@@ -1,6 +1,5 @@
 package InventoryController;
 
-import Database.Database;
 import Database.OverdueItem;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -28,7 +27,6 @@ public class OverdueInventoryTable extends TSCTable {
     private JFXTreeTableColumn<OIRow, String> studentNameCol, partNameCol, serialNumberCol;
     private JFXTreeTableColumn<OIRow, Long> barcodeCol;
     private JFXTreeTableColumn<OIRow, Date> dueDateCol;
-    private final Database database = Database.getInstance();
 
     public OverdueInventoryTable(TableScreensController controller) {
         super(controller);

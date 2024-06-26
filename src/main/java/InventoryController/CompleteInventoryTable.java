@@ -1,6 +1,5 @@
 package InventoryController;
 
-import Database.Database;
 import Database.ObjectClasses.Part;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -28,7 +27,6 @@ public class CompleteInventoryTable extends TSCTable {
     private JFXTreeTableColumn<CIRow, String> partNameCol, locationCol, serialNumberCol;
     private JFXTreeTableColumn<CIRow, Integer> partIDCol;
     private JFXTreeTableColumn<CIRow, Long> barcodeCol;
-    private final Database database = Database.getInstance();
 
     public CompleteInventoryTable(TableScreensController controller) {
         super(controller);

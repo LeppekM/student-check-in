@@ -1,6 +1,5 @@
 package InventoryController;
 
-import Database.Database;
 import Database.ObjectClasses.Checkout;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -26,7 +25,6 @@ public class HistoryInventoryTable extends TSCTable {
     private JFXTreeTableColumn<HIRow, String> studentNameCol, partNameCol, actionCol;
     private JFXTreeTableColumn<HIRow, Date> dateCol;
     private JFXTreeTableColumn<HIRow, Long> barcodeCol;
-    private final Database database = Database.getInstance();
 
     public HistoryInventoryTable(TableScreensController controller) {
         super(controller);

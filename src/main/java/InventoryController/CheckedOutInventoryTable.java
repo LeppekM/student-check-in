@@ -1,6 +1,5 @@
 package InventoryController;
 
-import Database.Database;
 import Database.ObjectClasses.Checkout;
 import HelperClasses.ExportToExcel;
 import com.jfoenix.controls.JFXTreeTableColumn;
@@ -26,7 +25,6 @@ public class CheckedOutInventoryTable extends TSCTable {
     private JFXTreeTableColumn<CORow, String> studentNameCol, partNameCol;
     private JFXTreeTableColumn<CORow, Long> barcodeCol;
     private JFXTreeTableColumn<CORow, Date> checkOutDateCol, dueDateCol;
-    private final Database database = Database.getInstance();
 
     public CheckedOutInventoryTable(TableScreensController controller) {
         super(controller);

@@ -1027,6 +1027,18 @@ public class Database implements IController {
         return adminPin == pin;
     }
 
+    public int getNumAdmins() {
+        String query = "SELECT COUNT(*) FROM workers WHERE isAdmin = 1;";
+        try {
+            ResultSet resultSet = connection.prepareStatement(query).executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     /**
      * Gets a student from the database based on their RFID or email
      * todo: simplify, if possible

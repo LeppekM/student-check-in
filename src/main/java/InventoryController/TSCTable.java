@@ -1,7 +1,9 @@
 package InventoryController;
 
+import Database.Database;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -32,6 +34,8 @@ public abstract class TSCTable {
     protected ObservableList<TableRow> rows = FXCollections.observableArrayList();
     protected TreeItem<TableRow> root;
     protected Worker worker;
+    protected Database database = Database.getInstance();
+    protected StageUtils stageUtils = StageUtils.getInstance();
 
     protected static double NUM_COLS;
     protected static double SCROLLBAR_BUFFER = 15;

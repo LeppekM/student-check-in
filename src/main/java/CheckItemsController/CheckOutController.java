@@ -96,7 +96,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
      * Resets all fields by recreating a new page
      */
     public void reset() {
-        stageUtils.newStage("/fxml/CheckOutPage.fxml", main, worker);
+        stageUtils.newStage("/fxml/CheckOutPage.fxml", main, worker, null);
     }
 
     /**
@@ -333,7 +333,7 @@ public class CheckOutController extends ControllerMenu implements IController, I
                 return;
             }
         }
-        stageUtils.newStage("/fxml/Menu.fxml", main, worker);
+        stageUtils.goBack(main, worker);
     }
 
     /**

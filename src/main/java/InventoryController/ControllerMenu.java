@@ -73,23 +73,23 @@ public class ControllerMenu implements IController, Initializable {
 
     @FXML
     private void openInventory(){
-        stageUtils.newStage("/fxml/TableScreen.fxml", mainMenuScene, worker);
+        stageUtils.newStage("/fxml/TableScreen.fxml", mainMenuScene, worker, TableScreen.COMPLETE_INVENTORY);
     }
 
     @FXML
     private void openMangeStudents() {
-        stageUtils.newStage("/fxml/manageStudents.fxml", mainMenuScene, worker);
+        stageUtils.newStage("/fxml/TableScreen.fxml", mainMenuScene, worker, TableScreen.STUDENTS);
     }
 
     @FXML
     public void openCheckItemsPage(){
-        stageUtils.newStage("/fxml/CheckOutPage.fxml", mainMenuScene, worker);
+        stageUtils.newStage("/fxml/CheckOutPage.fxml", mainMenuScene, worker, null);
     }
 
     private void openManageWorkers() {
         if (worker != null) {
             if (worker.isAdmin() || worker.canEditWorkers()) {
-                stageUtils.newStage("/fxml/manageWorkers.fxml", mainMenuScene, worker);
+                stageUtils.newStage("/fxml/TableScreen.fxml", mainMenuScene, worker, TableScreen.EMPLOYEES);
             }
         }
     }

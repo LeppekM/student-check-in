@@ -6,7 +6,6 @@ import javafx.beans.property.StringProperty;
 
 public class ManageStudentsTabTableRow extends RecursiveTreeObject<ManageStudentsTabTableRow> {
 
-    private StringProperty name;
     private StringProperty firstName, lastName;
     private StringProperty id;
     private StringProperty email;
@@ -18,12 +17,10 @@ public class ManageStudentsTabTableRow extends RecursiveTreeObject<ManageStudent
         this.email = new SimpleStringProperty(email);
     }
 
-    public StringProperty getName() {
-        return name;
-    }
     public StringProperty getFirstName() {
         return firstName;
     }
+
     public StringProperty getLastName() {
         return lastName;
     }

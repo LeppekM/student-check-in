@@ -55,14 +55,11 @@
         </HBox>
         <JFXTreeTableView fx:id="table" stylesheets="@../css/TableStyle.css" VBox.vgrow="ALWAYS"/>
         <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="200.0" stylesheets="@../css/ButtonStyle.css">
-            <opaqueInsets>
-                <Insets bottom="14.0" right="20.0"/>
-            </opaqueInsets>
             <VBox.margin>
                 <Insets top="5.0"/>
             </VBox.margin>
-            <JFXButton fx:id="excelButton" alignment="BASELINE_LEFT" contentDisplay="TOP" onAction="#export"
-                       prefHeight="0.0" prefWidth="50.0" translateX="-20.0">
+            <JFXButton fx:id="excelButton" contentDisplay="TOP" onAction="#export"
+                       prefHeight="0.0" prefWidth="50.0">
                 <graphic>
                     <ImageView fitHeight="33.0" fitWidth="34.0">
                         <Image url="@../images/sheetDownload.png"/>
@@ -70,74 +67,74 @@
                 </graphic>
             </JFXButton>
             <JFXButton fx:id="addPartButton" mnemonicParsing="false" onAction="#addPart" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Add">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Add">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="deleteManyPartButton" mnemonicParsing="false" onAction="#deleteManyParts"
-                       prefHeight="45.0" prefWidth="80.0" stylesheets="@../css/CheckButton.css"
+                       prefHeight="45.0" prefWidth="0.0" stylesheets="@../css/CheckButton.css"
                        text="Delete All With Same Name">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="deletePartButton" mnemonicParsing="false" onAction="#deletePart" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Delete">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Delete">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="editManyPartButton" mnemonicParsing="false" onAction="#editManyParts" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Edit All With Same Name">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Edit All With Same Name">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="editPartButton" mnemonicParsing="false" onAction="#editPart" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Edit">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Edit">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="clearHistoryButton" mnemonicParsing="false" onAction="#clearHistory" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Clear History">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Clear History">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="importStudentsButton" mnemonicParsing="false" onAction="#importStudents"
-                       prefHeight="45.0" prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Import Students">
+                       prefHeight="45.0" prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Import Students">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="addStudentButton" mnemonicParsing="false" onAction="#addStudent" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Add">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Add">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="deleteStudentButton" mnemonicParsing="false" onAction="#deleteStudent" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Delete">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Delete">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="addEmployeeButton" mnemonicParsing="false" onAction="#addEmployee" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Add Student Employee">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Add Student Employee">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="addAdminButton" mnemonicParsing="false" onAction="#addAdmin" prefHeight="45.0"
-                       prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Add Admin">
+                       prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Add Admin">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>
             </JFXButton>
             <JFXButton fx:id="deleteEmployeeButton" mnemonicParsing="false" onAction="#deleteEmployee"
-                       prefHeight="45.0" prefWidth="80.0" stylesheets="@../css/CheckButton.css" text="Delete">
+                       prefHeight="45.0" prefWidth="0.0" stylesheets="@../css/CheckButton.css" text="Delete">
                 <HBox.margin>
                     <Insets right="20.0"/>
                 </HBox.margin>

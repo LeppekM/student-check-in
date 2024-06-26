@@ -3,7 +3,7 @@ package CheckItemsController;
 import java.time.LocalDate;
 
 /**
- * Stores info about a part that is checked out
+ * Stores info about a part that is checked out todo: remove, is effectively just used to check last time a part was checked out
  */
 public class CheckoutObject {
 
