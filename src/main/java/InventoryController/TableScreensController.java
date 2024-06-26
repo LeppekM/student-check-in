@@ -18,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,7 +45,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     public JFXTabPane tabPane;
 
     @FXML
-    private StackPane scene;
+    private VBox scene;
 
     @FXML
     TextField searchInput;
@@ -67,6 +68,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // init tabPane listeners
+        //scene.maxWidthProperty().bind(scene.getScene().getWindow().widthProperty());
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue.getText().equals("Total Inventory")) {
@@ -167,7 +169,10 @@ public class TableScreensController extends ControllerMenu implements IControlle
     private void setDisplay(Button button, boolean bool) {
         if (bool) {
             button.setVisible(true);
-            button.setMinWidth(200);
+            button.setMinWidth(150);
+            if (button == excelButton) {
+                button.setMaxWidth(75);
+            }
         } else {
             button.setVisible(false);
             button.setMaxWidth(0);
@@ -632,7 +637,7 @@ public class TableScreensController extends ControllerMenu implements IControlle
         }
     }
 
-    public StackPane getScene() {
+    public VBox getScene() {
         return scene;
     }
 

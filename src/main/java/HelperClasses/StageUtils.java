@@ -20,6 +20,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -83,6 +84,12 @@ public class StageUtils {
             ((IController) loader.getController()).initWorker(worker);
             if (tableScreen != null) {
                 ((TableScreensController) loader.getController()).setScreen(tableScreen);
+                // add binding here
+                VBox vBox = (VBox) root.lookup("#scene");
+                if (vBox != null) {
+                    Stage stage = (Stage) node.getScene().getWindow();
+                    vBox.maxWidthProperty().bind(stage.widthProperty());
+                }
             }
         } catch (IOException invoke) {
             StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
