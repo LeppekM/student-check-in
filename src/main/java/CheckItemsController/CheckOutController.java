@@ -348,7 +348,10 @@ public class CheckOutController extends ControllerMenu implements IController, I
         });
 
         studentIDField.setOnKeyPressed(event -> {
-            if (event.getCode().equals(KeyCode.ENTER)){
+            if (!studentIDField.getFilteredEntries().isEmpty() && (event.getCode().equals(KeyCode.ENTER) || event.getCode().equals(KeyCode.TAB))) {
+                studentIDField.setText(studentIDField.getFilteredEntries().get(0));
+            }
+            if (event.getCode().equals(KeyCode.ENTER) || event.getCode().equals(KeyCode.TAB)){
                 firstBarcodeField.requestFocus();
             }
         });

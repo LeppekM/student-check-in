@@ -36,6 +36,5 @@ Product Owner: Jim Frommell
 * Fix visual errors being caused from the revamps
 * Testing suite
 * Documentation, for the love of god
-* improve autofill for checkin/out to allow tab to autofill rest of top email
 * scrollbar for checkin/out page (or other fix to infinite barcode smush problem) (like if you press enter on empty barcodefield it submits)
 * Clean formatting / code conformity

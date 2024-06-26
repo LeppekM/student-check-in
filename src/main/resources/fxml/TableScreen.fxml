@@ -15,7 +15,6 @@
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <VBox fx:id="scene" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="InventoryController.TableScreensController">
@@ -32,7 +31,7 @@
                 <URL value="@../css/HeaderStyle.css"/>
             </stylesheets>
             <HBox.margin>
-                <Insets left="20.0" top="14.0"/>
+                <Insets left="20.0" top="7.0"/>
             </HBox.margin>
         </Label>
         <HBox alignment="CENTER_RIGHT" prefHeight="68.0" prefWidth="306.0" HBox.hgrow="ALWAYS">
