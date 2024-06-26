@@ -275,29 +275,6 @@ public class Database implements IController {
         return sID;
     }
 
-    public boolean hasCheckedOutItemsFromID(int studentID) {
-        String query = "SELECT studentID FROM checkout WHERE studentID = ? AND checkinAt IS NULL;";
-        List<Integer> checkouts = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, studentID);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                checkouts.add(rs.getInt("studentID"));
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
-            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
-            throw new IllegalStateException("Cannot connect to the database", e);
-        }
-        return !checkouts.isEmpty();
-    }
-
-    public boolean hasCheckedOutItemsFromEmail(String email) {
-        return hasCheckedOutItemsFromID(getStudentIDFromEmail(email));
-    }
-
     /**
      * Inserts new checkout entity into the database, and changes the associated part.isCheckedOut to 1
      */
