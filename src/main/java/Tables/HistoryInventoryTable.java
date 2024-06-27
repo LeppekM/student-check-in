@@ -13,6 +13,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
@@ -21,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 
 public class HistoryInventoryTable extends TSCTable {
 
@@ -124,6 +127,20 @@ public class HistoryInventoryTable extends TSCTable {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void clearHistory() {
+        if (this.worker != null && this.worker.isAdmin()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete Old History");
+            alert.setContentText("Are you sure you want to clear the transaction history for parts older than 2 years?");
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.YES) {
+                database.clearOldHistory();
+                populateTable();
+            }
         }
     }
 

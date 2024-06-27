@@ -1,8 +1,11 @@
 package Tables;
 
+import App.StudentCheckIn;
 import Database.ObjectClasses.Part;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
+import HelperClasses.StageUtils;
+import Popups.EditPartController;
 import Popups.ViewTotalPartController;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
@@ -19,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -133,6 +137,158 @@ public class CompleteInventoryTable extends TSCTable {
 
     public int getRowPartID(int row) {
         return partIDCol.getCellData(row);
+    }
+
+    public void addPart() {
+        Stage stage = StageUtils.getInstance().createPopupStage("fxml/AddPart.fxml", controller.getScene(), "Add a Part");
+        stage.setOnCloseRequest(event -> {
+            populateTable();
+            stage.close();
+        });
+        stage.show();
+    }
+
+    public void editPart() {
+        if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+            if ((worker != null && (worker.canEditParts() || worker.isAdmin()))
+                    || StageUtils.getInstance().requestAdminPin("edit a part", controller.getScene())) {
+
+                int row = table.getSelectionModel().getFocusedIndex();
+                int partID = getRowPartID(row);
+                Part part = database.selectPart(partID);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditOnePart.fxml"));
+
+                try {
+                    Parent root = loader.load();
+                    ((EditPartController) loader.getController()).initPart(part);
+                    Scene scene = new Scene(root, 400, 500);
+                    Stage stage = new Stage();
+                    stage.setMinWidth(400);
+                    stage.setMaxWidth(400);
+                    stage.setMaxHeight(550);
+                    stage.setMinHeight(550);
+                    String partName = part.getPartName();
+                    if (part.getPartName().endsWith("s")) {
+                        partName = part.getPartName().substring(0, part.getPartName().length() - 1);
+                    }
+                    stage.setTitle("Edit a " + partName);
+                    stage.initOwner(controller.getScene().getScene().getWindow());
+                    stage.initModality(Modality.WINDOW_MODAL);
+                    stage.setScene(scene);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.setOnCloseRequest(ev -> {
+                        populateTable();
+                        stage.close();
+                    });
+                    stage.show();
+                } catch (IOException e) {
+                    StudentCheckIn.logger.error("IOException: Loading Edit Part.");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void editPartType() {
+        if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+            int row = table.getSelectionModel().getFocusedIndex();
+            int partID = getRowPartID(row);
+            Part part = database.selectPart(partID);
+
+            if ((worker != null && (worker.canEditParts() || worker.isAdmin()))
+                    || StageUtils.getInstance().requestAdminPin("edit all parts named " + part.getPartName(), controller.getScene())) {
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditPartType.fxml"));
+                try {
+                    Parent root = loader.load();
+                    ((EditPartController) loader.getController()).initPart(part);
+                    Scene scene = new Scene(root, 400, 500);
+                    Stage stage = new Stage();
+                    stage.setMinWidth(400);
+                    stage.setMaxWidth(400);
+                    stage.setMaxHeight(550);
+                    stage.setMinHeight(550);
+                    stage.setTitle("Edit all " + part.getPartName());
+                    stage.initOwner(controller.getScene().getScene().getWindow());
+                    stage.initModality(Modality.WINDOW_MODAL);
+                    stage.setScene(scene);
+                    stage.getIcons().add(new Image("images/msoe.png"));
+                    stage.setOnCloseRequest(ev -> {
+                        populateTable();
+                        stage.close();
+                    });
+                    stage.show();
+                } catch (IOException e) {
+                    StudentCheckIn.logger.error("IOException: Loading Edit Part.");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void deletePart() {
+        if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+            int row = table.getSelectionModel().getFocusedIndex();
+            int partID = getRowPartID(row);
+            Part part = database.selectPart(partID);
+
+            if ((worker != null && (worker.canRemoveParts() || worker.isAdmin())) || stageUtils.requestAdminPin("Delete a Part", controller.getScene())) {
+                if (!part.getCheckedOut()) {
+                    database.initWorker(worker);
+                    try {
+                        if (database.selectPart(partID) != null) {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete the part with ID = " + partID + "?", ButtonType.YES, ButtonType.NO);
+                            alert.showAndWait();
+                            if (alert.getResult() == ButtonType.YES) {
+                                database.deletePart(partID);
+                                populateTable();
+                            }
+                        }
+                    } catch (Exception e) {
+                        StudentCheckIn.logger.error("Exception while deleting part.");
+                        e.printStackTrace();
+                    }
+                } else {
+                    stageUtils.errorAlert("This part is currently checked out and cannot be deleted.");
+                }
+            }
+        }
+    }
+
+    public void deletePartType() {
+        int row = table.getSelectionModel().getFocusedIndex();
+        int partID = getRowPartID(row);
+        Part part = database.selectPart(partID);
+
+        if ((worker != null && (worker.canRemoveParts() || worker.isAdmin())) || stageUtils.requestAdminPin("delete parts", controller.getScene())) {
+            boolean typeHasOneCheckedOut = false;
+            ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + part.getPartID());
+            for (String id : partIDs) {
+                if (database.getIsCheckedOut(id)) {
+                    typeHasOneCheckedOut = true;
+                }
+            }
+            String partName = part.getPartName();
+            if (!typeHasOneCheckedOut) {
+                database.initWorker(worker);
+                try {
+                    if (database.hasPartName(partName)) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete all parts named: " + partName + "?", ButtonType.YES, ButtonType.NO);
+                        alert.showAndWait();
+                        if (alert.getResult() == ButtonType.YES) {
+                            database.deleteParts(partName);
+                            populateTable();
+                        }
+                    }
+                } catch (Exception e) {
+                    StudentCheckIn.logger.error("Exception while deleting part type.");
+                    e.printStackTrace();
+                }
+            } else {
+                stageUtils.errorAlert("At least one " + partName + " is currently checked out, so "
+                        + partName + " parts cannot be deleted.");
+            }
+        }
     }
 
     public class CIRow extends TableRow {

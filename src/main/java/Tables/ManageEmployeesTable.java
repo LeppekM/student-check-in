@@ -1,6 +1,7 @@
 package Tables;
 
 import App.StudentCheckIn;
+import Controllers.IController;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
@@ -160,6 +161,71 @@ public class ManageEmployeesTable extends TSCTable {
         int index = table.getSelectionModel().getFocusedIndex();
         String email = emailCol.getCellData(index);
         return database.getWorker(email);
+    }
+
+    public void addWorker() {
+        Stage stage = new Stage();
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addWorker.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            IController controller = loader.getController();
+            controller.initWorker(worker);
+            Scene scene = new Scene(root, 350, 370);
+            stage.setTitle("Add a New Worker");
+            stage.initOwner(this.controller.getScene().getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add worker page");
+            alert.initStyle(StageStyle.UTILITY);
+            StudentCheckIn.logger.error("IOException: Couldn't load add worker page.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        populateTable();
+    }
+
+    public void addAdmin() {
+        Stage stage = new Stage();
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addAdmin.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            IController controller = loader.getController();
+            controller.initWorker(worker);
+            Scene scene = new Scene(root, 350, 420);
+            stage.setTitle("Add a New Worker");
+            stage.initOwner(this.controller.getScene().getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.showAndWait();
+        } catch (IOException e) {
+            stageUtils.errorAlert("Couldn't load add admin page");
+            e.printStackTrace();
+        }
+        populateTable();
+    }
+
+    public void deleteWorker() {
+        int admins = database.getNumAdmins();
+        if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+            Worker w = getSelectedWorker();
+            if (admins == 1 && w.isAdmin()) {
+                stageUtils.errorAlert("Cannot delete the last admin.");
+            } else if (worker.getID() == w.getID()) {
+                stageUtils.errorAlert("Cannot delete your own account.");
+            } else  {
+                if (stageUtils.confirmationAlert("Delete This Worker?",
+                        "Are you sure you want to delete this worker?")) {
+                    database.deleteWorker(w.getName());
+                }
+            }
+        }
+        populateTable();
     }
 
     public class MERow extends TableRow {

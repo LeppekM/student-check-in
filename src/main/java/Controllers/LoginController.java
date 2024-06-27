@@ -86,16 +86,13 @@ public class LoginController implements Initializable {
     }
 
     private void rfidFilter(JFXTextField textField) {
-        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    //in focus
-                } else {
-                    String id = textField.getText();
-                    if (textField.getText().contains("rfid:")) {
-                        textField.setText(id.substring(5));
-                    }
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                //in focus
+            } else {
+                String id = textField.getText();
+                if (textField.getText().contains("rfid:")) {
+                    textField.setText(id.substring(5));
                 }
             }
         });

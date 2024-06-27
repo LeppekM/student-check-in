@@ -1,9 +1,11 @@
 package Tables;
 
+import Controllers.IController;
 import Database.ObjectClasses.Student;
 import HelperClasses.ExportToExcel;
 import App.StudentCheckIn;
 import Controllers.TableScreensController;
+import HelperClasses.StageUtils;
 import Popups.EditStudent;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
@@ -20,12 +22,24 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ManageStudentsTable extends TSCTable {
 
@@ -142,6 +156,115 @@ public class ManageStudentsTable extends TSCTable {
 
     public String getEmail(int row) {
         return emailCol.getCellData(row);
+    }
+
+    public void importStudents() {
+        database.initWorker(worker);
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Import Students");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
+
+            File file = fileChooser.showOpenDialog(table.getScene().getWindow());
+            FileInputStream fis = new FileInputStream(file);
+            XSSFWorkbook workbook = new XSSFWorkbook(fis);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIt = sheet.iterator();
+            // skip the first row, which just has column labels
+            if (rowIt.hasNext()) {
+                rowIt.next();
+            }
+
+            List<Student> failedImports = new ArrayList<>();
+            // parse the rest of the rows
+            while (rowIt.hasNext()) {
+                Row row = rowIt.next();
+                if (row.getCell(0) != null && row.getCell(3) != null) {
+                    String email = row.getCell(3).toString();
+                    String name = row.getCell(0).toString();
+                    try {
+                        String lastName = name.substring(0, name.indexOf(", "));
+                        String restOfName = name.substring(name.indexOf(", ") + 2);
+                        String firstName;
+                        if (restOfName.contains(" ")) {
+                            firstName = restOfName.substring(0, restOfName.indexOf(" "));
+                        } else {
+                            firstName = restOfName;
+                        }
+                        if (restOfName.contains(", ")) {
+                            lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
+                        }
+                        if (!email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                            failedImports.add(new Student(firstName + " " + lastName, email));
+                        } else {
+                            if (!database.getStudentEmails().contains(email)) {
+                                if (!database.importStudent(new Student((firstName + " " + lastName), email))) {
+                                    failedImports.add(new Student(firstName + " " + lastName, email));
+                                }
+                            }
+                        }
+                    } catch (StringIndexOutOfBoundsException e) {
+                        failedImports.add(new Student(name, email));
+                    }
+                } else {
+                    stageUtils.errorAlert("The name must be in the first row and the email must be in the fourth row of the imported excel file.");
+                }
+
+            }
+            populateTable();
+
+            if (!failedImports.isEmpty()) {
+                List<String> lines = new ArrayList<>();
+                for (Student student : failedImports) {
+                    lines.add(student.getName());
+                }
+                Path filePath = Paths.get("failed_students_import.txt");
+                Files.write(filePath, lines);
+                stageUtils.errorAlert("The program failed to import the students listed in the text file: \"" + filePath.getFileName() + "\"");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addStudent() {
+        Stage stage = new Stage();
+        try {
+            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addStudent.fxml");
+            FXMLLoader loader = new FXMLLoader(myFxmlURL);
+            Parent root = loader.load();
+            IController controller = loader.getController();
+            controller.initWorker(worker);
+            Scene scene = new Scene(root);
+            stage.setTitle("Add a New Student");
+            stage.initOwner(this.controller.getScene().getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("images/msoe.png"));
+            stage.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add student page");
+            alert.initStyle(StageStyle.UTILITY);
+            StudentCheckIn.logger.error("IOException: Couldn't load add student page.");
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+        populateTable();
+    }
+
+    public void deleteStudent() {
+        if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
+            if ((worker != null && worker.isAdmin())
+                    || StageUtils.getInstance().requestAdminPin("delete a student", controller.getScene())) {
+
+                int index = table.getSelectionModel().getFocusedIndex();
+                String email = getEmail(index);
+                if (stageUtils.confirmationAlert("Delete Student", "Delete this Student?")) {
+                    database.deleteStudent(email);
+                    populateTable();
+                }
+            }
+        }
     }
 
     public class MSRow extends TableRow {

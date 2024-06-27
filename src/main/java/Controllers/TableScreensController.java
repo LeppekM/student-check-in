@@ -281,409 +281,76 @@ public class TableScreensController extends MenuController implements IControlle
         tscTable.export(export);
     }
 
-    @FXML
     public void addPart() {
-        if (screen == TableScreen.COMPLETE_INVENTORY) {
-            Stage stage = StageUtils.getInstance().createPopupStage("fxml/AddPart.fxml", scene, "Add a Part");
-            stage.setOnCloseRequest(event -> {
-                tscTable.populateTable();
-                stage.close();
-            });
-            stage.show();
-        } else {
-            impossibleOperation("add part");
+        if (tscTable instanceof CompleteInventoryTable) {
+            ((CompleteInventoryTable) tscTable).addPart();
         }
     }
 
     public void deleteManyParts() {
-        if (screen == TableScreen.COMPLETE_INVENTORY) {
-            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
-                int row = table.getSelectionModel().getFocusedIndex();
-                CompleteInventoryTable temp = (CompleteInventoryTable) tscTable;
-                int partID = temp.getRowPartID(row);
-                Part part = database.selectPart(partID);
-
-                if ((worker != null && (worker.canRemoveParts() || worker.isAdmin())) || stageUtils.requestAdminPin("delete parts", scene)) {
-                    boolean typeHasOneCheckedOut = false;
-                    ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + part.getPartID());
-                    for (String id : partIDs) {
-                        if (database.getIsCheckedOut(id)) {
-                            typeHasOneCheckedOut = true;
-                        }
-                    }
-                    String partName = part.getPartName();
-                    if (!typeHasOneCheckedOut) {
-                        database.initWorker(worker);
-                        try {
-                            if (database.hasPartName(partName)) {
-                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete all parts named: " + partName + "?", ButtonType.YES, ButtonType.NO);
-                                alert.showAndWait();
-                                if (alert.getResult() == ButtonType.YES) {
-                                    database.deleteParts(partName);
-                                    tscTable.populateTable();
-                                }
-                            }
-                        } catch (Exception e) {
-                            StudentCheckIn.logger.error("Exception while deleting part type.");
-                            e.printStackTrace();
-                        }
-                    } else {
-                        stageUtils.errorAlert("At least one " + partName + " is currently checked out, so "
-                                + partName + " parts cannot be deleted.");
-                    }
-                }
-            }
-        } else {
-            impossibleOperation("delete many parts");
+        if (tscTable instanceof CompleteInventoryTable) {
+            ((CompleteInventoryTable) tscTable).deletePartType();
         }
     }
 
     public void deletePart() {
-        if (screen == TableScreen.COMPLETE_INVENTORY) {
-            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
-                int row = table.getSelectionModel().getFocusedIndex();
-                CompleteInventoryTable temp = (CompleteInventoryTable) tscTable;
-                int partID = temp.getRowPartID(row);
-                Part part = database.selectPart(partID);
-
-                if ((worker != null && (worker.canRemoveParts() || worker.isAdmin())) || stageUtils.requestAdminPin("Delete a Part", scene) ) {
-                    if (!part.getCheckedOut()) {
-                        database.initWorker(worker);
-                        try {
-                            if (database.selectPart(partID) != null) {
-                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you wish to delete the part with ID = " + partID + "?", ButtonType.YES, ButtonType.NO);
-                                alert.showAndWait();
-                                if (alert.getResult() == ButtonType.YES) {
-                                    database.deletePart(partID);
-                                    tscTable.populateTable();
-                                }
-                            }
-                        } catch (Exception e) {
-                            StudentCheckIn.logger.error("Exception while deleting part.");
-                            e.printStackTrace();
-                        }
-                    } else {
-                        deleteCheckedOutPartAlert();
-                    }
-                }
-            }
-        } else {
-            impossibleOperation("delete part");
+        if (tscTable instanceof CompleteInventoryTable) {
+            ((CompleteInventoryTable) tscTable).deletePart();
         }
     }
 
-    /**
-     * Alert that the part is currently checked out, so it cannot be deleted
-     */
-    private void deleteCheckedOutPartAlert() {
-        stageUtils.errorAlert("This part is currently checked out and cannot be deleted.");
-    }
-
     public void editManyParts() {
-        if (screen == TableScreen.COMPLETE_INVENTORY) {
-            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
-                int row = table.getSelectionModel().getFocusedIndex();
-                CompleteInventoryTable temp = (CompleteInventoryTable) tscTable;
-                int partID = temp.getRowPartID(row);
-                Part part = database.selectPart(partID);
-
-                if ((worker != null && (worker.canEditParts() || worker.isAdmin()))
-                        || StageUtils.getInstance().requestAdminPin("edit all parts named " + part.getPartName(), scene)) {
-
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditPartType.fxml"));
-                    try {
-                        Parent root = loader.load();
-                        ((EditPartController) loader.getController()).initPart(part);
-                        Scene scene = new Scene(root, 400, 500);
-                        Stage stage = new Stage();
-                        stage.setMinWidth(400);
-                        stage.setMaxWidth(400);
-                        stage.setMaxHeight(550);
-                        stage.setMinHeight(550);
-                        stage.setTitle("Edit all " + part.getPartName());
-                        stage.initOwner(this.scene.getScene().getWindow());
-                        stage.initModality(Modality.WINDOW_MODAL);
-                        stage.setScene(scene);
-                        stage.getIcons().add(new Image("images/msoe.png"));
-                        stage.setOnCloseRequest(ev -> {
-                            tscTable.populateTable();
-                            stage.close();
-                        });
-                        stage.show();
-                    } catch (IOException e) {
-                        StudentCheckIn.logger.error("IOException: Loading Edit Part.");
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } else {
-            impossibleOperation("edit many parts");
+        if (tscTable instanceof CompleteInventoryTable) {
+            ((CompleteInventoryTable) tscTable).editPartType();
         }
     }
 
     @FXML
     public void editPart() {
-        if (screen == TableScreen.COMPLETE_INVENTORY) {
-            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
-                if ((worker != null && (worker.canEditParts() || worker.isAdmin()))
-                        || StageUtils.getInstance().requestAdminPin("edit a part", scene)) {
-
-                    int row = table.getSelectionModel().getFocusedIndex();
-                    CompleteInventoryTable temp = (CompleteInventoryTable) tscTable;
-                    int partID = temp.getRowPartID(row);
-                    Part part = database.selectPart(partID);
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditOnePart.fxml"));
-
-                    try {
-                        Parent root = loader.load();
-                        ((EditPartController) loader.getController()).initPart(part);
-                        Scene scene = new Scene(root, 400, 500);
-                        Stage stage = new Stage();
-                        stage.setMinWidth(400);
-                        stage.setMaxWidth(400);
-                        stage.setMaxHeight(550);
-                        stage.setMinHeight(550);
-                        String partName = part.getPartName();
-                        if (part.getPartName().endsWith("s")) {
-                            partName = part.getPartName().substring(0, part.getPartName().length() - 1);
-                        }
-                        stage.setTitle("Edit a " + partName);
-                        stage.initOwner(this.scene.getScene().getWindow());
-                        stage.initModality(Modality.WINDOW_MODAL);
-                        stage.setScene(scene);
-                        stage.getIcons().add(new Image("images/msoe.png"));
-                        stage.setOnCloseRequest(ev -> {
-                            tscTable.populateTable();
-                            stage.close();
-                        });
-                        stage.show();
-                    } catch (IOException e) {
-                        StudentCheckIn.logger.error("IOException: Loading Edit Part.");
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } else {
-            impossibleOperation("edit part");
+        if (tscTable instanceof CompleteInventoryTable) {
+            ((CompleteInventoryTable) tscTable).editPart();
         }
     }
 
     public void clearHistory() {
-        if (screen == TableScreen.HISTORY) {
-            if (this.worker != null && this.worker.isAdmin()) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Confirm Delete Old History");
-                alert.setContentText("Are you sure you want to clear the transaction history for parts older than 2 years?");
-                alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.YES) {
-                    database.clearOldHistory();
-                    tscTable.populateTable();
-                }
-            }
-
-        } else {
-            impossibleOperation("clear history");
+        if (tscTable instanceof HistoryInventoryTable) {
+            ((HistoryInventoryTable) tscTable).clearHistory();
         }
     }
 
     public void importStudents() {
-        if (screen == TableScreen.STUDENTS) {
-            database.initWorker(worker);
-            try {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Import Students");
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
-
-                File file = fileChooser.showOpenDialog(table.getScene().getWindow());
-                FileInputStream fis = new FileInputStream(file);
-                XSSFWorkbook workbook = new XSSFWorkbook(fis);
-                XSSFSheet sheet = workbook.getSheetAt(0);
-                Iterator<Row> rowIt = sheet.iterator();
-                // skip the first row, which just has column labels
-                if (rowIt.hasNext()) {
-                    rowIt.next();
-                }
-
-                List<Student> failedImports = new ArrayList<>();
-                // parse the rest of the rows
-                while (rowIt.hasNext()) {
-                    Row row = rowIt.next();
-                    if (row.getCell(0) != null && row.getCell(3) != null) {
-                        String email = row.getCell(3).toString();
-                        String name = row.getCell(0).toString();
-                        try {
-                            String lastName = name.substring(0, name.indexOf(", "));
-                            String restOfName = name.substring(name.indexOf(", ") + 2);
-                            String firstName;
-                            if (restOfName.contains(" ")) {
-                                firstName = restOfName.substring(0, restOfName.indexOf(" "));
-                            } else {
-                                firstName = restOfName;
-                            }
-                            if (restOfName.contains(", ")) {
-                                lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
-                            }
-                            if (!email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-                                failedImports.add(new Student(firstName + " " + lastName, email));
-                            } else {
-                                if (!database.getStudentEmails().contains(email)) {
-                                    if (!database.importStudent(new Student((firstName + " " + lastName), email))) {
-                                        failedImports.add(new Student(firstName + " " + lastName, email));
-                                    }
-                                }
-                            }
-                        } catch (StringIndexOutOfBoundsException e) {
-                            failedImports.add(new Student(name, email));
-                        }
-                    } else {
-                        stageUtils.errorAlert("The name must be in the first row and the email must be in the fourth row of the imported excel file.");
-                    }
-
-                }
-                tscTable.populateTable();
-
-                if (!failedImports.isEmpty()) {
-                    List<String> lines = new ArrayList<>();
-                    for (Student student : failedImports) {
-                        lines.add(student.getName());
-                    }
-                    Path filePath = Paths.get("failed_students_import.txt");
-                    Files.write(filePath, lines);
-                    stageUtils.errorAlert("The program failed to import the students listed in the text file: \"" + filePath.getFileName() + "\"");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            impossibleOperation("import students");
+        if (tscTable instanceof ManageStudentsTable) {
+            ((ManageStudentsTable) tscTable).importStudents();
         }
     }
 
     public void addStudent() {
-        if (screen == TableScreen.STUDENTS) {
-            Stage stage = new Stage();
-            try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/addStudent.fxml");
-                FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                Parent root = loader.load();
-                IController controller = loader.getController();
-                controller.initWorker(worker);
-                Scene scene = new Scene(root);
-                stage.setTitle("Add a New Student");
-                stage.initOwner(this.scene.getScene().getWindow());
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.setScene(scene);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.showAndWait();
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add student page");
-                alert.initStyle(StageStyle.UTILITY);
-                StudentCheckIn.logger.error("IOException: Couldn't load add student page.");
-                alert.showAndWait();
-                e.printStackTrace();
-            }
-            tscTable.populateTable();
-        } else {
-            impossibleOperation("add student");
+        if (tscTable instanceof ManageStudentsTable) {
+            ((ManageStudentsTable) tscTable).addStudent();
         }
     }
 
     public void deleteStudent() {
-        if (screen == TableScreen.STUDENTS) {
-            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
-                if ((worker != null && worker.isAdmin())
-                        || StageUtils.getInstance().requestAdminPin("delete a student", scene)) {
-
-                    int index = table.getSelectionModel().getFocusedIndex();
-                    ManageStudentsTable temp = (ManageStudentsTable) tscTable;
-                    String email = temp.getEmail(index);
-                    if (stageUtils.confirmationAlert("Delete Student", "Delete this Student?")) {
-                        database.deleteStudent(email);
-                        tscTable.populateTable();
-                    }
-                }
-            }
-        } else {
-            impossibleOperation("delete student");
+        if (tscTable instanceof ManageStudentsTable) {
+            ((ManageStudentsTable) tscTable).deleteStudent();
         }
     }
 
     public void addWorker() {
-        if (screen == TableScreen.WORKERS) {
-            Stage stage = new Stage();
-            try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/addWorker.fxml");
-                FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                Parent root = loader.load();
-                IController controller = loader.getController();
-                controller.initWorker(worker);
-                Scene scene = new Scene(root, 350, 370);
-                stage.setTitle("Add a New Worker");
-                stage.initOwner(this.scene.getScene().getWindow());
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.setScene(scene);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.showAndWait();
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add worker page");
-                alert.initStyle(StageStyle.UTILITY);
-                StudentCheckIn.logger.error("IOException: Couldn't load add worker page.");
-                alert.showAndWait();
-                e.printStackTrace();
-            }
-            tscTable.populateTable();
-        } else {
-            impossibleOperation("add employee");
+        if (tscTable instanceof ManageEmployeesTable) {
+            ((ManageEmployeesTable) tscTable).addWorker();
         }
     }
 
     public void addAdmin() {
-        if (screen == TableScreen.WORKERS) {
-            Stage stage = new Stage();
-            try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/addAdmin.fxml");
-                FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                Parent root = loader.load();
-                IController controller = loader.getController();
-                controller.initWorker(worker);
-                Scene scene = new Scene(root, 350, 420);
-                stage.setTitle("Add a New Worker");
-                stage.initOwner(this.scene.getScene().getWindow());
-                stage.initModality(Modality.WINDOW_MODAL);
-                stage.setScene(scene);
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.showAndWait();
-            } catch (IOException e) {
-                stageUtils.errorAlert("Couldn't load add admin page");
-                e.printStackTrace();
-            }
-            tscTable.populateTable();
-        } else {
-            impossibleOperation("add admin");
+        if (tscTable instanceof ManageEmployeesTable) {
+            ((ManageEmployeesTable) tscTable).addAdmin();
         }
     }
 
     public void deleteEmployee() {
-        if (screen == TableScreen.WORKERS) {
-            int admins = database.getNumAdmins();
-            if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
-                ManageEmployeesTable temp = (ManageEmployeesTable) tscTable;
-                Worker w = temp.getSelectedWorker();
-                if (admins == 1 && w.isAdmin()) {
-                    stageUtils.errorAlert("Cannot delete the last admin.");
-                } else if (worker.getID() == w.getID()) {
-                    stageUtils.errorAlert("Cannot delete your own account.");
-                } else  {
-                    if (stageUtils.confirmationAlert("Delete This Worker?",
-                            "Are you sure you want to delete this worker?")) {
-                        database.deleteWorker(w.getName());
-                    }
-                }
-            }
-            tscTable.populateTable();
-        } else {
-            impossibleOperation("delete employee");
+        if (tscTable instanceof ManageEmployeesTable) {
+            ((ManageEmployeesTable) tscTable).deleteWorker();
         }
     }
 
@@ -694,9 +361,5 @@ public class TableScreensController extends MenuController implements IControlle
     public void setScreen(TableScreen tableScreen) {
         screen = tableScreen;
         reloadScreen();
-    }
-
-    private void impossibleOperation(String operation) {
-        stageUtils.errorAlert("It should be impossible to access " + operation + " from " + screen);
     }
 }
