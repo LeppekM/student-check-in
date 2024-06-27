@@ -1,7 +1,7 @@
 package InventoryController;
 
+import Popups.AddPartController;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -9,12 +9,12 @@ import static org.junit.Assert.assertTrue;
 
 public class AddPartTextFieldValidationTest {
 
-    private ControllerAddPart controllerAddPart;
+    private AddPartController controllerAddPart;
 
 
     @Before
     public void before(){
-        controllerAddPart = new ControllerAddPart();
+        controllerAddPart = new AddPartController();
     }
 
 

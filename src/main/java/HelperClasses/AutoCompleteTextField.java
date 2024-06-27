@@ -194,8 +194,8 @@ public class AutoCompleteTextField extends JFXTextField {
                 occurence + text.length()));
         in.setStyle(getTextOccurrenceStyle());
         //Part after occurence
-        Text post = new Text(result.substring(occurence + text.length(),
-                result.length()));
+        Text post = new Text(result.substring(occurence + text.length()
+        ));
 
         TextFlow entryFlow = new TextFlow(pre, in, post);
         return entryFlow;

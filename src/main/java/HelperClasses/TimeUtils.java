@@ -1,6 +1,6 @@
 package HelperClasses;
 
-import InventoryController.StudentCheckIn;
+import App.StudentCheckIn;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

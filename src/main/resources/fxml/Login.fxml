@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 
 <StackPane fx:id="loginScene" minHeight="525.0" minWidth="1030.0" prefHeight="400.0" prefWidth="640.0"
-           xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerLogin">
+           xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LoginController">
     <VBox alignment="CENTER">
         <StackPane>
             <VBox.margin>

@@ -13,7 +13,7 @@
 
 <VBox id="root" fx:id="sceneViewHistoryPart" prefHeight="450.0" prefWidth="400.0"
       xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="InventoryController.ControllerViewHistoryPart">
+      fx:controller="Popups.ViewHistoryPartController">
     <GridPane alignment="TOP_CENTER" hgap="3.0" prefHeight="367.0" prefWidth="370.0" vgap="15.0">
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT"/>

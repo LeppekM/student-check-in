@@ -6,14 +6,14 @@ import javafx.beans.property.*;
 import java.util.Date;
 
 public class OverdueItem extends RecursiveTreeObject {
-    private SimpleIntegerProperty ID;
-    private SimpleStringProperty partName;
-    private SimpleLongProperty barcode;
-    private ObjectProperty<Date> dueDate;
+    private final SimpleIntegerProperty ID;
+    private final SimpleStringProperty partName;
+    private final SimpleLongProperty barcode;
+    private final ObjectProperty<Date> dueDate;
     private SimpleDoubleProperty price;
-    private SimpleStringProperty studentName;
-    private SimpleStringProperty email;
-    private SimpleStringProperty checkID;
+    private final SimpleStringProperty studentName;
+    private final SimpleStringProperty email;
+    private final SimpleStringProperty checkID;
     private SimpleStringProperty serialNumber;
 
     public OverdueItem(int studentID, String studentName, String email, String partName, String serialNumber, long barcodeCon, Date dueDate, String checkID) {

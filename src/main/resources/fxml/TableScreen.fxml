@@ -17,7 +17,7 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.Region?>
 <VBox fx:id="scene" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="InventoryController.TableScreensController">
+      fx:controller="Controllers.TableScreensController">
     <JFXTabPane fx:id="tabPane" stylesheets="@../css/TabStyle.css"
                 tabClosingPolicy="UNAVAILABLE">
         <Tab text="Total Inventory"> </Tab>

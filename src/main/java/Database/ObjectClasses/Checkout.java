@@ -6,8 +6,13 @@ import javafx.beans.property.*;
 import java.util.Date;
 
 public class Checkout extends RecursiveTreeObject {
-    private StringProperty studentName, studentEmail, partName, action, serialNumber, fee;
-    private LongProperty barcode;
+    private final StringProperty studentName;
+    private final StringProperty studentEmail;
+    private final StringProperty partName;
+    private StringProperty action;
+    private StringProperty serialNumber;
+    private StringProperty fee;
+    private final LongProperty barcode;
     private IntegerProperty checkoutID, studentID, partID;
     private ObjectProperty<Date> date, dueDate, checkedOutDate;
 

@@ -11,7 +11,7 @@
 
 <VBox fx:id="sceneEditOnePart" prefHeight="500.0" prefWidth="400.0" stylesheets="@../css/PopupStyle.css"
       xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="InventoryController.ControllerEditOnePart">
+      fx:controller="Popups.EditOnePartController">
     <AnchorPane prefHeight="500.0" prefWidth="400.0">
         <Pane prefHeight="500.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0"
               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

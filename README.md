@@ -34,6 +34,7 @@ Product Owner: Jim Frommell
 * Double check leading 00s in table searches / improve searches with space delim
 * Make date format for tables more concise
 * Fix visual errors being caused from the revamps
+* QA test table functionality
 * Testing suite
 * Documentation, for the love of god
 * scrollbar for checkin/out page (or other fix to infinite barcode smush problem) (like if you press enter on empty barcodefield it submits)

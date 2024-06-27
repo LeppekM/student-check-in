@@ -1,10 +1,11 @@
 package HelperClasses;
 
+import App.StudentCheckIn;
 import Database.ObjectClasses.Worker;
-import InventoryController.IController;
-import InventoryController.StudentCheckIn;
-import InventoryController.TableScreen;
-import InventoryController.TableScreensController;
+import Controllers.IController;
+import Popups.AdminPinRequestController;
+import Tables.TableScreen;
+import Controllers.TableScreensController;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
 import javafx.animation.PauseTransition;
@@ -298,7 +299,7 @@ public class StageUtils {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Menu.fxml"));
             Parent root = loader.load();
-            IController controller = loader.<IController>getController();
+            IController controller = loader.getController();
             controller.initWorker(worker);
             pane.getScene().setRoot(root);
             ((IController) loader.getController()).initWorker(worker);

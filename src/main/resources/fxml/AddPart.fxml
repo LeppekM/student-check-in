@@ -13,7 +13,7 @@
 
 <?import com.jfoenix.controls.JFXCheckBox?>
 <VBox id="root" fx:id="sceneAddPart" prefHeight="450.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/10.0.1"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="InventoryController.ControllerAddPart">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="Popups.AddPartController">
     <AnchorPane prefHeight="468.0" prefWidth="410.0">
         <Pane prefHeight="450.0" prefWidth="410.0">
             <Label layoutX="75.0" layoutY="14.0" text="Part Name:">

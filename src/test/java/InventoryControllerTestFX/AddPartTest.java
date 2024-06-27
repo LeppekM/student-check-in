@@ -37,7 +37,7 @@ public class AddPartTest extends ApplicationTest {
     public void start (Stage stage)throws IOException{
         URL myFxmlURL = ClassLoader.getSystemResource("fxml/AddPart.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
-        Parent root = loader.load(myFxmlURL);
+        Parent root = FXMLLoader.load(myFxmlURL);
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("AddPart Test");
         stage.setScene(scene);

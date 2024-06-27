@@ -5,9 +5,13 @@ import javafx.beans.property.*;
 
 public class Part {
 
-    private SimpleStringProperty partName, serialNumber, manufacturer, vendor, location;
+    private final SimpleStringProperty partName;
+    private final SimpleStringProperty serialNumber;
+    private SimpleStringProperty manufacturer;
+    private SimpleStringProperty vendor;
+    private SimpleStringProperty location;
     private final SimpleLongProperty barcode;
-    private SimpleDoubleProperty price;
+    private final SimpleDoubleProperty price;
     private SimpleIntegerProperty partID;
     private final SimpleBooleanProperty checkedOut = new SimpleBooleanProperty(false);
 
@@ -111,19 +115,18 @@ public class Part {
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder();
-        str.append("Part Name: ").append(getPartName());
-        str.append("\tSerial Number: ").append(getSerialNumber());
-        str.append("\tManufacturer: ").append(getManufacturer());
-        str.append("\tPrice: ").append(getPrice());
-        str.append("\tVendor: ").append(getVendor());
-        str.append("\tLocation: ").append(getLocation());
-        str.append("\tBarcode: ").append(getBarcode());
-        str.append("\tFault: ").append(false);
-        str.append("\tFault Description: "); // will not correctly parse if these are not appended
-        str.append("\tPart ID: ").append(getPartID());
-        str.append("\tIs Deleted: ");
-        str.append("\tIs CheckedOut: ").append(getCheckedOut()).append("\n");
-        return str.toString();
+        String str = "Part Name: " + getPartName() +
+                "\tSerial Number: " + getSerialNumber() +
+                "\tManufacturer: " + getManufacturer() +
+                "\tPrice: " + getPrice() +
+                "\tVendor: " + getVendor() +
+                "\tLocation: " + getLocation() +
+                "\tBarcode: " + getBarcode() +
+                "\tFault: " + false +
+                "\tFault Description: " + // will not correctly parse if these are not appended
+                "\tPart ID: " + getPartID() +
+                "\tIs Deleted: " +
+                "\tIs CheckedOut: " + getCheckedOut() + "\n";
+        return str;
     }
 }

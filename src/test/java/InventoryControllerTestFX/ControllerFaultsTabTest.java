@@ -19,7 +19,7 @@ public class ControllerFaultsTabTest extends ApplicationTest {
 
         URL myFxmlURL = ClassLoader.getSystemResource("InventoryFaultsTab.fxml");
         FXMLLoader loader = new FXMLLoader(myFxmlURL);
-        Parent root = loader.load(myFxmlURL);
+        Parent root = FXMLLoader.load(myFxmlURL);
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Faulty Parts Test");
         stage.setScene(scene);

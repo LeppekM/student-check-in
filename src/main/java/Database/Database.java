@@ -1,13 +1,13 @@
 package Database;
 
-import CheckItemsController.CheckoutObject;
+import App.StudentCheckIn;
+import Controllers.IController;
 import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.TimeUtils;
 import HelperClasses.StageUtils;
-import InventoryController.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -462,7 +462,7 @@ public class Database implements IController {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
             DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-            String formattedDate = target.format(timeUtils.getTwoYearsAgo());
+            String formattedDate = target.format(TimeUtils.getTwoYearsAgo());
             preparedStatement.setString(1, formattedDate);
             preparedStatement.execute();
             preparedStatement.close();
@@ -1185,7 +1185,7 @@ public class Database implements IController {
      */
     public void addStudent(Student s) {
         String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) + "', date('" + timeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
+                + ", '" + cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) + "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);

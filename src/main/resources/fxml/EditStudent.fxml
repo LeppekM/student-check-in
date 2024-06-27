@@ -14,7 +14,7 @@
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="620.0" prefWidth="840.0" stylesheets="@../css/PageStyle.css"
             xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ManagePeople.EditStudent">
+            fx:controller="Popups.EditStudent">
    <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0"
          prefWidth="840.0">
       <Label layoutX="38.0" layoutY="279.0" stylesheets="@../css/HeaderStyleSmall.css" text="Checked Out"/>

@@ -26,7 +26,7 @@ public class Log4J extends PrintStream {
         systemOutToLogger = null;
     }
 
-    private String packageOrClassToLog;
+    private final String packageOrClassToLog;
     private Log4J(PrintStream original, String packageOrClassToLog) {
         super(original);
         this.packageOrClassToLog = packageOrClassToLog;

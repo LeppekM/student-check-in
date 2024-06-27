@@ -10,7 +10,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TestLog4J {
 
@@ -33,7 +33,7 @@ public class TestLog4J {
     @Test
     public void checkLogFileExists(){
         File file = new File(System.getProperty("user.dir") + "\\latest.log");
-        assertEquals(file.exists(), true);
-        assertEquals(file.isDirectory(), false);
+        assertTrue(file.exists());
+        assertFalse(file.isDirectory());
     }
 }
