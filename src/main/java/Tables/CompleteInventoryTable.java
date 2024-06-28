@@ -1,12 +1,14 @@
 package Tables;
 
 import App.StudentCheckIn;
+import Database.CheckoutObject;
 import Database.ObjectClasses.Part;
+import Database.ObjectClasses.Student;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
 import HelperClasses.StageUtils;
 import Popups.EditPartController;
-import Popups.ViewTotalPartController;
+import Popups.Popup;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -14,14 +16,19 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
@@ -111,27 +118,111 @@ public class CompleteInventoryTable extends TSCTable {
 
     @Override
     protected void popupRow(int index) {
+        String titleStyle = "-fx-font-weight: bolder; -fx-font-size: 20px;";
+        int height = 40;
         Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewTotalPart.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            stage.setTitle("View Part");
-            stage.initOwner(scene.getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            if (index != -1) {
-                TreeItem item = table.getSelectionModel().getModelItem(index);
-                // null if user clicks on empty row
-                if (item != null) {
-                    CompleteInventoryTable.CIRow row = ((CompleteInventoryTable.CIRow) item.getValue());
-                    ((ViewTotalPartController) loader.getController()).populate(row);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
-                }
+        HBox root = new HBox();
+
+        VBox vBox1 = new VBox();
+        vBox1.setAlignment(Pos.TOP_CENTER);
+        Label vLabel1 = new Label("Part Info");
+        vLabel1.setStyle(titleStyle);
+        vLabel1.setMinHeight(height);
+        vBox1.getChildren().add(vLabel1);
+        root.getChildren().add(vBox1);
+
+        Separator separator = new Separator();
+        separator.setOrientation(Orientation.VERTICAL);
+        root.getChildren().add(separator);
+
+        VBox vBox2 = new VBox();
+        vBox2.setAlignment(Pos.TOP_CENTER);
+        Label vLabel2 = new Label("Last Transaction Info");
+        vLabel2.setStyle(titleStyle);
+        vLabel2.setMinHeight(height);
+        vBox2.getChildren().add(vLabel2);
+        root.getChildren().add(vBox2);
+
+        Scene scene = new Scene(root);
+        stage.setTitle("View Part");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+        if (index != -1) {
+            TreeItem item = table.getSelectionModel().getModelItem(index);
+            // null if user clicks on empty row
+            if (item != null) {
+                CompleteInventoryTable.CIRow row = ((CompleteInventoryTable.CIRow) item.getValue());
+                Popup partInfo = new Popup(vBox1) {
+                    @Override
+                    public void populate() {
+                        add("Part Name: ", row.getPartName().get(), false);
+                        add("Barcode: ", "" + row.getBarcode().get(), false);
+                        add("Serial Number: ", row.getSerialNumber().get(), false);
+                        add("Part ID: ", "" + row.getPartID().get(), false);
+
+                        submitButton.setVisible(false);
+                    }
+
+                    @Override
+                    public void submit() {
+                        // no button in this half of box
+                    }
+                };
+
+                Popup lastTransactionInfo = new Popup(vBox2) {
+                    @Override
+                    public void populate() {
+                        Student student = database.getStudentToLastCheckout(row.getPartID().get());
+
+                        if (student != null) {
+                            CheckoutObject checkoutObject = database.getLastCheckoutOf(row.getPartID().get());
+                            String type = checkoutObject.getCheckinAtDate() == null || checkoutObject.getCheckinAtDate().isEmpty() ? "Checked Out" : "Check In";
+
+                            add("Student Name: ", student.getName(), false);
+                            add("Student Email: ", student.getEmail(), false);
+
+                            boolean isOverdue = false;
+                            if (!checkoutObject.getCheckoutAtDate().isEmpty()) {
+                                String className = checkoutObject.getExtendedCourseName();
+                                if (className != null && !className.isEmpty()) {
+                                    add("Class Name: ", className, false);
+                                    add("Professor Name: ", checkoutObject.getExtendedProfessor(), false);
+                                }
+                                isOverdue = database.isOverdue(checkoutObject.getDueAt()) && checkoutObject.getCheckinAtDate() == null;
+                                if (isOverdue) {
+                                    DecimalFormat df = new DecimalFormat("#,###,##0.00");
+                                    add("Fee: ", "$" + df.format(row.getPrice().get() / 100), false);
+                                }
+                            }
+                            Label label;
+                            if (type.equals("Check In")){
+                                label = add(type + " Date: ", checkoutObject.getCheckinAtDate(), false);
+                            } else {
+                                label = add(type + " Date: ", checkoutObject.getCheckoutAtDate(), false);
+                            }
+                            add("Due Date: ", checkoutObject.getDueAt(), false);
+                            if (isOverdue) {
+                                label.setStyle("-fx-text-fill: red; -fx-font-size: 16px;");
+                            }
+                        } else {
+                            Label label = new Label("No Previous Checkout History Associated with this Part");
+                            label.setStyle("-fx-font-size: 16px;");
+                            HBox hBox = new HBox(label);
+                            addHBox(hBox);
+                        }
+                        submitButton.setText("Close");
+                    }
+
+                    @Override
+                    public void submit() {
+                        stage.close();
+                    }
+                };
+
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.show();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -214,7 +305,7 @@ public class CompleteInventoryTable extends TSCTable {
                     stage.setScene(scene);
                     stage.getIcons().add(new Image("images/msoe.png"));
                     stage.setOnCloseRequest(ev -> {
-                        populateTable();
+//                        populateTable();
                         stage.close();
                     });
                     stage.show();
@@ -241,7 +332,7 @@ public class CompleteInventoryTable extends TSCTable {
                             alert.showAndWait();
                             if (alert.getResult() == ButtonType.YES) {
                                 database.deletePart(partID);
-                                populateTable();
+//                                populateTable();
                             }
                         }
                     } catch (Exception e) {
@@ -277,7 +368,7 @@ public class CompleteInventoryTable extends TSCTable {
                         alert.showAndWait();
                         if (alert.getResult() == ButtonType.YES) {
                             database.deleteParts(partName);
-                            populateTable();
+//                            populateTable();
                         }
                     }
                 } catch (Exception e) {

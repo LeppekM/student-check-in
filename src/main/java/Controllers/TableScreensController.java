@@ -1,40 +1,19 @@
 package Controllers;
 
 import Database.Database;
-import Database.ObjectClasses.Part;
-import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
 import HelperClasses.StageUtils;
-import App.StudentCheckIn;
-import Popups.EditPartController;
 import Tables.*;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTreeTableView;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class TableScreensController extends MenuController implements IController, Initializable {
@@ -122,9 +101,7 @@ public class TableScreensController extends MenuController implements IControlle
         });
 
         // add deactivate/activate behavior for buttons which need it
-        table.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            disableButtons(false);
-        });
+        table.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> disableButtons(false));
 
         // Updates the search if the user presses enter with the cursor in the search field
         searchInput.setOnKeyReleased(event -> {
@@ -281,6 +258,7 @@ public class TableScreensController extends MenuController implements IControlle
         tscTable.export(export);
     }
 
+    @FXML
     public void addPart() {
         if (tscTable instanceof CompleteInventoryTable) {
             ((CompleteInventoryTable) tscTable).addPart();

@@ -88,8 +88,10 @@ public class StageUtils {
                 // This prevents horizontal overflow/visual errors in the table scenes
                 VBox vBox = (VBox) root.lookup("#scene");
                 if (vBox != null) {
-                    Stage stage = (Stage) node.getScene().getWindow();
-                    vBox.maxWidthProperty().bind(stage.widthProperty());
+                    try {
+                        Stage stage = (Stage) node.getScene().getWindow();
+                        vBox.maxWidthProperty().bind(stage.widthProperty());
+                    } catch (Exception e) {} // throws NullPointer for some reason, seems to still work though
                 }
             }
         } catch (IOException invoke) {

@@ -404,6 +404,9 @@ public class Database implements IController {
                 studentName = resultSet.getString("studentName");
             }
             student = selectStudent(studentID, null);
+            if (student == null) {
+                return null;
+            }
             if (student.getName().isEmpty()) {
                 student.setName(studentName);
             }
