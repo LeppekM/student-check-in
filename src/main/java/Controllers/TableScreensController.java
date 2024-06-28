@@ -76,7 +76,7 @@ public class TableScreensController extends MenuController implements IControlle
             } else if (screen == TableScreen.STUDENTS) {
                 deleteStudent();
             } else if (screen == TableScreen.WORKERS) {
-                deleteEmployee();
+                deleteWorker();
             }
         });
 
@@ -170,8 +170,8 @@ public class TableScreensController extends MenuController implements IControlle
                 menuButton5.setVisible(false);
                 break;
             case WORKERS:
-                tscTable = new ManageEmployeesTable(this);
-                titleLabel.setText("Manage Employees");
+                tscTable = new ManageWorkersTable(this);
+                titleLabel.setText("Manage Workers");
                 excelButton.setVisible(false);
                 menuButton1.setVisible(true);
                 menuButton1.setText("Delete");
@@ -315,20 +315,20 @@ public class TableScreensController extends MenuController implements IControlle
     }
 
     public void addWorker() {
-        if (tscTable instanceof ManageEmployeesTable) {
-            ((ManageEmployeesTable) tscTable).addWorker();
+        if (tscTable instanceof ManageWorkersTable) {
+            ((ManageWorkersTable) tscTable).addWorker();
         }
     }
 
     public void addAdmin() {
-        if (tscTable instanceof ManageEmployeesTable) {
-            ((ManageEmployeesTable) tscTable).addAdmin();
+        if (tscTable instanceof ManageWorkersTable) {
+            ((ManageWorkersTable) tscTable).addAdmin();
         }
     }
 
-    public void deleteEmployee() {
-        if (tscTable instanceof ManageEmployeesTable) {
-            ((ManageEmployeesTable) tscTable).deleteWorker();
+    public void deleteWorker() {
+        if (tscTable instanceof ManageWorkersTable) {
+            ((ManageWorkersTable) tscTable).deleteWorker();
         }
     }
 

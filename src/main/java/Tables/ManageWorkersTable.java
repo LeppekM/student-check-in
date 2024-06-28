@@ -32,12 +32,12 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.net.URL;
 
-public class ManageEmployeesTable extends TSCTable {
+public class ManageWorkersTable extends TSCTable {
 
     private JFXTreeTableColumn<MERow, String> nameCol, emailCol;
     private JFXTreeTableColumn<MERow, Boolean> adminCol;
 
-    public ManageEmployeesTable(TableScreensController controller) {
+    public ManageWorkersTable(TableScreensController controller) {
         super(controller);
     }
 
