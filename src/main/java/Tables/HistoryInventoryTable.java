@@ -3,25 +3,23 @@ package Tables;
 import Database.ObjectClasses.Checkout;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
-import Popups.ViewHistoryPartController;
+import Popups.Popup;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -107,26 +105,42 @@ public class HistoryInventoryTable extends TSCTable {
     @Override
     protected void popupRow(int index) {
         Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewHistoryPart.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            stage.setTitle("View Transaction");
-            stage.initOwner(scene.getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            if (index != -1) {
-                TreeItem item = table.getSelectionModel().getModelItem(index);
-                // null if user clicks on empty row
-                if (item != null) {
-                    HIRow row = ((HIRow) item.getValue());
-                    ((ViewHistoryPartController) loader.getController()).populate(row);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
-                }
+
+        VBox root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("View Transaction");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+        if (index != -1) {
+            TreeItem item = table.getSelectionModel().getModelItem(index);
+            // null if user clicks on empty row
+            if (item != null) {
+                HIRow row = ((HIRow) item.getValue());
+
+                Popup historyPopup = new Popup(root) {
+
+                    @Override
+                    public void populate() {
+                        add("Student Name: ", row.getStudentName().get(), false);
+                        add("Student Email: ", row.getStudentEmail().get(), false);
+                        add("Part Name: ", row.getPartName().get(), false);
+                        add("Barcode: ", "" + row.getBarcode().get(), false);
+                        add("Action: ", row.getAction().get(), false);
+                        add("Date: ", "" + row.getDate().get(), false);
+
+                        submitButton.setText("Close");
+                    }
+
+                    @Override
+                    public void submit() {
+                        stage.close();
+                    }
+                };
+
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.show();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

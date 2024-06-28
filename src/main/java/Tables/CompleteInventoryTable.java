@@ -68,7 +68,7 @@ public class CompleteInventoryTable extends TSCTable {
 
     @Override
     public void export(ExportToExcel exportToExcel) {
-        ObservableList<Part> list = database.getAllParts();  //todo: this is questionable, want to export current view w filters or all?
+        ObservableList<Part> list = database.getAllParts();
         exportToExcel.exportPartList(list);
     }
 

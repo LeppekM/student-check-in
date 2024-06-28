@@ -18,6 +18,9 @@ public abstract class Popup {
 
     protected JFXButton submitButton;
 
+    protected static final int HEIGHT = 35;
+    protected static final int WIDTH = 150;
+
 
     public Popup(Pane root) {
         this.root = root;
@@ -41,13 +44,10 @@ public abstract class Popup {
     }
 
     public Label add(String label, String field, boolean editable) {
-        int height = 35;
-        int width = 150;
-
         HBox hbox = new HBox();
         Label l = new Label(label);
-        l.setMaxSize(width, height);
-        l.setMinSize(width, height);
+        l.setMaxSize(WIDTH, HEIGHT);
+        l.setMinSize(WIDTH, HEIGHT);
         l.setStyle("-fx-font-size: 16px;");
         l.alignmentProperty().set(Pos.CENTER_RIGHT);
         hbox.getChildren().add(l);
@@ -56,8 +56,8 @@ public abstract class Popup {
         textField.setText(field);
         textField.setEditable(editable);
         textField.setStyle("-fx-font-size: 16px; -jfx-focus-color: FIREBRICK;");
-        textField.setMinSize(width, height);
-        textField.setMaxSize(width, height);
+        textField.setMinSize(WIDTH, HEIGHT);
+        textField.setMaxSize(WIDTH, HEIGHT);
         hbox.getChildren().add(textField);
         vbox.getChildren().add(hbox);
         return l;
