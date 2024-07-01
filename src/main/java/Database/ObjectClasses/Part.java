@@ -103,6 +103,10 @@ public class Part {
         return partID.get();
     }
 
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = new SimpleStringProperty(manufacturer);
+    }
+
     public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode) {
         this.partName.set(partName);
         this.serialNumber.set(serialNumber);

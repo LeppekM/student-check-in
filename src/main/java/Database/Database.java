@@ -665,13 +665,11 @@ public class Database implements IController {
      * @return true if the part has unique barcodes; false otherwise
      */
     public boolean hasUniqueBarcodes(String partName) {
-        ArrayList<String> barcodes = getAllBarcodesForPartName(partName);
         if (countPartsOfType(partName) > 1) {
-            for (int i = 0; i < barcodes.size(); i++) {
-                for (int j = 0; j < barcodes.size(); j++) {
-                    if (i != j && barcodes.get(i).equals(barcodes.get(j))) {
-                        return false;
-                    }
+            ArrayList<String> barcodes = getAllBarcodesForPartName(partName);
+            for (String barcode : barcodes) {
+                if (Collections.frequency(barcodes, barcode) > 1) {
+                    return false;
                 }
             }
         }
@@ -784,12 +782,11 @@ public class Database implements IController {
     }
 
     public void editAllOfPartName(String originalPartName, Part updatedPart) {
-        try {
-            String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, vendorID = ?, " +
-                    "updatedAt = ? WHERE partName = ?;";
-            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllQuery);
-            ArrayList<String> partIDsForPart = database.getAllPartIDsForPartName(originalPartName);
-            for (String id: partIDsForPart) {
+        if (!originalPartName.equals(updatedPart.getPartName())) {
+            try {
+                String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, vendorID = ?, " +
+                        "updatedAt = ? WHERE partName = ?;";
+                PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllQuery);
                 preparedStatement.setString(1, updatedPart.getPartName());
                 preparedStatement.setDouble(2, updatedPart.getPrice());
                 preparedStatement.setString(3, updatedPart.getLocation());
@@ -798,10 +795,10 @@ public class Database implements IController {
                 preparedStatement.setString(6, timeUtils.getCurrentDate());
                 preparedStatement.setString(7, originalPartName);
                 preparedStatement.execute();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                throw new IllegalStateException("Cannot connect to the database", e);
             }
-            preparedStatement.close();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect to the database", e);
         }
     }
 

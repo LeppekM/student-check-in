@@ -36,6 +36,7 @@ public abstract class TSCTable {
     public TSCTable(TableScreensController controller) {
         TSCTable.controller = controller;
         table = controller.table;
+        initWorker(controller.getWorker());
     }
 
     public abstract void initialize();

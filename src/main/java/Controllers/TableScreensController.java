@@ -340,4 +340,8 @@ public class TableScreensController extends MenuController implements IControlle
         screen = tableScreen;
         reloadScreen();
     }
+
+    public Worker getWorker() {
+        return worker;
+    }
 }
