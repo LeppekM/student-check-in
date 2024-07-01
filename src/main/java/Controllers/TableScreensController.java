@@ -7,6 +7,11 @@ import HelperClasses.StageUtils;
 import Tables.*;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTreeTableView;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -42,6 +47,7 @@ public class TableScreensController extends MenuController implements IControlle
     private Worker worker;
     private TSCTable tscTable;
     private TableScreen screen;
+    private final ObjectProperty<TableScreen> screenProperty = new SimpleObjectProperty<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -58,12 +64,21 @@ public class TableScreensController extends MenuController implements IControlle
                     screen = TableScreen.OVERDUE;
                 }
             }
-            reloadScreen();
+            if (newValue != oldValue){
+                reloadScreen();
+            }
         });
         tabPane.widthProperty().addListener((observable, oldValue, newValue) -> {
             tabPane.setTabMinWidth(tabPane.getWidth() / 4.5);
             tabPane.setTabMaxWidth(tabPane.getWidth() / 4.5);
         });
+
+        screenProperty.set(TableScreen.OVERDUE);
+        BooleanBinding hideTabs = screenProperty.isEqualTo(TableScreen.STUDENTS).or(screenProperty.isEqualTo(TableScreen.WORKERS));
+        NumberBinding heightBinding = Bindings.when(hideTabs).then(0).otherwise(42);
+        tabPane.maxHeightProperty().bind(heightBinding);
+        tabPane.minHeightProperty().bind(heightBinding);
+        tabPane.prefHeightProperty().bind(heightBinding);
 
         backButton.getStylesheets().add("/css/CheckButton.css");  // set button style
 
@@ -112,13 +127,7 @@ public class TableScreensController extends MenuController implements IControlle
     }
 
     private void reloadScreen() {
-        if (screen == TableScreen.STUDENTS || screen == TableScreen.WORKERS) {
-            tabPane.setVisible(false);
-            tabPane.setMaxHeight(0);
-        } else {
-            tabPane.setVisible(true);
-            tabPane.setMaxHeight(42);
-        }
+        screenProperty.set(screen);
 
         disableButtons(true);
 
