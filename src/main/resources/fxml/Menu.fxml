@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="mainMenuScene" prefHeight="620.0" prefWidth="800.0" stylesheets="@../css/MenuStyle.css"
-      xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Controllers.MenuController">
   <StackPane fx:id="pane" VBox.vgrow="ALWAYS">
     <VBox alignment="CENTER">

@@ -16,7 +16,7 @@
 <?import javafx.geometry.Insets?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <VBox fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      prefHeight="800.0" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Controllers.CheckOutController" stylesheets="@../css/SpinnerStyle.css">
    <HBox VBox.vgrow="ALWAYS">
       <Pane prefWidth="40.0" HBox.hgrow="SOMETIMES"/>
