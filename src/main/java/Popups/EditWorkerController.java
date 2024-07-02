@@ -14,7 +14,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-public class EditWorker implements IController {
+public class EditWorkerController implements IController {
 
     @FXML
     private AnchorPane main = new AnchorPane();

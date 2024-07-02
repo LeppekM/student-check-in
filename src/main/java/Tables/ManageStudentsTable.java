@@ -6,7 +6,7 @@ import HelperClasses.ExportToExcel;
 import App.StudentCheckIn;
 import Controllers.TableScreensController;
 import HelperClasses.StageUtils;
-import Popups.EditStudent;
+import Popups.EditStudentController;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -129,7 +129,7 @@ public class ManageStudentsTable extends TSCTable {
             URL myFxmlURL = ClassLoader.getSystemResource("fxml/EditStudent.fxml");
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load();
-            EditStudent sp = loader.getController();
+            EditStudentController sp = loader.getController();
             sp.setStudent(s);
             sp.initWorker(worker);
             Scene scene = new Scene(root, 840, 630);

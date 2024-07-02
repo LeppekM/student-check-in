@@ -14,7 +14,7 @@
 
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/8.0.202"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="Popups.EditAdmin">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="Popups.EditAdminController">
    <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
          prefWidth="789.0">
       <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#save"

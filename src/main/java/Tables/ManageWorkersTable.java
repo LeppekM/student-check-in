@@ -5,8 +5,8 @@ import Controllers.IController;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
-import Popups.EditAdmin;
-import Popups.EditWorker;
+import Popups.EditAdminController;
+import Popups.EditWorkerController;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -125,14 +125,14 @@ public class ManageWorkersTable extends TSCTable {
             FXMLLoader loader = new FXMLLoader(myFxmlURL);
             Parent root = loader.load();
             if (w.isAdmin()) {
-                EditAdmin ea = loader.getController();
+                EditAdminController ea = loader.getController();
                 ea.setAdmin(w);
                 ea.initWorker(worker);
                 if (ea.changed()) {
                     stageUtils.unsavedChangesAlert(stage);
                 }
             } else {
-                EditWorker ew = loader.getController();
+                EditWorkerController ew = loader.getController();
                 ew.setWorker(w);
                 ew.initWorker(worker);
                 if (ew.changed()) {
