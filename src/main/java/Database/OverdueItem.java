@@ -86,4 +86,8 @@ public class OverdueItem extends RecursiveTreeObject {
         return serialNumber;
     }
 
+    public SimpleStringProperty getCheckID() {
+        return checkID;
+    }
+
 }

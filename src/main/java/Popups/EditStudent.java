@@ -7,6 +7,7 @@ import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
 import HelperClasses.StageUtils;
 import Controllers.IController;
+import Tables.OverdueInventoryTable;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
@@ -29,7 +30,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.net.URL;
 
 public class EditStudent implements IController {
 
@@ -164,24 +164,10 @@ public class EditStudent implements IController {
      */
     public void oPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
-            Stage stage = new Stage();
-            try {
-                URL myFxmlURL = ClassLoader.getSystemResource("fxml/ViewOverduePart.fxml");
-                FXMLLoader loader = new FXMLLoader(myFxmlURL);
-                Parent root = loader.load();
-                Scene scene = new Scene(root, 400, 300);
-                stage.setTitle("Overdue Item");
-                stage.initOwner(main.getScene().getWindow());
-                stage.setScene(scene);
-                int index = oTable.getSelectionModel().getSelectedIndex();
-                if (index != -1) {
-                    OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
-                    ((OverduePopUpController) loader.getController()).populate(item, null);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            int index = oTable.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                OverdueItem item = ((OverdueItem) oTable.getSelectionModel().getModelItem(index).getValue());
+                OverdueInventoryTable.createOverduePartPopup(item);
             }
         }
     }

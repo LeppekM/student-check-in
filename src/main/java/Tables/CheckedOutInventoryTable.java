@@ -3,23 +3,24 @@ package Tables;
 import Database.ObjectClasses.Checkout;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
-import Popups.ViewCheckedOutPartController;
+import Popups.Popup;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CheckedOutInventoryTable extends TSCTable {
@@ -41,12 +42,14 @@ public class CheckedOutInventoryTable extends TSCTable {
         studentNameCol.setCellValueFactory(col -> col.getValue().getValue().getStudentName());
         partNameCol = createNewCol("Part Name");
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
-        barcodeCol = createNewCol("Barcode");
+        barcodeCol = createNewCol("Barcode", 0.1);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
-        checkOutDateCol = createNewCol("Check Out Date");
+        checkOutDateCol = createNewCol("Check Out Date", 0.25);
         checkOutDateCol.setCellValueFactory(col -> col.getValue().getValue().getCheckedOutAt());
-        dueDateCol = createNewCol("Due Date");
+        checkOutDateCol.setCellFactory(dateColFormat());
+        dueDateCol = createNewCol("Due Date", 0.25);
         dueDateCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
+        dueDateCol.setCellFactory(dateColFormat());
 
         rows = FXCollections.observableArrayList();
 
@@ -109,26 +112,47 @@ public class CheckedOutInventoryTable extends TSCTable {
     @Override
     protected void popupRow(int index) {
         Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ViewCheckedOutPart.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            stage.setTitle("View Checked Out Part");
-            stage.initOwner(scene.getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            if (index != -1) {
-                TreeItem item = table.getSelectionModel().getModelItem(index);
-                // null if user clicks on empty row
-                if (item != null) {
-                    CORow row = ((CORow) item.getValue());
-                    ((ViewCheckedOutPartController) loader.getController()).populate(row);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
-                }
+        VBox root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("View Checked Out Part");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+        if (index != -1) {
+            TreeItem item = table.getSelectionModel().getModelItem(index);
+            // null if user clicks on empty row
+            if (item != null) {
+                CORow row = ((CORow) item.getValue());
+
+                Popup checkedOutPopup = new Popup(root) {
+                    @Override
+                    public void populate() {
+                        add("Student Name: ", row.getStudentName().get(), false);
+                        add("Student Email: ", row.getStudentEmail().getValue(), false);
+                        add("Part Name: ", row.getPartName().getValue(), false);
+                        add("Barcode: ", "" + row.getBarcode().get(), false);
+                        add("Serial Number: ", row.getSerialNumber().get(), false);
+                        add("Part ID: ", "" + row.getPartID().get(), false);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
+                        add("Checked Out Date: ", dateFormat.format(row.getCheckedOutAt().getValue()), false);
+                        Label dueDateLabel = (Label) add("Due Date: ", dateFormat.format(row.getDueDate().getValue()), false).getChildren().get(0);
+                        if (database.isOverdue(String.valueOf(row.getDueDate().get()))) {
+                            dueDateLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FIREBRICK");
+                        }
+                        add("Fee: ", "$" + new DecimalFormat("#,###,##0.00").format(Double.parseDouble(row.getFee().get()) / 100), false);
+
+                        submitButton.setText("Close");
+                    }
+
+                    @Override
+                    public void submit() {
+                        stage.close();
+                    }
+                };
+
+                stage.getIcons().add(new Image("images/msoe.png"));
+                stage.show();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

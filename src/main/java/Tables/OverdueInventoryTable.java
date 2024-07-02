@@ -1,27 +1,25 @@
 package Tables;
 
+import Database.ObjectClasses.Student;
 import Database.OverdueItem;
 import HelperClasses.ExportToExcel;
-import App.StudentCheckIn;
 import Controllers.TableScreensController;
-import Popups.OverduePopUpController;
+import Popups.Popup;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class OverdueInventoryTable extends TSCTable {
@@ -40,18 +38,19 @@ public class OverdueInventoryTable extends TSCTable {
         NUM_COLS = 6;
         table.setPlaceholder(getEmptyTableLabel());
 
-        studentIDCol = createNewCol("Student ID");
+        studentIDCol = createNewCol("Student ID", 0.1);
         studentIDCol.setCellValueFactory(col -> col.getValue().getValue().getStudentID().asObject());
-        studentNameCol = createNewCol("Student Name");
+        studentNameCol = createNewCol("Student Name", 0.2);
         studentNameCol.setCellValueFactory(col -> col.getValue().getValue().getStudentName());
-        partNameCol = createNewCol("Part Name");
+        partNameCol = createNewCol("Part Name", 0.2);
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
-        serialNumberCol = createNewCol("Serial Number");
+        serialNumberCol = createNewCol("Serial Number", 0.15);
         serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
-        barcodeCol = createNewCol("Barcode");
+        barcodeCol = createNewCol("Barcode", 0.1);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
-        dueDateCol = createNewCol("Due Date");
+        dueDateCol = createNewCol("Due Date", 0.25);
         dueDateCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
+        dueDateCol.setCellFactory(dateColFormat());
 
         rows = FXCollections.observableArrayList();
 
@@ -72,12 +71,10 @@ public class OverdueInventoryTable extends TSCTable {
         // todo add cache
         ObservableList<OverdueItem> list = database.getOverdue();
         for (OverdueItem overdueItem : list) {
-            rows.add(new OIRow(overdueItem.getStudentName().get(),
-                            overdueItem.getID().get(),
-                            overdueItem.getPartName().get(),
-                            overdueItem.getSerialNumber().get(),
-                            overdueItem.getBarcode().get(),
-                            overdueItem.getDueDate().get()));
+            rows.add(new OIRow(overdueItem.getStudentName().get(), overdueItem.getID().get(),
+                            overdueItem.getPartName().get(), overdueItem.getSerialNumber().get(),
+                            overdueItem.getBarcode().get(), overdueItem.getDueDate().get(),
+                            overdueItem.getCheckID().get()));
         }
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 
@@ -106,65 +103,75 @@ public class OverdueInventoryTable extends TSCTable {
         String dueDate = val.getDueDate().getValue().toString();
         String barcode = val.getBarcode().getValue().toString();
 
-
-        return ((studentID != null && studentID.toLowerCase().contains(input))
-                || (partName != null && partName.toLowerCase().contains(input))
-                || (barcode!= null && barcode.toLowerCase().contains(input))
-                || (dueDate != null && dueDate.toLowerCase().contains(input))
+        return (studentID.toLowerCase().contains(input) || (partName != null && partName.toLowerCase().contains(input))
+                || barcode.toLowerCase().contains(input) || (dueDate != null && dueDate.toLowerCase().contains(input))
                 || (studentName != null && studentName.toLowerCase().contains(input))
-                || (serialNumber != null && serialNumber.toLowerCase().contains(input)));
+                || serialNumber.toLowerCase().contains(input));
     }
 
     @Override
     protected void popupRow(int index) {
-        Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/ViewOverduePart.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load();
-            Scene scene = new Scene(root, 400, 400);
-            stage.setTitle("Part Information");
-            stage.initOwner(scene.getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            if (index != -1) {
-                TreeItem item = table.getSelectionModel().getModelItem(index);
-                if (item != null) {
-                    OverdueInventoryTable.OIRow row = (OverdueInventoryTable.OIRow) item.getValue();
-                    ((OverduePopUpController) loader.getController()).populate(null,
-                            new OIRow(row.getStudentName().get(), row.getStudentID().get(),
-                                    row.getPartName().get(), row.getSerialNumber().get(), row.getBarcode().get(),
-                                    row.getDueDate().get()));
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.showAndWait();
-                }
+        if (index != -1) {
+            TreeItem item = table.getSelectionModel().getModelItem(index);
+            if (item != null) {
+                OIRow row = (OIRow) item.getValue();
+                OverdueItem overdueItem = database.selectStudent(row.getStudentID().get(), null)
+                        .getOverdueItem(row.getCheckInID().get());
+                createOverduePartPopup(overdueItem);
             }
-        } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException while opening Overdue popup");
-            e.printStackTrace();
         }
-
         populateTable();
+    }
+
+    public static void createOverduePartPopup(OverdueItem row) {
+        Stage stage = new Stage();
+        VBox root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("Part Information");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+
+        Popup overduePopup = new Popup(root) {
+            @Override
+            public void populate() {
+                add("Student Name: ", row.getStudentName().getValue(), false);
+                add("Student ID: ", "" + row.getID().get(), false);
+                Student student = database.selectStudent(row.getID().get(), null);
+                add("Student Email: ", student.getEmail(), false);
+                add("Part Name: ", row.getPartName().getValue(), false);
+                add("Barcode: ", "" + row.getBarcode().get(), false);
+                add("Due Date: ", new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDueDate().getValue()), false);
+
+                submitButton.setText("Close");
+            }
+
+            @Override
+            public void submit() {
+                stage.close();
+            }
+        };
+
+        stage.getIcons().add(new Image("images/msoe.png"));
+        stage.showAndWait();
     }
 
     public class OIRow extends TableRow {
 
-        private final StringProperty studentName;
-        private final StringProperty partName;
-        private StringProperty fee;
-        private final StringProperty serialNumber;
+        private final StringProperty studentName, partName, serialNumber, checkInID;
         private final LongProperty barcode;
         private final IntegerProperty studentID;
         private final ObjectProperty<Date> dueDate;
 
         public OIRow(String studentName, int studentID, String partName, String serialNumber, long barcode,
-                                  Date dueDate) {
+                                  Date dueDate, String checkInID) {
             this.studentID = new SimpleIntegerProperty(studentID);
             this.partName = new SimpleStringProperty(partName);
             this.studentName = new SimpleStringProperty(studentName);
             this.barcode = new SimpleLongProperty(barcode);
-            this.dueDate = new SimpleObjectProperty<Date>(dueDate);
+            this.dueDate = new SimpleObjectProperty<>(dueDate);
             this.serialNumber = new SimpleStringProperty(serialNumber);
+            this.checkInID = new SimpleStringProperty(checkInID);
         }
 
         public IntegerProperty getStudentID() {
@@ -189,6 +196,10 @@ public class OverdueInventoryTable extends TSCTable {
 
         public StringProperty getSerialNumber(){
             return serialNumber;
+        }
+
+        public StringProperty getCheckInID(){
+            return checkInID;
         }
     }
 }

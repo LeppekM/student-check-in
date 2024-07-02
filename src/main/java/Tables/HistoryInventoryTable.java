@@ -11,15 +11,13 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -40,14 +38,15 @@ public class HistoryInventoryTable extends TSCTable {
 
         studentNameCol = createNewCol("Student");
         studentNameCol.setCellValueFactory(col -> col.getValue().getValue().getStudentName());
-        partNameCol = createNewCol("Part");
+        partNameCol = createNewCol("Part", 0.25);
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
-        barcodeCol = createNewCol("Barcode");
+        barcodeCol = createNewCol("Barcode", 0.1);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
         actionCol = createNewCol("Action");
         actionCol.setCellValueFactory(col -> col.getValue().getValue().getAction());
-        dateCol = createNewCol("Date");
+        dateCol = createNewCol("Date", 0.25);
         dateCol.setCellValueFactory(col -> col.getValue().getValue().getDate());
+        dateCol.setCellFactory(dateColFormat());
 
         setDoubleClickBehavior();
     }
@@ -127,7 +126,7 @@ public class HistoryInventoryTable extends TSCTable {
                         add("Part Name: ", row.getPartName().get(), false);
                         add("Barcode: ", "" + row.getBarcode().get(), false);
                         add("Action: ", row.getAction().get(), false);
-                        add("Date: ", "" + row.getDate().get(), false);
+                        add("Date: ", new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDate().get()), false);
 
                         submitButton.setText("Close");
                     }

@@ -428,7 +428,8 @@ public class Database implements IController {
                 "INNER JOIN (SELECT MAX(checkoutID) AS max_checkoutID FROM checkout WHERE partID = " + partID +
                 ") max_c on c.checkoutID = max_c.max_checkoutID;";
         CheckoutObject checkoutObject = null;
-        String studentID = "", barcode = "", dueAt = "";
+        String studentID = "", barcode = "";
+        String dueAt = null;
         String checkoutAt = null, checkinAt = null;
 
         try {
@@ -441,7 +442,7 @@ public class Database implements IController {
                 checkinAt = resultSet.getString("checkinAt");
                 dueAt = resultSet.getString("dueAt");
             }
-            checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, checkinAt, dueAt);
+            checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, checkinAt, timeUtils.convertStringtoDate(dueAt));
             resultSet.close();
             statement.close();
         } catch (SQLException e) {

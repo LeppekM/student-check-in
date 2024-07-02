@@ -1,7 +1,6 @@
 package Database.ObjectClasses;
 
 import Database.OverdueItem;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -9,11 +8,8 @@ import javafx.collections.ObservableList;
  */
 public class Student {
 
-    private String name;
-    private int uniqueID;
-    private int RFID;
-    private String email, firstName, lastName;
-    private String date;
+    private int uniqueID, RFID;
+    private String name, email, firstName, lastName, date;
     private ObservableList<Checkout> checkedOut;
     private ObservableList<OverdueItem> overdueItems;
 
@@ -94,16 +90,21 @@ public class Student {
         return checkedOut;
     }
 
-    public void setCheckedOut(ObservableList<Checkout> checkedOut) {
-        this.checkedOut = FXCollections.observableArrayList(checkedOut);
-    }
-
     public ObservableList<OverdueItem> getOverdueItems() {
         return overdueItems;
     }
 
-    public void setOverdueItems(ObservableList<OverdueItem> overdueItems) {
-        this.overdueItems = FXCollections.observableArrayList(overdueItems);
+    /**
+     * @return OverdueItem if Student has part checked out and overdue, null otherwise
+     */
+    public OverdueItem getOverdueItem(String checkInID) {
+        OverdueItem overdueItem = null;
+        for(OverdueItem part : overdueItems) {
+            if (part.getCheckID().get().equals(checkInID)) {
+                overdueItem = part;
+            }
+        }
+        return overdueItem;
     }
 
 }

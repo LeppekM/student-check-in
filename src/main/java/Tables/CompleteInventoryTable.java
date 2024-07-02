@@ -7,6 +7,7 @@ import Database.ObjectClasses.Student;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
 import HelperClasses.StageUtils;
+import HelperClasses.TimeUtils;
 import Popups.Popup;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -24,7 +25,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,15 +50,15 @@ public class CompleteInventoryTable extends TSCTable {
         NUM_COLS = 5;
         table.setPlaceholder(getEmptyTableLabel());
 
-        partNameCol = createNewCol("Part Name");
+        partNameCol = createNewCol("Part Name", 0.3);
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
-        serialNumberCol = createNewCol("Serial Number");
+        serialNumberCol = createNewCol("Serial Number", 0.15);
         serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
-        locationCol = createNewCol("Location");
+        locationCol = createNewCol("Location", 0.25);
         locationCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
-        barcodeCol = createNewCol("Barcode");
+        barcodeCol = createNewCol("Barcode", 0.15);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
-        partIDCol = createNewCol("Part ID");
+        partIDCol = createNewCol("Part ID", 0.15);
         partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID().asObject());
 
         rows = FXCollections.observableArrayList();
@@ -180,25 +183,28 @@ public class CompleteInventoryTable extends TSCTable {
                             add("Student Email: ", student.getEmail(), false);
 
                             boolean isOverdue = false;
-                            if (!checkoutObject.getCheckoutAtDate().isEmpty()) {
+                            if (checkoutObject.getCheckoutAtDate() != null) {
                                 String className = checkoutObject.getExtendedCourseName();
                                 if (className != null && !className.isEmpty()) {
                                     add("Class Name: ", className, false);
                                     add("Professor Name: ", checkoutObject.getExtendedProfessor(), false);
                                 }
-                                isOverdue = database.isOverdue(checkoutObject.getDueAt()) && checkoutObject.getCheckinAtDate() == null;
+                                Date current = new Date();
+                                isOverdue = checkoutObject.getDueAt().after(current) && checkoutObject.getCheckinAtDate() == null;
                                 if (isOverdue) {
                                     DecimalFormat df = new DecimalFormat("#,###,##0.00");
                                     add("Fee: ", "$" + df.format(row.getPrice().get() / 100), false);
                                 }
                             }
                             Label label;
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
+                            TimeUtils timeUtils = new TimeUtils();
                             if (type.equals("Check In")){
-                                label = (Label) add(type + " Date: ", checkoutObject.getCheckinAtDate(), false).getChildren().get(0);
+                                label = (Label) add(type + ": ", dateFormat.format(timeUtils.convertStringtoDate(checkoutObject.getCheckinAtDate())), false).getChildren().get(0);
                             } else {
-                                label = (Label) add(type + " Date: ", checkoutObject.getCheckoutAtDate(), false).getChildren().get(0);
+                                label = (Label) add(type + ": ", dateFormat.format(timeUtils.convertStringtoDate(checkoutObject.getCheckoutAtDate())), false).getChildren().get(0);
                             }
-                            add("Due Date: ", checkoutObject.getDueAt(), false);
+                            add("Due Date: ", dateFormat.format(checkoutObject.getDueAt()), false);
                             if (isOverdue) {
                                 label.setStyle("-fx-text-fill: red; -fx-font-size: 16px;");
                             }

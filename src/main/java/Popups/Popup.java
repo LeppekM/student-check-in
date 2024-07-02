@@ -23,7 +23,7 @@ public abstract class Popup {
     protected JFXButton submitButton;
 
     protected static final int HEIGHT = 35;
-    protected static final int WIDTH = 150;
+    protected static final int WIDTH = 200;
     protected static final String LABEL_STYLE = "-fx-font-size: 16px;";
     protected static final String TEXTFIELD_STYLE = "-fx-font-size: 16px; -jfx-focus-color: FIREBRICK;";
 
@@ -51,8 +51,8 @@ public abstract class Popup {
 
     protected Label createLabel(String text) {
         Label l = new Label(text);
-        l.setMaxSize(WIDTH, HEIGHT);
-        l.setMinSize(WIDTH, HEIGHT);
+        l.setMaxSize(WIDTH-75, HEIGHT);
+        l.setMinSize(WIDTH-75, HEIGHT);
         l.setStyle(LABEL_STYLE);
         l.alignmentProperty().set(Pos.CENTER_RIGHT);
         return l;
@@ -116,12 +116,6 @@ public abstract class Popup {
         serialBox.getChildren().add(suffixField);
         vbox.getChildren().add(serialBox);
         return serialBox;
-    }
-
-    public void addAll(ArrayList<String> inputs, boolean editable) {
-        for (String s : inputs) {
-            add(s, "", editable);
-        }
     }
 
     public abstract void populate();

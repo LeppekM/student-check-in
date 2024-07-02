@@ -10,11 +10,13 @@ import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableRow;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * This
@@ -27,7 +29,7 @@ public abstract class TSCTable {
     protected ObservableList<TableRow> rows = FXCollections.observableArrayList();
     protected TreeItem<TableRow> root;
     protected Worker worker;
-    protected Database database = Database.getInstance();
+    protected static Database database = Database.getInstance();
     protected StageUtils stageUtils = StageUtils.getInstance();
 
     protected static double NUM_COLS;
@@ -107,8 +109,12 @@ public abstract class TSCTable {
      * @return
      */
     protected JFXTreeTableColumn createNewCol(String colName) {
+        return createNewCol(colName, 1.0 / NUM_COLS);
+    }
+
+    protected JFXTreeTableColumn createNewCol(String colName, double colWidthPercentage) {
         JFXTreeTableColumn tempCol = new JFXTreeTableColumn<>(colName);
-        tempCol.prefWidthProperty().bind(table.widthProperty().subtract(SCROLLBAR_BUFFER).divide(NUM_COLS));
+        tempCol.prefWidthProperty().bind(table.widthProperty().subtract(SCROLLBAR_BUFFER).multiply(colWidthPercentage));
         tempCol.setStyle("-fx-font-size: 18px");
         tempCol.setResizable(false);
 
@@ -138,6 +144,25 @@ public abstract class TSCTable {
             });
             return row;
         });
+    }
+
+    protected Callback dateColFormat(){
+        return new Callback<TreeTableColumn<TableRow, Date>, TreeTableCell<TableRow, Date>>() {
+            @Override
+            public TreeTableCell<TableRow, Date> call(TreeTableColumn<TableRow, Date> column) {
+                return new TreeTableCell<TableRow, Date>() {
+                    @Override
+                    protected void updateItem(Date item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                        } else {
+                            setText(new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(item));
+                        }
+                    }
+                };
+            }
+        };
     }
 
     public class TableRow extends RecursiveTreeObject<TableRow> {
