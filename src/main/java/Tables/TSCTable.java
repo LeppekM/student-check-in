@@ -121,7 +121,7 @@ public abstract class TSCTable {
         return tempCol;
     }
 
-    protected Label getEmptyTableLabel() {
+    public static Label getEmptyTableLabel() {
         Label emptyTableLabel = new Label("No parts found.");
         emptyTableLabel.setStyle("-fx-text-fill: white");
         emptyTableLabel.setFont(new Font(18));

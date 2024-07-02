@@ -17,11 +17,11 @@
             fx:controller="Popups.EditStudent">
    <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0"
          prefWidth="840.0">
-      <Label layoutX="38.0" layoutY="279.0" stylesheets="@../css/HeaderStyleSmall.css" text="Checked Out"/>
-      <Label layoutX="367.0" layoutY="279.0" stylesheets="@../css/HeaderStyleSmall.css" text="Overdue"/>
-      <JFXTreeTableView fx:id="coTable" layoutX="50.0" layoutY="337.0" onMouseClicked="#coPopUp" prefHeight="272.0"
+      <Label layoutX="138.0" layoutY="279.0" stylesheets="@../css/HeaderStyleSmall.css" text="Checked Out"/>
+      <Label layoutX="477.0" layoutY="279.0" stylesheets="@../css/HeaderStyleSmall.css" text="Overdue"/>
+      <JFXTreeTableView fx:id="coTable" layoutX="150.0" layoutY="337.0" onMouseClicked="#coPopUp" prefHeight="272.0"
                         prefWidth="200.0" stylesheets="@../css/TableStyle.css"/>
-      <JFXTreeTableView fx:id="oTable" layoutX="341.0" layoutY="337.0" onMouseClicked="#oPopUp" prefHeight="272.0"
+      <JFXTreeTableView fx:id="oTable" layoutX="451.0" layoutY="337.0" onMouseClicked="#oPopUp" prefHeight="272.0"
                         prefWidth="200.0" stylesheets="@../css/TableStyle.css"/>
       <Button layoutX="732.0" layoutY="16.0" mnemonicParsing="false" onAction="#save"
               style="-fx-background-color: #ffffff; -fx-background-radius: 15pt; -fx-border-radius: 15pt;

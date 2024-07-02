@@ -3,6 +3,7 @@ package Tables;
 import Database.ObjectClasses.Checkout;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
+import HelperClasses.TimeUtils;
 import Popups.Popup;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
@@ -20,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -70,12 +72,13 @@ public class CheckedOutInventoryTable extends TSCTable {
         table.getColumns().clear();
         // get and add all rows
         ObservableList<Checkout> list = database.getAllCurrentlyCheckedOut();
-        for (Checkout checkedOutItems : list) {
-            rows.add(new CORow(checkedOutItems.getStudentName().getValue(),
-                    checkedOutItems.getStudentEmail().get(), checkedOutItems.getPartName().getValue(),
-                    checkedOutItems.getBarcode().getValue(), checkedOutItems.getSerialNumber().get(),
-                    checkedOutItems.getPartID().get(), checkedOutItems.getCheckedOutDate().get(),
-                    checkedOutItems.getDueDate().get(), checkedOutItems.getFee().getValue()));
+        for (Checkout checkedOutPart : list) {
+            rows.add(new CORow(checkedOutPart.getStudentName().getValue(),
+                    checkedOutPart.getStudentEmail().get(), checkedOutPart.getPartName().getValue(),
+                    checkedOutPart.getBarcode().getValue(), checkedOutPart.getSerialNumber().get(),
+                    checkedOutPart.getPartID().get(), checkedOutPart.getCheckedOutDate().get(),
+                    checkedOutPart.getDueDate().get(), checkedOutPart.getFee().getValue(),
+                    checkedOutPart.getStudentID().get(), checkedOutPart.getCheckoutID().get()));
         }
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 
@@ -111,6 +114,23 @@ public class CheckedOutInventoryTable extends TSCTable {
 
     @Override
     protected void popupRow(int index) {
+        if (index != -1) {
+            TreeItem item = table.getSelectionModel().getModelItem(index);
+            // null if user clicks on empty row
+            if (item != null) {
+                CORow row = ((CORow) item.getValue());
+
+                Checkout checkout = new Checkout(row.getCheckoutID().get(), row.getStudentName().get(),
+                        row.getStudentEmail().get(), row.getStudentRFID().get(), row.getPartName().get(),
+                        row.getBarcode().getValue(), row.getSerialNumber().get(), row.getPartID().get(),
+                        row.getCheckedOutAt().get(), row.getDueDate().get(), row.getFee().getValue());
+
+                createCheckoutPopup(checkout);
+            }
+        }
+    }
+
+    public static void createCheckoutPopup(Checkout checkout) {
         Stage stage = new Stage();
         VBox root = new VBox();
         Scene scene = new Scene(root);
@@ -118,42 +138,40 @@ public class CheckedOutInventoryTable extends TSCTable {
         stage.initOwner(scene.getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
-        if (index != -1) {
-            TreeItem item = table.getSelectionModel().getModelItem(index);
-            // null if user clicks on empty row
-            if (item != null) {
-                CORow row = ((CORow) item.getValue());
-
-                Popup checkedOutPopup = new Popup(root) {
-                    @Override
-                    public void populate() {
-                        add("Student Name: ", row.getStudentName().get(), false);
-                        add("Student Email: ", row.getStudentEmail().getValue(), false);
-                        add("Part Name: ", row.getPartName().getValue(), false);
-                        add("Barcode: ", "" + row.getBarcode().get(), false);
-                        add("Serial Number: ", row.getSerialNumber().get(), false);
-                        add("Part ID: ", "" + row.getPartID().get(), false);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-                        add("Checked Out Date: ", dateFormat.format(row.getCheckedOutAt().getValue()), false);
-                        Label dueDateLabel = (Label) add("Due Date: ", dateFormat.format(row.getDueDate().getValue()), false).getChildren().get(0);
-                        if (database.isOverdue(String.valueOf(row.getDueDate().get()))) {
-                            dueDateLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FIREBRICK");
-                        }
-                        add("Fee: ", "$" + new DecimalFormat("#,###,##0.00").format(Double.parseDouble(row.getFee().get()) / 100), false);
-
-                        submitButton.setText("Close");
+        Popup checkedOutPopup = new Popup(root) {
+            @Override
+            public void populate() {
+                add("Student Name: ", checkout.getStudentName().get(), false);
+                add("Student Email: ", checkout.getStudentEmail().getValue(), false);
+                add("Part Name: ", checkout.getPartName().getValue(), false);
+                add("Barcode: ", "" + checkout.getBarcode().get(), false);
+                add("Serial Number: ", checkout.getSerialNumber().get(), false);
+                add("Part ID: ", "" + checkout.getPartID().get(), false);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
+                add("Out Date: ", dateFormat.format(checkout.getCheckedOutDate().getValue()), false);
+                Label dueDateLabel = (Label) add("Due Date: ", dateFormat.format(checkout.getDueDate().getValue()), false).getChildren().get(0);
+                TimeUtils timeUtils = new TimeUtils();
+                try{
+                    if (dateFormat.parse(timeUtils.getCurrentDateTimeStamp()).after(checkout.getDueDate().get())) {
+                        dueDateLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FIREBRICK");
                     }
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
 
-                    @Override
-                    public void submit() {
-                        stage.close();
-                    }
-                };
+                add("Fee: ", "$" + new DecimalFormat("#,###,##0.00").format(Double.parseDouble(checkout.getFee().get()) / 100), false);
 
-                stage.getIcons().add(new Image("images/msoe.png"));
-                stage.show();
+                submitButton.setText("Close");
             }
-        }
+
+            @Override
+            public void submit() {
+                stage.close();
+            }
+        };
+
+        stage.getIcons().add(new Image("images/msoe.png"));
+        stage.show();
     }
 
     public class CORow extends TableRow {
@@ -164,11 +182,13 @@ public class CheckedOutInventoryTable extends TSCTable {
         private final StringProperty fee;
         private final LongProperty barcode;
         private final IntegerProperty partID;
+        private final IntegerProperty studentRFID;
+        private final IntegerProperty checkoutID;
         private final ObjectProperty<Date> dueDate;
         private final ObjectProperty<Date> checkedOutAt;
 
         public CORow(String studentName, String studentEmail, String partName, long barcode, String serialNumber,
-                     int partID, Date checkedOutAt, Date dueDate, String fee) {
+                     int partID, Date checkedOutAt, Date dueDate, String fee, int studentRFID, int checkoutID) {
             this.studentName = new SimpleStringProperty(studentName);
             this.studentEmail = new SimpleStringProperty(studentEmail);
             this.partName = new SimpleStringProperty(partName);
@@ -178,6 +198,8 @@ public class CheckedOutInventoryTable extends TSCTable {
             this.checkedOutAt = new SimpleObjectProperty<>(checkedOutAt);
             this.dueDate = new SimpleObjectProperty<>(dueDate);
             this.fee = new SimpleStringProperty(fee);
+            this.studentRFID = new SimpleIntegerProperty(studentRFID);
+            this.checkoutID = new SimpleIntegerProperty(checkoutID);
         }
 
         public StringProperty getStudentName() {
@@ -214,6 +236,14 @@ public class CheckedOutInventoryTable extends TSCTable {
 
         public StringProperty getFee() {
             return fee;
+        }
+
+        public IntegerProperty getStudentRFID() {
+            return studentRFID;
+        }
+
+        public IntegerProperty getCheckoutID() {
+            return checkoutID;
         }
     }
 }

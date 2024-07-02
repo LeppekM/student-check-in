@@ -88,4 +88,8 @@ public class Checkout extends RecursiveTreeObject {
     public StringProperty getFee() {
         return fee;
     }
+
+    public IntegerProperty getStudentID() {
+        return studentID;
+    }
 }

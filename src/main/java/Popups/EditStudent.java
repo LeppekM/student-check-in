@@ -7,7 +7,9 @@ import Database.ObjectClasses.Worker;
 import Database.OverdueItem;
 import HelperClasses.StageUtils;
 import Controllers.IController;
+import Tables.CheckedOutInventoryTable;
 import Tables.OverdueInventoryTable;
+import Tables.TSCTable;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
@@ -81,34 +83,18 @@ public class EditStudent implements IController {
      */
     private void setTables() {
         coTableCol = new JFXTreeTableColumn<>("Part Name");
-        Label emptyTableLabel = new Label("No parts found.");
-        emptyTableLabel.setStyle("-fx-text-fill: white");
-        emptyTableLabel.setFont(new Font(18));
-        coTable.setPlaceholder(emptyTableLabel);
+        coTable.setPlaceholder(TSCTable.getEmptyTableLabel());
         coTableCol.prefWidthProperty().bind(coTable.widthProperty());
         coTableCol.setStyle("-fx-font-size: 18px");
         coTableCol.setResizable(false);
-        coTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<Checkout, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<Checkout, String> param) {
-                return param.getValue().getValue().getPartName();
-            }
-        });
+        coTableCol.setCellValueFactory(param -> param.getValue().getValue().getPartName());
 
         oTableCol = new JFXTreeTableColumn<>("Part Name");
-        Label emptyTableLabel2 = new Label("No parts found.");
-        emptyTableLabel2.setStyle("-fx-text-fill: white");
-        emptyTableLabel2.setFont(new Font(18));
-        oTable.setPlaceholder(emptyTableLabel);
+        oTable.setPlaceholder(TSCTable.getEmptyTableLabel());
         oTableCol.prefWidthProperty().bind(oTable.widthProperty());
         oTableCol.setStyle("-fx-font-size: 18px");
         oTableCol.setResizable(false);
-        oTableCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<OverdueItem, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<OverdueItem, String> param) {
-                return param.getValue().getValue().getPartName();
-            }
-        });
+        oTableCol.setCellValueFactory(param -> param.getValue().getValue().getPartName());
 
         populateTables();
     }
@@ -137,23 +123,10 @@ public class EditStudent implements IController {
      */
     public void coPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
-            Stage stage = new Stage();
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StudentCheckPopUp.fxml"));
-                Parent root = loader.load();
-                Scene scene = new Scene(root, 400, 300);
-                stage.setTitle("Checked Out Item");
-                stage.initOwner(main.getScene().getWindow());
-                stage.setScene(scene);
-                int index = coTable.getSelectionModel().getSelectedIndex();
-                if (index != -1) {
-                    Checkout item = ((Checkout) coTable.getSelectionModel().getModelItem(index).getValue());
-                    ((CheckoutPopUpController) loader.getController()).populate(item);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.show();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            int index = coTable.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                Checkout item = ((Checkout) coTable.getSelectionModel().getModelItem(index).getValue());
+                CheckedOutInventoryTable.createCheckoutPopup(item);
             }
         }
     }

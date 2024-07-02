@@ -7,7 +7,7 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AutoCompleteTextField;
 import HelperClasses.StageUtils;
-import Popups.CheckoutPopUpController;
+import Tables.CheckedOutInventoryTable;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.animation.PauseTransition;
@@ -629,25 +629,10 @@ public class CheckOutController extends MenuController implements IController, I
     @FXML
     public void coPopUp(MouseEvent event) {
         if (event.getClickCount() == 2) {
-            Stage stage = new Stage();
-            try {
-                URL myFMLURL = ClassLoader.getSystemResource("fxml/StudentCheckPopUp.fxml");
-                FXMLLoader loader = new FXMLLoader(myFMLURL);
-                Parent root = loader.load();
-                ((IController) loader.getController()).initWorker(worker);
-                Scene scene = new Scene(root, 400, 300);
-                stage.setTitle("Checked Out Item");
-                stage.initOwner(main.getScene().getWindow());
-                stage.setScene(scene);
-                int index = coTable.getSelectionModel().getSelectedIndex();
-                if (index != -1) {
-                    Checkout item = ((Checkout) coTable.getSelectionModel().getModelItem(index).getValue());
-                    ((CheckoutPopUpController) loader.getController()).populate(item);
-                    stage.getIcons().add(new Image("images/msoe.png"));
-                    stage.showAndWait();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            int index = coTable.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                Checkout item = ((Checkout) coTable.getSelectionModel().getModelItem(index).getValue());
+                CheckedOutInventoryTable.createCheckoutPopup(item);
             }
         }
     }
