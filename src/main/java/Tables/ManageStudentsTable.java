@@ -7,6 +7,8 @@ import App.StudentCheckIn;
 import Controllers.TableScreensController;
 import HelperClasses.StageUtils;
 import Popups.EditStudentController;
+import Popups.Popup;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -22,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -229,26 +232,52 @@ public class ManageStudentsTable extends TSCTable {
 
     public void addStudent() {
         Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addStudent.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load();
-            IController controller = loader.getController();
-            controller.initWorker(worker);
-            Scene scene = new Scene(root);
-            stage.setTitle("Add a New Student");
-            stage.initOwner(this.controller.getScene().getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.showAndWait();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add student page");
-            alert.initStyle(StageStyle.UTILITY);
-            StudentCheckIn.logger.error("IOException: Couldn't load add student page.");
-            alert.showAndWait();
-            e.printStackTrace();
-        }
+        VBox root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("Add a New Student");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+
+        Popup addStudent = new Popup(root) {
+            private JFXTextField email, first, last, rfid;
+
+            @Override
+            public void populate() {
+                first = (JFXTextField) add("First Name: ", "", true).getChildren().get(1);
+                last = (JFXTextField) add("Last Name: ", "", true).getChildren().get(1);
+                email = (JFXTextField) add("Email: ", "", true).getChildren().get(1);
+                rfid = (JFXTextField) add("RFID: ", "", true).getChildren().get(1);
+            }
+
+            @Override
+            public void submit() {
+                if (!first.getText().isEmpty() && !last.getText().isEmpty() &&
+                        !email.getText().isEmpty() && !rfid.getText().isEmpty()) {
+                    if (rfid.getText().matches("[0-9]{4,}")) {
+                        if (email.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                            if (database.getStudentEmails().contains(email.getText())) {
+                                stageUtils.errorAlert("A student with that email already exists.");
+                            } else if (database.studentRFIDExists(Integer.parseInt(rfid.getText()))) {
+                                stageUtils.errorAlert("A student with that rfid already exists.");
+                            } else {
+                                database.addStudent(new Student(first.getText() + " " + last.getText(), Integer.parseInt(rfid.getText()), email.getText()));
+                                stage.close();
+                            }
+                        } else {
+                            stageUtils.errorAlert("Please enter a valid msoe email.");
+                        }
+                    } else {
+                        stageUtils.errorAlert("The rfid must be a validly formatted student RFID. Scan the student ID.");
+                    }
+                } else {
+                    stageUtils.errorAlert("All fields must be filled in.");
+                }
+            }
+        };
+
+        stage.getIcons().add(new Image("images/msoe.png"));
+        stage.showAndWait();
         populateTable();
     }
 

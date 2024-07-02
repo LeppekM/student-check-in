@@ -7,6 +7,9 @@ import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
 import Popups.EditAdminController;
 import Popups.EditWorkerController;
+import Popups.Popup;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -25,12 +28,19 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static Controllers.CheckOutController.EMAIL_REGEX;
+import static Controllers.CheckOutController.RFID_REGEX;
 
 public class ManageWorkersTable extends TSCTable {
 
@@ -165,48 +175,139 @@ public class ManageWorkersTable extends TSCTable {
 
     public void addWorker() {
         Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addWorker.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load();
-            IController controller = loader.getController();
-            controller.initWorker(worker);
-            Scene scene = new Scene(root, 350, 370);
-            stage.setTitle("Add a New Worker");
-            stage.initOwner(this.controller.getScene().getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.showAndWait();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load add worker page");
-            alert.initStyle(StageStyle.UTILITY);
-            StudentCheckIn.logger.error("IOException: Couldn't load add worker page.");
-            alert.showAndWait();
-            e.printStackTrace();
-        }
+        VBox root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("Add a New Worker");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+
+        Popup addWorker = new Popup(root) {
+            private JFXTextField email, first, last, rfid;
+            private JFXPasswordField pass;
+
+            @Override
+            public void populate() {
+                email = (JFXTextField) add("MSOE Email: ", "", true).getChildren().get(1);
+                first = (JFXTextField) add("First Name: ", "", true).getChildren().get(1);
+                last = (JFXTextField) add("Last Name: ", "", true).getChildren().get(1);
+                pass = addPasswordField("Password: ");
+                rfid = (JFXTextField) add("RFID: ", "", true).getChildren().get(1);
+                stageUtils.acceptIntegerOnly(rfid);
+            }
+
+            @Override
+            public void submit() {
+                StringBuilder n;
+                if (!email.getText().isEmpty() && !first.getText().isEmpty() && !last.getText().isEmpty() && !pass.getText().isEmpty()){
+                    ObservableList<Worker> workers = database.getWorkers();
+                    for (Worker w : workers) {
+                        if (w.getEmail().equals(email.getText())) {
+                            stageUtils.errorAlert("Worker is already in the database!");
+                            break;
+                        }
+                    }
+                    if (!email.getText().matches(EMAIL_REGEX)){
+                        stageUtils.errorAlert("Email must be an MSOE email.");
+                    } else if (first.getText().matches("\\s*")){
+                        stageUtils.errorAlert("Worker's first name is invalid");
+                    } else if (last.getText().matches("\\s*")){
+                        stageUtils.errorAlert("Worker's last name is invalid");
+                    } else if (pass.getText().length() < 8){
+                        stageUtils.errorAlert("Password must be at least eight characters in length.");
+                    } else if (!rfid.getText().matches(RFID_REGEX)){
+                        stageUtils.errorAlert("RFID must be at least 4 digits long.");
+                    } else {
+                        String temp = first.getText().substring(0, 1).toUpperCase() + first.getText().substring(1);
+                        n = new StringBuilder(temp);
+                        temp = last.getText().substring(0, 1).toUpperCase() + last.getText().substring(1);
+                        n.append(" ").append(temp);
+
+                        database.initWorker(worker);
+                        database.addWorker(new Worker(n.toString(), email.getText(), pass.getText(), Integer.parseInt(rfid.getText())));
+                        stage.close();
+                    }
+                } else {
+                    stageUtils.errorAlert("All fields must be filled in.");
+                }
+            }
+        };
+
+        stage.getIcons().add(new Image("images/msoe.png"));
+        stage.showAndWait();
         populateTable();
     }
 
     public void addAdmin() {
         Stage stage = new Stage();
-        try {
-            URL myFxmlURL = ClassLoader.getSystemResource("fxml/addAdmin.fxml");
-            FXMLLoader loader = new FXMLLoader(myFxmlURL);
-            Parent root = loader.load();
-            IController controller = loader.getController();
-            controller.initWorker(worker);
-            Scene scene = new Scene(root, 350, 420);
-            stage.setTitle("Add a New Worker");
-            stage.initOwner(this.controller.getScene().getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("images/msoe.png"));
-            stage.showAndWait();
-        } catch (IOException e) {
-            stageUtils.errorAlert("Couldn't load add admin page");
-            e.printStackTrace();
-        }
+        VBox root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("Add a New Admin");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+
+        Popup addAdmin = new Popup(root) {
+            private JFXTextField email, first, last, rfid;
+            private JFXPasswordField pass, pin;
+
+            @Override
+            public void populate() {
+                email = (JFXTextField) add("MSOE Email: ", "", true).getChildren().get(1);
+                first = (JFXTextField) add("First Name: ", "", true).getChildren().get(1);
+                last = (JFXTextField) add("Last Name: ", "", true).getChildren().get(1);
+                pass = addPasswordField("Password: ");
+                pin = addPasswordField("4-Digit Pin: ");
+                rfid = (JFXTextField) add("RFID: ", "", true).getChildren().get(1);
+                stageUtils.acceptIntegerOnly(rfid);
+                stageUtils.acceptIntegerOnly(pin);
+                stageUtils.setMaxTextLength(pin, 4);
+            }
+
+            @Override
+            public void submit() {
+                StringBuilder n;
+                if (!email.getText().isEmpty() && !first.getText().isEmpty() && !last.getText().isEmpty() && !pass.getText().isEmpty()){
+                    ObservableList<Worker> workers = database.getWorkers();
+                    for (Worker w : workers) {
+                        if (w.getEmail().equals(email.getText())) {
+                            stageUtils.errorAlert("Admin is already in the database!");
+                            break;
+                        }
+                    }
+                    if (!email.getText().matches(EMAIL_REGEX)){
+                        stageUtils.errorAlert("Email must be an MSOE email.");
+                    } else if (first.getText().matches("\\s*")){
+                        stageUtils.errorAlert("Admin's first name is invalid");
+                    } else if (last.getText().matches("\\s*")){
+                        stageUtils.errorAlert("Admin's last name is invalid");
+                    } else if (pass.getText().length() < 8){
+                        stageUtils.errorAlert("Password must be at least eight characters in length.");
+                    } else if (!rfid.getText().matches(RFID_REGEX)){
+                        stageUtils.errorAlert("RFID must be at least 4 digits long.");
+                    } else if (!pin.getText().matches("[0-9]{4}")) {
+                        stageUtils.errorAlert("Pin must be at exactly 4 digits");
+                    } else {
+                        String temp = first.getText().substring(0, 1).toUpperCase() + first.getText().substring(1);
+                        n = new StringBuilder(temp);
+                        temp = last.getText().substring(0, 1).toUpperCase() + last.getText().substring(1);
+                        n.append(" ").append(temp);
+
+                        ObservableList<Worker> w = database.getWorkers();
+                        database.initWorker(worker);
+                        database.addWorker(new Worker(n.toString(), w.get(w.size() - 1).getID() + 1, email.getText(), pass.getText(),
+                                Integer.parseInt(pin.getText()), Integer.parseInt(rfid.getText()), true, true, true,
+                                true));
+                        stage.close();
+                    }
+                } else {
+                    stageUtils.errorAlert("All fields must be filled in.");
+                }
+            }
+        };
+
+        stage.getIcons().add(new Image("images/msoe.png"));
+        stage.showAndWait();
         populateTable();
     }
 

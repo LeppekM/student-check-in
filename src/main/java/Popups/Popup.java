@@ -3,6 +3,7 @@ package Popups;
 import Database.Database;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -78,6 +79,18 @@ public abstract class Popup {
 
     public void addHBox(HBox hbox) {
         vbox.getChildren().add(hbox);
+    }
+
+    public JFXPasswordField addPasswordField(String label){
+        HBox hbox = new HBox();
+        hbox.getChildren().add(createLabel(label));
+        JFXPasswordField field = new JFXPasswordField();
+        field.setStyle(TEXTFIELD_STYLE);
+        field.setMinSize(WIDTH, HEIGHT);
+        field.setMaxSize(WIDTH, HEIGHT);
+        hbox.getChildren().add(field);
+        vbox.getChildren().add(hbox);
+        return field;
     }
 
     public JFXComboBox<String> addVendorField() {
