@@ -10,12 +10,10 @@ This is the check-in/check-out system that keeps track of parts belonging to the
 
 * Summary of set up:
   * Set-up instructions are shown with pictures in Inventory set up guide.pdf
-* Configuration
-* Dependencies
-  * Gradle, JDK 8, JavaFX 
-* Database configuration
-* How to run tests
-* Deployment instructions
+* Dependencies:
+  * Gradle
+  * JDK 8
+  * JavaFX
 
 ### Contribution ###
 
@@ -31,7 +29,6 @@ Product Owner: Jim Frommell
 ## Priority List ##
 * allow smarter clear history
   * Potentially allow adjustable dates for this
-* improve searches with space delim
 * QA test table functionality
 * Testing suite
 * Scan all of part type in inventory

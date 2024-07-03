@@ -102,20 +102,24 @@ public class OverdueInventoryTable extends TSCTable {
     }
 
     @Override
-    protected boolean isMatch(TableRow value, String filter) {
-        OIRow val = (OIRow) value;
-        String input = filter.toLowerCase();
-        String studentID = val.getStudentID().getValue().toString();
-        String studentName = val.getStudentName().getValue();
-        String partName = val.getPartName().getValue();
-        String serialNumber = val.getBarcode().getValue().toString();
-        String dueDate = val.getDueDate().getValue().toString();
-        String barcode = val.getBarcode().getValue().toString();
-
-        return studentID.toLowerCase().contains(input) || partName != null && partName.toLowerCase().contains(input)
-                || barcode.toLowerCase().contains(input) || dueDate != null && dueDate.toLowerCase().contains(input)
-                || studentName != null && studentName.toLowerCase().contains(input)
-                || serialNumber.toLowerCase().contains(input);
+    protected boolean isMatch(TableRow value, String[] filters) {
+        for (String filter : filters) {
+            OIRow val = (OIRow) value;
+            String input = filter.toLowerCase();
+            String studentID = val.getStudentID().getValue().toString();
+            String studentName = val.getStudentName().getValue();
+            String partName = val.getPartName().getValue();
+            String serialNumber = val.getBarcode().getValue().toString();
+            String dueDate = val.getDueDate().getValue().toString();
+            String barcode = val.getBarcode().getValue().toString();
+            if (!(studentID.toLowerCase().contains(input) || partName != null && partName.toLowerCase().contains(input)
+                    || barcode.toLowerCase().contains(input) || dueDate != null
+                    && dueDate.toLowerCase().contains(input) || studentName != null
+                    && studentName.toLowerCase().contains(input) || serialNumber.toLowerCase().contains(input))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

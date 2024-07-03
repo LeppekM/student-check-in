@@ -91,20 +91,24 @@ public class HistoryInventoryTable extends TSCTable {
     }
 
     @Override
-    protected boolean isMatch(TableRow value, String filter) {
-        HIRow val = (HIRow) value;
-        String input = filter.toLowerCase();
-        String student = val.getStudentName().getValue();
-        String partName = val.getPartName().getValue();
-        String serialNumber = val.getBarcode().getValue().toString();
-        String action = val.getAction().getValue();
-        String date = val.getDate().getValue().toString().toLowerCase();
-
-        return student != null && student.toLowerCase().contains(input)
-                || partName != null && partName.toLowerCase().contains(input)
-                || serialNumber.toLowerCase().contains(input)
-                || action != null && action.toLowerCase().contains(input)
-                || date.toLowerCase().contains(input);
+    protected boolean isMatch(TableRow value, String[] filters) {
+        for (String filter : filters) {
+            HIRow val = (HIRow) value;
+            String input = filter.toLowerCase();
+            String student = val.getStudentName().getValue();
+            String partName = val.getPartName().getValue();
+            String serialNumber = val.getBarcode().getValue().toString();
+            String action = val.getAction().getValue();
+            String date = val.getDate().getValue().toString().toLowerCase();
+            if (!(student != null && student.toLowerCase().contains(input)
+                    || partName != null && partName.toLowerCase().contains(input)
+                    || serialNumber.toLowerCase().contains(input)
+                    || action != null && action.toLowerCase().contains(input)
+                    || date.toLowerCase().contains(input))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

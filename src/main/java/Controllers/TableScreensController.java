@@ -253,11 +253,8 @@ public class TableScreensController extends MenuController implements IControlle
         String[] filters = filter.split(" ");
         if (!filter.isEmpty()) {
             TreeItem<TSCTable.TableRow> filteredRoot = new TreeItem<>();
-            for (String f : filters) {
-                f = f.trim();
-                tscTable.filter(f, filteredRoot);
-                table.setRoot(filteredRoot);
-            }
+            tscTable.filter(filters, filteredRoot);
+            table.setRoot(filteredRoot);
         }
         disableButtons(true);
     }

@@ -68,21 +68,21 @@ public abstract class TSCTable {
      */
     public abstract void populateTable();
 
-    public void filter(String filter, TreeItem<TableRow> filteredRoot) {
-        filter(root, filter, filteredRoot);
+    public void filter(String[] filters, TreeItem<TableRow> filteredRoot) {
+        filter(root, filters, filteredRoot);
     }
 
     /**
      * Determines which rows fit the search input
      */
-    private void filter(TreeItem<TableRow> root, String filter, TreeItem<TableRow> filteredRoot) {
+    private void filter(TreeItem<TableRow> root, String[] filters, TreeItem<TableRow> filteredRoot) {
         TreeItem<TableRow> filteredChild;
         for (TreeItem<TableRow> child : root.getChildren()) {
             filteredChild = new TreeItem<>();
             filteredChild.setValue(child.getValue());
             filteredChild.setExpanded(true);
-            filter(child, filter, filteredChild);
-            if (!filteredChild.getChildren().isEmpty() || isMatch(filteredChild.getValue(), filter)) {
+            filter(child, filters, filteredChild);
+            if (!filteredChild.getChildren().isEmpty() || isMatch(filteredChild.getValue(), filters)) {
                 filteredRoot.getChildren().add(filteredChild);
             }
         }
@@ -95,7 +95,7 @@ public abstract class TSCTable {
      * @param filter the search input
      * @return true if the row matches the search criteria; false otherwise
      */
-    protected abstract boolean isMatch(TableRow value, String filter);
+    protected abstract boolean isMatch(TableRow value, String[] filter);
 
     /**
      * Displays a pop-up for viewing everything about the part

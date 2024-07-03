@@ -103,19 +103,23 @@ public class CheckedOutInventoryTable extends TSCTable {
     }
 
     @Override
-    protected boolean isMatch(TableRow value, String filter) {
-        CORow val = (CORow) value;
-        String input = filter.toLowerCase();
-        String studentName = val.getStudentName().getValue();
-        String partName = val.getPartName().getValue();
-        String barcode = val.getBarcode().getValue().toString();
-        String checkedOutAt = val.getCheckedOutAt().getValue().toString();
-        String dueDate = val.getDueDate().getValue().toString();
-
-        return studentName != null && studentName.toLowerCase().contains(input) ||
-                partName != null && partName.toLowerCase().contains(input) || barcode.toLowerCase().contains(input)
-                || checkedOutAt != null && checkedOutAt.toLowerCase().contains(input)
-                || dueDate != null && dueDate.toLowerCase().contains(input);
+    protected boolean isMatch(TableRow value, String[] filters) {
+        for (String filter : filters) {
+            CORow val = (CORow) value;
+            String input = filter.toLowerCase();
+            String studentName = val.getStudentName().getValue();
+            String partName = val.getPartName().getValue();
+            String barcode = val.getBarcode().getValue().toString();
+            String checkedOutAt = val.getCheckedOutAt().getValue().toString();
+            String dueDate = val.getDueDate().getValue().toString();
+            if (!(studentName != null && studentName.toLowerCase().contains(input) ||
+                    partName != null && partName.toLowerCase().contains(input) || barcode.toLowerCase().contains(input)
+                    || checkedOutAt != null && checkedOutAt.toLowerCase().contains(input)
+                    || dueDate != null && dueDate.toLowerCase().contains(input))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

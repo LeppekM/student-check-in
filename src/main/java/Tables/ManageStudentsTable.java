@@ -108,18 +108,22 @@ public class ManageStudentsTable extends TSCTable {
     }
 
     @Override
-    public boolean isMatch(TableRow value, String filter) {
-        MSRow val = (MSRow) value;
-        String input = filter.toLowerCase();
-        String firstName = val.getFirstName().getValue();
-        String lastName = val.getLastName().getValue();
-        String id = "" + val.getId().getValue();
-        String email = val.getEmail().getValue();
-
-        return firstName != null && firstName.toLowerCase().contains(input)
-                || id.toLowerCase().contains(input)
-                || email != null && email.toLowerCase().contains(input)
-                || lastName != null && lastName.toLowerCase().contains(input);
+    public boolean isMatch(TableRow value, String[] filters) {
+        for (String filter : filters) {
+            MSRow val = (MSRow) value;
+            String input = filter.toLowerCase();
+            String firstName = val.getFirstName().getValue();
+            String lastName = val.getLastName().getValue();
+            String id = "" + val.getId().getValue();
+            String email = val.getEmail().getValue();
+            if (!(firstName != null && firstName.toLowerCase().contains(input)
+                    || id.toLowerCase().contains(input)
+                    || email != null && email.toLowerCase().contains(input)
+                    || lastName != null && lastName.toLowerCase().contains(input))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

@@ -106,19 +106,23 @@ public class CompleteInventoryTable extends TSCTable {
     }
 
     @Override
-    protected boolean isMatch(TableRow value, String filter) {
-        CIRow val = (CIRow) value;
-        String input = filter.toLowerCase();
-        String partName = val.getPartName().getValue();
-        String serialNumber = val.getSerialNumber().getValue();
-        String loc = val.getLocation().getValue();
-        String barcode = val.getBarcode().getValue().toString();
-        String partID = val.getPartID().getValue().toString();
-
-        return (partName != null && partName.toLowerCase().contains(input)
-                || serialNumber != null && serialNumber.toLowerCase().contains(input)
-                || loc != null && loc.toLowerCase().contains(input)
-                || barcode.toLowerCase().contains(input) || partID.toLowerCase().contains(input));
+    protected boolean isMatch(TableRow value, String[] filters) {
+        for (String filter : filters) {
+            CIRow val = (CIRow) value;
+            String input = filter.toLowerCase();
+            String partName = val.getPartName().getValue();
+            String serialNumber = val.getSerialNumber().getValue();
+            String loc = val.getLocation().getValue();
+            String barcode = val.getBarcode().getValue().toString();
+            String partID = val.getPartID().getValue().toString();
+            if (!(partName != null && partName.toLowerCase().contains(input)
+                    || serialNumber != null && serialNumber.toLowerCase().contains(input)
+                    || loc != null && loc.toLowerCase().contains(input)
+                    || barcode.toLowerCase().contains(input) || partID.toLowerCase().contains(input))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

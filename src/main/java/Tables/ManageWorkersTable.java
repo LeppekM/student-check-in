@@ -106,14 +106,18 @@ public class ManageWorkersTable extends TSCTable {
     }
 
     @Override
-    protected boolean isMatch(TableRow value, String filter) {
-        MERow val = (MERow) value;
-        String input = filter.toLowerCase();
-        String name = val.getName().getValue();
-        String email = val.getEmail().getValue();
-
-        return name != null && name.toLowerCase().contains(input)
-                || email != null && email.toLowerCase().contains(input);
+    protected boolean isMatch(TableRow value, String[] filters) {
+        for (String filter : filters) {
+            MERow val = (MERow) value;
+            String input = filter.toLowerCase();
+            String name = val.getName().getValue();
+            String email = val.getEmail().getValue();
+            if (!(name != null && name.toLowerCase().contains(input)
+                    || email != null && email.toLowerCase().contains(input))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
