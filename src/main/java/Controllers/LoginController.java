@@ -3,6 +3,7 @@ package Controllers;
 import Database.Database;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ImageViewPane;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -42,11 +43,13 @@ public class LoginController implements Initializable {
     private Label invalidLoginCredentialsError, rfidLabel, passLabel, emailLabel;
 
     private Database database;
+    private StageUtils stageUtils;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rfidFilter(rfid);
         database = Database.getInstance();
+        stageUtils = StageUtils.getInstance();
         setupBackgroundImage(loginScene);
         emailInputLoginPage.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -116,8 +119,7 @@ public class LoginController implements Initializable {
                     invalidLoginCredentialsError.setVisible(true);
                 }
             } catch (IOException invoke) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-                alert.showAndWait();
+                stageUtils.errorAlert("Error, no valid stage was found to load.");
                 invoke.printStackTrace();
             }
         } else {
@@ -133,8 +135,7 @@ public class LoginController implements Initializable {
                     invalidLoginCredentialsError.setVisible(true);
                 }
             } catch (IOException invoke) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-                alert.showAndWait();
+                stageUtils.errorAlert("Error, no valid stage was found to load.");
                 invoke.printStackTrace();
             }
         }

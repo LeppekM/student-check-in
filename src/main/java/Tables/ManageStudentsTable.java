@@ -158,10 +158,7 @@ public class ManageStudentsTable extends TSCTable {
             stage.show();
             populateTable();
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student info page");
-            alert.initStyle(StageStyle.UTILITY);
-            StudentCheckIn.logger.error("IOException: Couldn't load student info page.");
-            alert.showAndWait();
+            stageUtils.errorAlert("Couldn't load student info page");
             e.printStackTrace();
         }
     }
@@ -301,7 +298,7 @@ public class ManageStudentsTable extends TSCTable {
 
                 int index = table.getSelectionModel().getFocusedIndex();
                 String email = getEmail(index);
-                if (stageUtils.confirmationAlert("Delete Student", "Delete this Student?")) {
+                if (stageUtils.confirmationAlert("Delete Student", "Are you ok with this?", "Delete this Student?")) {
                     database.deleteStudent(email);
                     populateTable();
                 }

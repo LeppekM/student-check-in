@@ -3,6 +3,7 @@ package Popups;
 import Database.Database;
 import Database.ObjectClasses.Worker;
 import Controllers.IController;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -38,6 +39,7 @@ public class EditAdminController implements IController {
 
     private static Worker worker, loggedWorker;
     private Database database;
+    private StageUtils stageUtils = StageUtils.getInstance();
     private static String name, workerEmail, password;
     private static int adminPin, rfid;
 
@@ -93,50 +95,42 @@ public class EditAdminController implements IController {
      */
     public void save() {
         if (!changed()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
-            alert.setTitle("Edit Failure");
-            alert.setHeaderText("No changes were made.");
-            alert.showAndWait();
+            stageUtils.informationAlert("No changes were made", "No changes detected, so no edits made");
         } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Are you sure you want to make the following changes?\n");
-            alert.setTitle("Edit Success");
-            alert.setHeaderText("Student worker info changing...");
+            String contentText = "Are you sure you want to make the following changes?\n";
             if (!name.equals(workerName.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + name + " --> " + workerName.getText() + "\n");
+                contentText += "\t" + name + " --> " + workerName.getText() + "\n";
             }
             if (!workerEmail.equals(email.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + workerEmail + " --> " + email.getText() + "\n");
+                contentText += "\t" + workerEmail + " --> " + email.getText() + "\n";
             }
             if (!password.equals(pass.getText())){
-                alert.setContentText(alert.getContentText() + "\t" + password + " --> " + pass.getText() + "\n");
+                contentText += "\t" + password + " --> " + pass.getText() + "\n";
             }
             if (adminPin != Integer.parseInt(pin.getText())){
-                alert.setContentText(alert.getContentText() + "\t" + adminPin + " --> " + pin.getText() + "\n");
+                contentText += "\t" + adminPin + " --> " + pin.getText() + "\n";
             }
             if (rfid != Integer.parseInt(eRFIDa.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + rfid + " --> " + eRFIDa.getText() + "\n");
+                contentText += "\t" + rfid + " --> " + eRFIDa.getText() + "\n";
             }
-            alert.showAndWait().ifPresent(buttonType -> {
-                if (buttonType == ButtonType.OK){
-                    worker.setName(workerName.getText());
-                    worker.setEmail(email.getText());
-                    worker.setPass(pass.getText());
-                    worker.setPin(Integer.parseInt(pin.getText()));
-                    worker.setWorkerRFID(Integer.parseInt(eRFIDa.getText()));
-                    database.initWorker(loggedWorker);
-                    database.updateWorker(worker);
-                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Admin updated");
-                    alert1.showAndWait();
-                    main.getScene().getWindow().hide();
-                } else {
-                    workerName.setText(name);
-                    email.setText(workerEmail);
-                    pass.setText(password);
-                    pin.setText(adminPin + "");
-                    eRFIDa.setText(rfid + "");
-                }
-            });
+            if (stageUtils.confirmationAlert("Edit Success", "Student worker info changing...",
+                    contentText)){
+                worker.setName(workerName.getText());
+                worker.setEmail(email.getText());
+                worker.setPass(pass.getText());
+                worker.setPin(Integer.parseInt(pin.getText()));
+                worker.setWorkerRFID(Integer.parseInt(eRFIDa.getText()));
+                database.initWorker(loggedWorker);
+                database.updateWorker(worker);
+                stageUtils.informationAlert("Admin updated", "Admin updated successfully");
+                main.getScene().getWindow().hide();
+            } else {
+                workerName.setText(name);
+                email.setText(workerEmail);
+                pass.setText(password);
+                pin.setText(adminPin + "");
+                eRFIDa.setText(rfid + "");
+            }
         }
     }
 

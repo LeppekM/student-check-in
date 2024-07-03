@@ -3,6 +3,7 @@ package Popups;
 import Database.Database;
 import Database.ObjectClasses.Worker;
 import Controllers.IController;
+import HelperClasses.StageUtils;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -44,6 +45,7 @@ public class EditWorkerController implements IController {
     private static String name, workerEmail, password;
     private static int rfid;
     private static boolean priv, edit, work, remove;
+    private StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into
@@ -102,66 +104,54 @@ public class EditWorkerController implements IController {
     }
 
     public void save() {
-        if (!changed()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
-            alert.setTitle("Edit Failure");
-            alert.setHeaderText("No changes were made.");
-            alert.showAndWait();
-        }else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to " +
-                    "make the following changes?\n");
-            alert.setTitle("Edit Success");
-            alert.setHeaderText("Student worker info changing...");
+        if (!changed()) {
+            stageUtils.informationAlert("No Edits Made", "No changes detected, so no edits made");
+        } else {
+            String contentText = "Are you sure you want to make the following changes?\n";
             if (!name.equals(workerName.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + name + " --> " + workerName.getText() + "\n");
+                contentText += "\t" + name + " --> " + workerName.getText() + "\n";
             }
             if (!workerEmail.equals(email.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + workerEmail + " --> " + email.getText() + "\n");
+                contentText += "\t" + workerEmail + " --> " + email.getText() + "\n";
             }
             if (!password.equals(pass.getText())){
-                alert.setContentText(alert.getContentText() + "\t" + password + " --> " + pass.getText() + "\n");
+                contentText += "\t" + password + " --> " + pass.getText() + "\n";
             }
             if (priv != admin.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Admin: " + priv + " --> Admin: " +
-                        admin.isSelected() + "\n");
+                contentText += "\t Admin: " + priv + " --> Admin: " + admin.isSelected() + "\n";
             }
             if (edit != editParts.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Edit Parts: " + edit + " --> Edit Parts: "
-                        + editParts.isSelected() + "\n");
+                contentText += "\t Edit Parts: " + edit + " --> Edit Parts: " + editParts.isSelected() + "\n";
             }
             if (work != workers.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Manage Workers: " + work + " --> Manage Workers: "
-                        + workers.isSelected() + "\n");
+                contentText += "\t Manage Workers: " + work + " --> Manage Workers: " + workers.isSelected() + "\n";
             }
             if (remove != removeParts.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Remove Parts: " + remove + " --> Remove Parts: "
-                        + removeParts.isSelected() + "\n");
+                contentText += "\t Remove Parts: " + remove + " --> Remove Parts: " + removeParts.isSelected() + "\n";
             }
             if (rfid != Integer.parseInt(eRFIDw.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + rfid + " --> " + eRFIDw.getText() + "\n");
+                contentText += "\t" + rfid + " --> " + eRFIDw.getText() + "\n";
             }
-            alert.showAndWait().ifPresent(buttonType -> {
-                if (buttonType == ButtonType.OK){
-                    worker.setName(workerName.getText());
-                    worker.setEmail(email.getText());
-                    worker.setPass(pass.getText());
-                    worker.setAdmin(false);
-                    worker.setWorkerRFID(Integer.parseInt(eRFIDw.getText()));
-                    worker.setEdit(editParts.isSelected());
-                    worker.setRemove(removeParts.isSelected());
-                    worker.setWorker(workers.isSelected());
-                    database.initWorker(loggedWorker);
-                    database.updateWorker(worker);
-                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
-                    alert1.showAndWait();
-                    main.getScene().getWindow().hide();
-                } else {
-                    workerName.setText(name);
-                    email.setText(workerEmail);
-                    pass.setText(password);
-                    eRFIDw.setText(rfid + "");
-                }
-            });
+            if (stageUtils.confirmationAlert("Edit Success", "Student worker info changing...",
+                    contentText)){
+                worker.setName(workerName.getText());
+                worker.setEmail(email.getText());
+                worker.setPass(pass.getText());
+                worker.setAdmin(false);
+                worker.setWorkerRFID(Integer.parseInt(eRFIDw.getText()));
+                worker.setEdit(editParts.isSelected());
+                worker.setRemove(removeParts.isSelected());
+                worker.setWorker(workers.isSelected());
+                database.initWorker(loggedWorker);
+                database.updateWorker(worker);
+                stageUtils.informationAlert("Edit Success", "Worker updated");
+                main.getScene().getWindow().hide();
+            } else {
+                workerName.setText(name);
+                email.setText(workerEmail);
+                pass.setText(password);
+                eRFIDw.setText(rfid + "");
+            }
         }
     }
 

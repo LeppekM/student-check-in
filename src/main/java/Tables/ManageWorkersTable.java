@@ -162,10 +162,7 @@ public class ManageWorkersTable extends TSCTable {
             stage.show();
             populateTable();
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load admin info page");
-            alert.initStyle(StageStyle.UTILITY);
-            StudentCheckIn.logger.error("IOException: Couldn't load worker info page.");
-            alert.showAndWait();
+            stageUtils.errorAlert("Couldn't load admin info page");
             e.printStackTrace();
         }
     }
@@ -323,6 +320,7 @@ public class ManageWorkersTable extends TSCTable {
                 stageUtils.errorAlert("Cannot delete your own account.");
             } else {
                 if (stageUtils.confirmationAlert("Delete This Worker?",
+                        "Are you ok with this?",
                         "Are you sure you want to delete this worker?")) {
                     database.deleteWorker(w.getName());
                 }

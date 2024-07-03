@@ -96,8 +96,7 @@ public class MenuController implements IController, Initializable {
             Pane loginPane = loader.load();
             mainMenuScene.getScene().setRoot(loginPane);
         } catch(IOException invoke){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
+            stageUtils.errorAlert("Error, no valid stage was found to load.");
             invoke.printStackTrace();
         }
     }

@@ -22,6 +22,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+import static Controllers.CheckOutController.RFID_REGEX;
+
 /**
  *
  */
@@ -34,7 +36,7 @@ public class EditStudentController implements IController {
     private VBox vbox = new VBox();
 
     @FXML
-    private JFXTextField studentName, email, RFID;
+    private JFXTextField studentName, email, rfid;
 
     @FXML
     private JFXTreeTableView coTable, oTable;
@@ -49,6 +51,7 @@ public class EditStudentController implements IController {
     private static String name;
     private static int id;
     private static String studentEmail;
+    private StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * This method sets the student in this class and in the window
@@ -59,11 +62,11 @@ public class EditStudentController implements IController {
         database = Database.getInstance();
         studentName.setText(student.getName());
         email.setText(student.getEmail());
-        RFID.setText(student.getRFID() + "");
+        rfid.setText(student.getRFID() + "");
         StageUtils stageUtils = StageUtils.getInstance();
-        stageUtils.acceptIntegerOnly(RFID);
+        stageUtils.acceptIntegerOnly(rfid);
         name = studentName.getText();
-        id = Integer.parseInt(RFID.getText());
+        id = Integer.parseInt(rfid.getText());
         studentEmail = email.getText();
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(5);
@@ -150,55 +153,43 @@ public class EditStudentController implements IController {
      * @return true if nothing changed
      */
     public boolean changed(){
-        return !name.equals(studentName.getText()) || id != Integer.parseInt(RFID.getText()) || !studentEmail.equals(email.getText());
+        return !name.equals(studentName.getText()) || id != Integer.parseInt(rfid.getText()) || !studentEmail.equals(email.getText());
     }
 
     /**
      * This method saves the changes made to a student and ensures the user wants to
      */
     public void save() {
-        Alert alert;
         if (!changed()){
-            alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
-            alert.setTitle("Edit Failure");
-            alert.setHeaderText("No changes were made.");
-            alert.showAndWait();
-        } else if (!RFID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
-            alert = new Alert(Alert.AlertType.ERROR, "RFID must be 5 digits.");
-            alert.setTitle("Edit Failure.");
-            alert.setHeaderText("Student RFID is not 5 numbers.");
-            alert.showAndWait();
-            RFID.setText(id + "");
+            stageUtils.informationAlert("No Edits Made", "No changes detected, so no edits made");
+        } else if (!rfid.getText().matches(RFID_REGEX)) {
+            stageUtils.errorAlert("RFID must be at least 4 digits");
+            rfid.setText(id + "");
         } else {
-            alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to make the following changes?\n");
-            alert.setTitle("Edit Success");
-            alert.setHeaderText("Student info changing...");
+            String contentText = "Are you sure you want to make the following changes?\n";
             if (!name.equals(studentName.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + name + " --> " + studentName.getText() + "\n");
+                contentText += "\t" + name + " --> " + studentName.getText() + "\n";
             }
-            if (id != Integer.parseInt(RFID.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + id + " --> " + RFID.getText() + "\n");
+            if (id != Integer.parseInt(rfid.getText())) {
+                contentText += "\t" + id + " --> " + rfid.getText() + "\n";
             }
             if (!studentEmail.equals(email.getText())){
-                alert.setContentText(alert.getContentText() + "\t" + studentEmail + " --> " + email.getText() + "\n");
+                contentText += "\t" + studentEmail + " --> " + email.getText() + "\n";
             }
-            alert.showAndWait().ifPresent(buttonType -> {
-                if (buttonType == ButtonType.OK){
-                    student.setName(studentName.getText());
-                    int oldRFID = student.getRFID();
-                    student.setRFID(Integer.parseInt(RFID.getText()));
-                    student.setEmail(email.getText());
-                    database.initWorker(worker);
-                    database.updateStudent(student, oldRFID);
-                    Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Student updated");
-                    alert1.showAndWait();
-                    main.getScene().getWindow().hide();
-                }else {
-                    studentName.setText(name);
-                    RFID.setText(id + "");
-                    email.setText(studentEmail);
-                }
-            });
+            if (stageUtils.confirmationAlert("Edit Success", "Student info changing...", contentText)) {
+                student.setName(studentName.getText());
+                int oldRFID = student.getRFID();
+                student.setRFID(Integer.parseInt(rfid.getText()));
+                student.setEmail(email.getText());
+                database.initWorker(worker);
+                database.updateStudent(student, oldRFID);
+                stageUtils.informationAlert("Student updated", "Student updated successfully");
+                main.getScene().getWindow().hide();
+            } else {
+                studentName.setText(name);
+                rfid.setText(id + "");
+                email.setText(studentEmail);
+            }
         }
     }
 

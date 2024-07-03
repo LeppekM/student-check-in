@@ -156,13 +156,9 @@ public class HistoryInventoryTable extends TSCTable {
 
     public void clearHistory() {
         if (this.worker != null && this.worker.isAdmin()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Delete Old History");
-            alert.setContentText("Are you sure you want to clear the transaction history for parts " +
-                    "older than 2 years?");
-            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.YES) {
+            if (stageUtils.confirmationAlert("Confirm Delete Old History",
+                    "Are you sure you want to clear old history?",
+                    "Do you want to clear the transaction history for parts older than 2 years?")) {
                 database.clearOldHistory();
                 populateTable();
             }

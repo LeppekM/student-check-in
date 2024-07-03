@@ -45,7 +45,7 @@
                <Font name="Arial Black" size="32.0"/>
             </font>
          </JFXTextField>
-         <JFXTextField fx:id="RFID" alignment="CENTER" focusColor="FIREBRICK" prefHeight="80.0" promptText="RFID">
+         <JFXTextField fx:id="rfid" alignment="CENTER" focusColor="FIREBRICK" prefHeight="80.0" promptText="RFID">
             <font>
                <Font name="Arial Black" size="32.0"/>
             </font>

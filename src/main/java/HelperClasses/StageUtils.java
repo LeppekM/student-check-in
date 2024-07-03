@@ -63,7 +63,6 @@ public class StageUtils {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
         } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Unable to load FXML file: {}", fxml, e);
             e.printStackTrace();
         }
         return stage;
@@ -181,12 +180,12 @@ public class StageUtils {
      * @param errorText Error text
      */
     public void errorAlert(String errorText){
-        Alert errorAlert2 = new Alert(Alert.AlertType.ERROR);
-        errorAlert2.setHeaderText("Error");
-        errorAlert2.setContentText(errorText);
-        errorAlert2.initStyle(StageStyle.UTILITY);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error");
+        alert.setContentText(errorText);
+        alert.initStyle(StageStyle.UTILITY);
 
-        Platform.runLater(errorAlert2::showAndWait);
+        Platform.runLater(alert::showAndWait);
     }
 
     /**
@@ -224,18 +223,30 @@ public class StageUtils {
      * @return True if user pressed ok, false otherwise
      */
     public boolean missingFieldsAlert() {
-        return confirmationAlert("Information may be lost", "If you leave, unsubmitted information may be lost");
+        return confirmationAlert("Information may be lost", "Are you ok with this?",
+                "If you leave, unsubmitted information may be lost");
     }
 
-    public boolean confirmationAlert(String title, String content) {
+    public boolean confirmationAlert(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
-        alert.setHeaderText(content);
-        alert.setContentText("Are you ok with this?");
+        alert.setHeaderText(header);
+        alert.setContentText(content);
         Optional<ButtonType> result = alert.showAndWait();
         return result.get() == ButtonType.OK;
     }
 
+    /**
+     * Creates a new information alert, for non-error information that the user should acknowledge
+     */
+    public void informationAlert(String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.initStyle(StageStyle.UTILITY);
+
+        Platform.runLater(alert::showAndWait);
+    }
 
     /**
      * Asks the student worker to enter an admin pin if they try to do something they do
@@ -280,7 +291,6 @@ public class StageUtils {
             });
             stage.showAndWait();
         } catch (IOException e) {
-            StudentCheckIn.logger.error("IOException: Loading Admin Pin Request.");
             e.printStackTrace();
         }
         return isValid.get();
@@ -301,9 +311,7 @@ public class StageUtils {
             ((IController) loader.getController()).initWorker(worker);
             pane.getChildren().clear();
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            StudentCheckIn.logger.error("IOException: No valid stage was found to load");
-            alert.showAndWait();
+            errorAlert("Error, no valid stage was found to load.");
         }
     }
 

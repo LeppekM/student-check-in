@@ -449,6 +449,7 @@ public class CompleteInventoryTable extends TSCTable {
                 while (currentSN < quantity + startingSN) {
                     if (serialNums.contains(currentSN + suffix)) {
                         return stageUtils.confirmationAlert("Not enough serial numbers in sequence",
+                                "Are you ok with this?",
                                 "When adding " + quantity + " parts of " + partName + " with the starting " +
                                         "serial number of " + serialField.getText() + suffixField.getText() +
                                         " the serial number overlaps with existing parts starting with " +
@@ -580,16 +581,12 @@ public class CompleteInventoryTable extends TSCTable {
                     database.initWorker(worker);
                     try {
                         if (database.selectPart(partID) != null) {
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                    "Are you sure you wish to delete the part with ID = " + partID
-                                            + "?", ButtonType.YES, ButtonType.NO);
-                            alert.showAndWait();
-                            if (alert.getResult() == ButtonType.YES) {
+                            if (stageUtils.confirmationAlert("Are you sure?", "Delete this part?",
+                                    "Are you sure you wish to delete the part with ID = " + partID + "?")) {
                                 database.deletePart(partID);
                             }
                         }
                     } catch (Exception e) {
-                        StudentCheckIn.logger.error("Exception while deleting part.");
                         e.printStackTrace();
                     }
                 } else {
@@ -618,16 +615,13 @@ public class CompleteInventoryTable extends TSCTable {
                 database.initWorker(worker);
                 try {
                     if (database.hasPartName(partName)) {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                "Are you sure you wish to delete all parts named: " + partName + "?",
-                                ButtonType.YES, ButtonType.NO);
-                        alert.showAndWait();
-                        if (alert.getResult() == ButtonType.YES) {
+                        if (stageUtils.confirmationAlert("Are you sure?",
+                                "Delete all " + partName + "s?",
+                                "Are you sure you wish to delete all parts named: " + partName + "?")) {
                             database.deleteParts(partName);
                         }
                     }
                 } catch (Exception e) {
-                    StudentCheckIn.logger.error("Exception while deleting part type.");
                     e.printStackTrace();
                 }
             } else {

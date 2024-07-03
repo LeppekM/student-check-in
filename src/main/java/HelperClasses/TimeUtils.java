@@ -21,7 +21,6 @@ public class TimeUtils {
         } catch (ParseException e) {
             System.out.println("Error parsing date: " + stringDate);
         } catch (NullPointerException e){
-            StudentCheckIn.logger.error("Item is being checked out for first time; no checkout date");
             return null;
         }
         return date;
