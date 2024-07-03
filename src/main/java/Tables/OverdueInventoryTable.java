@@ -51,6 +51,7 @@ public class OverdueInventoryTable extends TSCTable {
         serialNumberCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
         barcodeCol = createNewCol("Barcode", 0.1);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
+        barcodeCol.setCellFactory(barcodeColFormat());
         dueDateCol = createNewCol("Due Date", 0.25);
         dueDateCol.setCellValueFactory(col -> col.getValue().getValue().getDueDate());
         dueDateCol.setCellFactory(dateColFormat());

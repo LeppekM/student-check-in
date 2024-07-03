@@ -45,6 +45,7 @@ public class HistoryInventoryTable extends TSCTable {
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
         barcodeCol = createNewCol("Barcode", 0.1);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
+        barcodeCol.setCellFactory(barcodeColFormat());
         actionCol = createNewCol("Action");
         actionCol.setCellValueFactory(col -> col.getValue().getValue().getAction());
         dateCol = createNewCol("Date", 0.25);

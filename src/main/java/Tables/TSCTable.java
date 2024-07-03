@@ -169,6 +169,25 @@ public abstract class TSCTable {
         };
     }
 
+    protected Callback barcodeColFormat(){
+        return new Callback<TreeTableColumn<TableRow, Long>, TreeTableCell<TableRow, Long>>() {
+            @Override
+            public TreeTableCell<TableRow, Long> call(TreeTableColumn<TableRow, Long> column) {
+                return new TreeTableCell<TableRow, Long>() {
+                    @Override
+                    protected void updateItem(Long item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                        } else {
+                            setText(String.format("%06d", item));
+                        }
+                    }
+                };
+            }
+        };
+    }
+
     public class TableRow extends RecursiveTreeObject<TableRow> {
 
     }

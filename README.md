@@ -31,7 +31,7 @@ Product Owner: Jim Frommell
 ## Priority List ##
 * allow smarter clear history
   * Potentially allow adjustable dates for this
-* Double check leading 00s allowed in table searches / improve searches with space delim
+* improve searches with space delim
 * QA test table functionality
 * Testing suite
 * Scan all of part type in inventory

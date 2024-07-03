@@ -49,6 +49,7 @@ public class CheckedOutInventoryTable extends TSCTable {
         partNameCol.setCellValueFactory(col -> col.getValue().getValue().getPartName());
         barcodeCol = createNewCol("Barcode", 0.1);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
+        barcodeCol.setCellFactory(barcodeColFormat());
         checkOutDateCol = createNewCol("Check Out Date", 0.25);
         checkOutDateCol.setCellValueFactory(col -> col.getValue().getValue().getCheckedOutAt());
         checkOutDateCol.setCellFactory(dateColFormat());

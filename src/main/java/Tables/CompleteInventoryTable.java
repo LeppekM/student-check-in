@@ -59,6 +59,7 @@ public class CompleteInventoryTable extends TSCTable {
         locationCol.setCellValueFactory(col -> col.getValue().getValue().getLocation());
         barcodeCol = createNewCol("Barcode", 0.15);
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
+        barcodeCol.setCellFactory(barcodeColFormat());
         partIDCol = createNewCol("Part ID", 0.15);
         partIDCol.setCellValueFactory(col -> col.getValue().getValue().getPartID().asObject());
 
