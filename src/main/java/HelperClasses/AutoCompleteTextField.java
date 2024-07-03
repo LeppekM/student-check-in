@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Side;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
-import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -71,10 +70,10 @@ public class AutoCompleteTextField extends JFXTextField {
     private ContextMenu entriesPopup;
 
     /**
-     * Indicates whether the search is case sensitive or not. <br>
+     * Indicates whether the search is case-sensitive or not. <br>
      * Default: false
      */
-    private boolean caseSensitive = false;
+    private final boolean caseSensitive = false;
 
     /**
      * Indicates whether the Popup should be hidden or displayed. Use this if
@@ -82,7 +81,7 @@ public class AutoCompleteTextField extends JFXTextField {
      * {@link javafx.scene.control.ListView ListView}). Do this by binding
      * {@link #getFilteredEntries() getFilteredEntries()} to the list/set.
      */
-    private boolean popupHidden = false;
+    private final boolean popupHidden = false;
 
     /**
      * The CSS style that should be applied on the parts in the popup that match
@@ -93,17 +92,17 @@ public class AutoCompleteTextField extends JFXTextField {
      * {@link javafx.scene.text.Text Text} instance. See the <i>JavaFX CSS
      * Reference Guide</i> for available CSS Properties.
      */
-    private String textOccurrenceStyle = "-fx-font-weight: bold; "
+    private final String textOccurrenceStyle = "-fx-font-weight: bold; "
             + "-fx-fill: red;";
 
     /**
      * The maximum Number of entries displayed in the popup.<br>
      * Default: 10
      */
-    private int maxEntries = 10;
+    private final int maxEntries = 10;
 
     public void initEntrySet(SortedSet<String> entrySet) {
-        this.entries = (entrySet == null ? new TreeSet<>() : entrySet);
+        this.entries = entrySet == null ? new TreeSet<>() : entrySet;
         this.filteredEntries.addAll(entries);
 
         entriesPopup = new ContextMenu();
@@ -179,26 +178,25 @@ public class AutoCompleteTextField extends JFXTextField {
     }
 
     private TextFlow getTextFlow(String text, String result) {
-        int occurence;
+        int occurrence;
 
         if (isCaseSensitive()) {
-            occurence = result.indexOf(text);
+            occurrence = result.indexOf(text);
         } else {
-            occurence = result.toLowerCase().indexOf(text.toLowerCase());
+            occurrence = result.toLowerCase().indexOf(text.toLowerCase());
         }
 
-        //Part before occurence (might be empty)
-        Text pre = new Text(result.substring(0, occurence));
-        //Part of (first) occurence
-        Text in = new Text(result.substring(occurence,
-                occurence + text.length()));
+        //Part before occurrence (might be empty)
+        Text pre = new Text(result.substring(0, occurrence));
+        //Part of (first) occurrence
+        Text in = new Text(result.substring(occurrence,
+                occurrence + text.length()));
         in.setStyle(getTextOccurrenceStyle());
-        //Part after occurence
-        Text post = new Text(result.substring(occurence + text.length()
+        //Part after occurrence
+        Text post = new Text(result.substring(occurrence + text.length()
         ));
 
-        TextFlow entryFlow = new TextFlow(pre, in, post);
-        return entryFlow;
+        return new TextFlow(pre, in, post);
     }
 
     public boolean isCaseSensitive() {
@@ -209,20 +207,8 @@ public class AutoCompleteTextField extends JFXTextField {
         return textOccurrenceStyle;
     }
 
-    public void setCaseSensitive(boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
-    }
-
-    public void setTextOccurrenceStyle(String textOccurrenceStyle) {
-        this.textOccurrenceStyle = textOccurrenceStyle;
-    }
-
     public boolean isPopupHidden() {
         return popupHidden;
-    }
-
-    public void setPopupHidden(boolean popupHidden) {
-        this.popupHidden = popupHidden;
     }
 
     public ObservableList<String> getFilteredEntries() {
@@ -231,10 +217,6 @@ public class AutoCompleteTextField extends JFXTextField {
 
     public int getMaxEntries() {
         return maxEntries;
-    }
-
-    public void setMaxEntries(int maxEntries) {
-        this.maxEntries = maxEntries;
     }
 
 }

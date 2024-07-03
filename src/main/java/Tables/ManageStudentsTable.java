@@ -1,6 +1,5 @@
 package Tables;
 
-import Controllers.IController;
 import Database.ObjectClasses.Student;
 import HelperClasses.ExportToExcel;
 import App.StudentCheckIn;
@@ -44,6 +43,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Manages the table which contains all students in the manage students screen
+ */
 public class ManageStudentsTable extends TSCTable {
 
     private JFXTreeTableColumn<MSRow, String> firstNameCol, lastNameCol, emailCol;
@@ -91,9 +93,12 @@ public class ManageStudentsTable extends TSCTable {
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 
         // unfortunately, this cast needs to be here to add the cols to the table
-        TreeTableColumn<TableRow, String> firstNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) firstNameCol;
-        TreeTableColumn<TableRow, String> lastNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) lastNameCol;
-        TreeTableColumn<TableRow, Integer> studentIDTemp = (TreeTableColumn<TableRow, Integer>) (TreeTableColumn) studentIDCol;
+        TreeTableColumn<TableRow, String> firstNameTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) firstNameCol;
+        TreeTableColumn<TableRow, String> lastNameTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) lastNameCol;
+        TreeTableColumn<TableRow, Integer> studentIDTemp =
+                (TreeTableColumn<TableRow, Integer>) (TreeTableColumn) studentIDCol;
         TreeTableColumn<TableRow, String> emailTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) emailCol;
 
         table.getColumns().setAll(firstNameTemp, lastNameTemp, studentIDTemp, emailTemp);
@@ -111,17 +116,17 @@ public class ManageStudentsTable extends TSCTable {
         String id = "" + val.getId().getValue();
         String email = val.getEmail().getValue();
 
-        return ((firstName != null && firstName.toLowerCase().contains(input))
-                || (id != null && id.toLowerCase().contains(input))
-                || (email != null && email.toLowerCase().contains(input)))
-                || (lastName != null && lastName.toLowerCase().contains(input));
+        return firstName != null && firstName.toLowerCase().contains(input)
+                || id.toLowerCase().contains(input)
+                || email != null && email.toLowerCase().contains(input)
+                || lastName != null && lastName.toLowerCase().contains(input);
     }
 
     @Override
     protected void popupRow(int index) {
         Stage stage = new Stage();
         MSRow r = (MSRow) table.getSelectionModel().getModelItem(index).getValue();
-        Student s = null;
+        Student s;
         if (r.getId().get() == 0) {
             s = database.selectStudentWithoutLists(r.getEmail().get());
         } else {
@@ -201,7 +206,7 @@ public class ManageStudentsTable extends TSCTable {
                             failedImports.add(new Student(firstName + " " + lastName, email));
                         } else {
                             if (!database.getStudentEmails().contains(email)) {
-                                if (!database.importStudent(new Student((firstName + " " + lastName), email))) {
+                                if (!database.importStudent(new Student(firstName + " " + lastName, email))) {
                                     failedImports.add(new Student(firstName + " " + lastName, email));
                                 }
                             }
@@ -210,7 +215,8 @@ public class ManageStudentsTable extends TSCTable {
                         failedImports.add(new Student(name, email));
                     }
                 } else {
-                    stageUtils.errorAlert("The name must be in the first row and the email must be in the fourth row of the imported excel file.");
+                    stageUtils.errorAlert("The name must be in the first row and the email must " +
+                            "be in the fourth row of the imported excel file.");
                 }
 
             }
@@ -223,7 +229,8 @@ public class ManageStudentsTable extends TSCTable {
                 }
                 Path filePath = Paths.get("failed_students_import.txt");
                 Files.write(filePath, lines);
-                stageUtils.errorAlert("The program failed to import the students listed in the text file: \"" + filePath.getFileName() + "\"");
+                stageUtils.errorAlert("The program failed to import the students listed in the text file: \""
+                        + filePath.getFileName() + "\"");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -239,7 +246,7 @@ public class ManageStudentsTable extends TSCTable {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
 
-        Popup addStudent = new Popup(root) {
+        new Popup(root) {
             private JFXTextField email, first, last, rfid;
 
             @Override
@@ -261,14 +268,16 @@ public class ManageStudentsTable extends TSCTable {
                             } else if (database.studentRFIDExists(Integer.parseInt(rfid.getText()))) {
                                 stageUtils.errorAlert("A student with that rfid already exists.");
                             } else {
-                                database.addStudent(new Student(first.getText() + " " + last.getText(), Integer.parseInt(rfid.getText()), email.getText()));
+                                database.addStudent(new Student(first.getText() + " " + last.getText(),
+                                        Integer.parseInt(rfid.getText()), email.getText()));
                                 stage.close();
                             }
                         } else {
                             stageUtils.errorAlert("Please enter a valid msoe email.");
                         }
                     } else {
-                        stageUtils.errorAlert("The rfid must be a validly formatted student RFID. Scan the student ID.");
+                        stageUtils.errorAlert("The rfid must be a validly formatted student RFID." +
+                                " Scan the student ID.");
                     }
                 } else {
                     stageUtils.errorAlert("All fields must be filled in.");
@@ -283,7 +292,7 @@ public class ManageStudentsTable extends TSCTable {
 
     public void deleteStudent() {
         if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
-            if ((worker != null && worker.isAdmin())
+            if (worker != null && worker.isAdmin()
                     || StageUtils.getInstance().requestAdminPin("delete a student", controller.getScene())) {
 
                 int index = table.getSelectionModel().getFocusedIndex();

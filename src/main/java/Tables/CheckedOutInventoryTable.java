@@ -25,6 +25,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Manages the table in Inventory screen that shows all parts currently checked out
+ */
 public class CheckedOutInventoryTable extends TSCTable {
 
     private JFXTreeTableColumn<CORow, String> studentNameCol, partNameCol;
@@ -83,10 +86,13 @@ public class CheckedOutInventoryTable extends TSCTable {
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 
         // unfortunately, this cast needs to be here to add the cols to the table
-        TreeTableColumn<TableRow, String> studentNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) studentNameCol;
-        TreeTableColumn<TableRow, String> partNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) partNameCol;
+        TreeTableColumn<TableRow, String> studentNameTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) studentNameCol;
+        TreeTableColumn<TableRow, String> partNameTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) partNameCol;
         TreeTableColumn<TableRow, Long> barcodeTemp = (TreeTableColumn<TableRow, Long>) (TreeTableColumn) barcodeCol;
-        TreeTableColumn<TableRow, Date> checkedOutDateTemp = (TreeTableColumn<TableRow, Date>) (TreeTableColumn) checkOutDateCol;
+        TreeTableColumn<TableRow, Date> checkedOutDateTemp =
+                (TreeTableColumn<TableRow, Date>) (TreeTableColumn) checkOutDateCol;
         TreeTableColumn<TableRow, Date> dueDateTemp = (TreeTableColumn<TableRow, Date>) (TreeTableColumn) dueDateCol;
 
         table.getColumns().setAll(studentNameTemp, partNameTemp, barcodeTemp, checkedOutDateTemp, dueDateTemp);
@@ -105,11 +111,10 @@ public class CheckedOutInventoryTable extends TSCTable {
         String checkedOutAt = val.getCheckedOutAt().getValue().toString();
         String dueDate = val.getDueDate().getValue().toString();
 
-        return ((studentName != null && studentName.toLowerCase().contains(input))
-                || (partName != null && partName.toLowerCase().contains(input))
-                || (barcode != null && barcode.toLowerCase().contains(input))
-                || (checkedOutAt != null && checkedOutAt.toLowerCase().contains(input))
-                || (dueDate != null && dueDate.toLowerCase().contains(input)));
+        return studentName != null && studentName.toLowerCase().contains(input) ||
+                partName != null && partName.toLowerCase().contains(input) || barcode.toLowerCase().contains(input)
+                || checkedOutAt != null && checkedOutAt.toLowerCase().contains(input)
+                || dueDate != null && dueDate.toLowerCase().contains(input);
     }
 
     @Override
@@ -118,7 +123,7 @@ public class CheckedOutInventoryTable extends TSCTable {
             TreeItem item = table.getSelectionModel().getModelItem(index);
             // null if user clicks on empty row
             if (item != null) {
-                CORow row = ((CORow) item.getValue());
+                CORow row = (CORow) item.getValue();
 
                 Checkout checkout = new Checkout(row.getCheckoutID().get(), row.getStudentName().get(),
                         row.getStudentEmail().get(), row.getStudentRFID().get(), row.getPartName().get(),
@@ -138,7 +143,7 @@ public class CheckedOutInventoryTable extends TSCTable {
         stage.initOwner(scene.getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
-        Popup checkedOutPopup = new Popup(root) {
+        new Popup(root) {
             @Override
             public void populate() {
                 add("Student Name: ", checkout.getStudentName().get(), false);

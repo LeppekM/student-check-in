@@ -21,22 +21,30 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * This controller is in charge of all the screens with tables as their primary element:
+ * Inventory (all tabs: Complete/Total Inventory, Checkout History, Checked Out, Overdue)
+ * Manage Students
+ * Manage Workers
+ * The controller is in charge of button functionality, showing/hiding elements depending on state,
+ * managing tables, and passing the search along to appropriate table objects
+ */
 public class TableScreensController extends MenuController implements IController, Initializable {
 
     @FXML
-    public Label titleLabel;
+    private Label titleLabel;
 
     @FXML
-    public JFXTabPane tabPane;
+    private JFXTabPane tabPane;
 
     @FXML
     private VBox scene;
 
     @FXML
-    TextField searchInput;
+    private TextField searchInput;
 
     @FXML
-    public JFXTreeTableView<TSCTable.TableRow> table;
+    private JFXTreeTableView<TSCTable.TableRow> table;
 
     @FXML
     private Button backButton, excelButton, menuButton1, menuButton2, menuButton3, menuButton4, menuButton5;
@@ -74,7 +82,8 @@ public class TableScreensController extends MenuController implements IControlle
         });
 
         screenProperty.set(TableScreen.OVERDUE);
-        BooleanBinding hideTabs = screenProperty.isEqualTo(TableScreen.STUDENTS).or(screenProperty.isEqualTo(TableScreen.WORKERS));
+        BooleanBinding hideTabs = screenProperty.isEqualTo(TableScreen.STUDENTS)
+                .or(screenProperty.isEqualTo(TableScreen.WORKERS));
         NumberBinding heightBinding = Bindings.when(hideTabs).then(0).otherwise(42);
         tabPane.maxHeightProperty().bind(heightBinding);
         tabPane.minHeightProperty().bind(heightBinding);
@@ -116,7 +125,8 @@ public class TableScreensController extends MenuController implements IControlle
         });
 
         // add deactivate/activate behavior for buttons which need it
-        table.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> disableButtons(false));
+        table.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
+                disableButtons(false));
 
         // Updates the search if the user presses enter with the cursor in the search field
         searchInput.setOnKeyReleased(event -> {
@@ -128,9 +138,6 @@ public class TableScreensController extends MenuController implements IControlle
 
     private void reloadScreen() {
         screenProperty.set(screen);
-
-        disableButtons(true);
-
         switch (screen) {
             case COMPLETE_INVENTORY:
                 tscTable = new CompleteInventoryTable(this);
@@ -205,6 +212,7 @@ public class TableScreensController extends MenuController implements IControlle
                 menuButton5.setVisible(false);
                 break;
         }
+        disableButtons(true);
         tscTable.initialize();
         tscTable.populateTable();
     }
@@ -348,6 +356,10 @@ public class TableScreensController extends MenuController implements IControlle
     public void setScreen(TableScreen tableScreen) {
         screen = tableScreen;
         reloadScreen();
+    }
+
+    public JFXTreeTableView<TSCTable.TableRow> getTable() {
+        return table;
     }
 
     public Worker getWorker() {

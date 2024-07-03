@@ -3,13 +3,13 @@ package Database.ObjectClasses;
 import Database.Database;
 import javafx.beans.property.*;
 
+/**
+ * Object which represents the Part entity in the database and real life parts/kits being checked in/out
+ */
 public class Part {
 
-    private final SimpleStringProperty partName;
-    private final SimpleStringProperty serialNumber;
-    private SimpleStringProperty manufacturer;
-    private SimpleStringProperty vendor;
-    private SimpleStringProperty location;
+    private final SimpleStringProperty partName, serialNumber;
+    private SimpleStringProperty manufacturer, vendor, location;
     private final SimpleLongProperty barcode;
     private final SimpleDoubleProperty price;
     private SimpleIntegerProperty partID;
@@ -24,14 +24,16 @@ public class Part {
         this.barcode = new SimpleLongProperty(barcode);
     }
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode, int partID) {
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor,
+                String location, long barcode, int partID) {
         this(partName, serialNumber, price, location, barcode);
         this.manufacturer = new SimpleStringProperty(manufacturer);
         this.vendor = new SimpleStringProperty(vendor);
         this.partID = new SimpleIntegerProperty(partID);
     }
 
-    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode) {
+    public Part(String partName, String serialNumber, String manufacturer, double price, String vendor,
+                String location, long barcode) {
         this(partName, serialNumber, price, location, barcode);
         this.manufacturer = new SimpleStringProperty(manufacturer);
         this.vendor = new SimpleStringProperty(vendor);
@@ -51,16 +53,8 @@ public class Part {
         return partName.get();
     }
 
-    public void setPartName(String name) {
-        this.partName.set(name);
-    }
-
     public String getSerialNumber() {
         return serialNumber.get();
-    }
-
-    public void setSerialNumber(String serial) {
-        this.serialNumber.set(serial);
     }
 
     public String getManufacturer() {
@@ -71,20 +65,12 @@ public class Part {
         return price.get();
     }
 
-    public void setPrice(double price) {
-        this.price.set(price);
-    }
-
     public String getVendor() {
         return vendor.get();
     }
 
     public String getLocation() {
         return location.get();
-    }
-
-    public void setLocation(String location) {
-        this.location.set(location);
     }
 
     public Long getBarcode() {
@@ -101,10 +87,6 @@ public class Part {
 
     public int getPartID() {
         return partID.get();
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = new SimpleStringProperty(manufacturer);
     }
 
     public void update(String partName, String serialNumber, String manufacturer, double price, String vendor, String location, long barcode) {

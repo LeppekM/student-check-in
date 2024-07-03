@@ -13,7 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 
 /**
- *
+ * Helper class which is used to put the background image on the login and menu pages
  * @author akouznet
  */
 public class ImageViewPane extends Region {

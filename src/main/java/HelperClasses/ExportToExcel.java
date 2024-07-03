@@ -11,6 +11,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * Helper class which allows the tables on the inventory page to export as Excel documents
+ */
 public class ExportToExcel {
 
     private void formatExcelFile(String[] columns, Workbook workbook, Sheet sheet) {
@@ -40,7 +43,7 @@ public class ExportToExcel {
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
 
 
-        String[] columns = {"Student Name", "Part Name", "Barcode", "Check Out Date", "Due Date"}; //Number of columns in tableview
+        String[] columns = {"Student Name", "Part Name", "Barcode", "Check Out Date", "Due Date"};
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
 
@@ -71,7 +74,7 @@ public class ExportToExcel {
                 new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
 
 
-        String[] columns = {"Student Name", "Student ID", "Part Name", "Serial Number", "Barcode", "Due Date"}; //Number of columns in tableview
+        String[] columns = {"Student Name", "Student ID", "Part Name", "Serial Number", "Barcode", "Due Date"};
         int rowNum = 1;
         Workbook workbook = new XSSFWorkbook();
 

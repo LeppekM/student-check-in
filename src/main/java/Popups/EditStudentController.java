@@ -15,7 +15,6 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -23,6 +22,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+/**
+ *
+ */
 public class EditStudentController implements IController {
 
     @FXML
@@ -93,7 +95,7 @@ public class EditStudentController implements IController {
      * This method fills the tables with data if there is any
      */
     private void populateTables() {
-        if(student.getRFID()==0){
+        if (student.getRFID()==0) {
             return;
         }
 
@@ -153,22 +155,21 @@ public class EditStudentController implements IController {
 
     /**
      * This method saves the changes made to a student and ensures the user wants to
-     * @param actionEvent button
      */
-    public void save(ActionEvent actionEvent) {
+    public void save() {
         Alert alert;
         if (!changed()){
             alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
             alert.showAndWait();
-        }else if (!RFID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
+        } else if (!RFID.getText().matches("^\\D*(?:\\d\\D*){4,}$")) {
             alert = new Alert(Alert.AlertType.ERROR, "RFID must be 5 digits.");
             alert.setTitle("Edit Failure.");
             alert.setHeaderText("Student RFID is not 5 numbers.");
             alert.showAndWait();
             RFID.setText(id + "");
-        }else {
+        } else {
             alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to make the following changes?\n");
             alert.setTitle("Edit Success");
             alert.setHeaderText("Student info changing...");

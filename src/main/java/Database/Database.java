@@ -21,14 +21,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
+/**
+ * This is the Object that works as the data access layer, and is the only object in the project which touches the
+ * database. This Object is a singleton to prevent too many connections at a time, and acts as a utility/helper class
+ */
 public class Database implements IController {
     //DB root pass: Userpassword123
-    public static final String username = "root";
-    public static final String password = "3l3ctr1c_B00gloo";
-    static String host = "jdbc:mysql://localhost:3306";
-    static final String dbDriver = "com.mysql.jdbc.Driver";
-    static final String dbname = "/student_check_in";
-    static Connection connection;
+    public static final String USERNAME = "root";
+    public static final String PASSWORD = "3l3ctr1c_B00gloo";
+    private static final String HOST = "jdbc:mysql://localhost:3306";
+    private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
+    private static final String DB_NAME = "/student_check_in";
+    private static Connection connection;
     private final TimeUtils timeUtils = new TimeUtils();
     private Worker worker;
     private final StageUtils stageUtils = StageUtils.getInstance();
@@ -41,21 +45,19 @@ public class Database implements IController {
         // Load the JDBC driver.
         // Library (.jar file) must be added to project build path.
         try {
-            Class.forName(dbDriver);
+            Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             System.exit(0);
         }
         connection = null;
         try {
-            connection = DriverManager.getConnection((host + dbname),
-                    username, password);
+            connection = DriverManager.getConnection((HOST + DB_NAME),
+                    USERNAME, PASSWORD);
             connection.setClientInfo("autoReconnect", "true");
         } catch (SQLException e) {
             e.printStackTrace();
-            StudentCheckIn.logger.error("SQLError: Can't connect to the database! Connection could not be established.");
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, could not connect to the database.");
-            alert.showAndWait();
+            stageUtils.errorAlert("Error, could not connect to the database.");
         }
     }
 
@@ -70,12 +72,9 @@ public class Database implements IController {
     public Connection getConnection() {
         try{
             if (connection.isClosed()) {
-                connection = DriverManager.getConnection((host + dbname), username, password);
+                connection = DriverManager.getConnection(HOST + DB_NAME, USERNAME, PASSWORD);
             }
-        } catch (SQLException ignored) {
-            StudentCheckIn.logger.error("SQLError: Can't connect to the database! Problem establishing a new " +
-                    "connection after previous was closed.");
-        }
+        } catch (SQLException ignored) { }
 
         return connection;
     }
@@ -88,9 +87,9 @@ public class Database implements IController {
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
 
         timeUtils.getCurrentDateTimeStamp();
-        String overdue = "SELECT checkout.partID, checkout.studentID, students.studentName, students.email, parts.partName," +
-                " parts.serialNumber, parts.barcode, checkout.dueAt, checkout.checkoutID FROM checkout " +
-                "LEFT JOIN parts ON checkout.partID = parts.partID " +
+        String overdue = "SELECT checkout.partID, checkout.studentID, students.studentName, students.email, " +
+                "parts.partName, parts.serialNumber, parts.barcode, checkout.dueAt, checkout.checkoutID " +
+                "FROM checkout LEFT JOIN parts ON checkout.partID = parts.partID " +
                 "LEFT JOIN students ON checkout.studentID = students.studentID " +
                 "WHERE checkout.checkinAt IS NULL;";
         try {
@@ -99,9 +98,9 @@ public class Database implements IController {
             while (resultSet.next()) {
                 String dueAt = resultSet.getString("checkout.dueAt");
                 if (isOverdue(dueAt)) {
-                    data.add(new OverdueItem(resultSet.getInt("checkout.studentID"), resultSet.getString("students.studentName"),
-                            resultSet.getString("students.email"), resultSet.getString("parts.partName"),
-                            resultSet.getString("parts.serialNumber"),
+                    data.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
+                            resultSet.getString("students.studentName"), resultSet.getString("students.email"),
+                            resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
                             resultSet.getLong("parts.barcode"), timeUtils.convertStringtoDate(dueAt),
                             resultSet.getString("checkout.checkoutID")));
                 }
@@ -109,7 +108,6 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQL Error: {}", e.getLocalizedMessage());
             e.printStackTrace();
         }
         return data;
@@ -128,7 +126,6 @@ public class Database implements IController {
                 Date dueDate = dateFormat.parse(date);
                 return current.after(dueDate);
             } catch (ParseException e) {
-                StudentCheckIn.logger.error("Parse Error: {}", e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
@@ -148,7 +145,8 @@ public class Database implements IController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted").hideAfter(new Duration(5000)).show();
+        Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted")
+                .hideAfter(new Duration(5000)).show();
     }
 
     /**
@@ -179,8 +177,9 @@ public class Database implements IController {
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
-                        resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")), resultSet.getString("vendorID"),
-                        resultSet.getString("location"), resultSet.getLong("barcode"), resultSet.getInt("partID"));
+                        resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")),
+                        resultSet.getString("vendorID"), resultSet.getString("location"),
+                        resultSet.getLong("barcode"), resultSet.getInt("partID"));
             }
             resultSet.close();
             statement.close();
@@ -207,7 +206,6 @@ public class Database implements IController {
             statement.close();
             rs.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when checking if barcode exists.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return bc == 0;
@@ -225,18 +223,18 @@ public class Database implements IController {
             statement.close();
             rs.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when checking if part name exists.");
             stageUtils.errorAlert("SQLException: Can't connect to the database when checking if part name exists.");
         }
         return !name.isEmpty();
     }
 
-    public int getCheckoutIDFromBarcodeAndRFID(int RFID, long barcode) {
+    public int getCheckoutIDFromBarcodeAndRFID(int rfid, long barcode) {
         int checkoutID = 0;
-        String query = "select checkoutID from checkout where studentID =? and barcode = ? and checkinAt IS NULL limit 1";
+        String query = "select checkoutID from checkout where studentID =? and barcode = ? " +
+                "and checkinAt IS NULL limit 1";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, RFID);
+            statement.setInt(1, rfid);
             statement.setLong(2, barcode);
             ResultSet rs = statement.executeQuery();
             if(rs.next()){
@@ -245,7 +243,6 @@ public class Database implements IController {
             rs.close();
             statement.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting checkout from part ID.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return checkoutID;
@@ -254,7 +251,8 @@ public class Database implements IController {
     /**
      * Returns the student ID associated with
      * @param email the email
-     * @return the ID associated with student's email, 0 if the student isn't in the db (might be 0 for imported students)
+     * @return the ID associated with student's email, 0 if the student isn't in the db
+     * (might be 0 for imported students)
      */
     public int getStudentIDFromEmail(String email) {
         int sID = 0;
@@ -269,7 +267,6 @@ public class Database implements IController {
             rs.close();
             statement.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database to look for student.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return sID;
@@ -278,18 +275,18 @@ public class Database implements IController {
     /**
      * Inserts new checkout entity into the database, and changes the associated part.isCheckedOut to 1
      */
-    public boolean checkOutPart(long barcode, int RFID, String course, String prof, String dueDate) {
+    public void checkOutPart(long barcode, int rfid, String course, String prof, String dueDate) {
         try {
-            String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, prof, course) " +
-                    "VALUES(?,?,?,?,?,?,?);";
+            String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, " +
+                    "prof, course) VALUES(?,?,?,?,?,?,?);";
             int partID = getPartIDFromBarcode(barcode, false);
             if (partID == 0) {
                 stageUtils.errorAlert("Unable to find a valid partID for barcode");
-                return false;
+                return;
             }
             PreparedStatement statement = connection.prepareStatement(addToCheckouts);
             statement.setInt(1, partID);
-            statement.setInt(2, RFID);
+            statement.setInt(2, rfid);
             statement.setLong(3, barcode);
             statement.setString(4, timeUtils.getCurrentDateTimeStamp());
             if (dueDate != null){
@@ -305,32 +302,28 @@ public class Database implements IController {
             statement.execute();
             statement.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when adding new checkout item.");
             throw new IllegalStateException("Cannot connect to the database", e);
         } catch (NullPointerException e){
             stageUtils.errorAlert("Part with barcode of " + barcode + " is already checked out");
-            return false;
         }
-        return true;
     }
 
     /**
      * Updates the checkout entity checkinAt to current time, and changes the associated part.isCheckedOut to 0
      */
-    public boolean checkInPart(long barcode, int RFID) {
+    public void checkInPart(long barcode, int rfid) {
         int partID = getPartIDFromBarcode(barcode, true);
         try {
             String setDate = "UPDATE checkout SET checkinAt = ? WHERE checkoutID = ?;";
             PreparedStatement statement = connection.prepareStatement(setDate);
             statement.setString(1, timeUtils.getCurrentDateTimeStamp());
-            statement.setInt(2, getCheckoutIDFromBarcodeAndRFID(RFID, barcode));
+            statement.setInt(2, getCheckoutIDFromBarcodeAndRFID(rfid, barcode));
             statement.execute();
             statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         setPartStatus(partID, true); //Sets part to checked in
-        return true;
     }
 
     /**
@@ -347,11 +340,10 @@ public class Database implements IController {
         }
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(status);
-            preparedStatement.setInt(1,partID);
+            preparedStatement.setInt(1, partID);
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when setting part status.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
     }
@@ -376,7 +368,6 @@ public class Database implements IController {
             rs.close();
             statement.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database when getting part ID from barcode.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return partID;
@@ -442,7 +433,8 @@ public class Database implements IController {
                 checkinAt = resultSet.getString("checkinAt");
                 dueAt = resultSet.getString("dueAt");
             }
-            checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, checkinAt, timeUtils.convertStringtoDate(dueAt));
+            checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, checkinAt,
+                    timeUtils.convertStringtoDate(dueAt));
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
@@ -482,7 +474,8 @@ public class Database implements IController {
      * @return true if the matching part is checked out; false otherwise
      */
     public boolean getIsCheckedOut(String partID) {
-        String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND partID = " + cleanString(partID) + ";";
+        String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND partID = " + cleanString(partID)
+                + ";";
         ResultSet resultSet;
         try {
             Statement statement = connection.createStatement();
@@ -501,7 +494,7 @@ public class Database implements IController {
     }
 
     public ObservableList<Part> getAllParts() {
-        String query ="select partName, serialNumber, barcode, location, partID, price from parts;";
+        String query = "select partName, serialNumber, barcode, location, partID, price from parts;";
         ObservableList<Part> data = FXCollections.observableArrayList();
         try {
             Statement statement = connection.createStatement();
@@ -517,7 +510,6 @@ public class Database implements IController {
                 data.add(part);
             }
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQL Error: Can't connect to the database.");
             throw new IllegalStateException("Cannot connect the database", e);
 
         }
@@ -546,7 +538,8 @@ public class Database implements IController {
                 long barcode = resultSet.getLong("barcode");
                 String action = resultSet.getString("Action");
                 String date = resultSet.getString("Date");
-                Checkout historyItems = new Checkout(studentName, studentEmail, partName, barcode, action, timeUtils.convertStringtoDate(date));
+                Checkout historyItems = new Checkout(studentName, studentEmail, partName, barcode, action,
+                        timeUtils.convertStringtoDate(date));
                 data.add(historyItems);
             }
         } catch (SQLException e) {
@@ -559,7 +552,9 @@ public class Database implements IController {
         ObservableList<Checkout> data = FXCollections.observableArrayList();
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT students.studentName, students.email, students.studentID, parts.partName, parts.barcode, parts.serialNumber, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, parts.partID, parts.price\n" +
+            ResultSet resultSet = statement.executeQuery("SELECT students.studentName, students.email, " +
+                    "students.studentID, parts.partName, parts.barcode, parts.serialNumber, checkout.checkoutAt, " +
+                    "checkout.dueAt, checkout.checkoutID, parts.partID, parts.price\n" +
                     "FROM checkout\n" +
                     "INNER JOIN parts on checkout.partID = parts.partID\n" +
                     "INNER JOIN students on checkout.studentID = students.studentID\n" +
@@ -577,13 +572,12 @@ public class Database implements IController {
                 int partID = resultSet.getInt("parts.partID");
                 String fee = resultSet.getString("price");
                 Checkout checkedOut = new Checkout(checkoutID, studentName, studentEmail, studentID, partName, barcode,
-                        serialNumber, partID, timeUtils.convertStringtoDate(checkedOutAt), timeUtils.convertStringtoDate(dueDate), fee);
+                        serialNumber, partID, timeUtils.convertStringtoDate(checkedOutAt),
+                        timeUtils.convertStringtoDate(dueDate), fee);
                 data.add(checkedOut);
             }
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQL Error: Can't connect to the database.");
             throw new IllegalStateException("Cannot connect the database", e);
-
         }
         return data;
     }
@@ -595,7 +589,8 @@ public class Database implements IController {
      * @return the list of serial numbers
      */
     public ArrayList<String> getOtherSerialNumbersForPartName(String partName, String partID) {
-        String query = "SELECT serialNumber FROM parts WHERE partName = '" + cleanString(partName) + "' AND partID != " + cleanString(partID) + ";";
+        String query = "SELECT serialNumber FROM parts WHERE partName = '" + cleanString(partName) +
+                "' AND partID != " + cleanString(partID) + ";";
         return collectFromOneCol(query, "serialNumber");
     }
 
@@ -607,18 +602,6 @@ public class Database implements IController {
     public ArrayList<String> getAllSerialNumbersForPartName(String partName) {
         String query = "SELECT serialNumber FROM parts WHERE partName = '" + cleanString(partName) + "';";
         return collectFromOneCol(query, "serialNumber");
-    }
-
-    /**
-     * Gets a list of barcodes used by a part with a given name, except for the part with the given part ID
-     *
-     * @param partName the name of parts being checked
-     * @param partID   the part ID of the part exempt from the search
-     * @return the list of barcodes
-     */
-    public ArrayList<String> getOtherBarcodesForPartName(String partName, String partID) {
-        String query = "SELECT barcode FROM parts WHERE partName = '" + cleanString(partName) + "' AND partID != " + cleanString(partID) + ";";
-        return collectFromOneCol(query, "barcode");
     }
 
     /**
@@ -785,8 +768,8 @@ public class Database implements IController {
     public void editAllOfPartName(String originalPartName, Part updatedPart) {
         if (!originalPartName.equals(updatedPart.getPartName())) {
             try {
-                String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, vendorID = ?, " +
-                        "updatedAt = ? WHERE partName = ?;";
+                String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, " +
+                        "vendorID = ?, updatedAt = ? WHERE partName = ?;";
                 PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllQuery);
                 preparedStatement.setString(1, updatedPart.getPartName());
                 preparedStatement.setDouble(2, updatedPart.getPrice());
@@ -861,14 +844,13 @@ public class Database implements IController {
         int studentRFID = 0;
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT studentID FROM students where studentID = " + rfid + ";");
+            ResultSet resultSet = statement.executeQuery("SELECT studentID FROM students where studentID = " +
+                    rfid + ";");
             studentRFID = resultSet.getInt("studentID");
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of rfids");
-            StudentCheckIn.logger.error("Could not retrieve the list of rfids");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not retrieve the list of rfids");
             e.printStackTrace();
         }
         return studentRFID != 0;
@@ -898,9 +880,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
-            StudentCheckIn.logger.error("Could not retrieve the list of students");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not retrieve the list of workers");
             e.printStackTrace();
         }
         return workerList;
@@ -915,23 +895,22 @@ public class Database implements IController {
         Worker worker = null;
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" + cleanString(email) + "';");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" +
+                    cleanString(email) + "';");
             resultSet.next();
             worker = buildWorker(resultSet);
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
-            StudentCheckIn.logger.error("Could not retrieve the list of workers");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not retrieve the list of workers");
             e.printStackTrace();
         }
         return worker;
     }
 
-    public Worker getWorker(int RFID) {
+    public Worker getWorker(int rfid) {
         Worker worker = null;
-        String query = "Select * from workers where ID = " + RFID + ";";
+        String query = "Select * from workers where ID = " + rfid + ";";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -940,9 +919,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of workers");
-            StudentCheckIn.logger.error("Could not retrieve the list of workers");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not retrieve the list of workers");
             e.printStackTrace();
         }
         return worker;
@@ -951,33 +928,21 @@ public class Database implements IController {
     private Worker buildWorker(ResultSet resultSet) {
         Worker worker = null;
         try {
-            String name;
-            String password;
-            int ID;
-            int RFID;
-            String email;
-            int pin;
-            boolean isAdmin;
-            boolean parts;
-            boolean workers;
-            boolean students;
-            name = resultSet.getString("workerName");
-            ID = resultSet.getInt("workerID");
-            RFID = resultSet.getInt("ID");
-            email = resultSet.getString("email");
-            password = resultSet.getString("pass");
-            isAdmin = resultSet.getByte("isAdmin") == 1;
-            parts = resultSet.getByte("editParts") == 1;
-            workers = resultSet.getByte("workers") == 1;
-            students = resultSet.getByte("removeParts") == 1;
-            pin = resultSet.getInt("pin");
-            if (!email.isEmpty() && RFID != 0) {
-                worker = new Worker(name, ID, email, password, pin, RFID, isAdmin, parts, workers, students);
+            String name = resultSet.getString("workerName");
+            String password = resultSet.getString("pass");
+            int workerID = resultSet.getInt("workerID");
+            int rfid = resultSet.getInt("ID");
+            String email = resultSet.getString("email");
+            int pin = resultSet.getInt("pin");
+            boolean isAdmin = resultSet.getByte("isAdmin") == 1;
+            boolean parts = resultSet.getByte("editParts") == 1;
+            boolean workers = resultSet.getByte("workers") == 1;
+            boolean students = resultSet.getByte("removeParts") == 1;
+            if (!email.isEmpty() && rfid != 0) {
+                worker = new Worker(name, workerID, email, password, pin, rfid, isAdmin, parts, workers, students);
             }
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the worker from database");
-            StudentCheckIn.logger.error("Could not retrieve workers");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not retrieve the worker from database");
             e.printStackTrace();
         }
         return worker;
@@ -997,9 +962,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not retrieve the list of admin pins");
-            StudentCheckIn.logger.error("Could not retrieve the list of admin pins");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not retrieve the list of admin pins");
             e.printStackTrace();
         }
         return adminPin == pin;
@@ -1020,24 +983,25 @@ public class Database implements IController {
     /**
      * Gets a student from the database based on their RFID or email
      * todo: simplify, if possible
-     * @param ID RFID to search for, -1 if no RFID being searched
+     * @param rfid RFID to search for, -1 if no RFID being searched
      * @param studentEmail the email being searched, null if no email being searched
      * @return a student matching inputs if one exists in the db, null otherwise
      */
-    public Student selectStudent(int ID, String studentEmail) {
+    public Student selectStudent(int rfid, String studentEmail) {
         String query;
-        String coList = "select students.studentID, students.studentName, students.email, parts.partName, checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, checkout.studentID, parts.barcode, parts.serialNumber, parts.price, parts.partID " +
-                "from students " +
+        String coList = "select students.studentID, students.studentName, students.email, parts.partName, " +
+                "checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, checkout.studentID, parts.barcode, " +
+                "parts.serialNumber, parts.price, parts.partID from students " +
                 "left join checkout on students.studentID = checkout.studentID " +
                 "left join parts on checkout.partID = parts.partID";
-        if (ID == -1 && studentEmail != null) {
+        if (rfid == -1 && studentEmail != null) {
             studentEmail = cleanString(studentEmail);
             query = "select * from students where email = '" + studentEmail + "';";
             coList += " where students.email = '" + studentEmail +
                     "' AND checkout.checkinAt is null;";
-        } else if (ID != -1) {
-            query = "select * from students where studentID = " + ID + ";";
-            coList += " where students.studentID = " + ID +
+        } else if (rfid != -1) {
+            query = "select * from students where studentID = " + rfid + ";";
+            coList += " where students.studentID = " + rfid +
                     " AND checkout.checkinAt is null;";
         } else {
             return null;  // if there's no ID or email
@@ -1051,7 +1015,6 @@ public class Database implements IController {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 name = resultSet.getString("studentName");
                 email = resultSet.getString("email");
@@ -1062,7 +1025,6 @@ public class Database implements IController {
             statement.close();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(coList);
-            resultSetMetaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 if (resultSet.getInt("checkout.checkoutID") != 0) {
                     checkedOutItems.add(new Checkout(
@@ -1087,8 +1049,7 @@ public class Database implements IController {
                                 resultSet.getString("parts.partName"),
                                 resultSet.getLong("parts.barcode"),
                                 timeUtils.convertStringtoDate(dueAt),
-                                resultSet.getString("checkout.checkoutID"),
-                                resultSet.getDouble("parts.price")));
+                                resultSet.getString("checkout.checkoutID")));
                     }
                 }
             }
@@ -1130,7 +1091,6 @@ public class Database implements IController {
                 id = rs.getInt("studentID");
             }
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("SQLException: Can't connect to the database.");
             throw new IllegalStateException("Cannot connect the database", e);
         }
         return new Student(name, id, studentEmail);
@@ -1174,7 +1134,6 @@ public class Database implements IController {
             rs.close();
             statement.close();
         } catch (SQLException e) {
-            StudentCheckIn.logger.error("IllegalStateException: Can't connect to the database when looking for student.");
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return sName;
@@ -1185,16 +1144,15 @@ public class Database implements IController {
      * @param s student to be added
      */
     public void addStudent(Student s) {
-        String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" + s.getRFID()
-                + ", '" + cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) + "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
+        String query = "insert into students (studentID, email, studentName, createdAt, createdBy) values (" +
+                s.getRFID() + ", '" + cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) +
+                "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
-            StudentCheckIn.logger.error("Could not add student, SQL Exception");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not add student");
             e.printStackTrace();
         }
     }
@@ -1209,15 +1167,14 @@ public class Database implements IController {
         // but other methods in this class need to replace "'" with "\\'" so that it does not
         // mess up the database queries.
         String query = "insert into students (email, studentName, createdAt, createdBy) values ('" +
-                cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) + "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
+                cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) +
+                "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add student");
-            StudentCheckIn.logger.error("Could not add student {}, SQL Exception", s.getName());
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not add student");
             e.printStackTrace();
             return false;
         }
@@ -1229,16 +1186,15 @@ public class Database implements IController {
             updateCheckedOutPartsRFID(s, oldRFID);
         }
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
-                cleanString(s.getName()) + "', students.email = '" + cleanString(s.getEmail()) + "', students.updatedAt = date('" +
-                TimeUtils.getToday() + "'), students.updatedBy = '" + cleanString(this.worker.getName()) + "' where students.uniqueID = " + s.getUniqueID() + ";";
+                cleanString(s.getName()) + "', students.email = '" + cleanString(s.getEmail()) +
+                "', students.updatedAt = date('" + TimeUtils.getToday() + "'), students.updatedBy = '" +
+                cleanString(this.worker.getName()) + "' where students.uniqueID = " + s.getUniqueID() + ";";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update student");
-            StudentCheckIn.logger.error("Could not update student, SQL Exception");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not update student");
             e.printStackTrace();
         }
     }
@@ -1250,13 +1206,15 @@ public class Database implements IController {
      */
     public void updateCheckedOutPartsRFID(Student s, int oldRFID){
         if (s.getRFID() != oldRFID) {  // won't update if no change is made with the RFID
-            String query = "UPDATE checkout SET checkout.studentID = " + s.getRFID() + " WHERE checkout.studentID = " + oldRFID + ";";
+            String query = "UPDATE checkout SET checkout.studentID = " + s.getRFID() +
+                    " WHERE checkout.studentID = " + oldRFID + ";";
             try {
                 Statement statement = connection.createStatement();
                 statement.executeUpdate(query);
                 statement.close();
             } catch (SQLException e) {
-                stageUtils.errorAlert("Issue updating checked out parts for student that was being updated, SQL exception");
+                stageUtils.errorAlert("Issue updating checked out parts for student that was " +
+                        "being updated, SQL exception");
                 e.printStackTrace();
             }
         }
@@ -1274,7 +1232,8 @@ public class Database implements IController {
      * @return the number of parts with the same barcode that the selected student does not have returned
      */
     public int amountOutByStudent(long barcode, Student s) {
-        String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND barcode = " + barcode + " AND studentID = " + s.getRFID() + ";";
+        String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND barcode = " + barcode +
+                " AND studentID = " + s.getRFID() + ";";
         ResultSet resultSet;
         try {
             Statement statement = connection.createStatement();
@@ -1321,8 +1280,7 @@ public class Database implements IController {
      */
     public void deleteStudent(String email) {
         if (studentHasCheckedOutItems(email)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Student could not be deleted because they have parts checked out");
-            alert.showAndWait();
+            stageUtils.errorAlert("Student could not be deleted because they have parts checked out");
             return;
         }
         String query = "delete from students where email = ?;";
@@ -1332,9 +1290,7 @@ public class Database implements IController {
             statement.execute();
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete student.");
-            StudentCheckIn.logger.error("SQL Exception: Could not delete student.");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not delete student.");
             e.printStackTrace();
         }
     }
@@ -1345,16 +1301,16 @@ public class Database implements IController {
      */
     public void addWorker(Worker w) {
         int bit = w.isAdmin() ? 1 : 0;
-        String query = "insert into workers (email, workerName, pin, pass, ID, isAdmin, createdAt, createdBy) values ('" + cleanString(w.getEmail()) +
-                "', '" + cleanString(w.getName()) + "', " + w.getPin() + ", '" + cleanString(w.getPass()) + "', " + w.getRIFD() + "," + bit + ", date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
+        String query = "insert into workers (email, workerName, pin, pass, ID, isAdmin, createdAt, createdBy) " +
+                "values ('" + cleanString(w.getEmail()) + "', '" + cleanString(w.getName()) + "', " + w.getPin() +
+                ", '" + cleanString(w.getPass()) + "', " + w.getWorkerRFID() + "," + bit + ", date('" +
+                TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not add worker");
-            StudentCheckIn.logger.error("Could not add worker, SQL Exception");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not add worker");
             e.printStackTrace();
         }
     }
@@ -1370,9 +1326,7 @@ public class Database implements IController {
             statement.execute(query);
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not delete worker.");
-            StudentCheckIn.logger.error("SQL Exception: Could not delete worker.");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not delete worker.");
             e.printStackTrace();
         }
     }
@@ -1383,19 +1337,17 @@ public class Database implements IController {
         int remove = w.canRemoveParts() ? 1 : 0;
         int work = w.canEditWorkers() ? 1 : 0;
         String query = "update workers set workers.workerName = '" + cleanString(w.getName()) + "', workers.pin = " +
-                w.getPin() + ", workers.pass = '" + cleanString(w.getPass()) + "', workers.ID = " + w.getRIFD() + ", workers.isAdmin = " + admin + "," +
-                " workers.email = '" + cleanString(w.getEmail()) + "', workers.editParts = " + edit +
-                ", workers.workers = " + work + ", workers.removeParts = " + remove + ", workers.updatedAt = date('" +
-                TimeUtils.getToday() + "'), workers.updatedBy = '" + cleanString(this.worker.getName()) + "' where workers.workerID = " +
-                w.getID() + ";";
+                w.getPin() + ", workers.pass = '" + cleanString(w.getPass()) + "', workers.ID = " + w.getWorkerRFID()
+                + ", workers.isAdmin = " + admin + "," + " workers.email = '" + cleanString(w.getEmail()) + "', " +
+                "workers.editParts = " + edit + ", workers.workers = " + work + ", workers.removeParts = " + remove +
+                ", workers.updatedAt = date('" + TimeUtils.getToday() + "'), workers.updatedBy = '" +
+                cleanString(this.worker.getName()) + "' where workers.workerID = " + w.getWorkerID() + ";";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
             statement.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Could not update worker");
-            StudentCheckIn.logger.error("Could not update worker, SQL Exception");
-            alert.showAndWait();
+            stageUtils.errorAlert("Could not update worker");
             e.printStackTrace();
         }
     }
@@ -1491,7 +1443,7 @@ public class Database implements IController {
      * @return the list of vendors
      */
     public ArrayList<String> getVendorList() {
-        ArrayList<String> vendors = null;
+        ArrayList<String> vendors;
         try {
             String getVendorListQuery = "SELECT vendor FROM vendors;";
             PreparedStatement preparedStatement = connection.prepareStatement(getVendorListQuery);

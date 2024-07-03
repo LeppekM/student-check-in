@@ -1,26 +1,22 @@
 package Database.ObjectClasses;
 
+/**
+ * Object representing Worker entity in database and real-life employee
+ */
 public class Worker {
 
-    private String name;
-    private int ID;
-    private int RIFD;
-    private String email;
-    private String pass;
-    private int pin;
-    private boolean isAdmin;
-    private boolean edit;
-    private boolean worker;
-    private boolean remove;
+    private String name, email, pass;
+    private int workerID, workerRFID, pin;
+    private boolean isAdmin, edit,  worker, remove;
 
-    public Worker(String name, int ID, String email, String pass, int pin, int RFID, boolean isAdmin, boolean edit, boolean worker,
-                  boolean remove){
+    public Worker(String name, int workerID, String email, String pass, int pin, int rfid, boolean isAdmin,
+                  boolean edit, boolean worker, boolean remove){
         this.name = name;
-        this.ID = ID;
+        this.workerID = workerID;
         this.email = email;
         this.pass = pass;
         this.pin = pin;
-        this.RIFD = RFID;
+        this.workerRFID = rfid;
         this.isAdmin = isAdmin;
         if (isAdmin){
             this.edit = true;
@@ -33,11 +29,11 @@ public class Worker {
         }
     }
 
-    public Worker(String name, String email, String pass, int RFID){
+    public Worker(String name, String email, String pass, int rfid){
         this.name = name;
         this.email = email;
         this.pass = pass;
-        this.RIFD = RFID;
+        this.workerRFID = rfid;
         this.pin = 0;
         this.isAdmin = false;
         edit = false;
@@ -53,8 +49,8 @@ public class Worker {
         this.name = name;
     }
 
-    public int getID(){
-        return ID;
+    public int getWorkerID(){
+        return workerID;
     }
 
     public String getEmail() {
@@ -81,12 +77,12 @@ public class Worker {
         this.pin = pin;
     }
 
-    public int getRIFD() {
-        return RIFD;
+    public int getWorkerRFID() {
+        return workerRFID;
     }
 
-    public void setRIFD(int RIFD) {
-        this.RIFD = RIFD;
+    public void setWorkerRFID(int workerRFID) {
+        this.workerRFID = workerRFID;
     }
 
     public boolean isAdmin() {

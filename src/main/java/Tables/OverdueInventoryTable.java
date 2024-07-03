@@ -22,6 +22,9 @@ import javafx.stage.Stage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * In charge of displaying parts that are currently Overdue in the Overdue tab of the Inventory screen
+ */
 public class OverdueInventoryTable extends TSCTable {
 
     private JFXTreeTableColumn<OIRow, Integer> studentIDCol;
@@ -79,14 +82,19 @@ public class OverdueInventoryTable extends TSCTable {
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 
         // unfortunately, this cast needs to be here to add the cols to the table
-        TreeTableColumn<TableRow, String> studentNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) studentNameCol;
-        TreeTableColumn<TableRow, String> partNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) partNameCol;
-        TreeTableColumn<TableRow, String> serialNumberTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) serialNumberCol;
+        TreeTableColumn<TableRow, String> studentNameTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) studentNameCol;
+        TreeTableColumn<TableRow, String> partNameTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) partNameCol;
+        TreeTableColumn<TableRow, String> serialNumberTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) serialNumberCol;
         TreeTableColumn<TableRow, Date> dueDateTemp = (TreeTableColumn<TableRow, Date>) (TreeTableColumn) dueDateCol;
-        TreeTableColumn<TableRow, Integer> studentIDTemp = (TreeTableColumn<TableRow, Integer>) (TreeTableColumn) studentIDCol;
+        TreeTableColumn<TableRow, Integer> studentIDTemp =
+                (TreeTableColumn<TableRow, Integer>) (TreeTableColumn) studentIDCol;
         TreeTableColumn<TableRow, Long> barcodeTemp = (TreeTableColumn<TableRow, Long>) (TreeTableColumn) barcodeCol;
 
-        table.getColumns().setAll(studentIDTemp, studentNameTemp, partNameTemp, serialNumberTemp, barcodeTemp, dueDateTemp);
+        table.getColumns().setAll(studentIDTemp, studentNameTemp, partNameTemp, serialNumberTemp,
+                barcodeTemp, dueDateTemp);
         table.setRoot(root);
         // needs to be false so that it doesn't group all elements, effectively hiding them until you drop them down
         table.setShowRoot(false);
@@ -103,16 +111,16 @@ public class OverdueInventoryTable extends TSCTable {
         String dueDate = val.getDueDate().getValue().toString();
         String barcode = val.getBarcode().getValue().toString();
 
-        return (studentID.toLowerCase().contains(input) || (partName != null && partName.toLowerCase().contains(input))
-                || barcode.toLowerCase().contains(input) || (dueDate != null && dueDate.toLowerCase().contains(input))
-                || (studentName != null && studentName.toLowerCase().contains(input))
-                || serialNumber.toLowerCase().contains(input));
+        return studentID.toLowerCase().contains(input) || partName != null && partName.toLowerCase().contains(input)
+                || barcode.toLowerCase().contains(input) || dueDate != null && dueDate.toLowerCase().contains(input)
+                || studentName != null && studentName.toLowerCase().contains(input)
+                || serialNumber.toLowerCase().contains(input);
     }
 
     @Override
     protected void popupRow(int index) {
         if (index != -1) {
-            TreeItem item = table.getSelectionModel().getModelItem(index);
+            TreeItem<TableRow> item = table.getSelectionModel().getModelItem(index);
             if (item != null) {
                 OIRow row = (OIRow) item.getValue();
                 OverdueItem overdueItem = database.selectStudent(row.getStudentID().get(), null)
@@ -132,7 +140,7 @@ public class OverdueInventoryTable extends TSCTable {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
 
-        Popup overduePopup = new Popup(root) {
+        new Popup(root) {
             @Override
             public void populate() {
                 add("Student Name: ", row.getStudentName().getValue(), false);
@@ -141,7 +149,8 @@ public class OverdueInventoryTable extends TSCTable {
                 add("Student Email: ", student.getEmail(), false);
                 add("Part Name: ", row.getPartName().getValue(), false);
                 add("Barcode: ", "" + row.getBarcode().get(), false);
-                add("Due Date: ", new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDueDate().getValue()), false);
+                add("Due Date: ", new SimpleDateFormat("dd MMM yyyy hh:mm:ss a")
+                        .format(row.getDueDate().getValue()), false);
 
                 submitButton.setText("Close");
             }

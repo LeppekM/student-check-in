@@ -1,7 +1,6 @@
 package Controllers;
 
 import Database.ObjectClasses.Worker;
-import HelperClasses.ImageViewPane;
 import HelperClasses.StageUtils;
 import Tables.TableScreen;
 import com.jfoenix.controls.JFXButton;
@@ -9,8 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -20,7 +17,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * Acts as the controller for the main menu.
+ * Acts as the controller for the main menu, the hub for directing the user between the following main screens:
+ * Login (logs the current worker out)
+ * Checkout/in
+ * Inventory
+ * Manage Students
+ * Manage Employees (if the user is a worker with permissions)
  */
 public class MenuController implements IController, Initializable {
 
@@ -46,15 +48,7 @@ public class MenuController implements IController, Initializable {
         manageWorkers.setDisable(true);
         manageWorkers.setText("Manage\nWorkers");
         manageWorkers.setOnAction(event -> openManageWorkers());
-        Image image = new Image("images/msoeBackgroundImage.png");
-        ImageView imageView = new ImageView();
-        imageView.setImage(image);
-        ImageViewPane msoeBackgroundImage = new ImageViewPane(imageView);
-        msoeBackgroundImage.setPrefWidth(591);
-        msoeBackgroundImage.setPrefHeight(789);
-        msoeBackgroundImage.setOpacity(0.68);
-        pane.getChildren().add(msoeBackgroundImage);
-        msoeBackgroundImage.toBack();
+        LoginController.setupBackgroundImage(pane);
     }
 
     /**

@@ -1,7 +1,6 @@
 package Tables;
 
 import App.StudentCheckIn;
-import Controllers.IController;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
@@ -28,7 +27,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -36,12 +34,13 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static Controllers.CheckOutController.EMAIL_REGEX;
 import static Controllers.CheckOutController.RFID_REGEX;
 
+/**
+ * Manages the workers in the database from the Manage Workers screen as a table
+ */
 public class ManageWorkersTable extends TSCTable {
 
     private JFXTreeTableColumn<MERow, String> nameCol, emailCol;
@@ -113,8 +112,8 @@ public class ManageWorkersTable extends TSCTable {
         String name = val.getName().getValue();
         String email = val.getEmail().getValue();
 
-        return ((name != null && name.toLowerCase().contains(input))
-                || (email != null && email.toLowerCase().contains(input)));
+        return name != null && name.toLowerCase().contains(input)
+                || email != null && email.toLowerCase().contains(input);
     }
 
     @Override
@@ -167,12 +166,6 @@ public class ManageWorkersTable extends TSCTable {
         }
     }
 
-    public Worker getSelectedWorker() {
-        int index = table.getSelectionModel().getFocusedIndex();
-        String email = emailCol.getCellData(index);
-        return database.getWorker(email);
-    }
-
     public void addWorker() {
         Stage stage = new Stage();
         VBox root = new VBox();
@@ -182,7 +175,7 @@ public class ManageWorkersTable extends TSCTable {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
 
-        Popup addWorker = new Popup(root) {
+        new Popup(root) {
             private JFXTextField email, first, last, rfid;
             private JFXPasswordField pass;
 
@@ -199,7 +192,8 @@ public class ManageWorkersTable extends TSCTable {
             @Override
             public void submit() {
                 StringBuilder n;
-                if (!email.getText().isEmpty() && !first.getText().isEmpty() && !last.getText().isEmpty() && !pass.getText().isEmpty()){
+                if (!email.getText().isEmpty() && !first.getText().isEmpty()
+                        && !last.getText().isEmpty() && !pass.getText().isEmpty()){
                     ObservableList<Worker> workers = database.getWorkers();
                     for (Worker w : workers) {
                         if (w.getEmail().equals(email.getText())) {
@@ -224,7 +218,8 @@ public class ManageWorkersTable extends TSCTable {
                         n.append(" ").append(temp);
 
                         database.initWorker(worker);
-                        database.addWorker(new Worker(n.toString(), email.getText(), pass.getText(), Integer.parseInt(rfid.getText())));
+                        database.addWorker(new Worker(n.toString(), email.getText(), pass.getText(),
+                                Integer.parseInt(rfid.getText())));
                         stage.close();
                     }
                 } else {
@@ -247,7 +242,7 @@ public class ManageWorkersTable extends TSCTable {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
 
-        Popup addAdmin = new Popup(root) {
+        new Popup(root) {
             private JFXTextField email, first, last, rfid;
             private JFXPasswordField pass, pin;
 
@@ -267,7 +262,8 @@ public class ManageWorkersTable extends TSCTable {
             @Override
             public void submit() {
                 StringBuilder n;
-                if (!email.getText().isEmpty() && !first.getText().isEmpty() && !last.getText().isEmpty() && !pass.getText().isEmpty()){
+                if (!email.getText().isEmpty() && !first.getText().isEmpty() &&
+                        !last.getText().isEmpty() && !pass.getText().isEmpty()){
                     ObservableList<Worker> workers = database.getWorkers();
                     for (Worker w : workers) {
                         if (w.getEmail().equals(email.getText())) {
@@ -295,9 +291,9 @@ public class ManageWorkersTable extends TSCTable {
 
                         ObservableList<Worker> w = database.getWorkers();
                         database.initWorker(worker);
-                        database.addWorker(new Worker(n.toString(), w.get(w.size() - 1).getID() + 1, email.getText(), pass.getText(),
-                                Integer.parseInt(pin.getText()), Integer.parseInt(rfid.getText()), true, true, true,
-                                true));
+                        database.addWorker(new Worker(n.toString(), w.get(w.size() - 1).getWorkerID()
+                                + 1, email.getText(), pass.getText(), Integer.parseInt(pin.getText()),
+                                Integer.parseInt(rfid.getText()), true, true, true, true));
                         stage.close();
                     }
                 } else {
@@ -314,12 +310,14 @@ public class ManageWorkersTable extends TSCTable {
     public void deleteWorker() {
         int admins = database.getNumAdmins();
         if (!table.getSelectionModel().getSelectedCells().isEmpty()) {
-            Worker w = getSelectedWorker();
+            int index = table.getSelectionModel().getFocusedIndex();
+            String email = emailCol.getCellData(index);
+            Worker w = database.getWorker(email);
             if (admins == 1 && w.isAdmin()) {
                 stageUtils.errorAlert("Cannot delete the last admin.");
-            } else if (worker.getID() == w.getID()) {
+            } else if (worker.getWorkerID() == w.getWorkerID()) {
                 stageUtils.errorAlert("Cannot delete your own account.");
-            } else  {
+            } else {
                 if (stageUtils.confirmationAlert("Delete This Worker?",
                         "Are you sure you want to delete this worker?")) {
                     database.deleteWorker(w.getName());

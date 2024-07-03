@@ -40,7 +40,7 @@ public class StageUtils {
 
     private static final StageUtils stageUtils = new StageUtils();
 
-    private StageUtils() {} // enforcing Singleton pattern for utility helper class
+    private StageUtils() { } // enforcing Singleton pattern for utility helper class
 
     public static StageUtils getInstance() {
         return stageUtils;
@@ -91,13 +91,11 @@ public class StageUtils {
                     try {
                         Stage stage = (Stage) node.getScene().getWindow();
                         vBox.maxWidthProperty().bind(stage.widthProperty());
-                    } catch (Exception e) {} // throws NullPointer for some reason, seems to still work though
+                    } catch (Exception e) { } // throws NullPointer for some reason, seems to still work though
                 }
             }
         } catch (IOException invoke) {
-            StudentCheckIn.logger.error("No valid stage was found to load. This could likely be because of a database disconnect.");
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error, no valid stage was found to load.");
-            alert.showAndWait();
+            stageUtils.errorAlert("Error, no valid stage was found to load.");
             invoke.printStackTrace();
         }
     }
@@ -200,15 +198,11 @@ public class StageUtils {
             Stage owner = createAlert();
             Notifications.create().title("Successful!").text(successText).hideAfter(new Duration(5000)).show();
             PauseTransition delay = new PauseTransition(Duration.seconds(5));
-            delay.setOnFinished( event -> owner.close() );
+            delay.setOnFinished(event -> owner.close());
             delay.play();
         })).start();
     }
 
-    /**
-     *
-     * @param stage
-     */
     public void unsavedChangesAlert(Stage stage) {
         stage.setOnCloseRequest(event1 -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to close?");
@@ -313,10 +307,6 @@ public class StageUtils {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     private Stage createAlert() {
         Stage owner = new Stage(StageStyle.TRANSPARENT);
         StackPane root = new StackPane();

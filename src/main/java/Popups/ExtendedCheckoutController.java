@@ -3,7 +3,6 @@ package Popups;
 import Controllers.CheckOutController;
 import Database.ExtendedCheckoutObject;
 import HelperClasses.TimeUtils;
-import App.StudentCheckIn;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
@@ -11,17 +10,17 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.DateCell;
 import javafx.scene.layout.Pane;
-import javafx.stage.StageStyle;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Creates the extended checkout popup in the checkout/in screen which marks the checkout date as non-standard
+ * and attaches additional information on professor/course the extended checkout is allowed under
+ */
 public class ExtendedCheckoutController implements Initializable {
     @FXML
     Pane main;
@@ -35,18 +34,17 @@ public class ExtendedCheckoutController implements Initializable {
     @FXML
     JFXButton submitButton;
 
-    private ExtendedCheckoutObject checkout;
     private final TimeUtils dbHelp = new TimeUtils();
 
     /**
      * Gets extended due date
-     *
      * @return Return extended date
      */
     private String getExtendedDueDate() {
         LocalDate ld = returnDate.getValue();
         return dbHelp.setExtendedDuedate(ld);
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         unlockFields();
@@ -54,25 +52,16 @@ public class ExtendedCheckoutController implements Initializable {
     }
 
     /**
-     * Submits fields to checkout page
+     * Submits fields to check out page
      */
     public void submit(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/CheckOutPage.fxml"));
-            Parent root = loader.load();
-            CheckOutController controller = loader.getController();
-            checkout = new ExtendedCheckoutObject(courseName.getText(), profName.getText(), getExtendedDueDate());
-            controller.initExtendedObject(checkout);
-            main.getScene().getWindow().hide();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Couldn't load student page");
-            alert.initStyle(StageStyle.UTILITY);
-            StudentCheckIn.logger.error("IOException: Couldn't load student page.");
-            alert.showAndWait();
-            e.printStackTrace();
-        }
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/CheckOutPage.fxml"));
+        CheckOutController controller = loader.getController();
+        ExtendedCheckoutObject checkout = new ExtendedCheckoutObject(courseName.getText(), profName.getText(),
+                getExtendedDueDate());
+        controller.initExtendedObject(checkout);
+        main.getScene().getWindow().hide();
     }
-
 
     /**
      * Resets fields

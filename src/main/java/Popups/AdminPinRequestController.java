@@ -13,6 +13,10 @@ import javafx.stage.WindowEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Creates a popup where the user is prompted for an admin's pin if the worker logged in doesn't
+ * have the necessary permissions to complete a task they attempted
+ */
 public class AdminPinRequestController implements Initializable {
 
     @FXML
@@ -46,7 +50,8 @@ public class AdminPinRequestController implements Initializable {
     @FXML
     private void submit() {
         submitted = true;
-        sceneAdminPinRequest.fireEvent(new WindowEvent(sceneAdminPinRequest.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        sceneAdminPinRequest.fireEvent(new WindowEvent(sceneAdminPinRequest.getScene().getWindow(),
+                WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
     public boolean isSubmitted() {

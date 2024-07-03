@@ -4,7 +4,7 @@ This README documents steps which are necessary to get your application up and r
 
 ### What is this repository for? ###
 
-This is the check-in/check-out system that keeps track of parts belonging to the EECS TSC.
+This is the check-in/check-out system that keeps track of parts belonging to the ECBE TSC.
 
 ### How do I get set up? ###
 
@@ -31,9 +31,9 @@ Product Owner: Jim Frommell
 ## Priority List ##
 * allow smarter clear history
   * Potentially allow adjustable dates for this
-* Double check leading 00s in table searches / improve searches with space delim
+* Double check leading 00s allowed in table searches / improve searches with space delim
 * QA test table functionality
 * Testing suite
-* Documentation, for the love of god
+* Scan all of part type in inventory
 * scrollbar for checkin/out page (or other fix to infinite barcode smush problem) (like if you press enter on empty barcodefield it submits)
 * Clean formatting / code conformity

@@ -8,18 +8,15 @@ import Database.ObjectClasses.Worker;
 import HelperClasses.AutoCompleteTextField;
 import HelperClasses.StageUtils;
 import Tables.CheckedOutInventoryTable;
+import Tables.TSCTable;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -30,12 +27,18 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 import static javafx.scene.paint.Color.FIREBRICK;
 
+/**
+ * Controls and manages functionality of the Checkout/in screen, responsible for:
+ * - creating checkout entities in the database
+ * - checking in and out valid parts/kits to certain students
+ * - creating new students if they do not exist in the database
+ * - displaying parts a student has checked out currently during the checkout process
+ */
 public class CheckOutController extends MenuController implements IController, Initializable {
 
     @FXML
@@ -54,7 +57,7 @@ public class CheckOutController extends MenuController implements IController, I
     private JFXButton submitButton;
 
     @FXML
-    JFXTreeTableView coTable;
+    private JFXTreeTableView coTable;
 
     @FXML
     private VBox barcodeVBox;
@@ -88,7 +91,7 @@ public class CheckOutController extends MenuController implements IController, I
         setFieldValidator();  // sets required fields and filters barcode fields
         firstBarcodeField = createBarcode();  // creates new barcode with listeners
         setupCOTable(); // sets up the initial values for the sidebar table
-        studentIDField.initEntrySet(new TreeSet<>(database.getStudentEmails()));  // sets up autofill for student ID field to take Emails
+        studentIDField.initEntrySet(new TreeSet<>(database.getStudentEmails()));  // sets up email autofill for field
         getStudentName();  // sets listeners for
         submitTimer();  // starts the countdown timer for auto-clicking the submit button
     }
@@ -121,11 +124,10 @@ public class CheckOutController extends MenuController implements IController, I
 
     /**
      * Helper method to check if extended fields are filled out
-     *
      * @return True if any of the fields are left empty
      */
     private boolean extendedFieldsNotFilled() {
-        return (professor == null || course == null || dueDate == null);
+        return professor == null || course == null || dueDate == null;
     }
 
     /**
@@ -142,7 +144,8 @@ public class CheckOutController extends MenuController implements IController, I
     public void submit() {
         if (hasError()) {
             stageUtils.errorAlert("Parts were not checked out because there are errors with at least one of them " +
-                    "\n\nPart is either checked out under another students' name or no more available checkout slots in system");
+                    "\n\nPart is either checked out under another students' name or no more available checkout " +
+                    "slots in system");
             return;
         }
         database.initWorker(worker); // kept for tracking purposes
@@ -205,7 +208,8 @@ public class CheckOutController extends MenuController implements IController, I
                                 database.checkOutPart(barcode, currentStudent.getRFID(), null, null, null);
                             }
                         } else {
-                            stageUtils.errorAlert("Barcode " + barcode + " was not found in database, part was not checked out");
+                            stageUtils.errorAlert("Barcode " + barcode + " was not found in database, " +
+                                    "part was not checked out");
                         }
                     }
                     barcodesAlreadyChecked.add(barcode);
@@ -268,7 +272,8 @@ public class CheckOutController extends MenuController implements IController, I
                 (observable, oldValue, newValue) -> {
                     if (newValue.length() == BARCODE_STRING_LENGTH) {
 
-                        int numOutByCurrentStudent = database.amountOutByStudent(Long.parseLong(newValue), currentStudent);
+                        int numOutByCurrentStudent = database.amountOutByStudent(Long.parseLong(newValue),
+                                currentStudent);
                         if (numOutByCurrentStudent > 0) {
                             spinnerInit(spinner, numOutByCurrentStudent);
                             statusLabel.setText(CHECK_IN_STR);
@@ -349,7 +354,8 @@ public class CheckOutController extends MenuController implements IController, I
         });
 
         studentIDField.setOnKeyPressed(event -> {
-            if (!studentIDField.getFilteredEntries().isEmpty() && (event.getCode().equals(KeyCode.ENTER) || event.getCode().equals(KeyCode.TAB))) {
+            if (!studentIDField.getFilteredEntries().isEmpty() && (event.getCode().equals(KeyCode.ENTER)
+                    || event.getCode().equals(KeyCode.TAB))) {
                 studentIDField.setText(studentIDField.getFilteredEntries().get(0));
             }
             if (event.getCode().equals(KeyCode.ENTER) || event.getCode().equals(KeyCode.TAB)){
@@ -383,7 +389,8 @@ public class CheckOutController extends MenuController implements IController, I
                 if (input.matches(EMAIL_REGEX)) {
                     int sID = database.getStudentIDFromEmail(input);
                     if (sID == 0) {
-                        stageUtils.errorAlert("Student is checking out equipment for first time/has no associated ID\n They must use their student ID to check out an item");
+                        stageUtils.errorAlert("Student is checking out equipment for first time/has no associated ID" +
+                                "\n They must use their student ID to check out an item");
                         reset();
                         return;
                     }
@@ -391,7 +398,7 @@ public class CheckOutController extends MenuController implements IController, I
                     stageUtils.errorAlert("Invalid student RFID or email address");
                     return;
                 }
-                if (!input.isEmpty() && studentNameField.getText().isEmpty()) { //If student ID isn't in DB, asks for email to attach the id to.
+                if (!input.isEmpty() && studentNameField.getText().isEmpty()) { //If RFID isn't in DB, asks for email
                     String studentEmail = newStudentEmail(false);
                     // re-prompt for email if not a validly formatted MSOE email, breaks loop if cancel is selected
                     while (studentEmail != null && !studentEmail.matches(EMAIL_REGEX)) {
@@ -400,7 +407,7 @@ public class CheckOutController extends MenuController implements IController, I
                     if (studentEmail != null) {
                         studentName = database.getStudentNameFromEmail(studentEmail);
 
-                        if (studentName.isEmpty()) {  //Means student doesn't exist in database, so completely new one will be created
+                        if (studentName.isEmpty()) {  //Means student isn't in database, so new one will be created
                             studentName = newStudentName(false);
                             // re-prompt for name if it doesn't contain a space
                             while (studentName != null && !studentName.contains(" ")) {
@@ -430,9 +437,7 @@ public class CheckOutController extends MenuController implements IController, I
                     populateCOTable();
                 }
             }
-
         });
-
     }
 
     /**
@@ -443,11 +448,12 @@ public class CheckOutController extends MenuController implements IController, I
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Student Creation");
         if (wasInvalid) {
-            dialog.setHeaderText("Student Name was not formatted correctly.\n Please Enter Name with space to Continue ");
+            dialog.setHeaderText("Student Name was not formatted correctly." +
+                    "\nPlease Enter Name with space to Continue ");
         } else {
-            dialog.setHeaderText("Student Name is not in System.\n Please Enter Name to Continue ");
+            dialog.setHeaderText("Student Name is not in System.\nPlease Enter Name to Continue ");
         }
-        dialog.setContentText("First and last name\n Separate by space");
+        dialog.setContentText("First and last name\nSeparate by space");
         dialog.showAndWait();
         return dialog.getResult();
     }
@@ -532,7 +538,8 @@ public class CheckOutController extends MenuController implements IController, I
             Stage stage = stageUtils.createPopupStage("fxml/ExtendedCheckout.fxml", main, "Part Information");
             stage.showAndWait();
             if (extendedFieldsNotFilled()) {
-                stageUtils.checkoutAlert("Extended Checkout","Process cancelled or fields were not filled out for extended checkout");
+                stageUtils.checkoutAlert("Extended Checkout",
+                        "Process cancelled or fields were not filled out for extended checkout");
                 extended.setSelected(false);
                 setExtendedCheckboxesVisible(false);
                 return;
@@ -563,9 +570,7 @@ public class CheckOutController extends MenuController implements IController, I
      * This sets up the formatting and CellFactories for the checkout side table
      */
     private void setupCOTable() {
-        Label emptyTableLabel = new Label("No parts found.");
-        emptyTableLabel.setStyle("-fx-text-fill: white");
-        emptyTableLabel.setFont(new Font(18));
+        Label emptyTableLabel = TSCTable.getEmptyTableLabel();
         coTable.setPlaceholder(emptyTableLabel);
         coTable.setStyle("-fx-font-size: 16px");
         coTableCol = new JFXTreeTableColumn<>("Part Name");
@@ -631,7 +636,7 @@ public class CheckOutController extends MenuController implements IController, I
         if (event.getClickCount() == 2) {
             int index = coTable.getSelectionModel().getSelectedIndex();
             if (index != -1) {
-                Checkout item = ((Checkout) coTable.getSelectionModel().getModelItem(index).getValue());
+                Checkout item = (Checkout) coTable.getSelectionModel().getModelItem(index).getValue();
                 CheckedOutInventoryTable.createCheckoutPopup(item);
             }
         }

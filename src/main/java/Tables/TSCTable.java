@@ -19,7 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This
+ * TSCTable is the template for all the tables in the Inventory tabs, Manage Workers, and Manage Students
+ * This class itself contains several protected variables and methods used to format each inheritor
  */
 public abstract class TSCTable {
 
@@ -37,7 +38,7 @@ public abstract class TSCTable {
 
     public TSCTable(TableScreensController controller) {
         TSCTable.controller = controller;
-        table = controller.table;
+        table = controller.getTable();
         initWorker(controller.getWorker());
     }
 
@@ -47,7 +48,7 @@ public abstract class TSCTable {
      * This method exports the table as an Excel spreadsheet
      * @param exportToExcel the helper class made to export the
      */
-    public abstract void export(ExportToExcel exportToExcel); // TODO: look into making export generic & if the class can be static
+    public abstract void export(ExportToExcel exportToExcel);
 
     /**
      * Adds the current worker to the class, so that the class knows whether an administrator
@@ -104,14 +105,16 @@ public abstract class TSCTable {
 
 
     /**
-     * Creates a new column for the table with
-     * @param colName
-     * @return
+     * Creates a new column for the table with its width being 1/n of the width of the whole table
+     * where n is number of columns
      */
     protected JFXTreeTableColumn createNewCol(String colName) {
         return createNewCol(colName, 1.0 / NUM_COLS);
     }
 
+    /**
+     * Creates a new column for the table with its width being specified as a decimal percentage
+     */
     protected JFXTreeTableColumn createNewCol(String colName, double colWidthPercentage) {
         JFXTreeTableColumn tempCol = new JFXTreeTableColumn<>(colName);
         tempCol.prefWidthProperty().bind(table.widthProperty().subtract(SCROLLBAR_BUFFER).multiply(colWidthPercentage));
@@ -136,7 +139,8 @@ public abstract class TSCTable {
                     popupRow(row.getIndex());
                 } else {
                     final int index = row.getIndex();
-                    if (index >= 0 && index < table.getCurrentItemsCount() && table.getSelectionModel().isSelected(index)) {
+                    if (index >= 0 && index < table.getCurrentItemsCount()
+                            && table.getSelectionModel().isSelected(index)) {
                         table.getSelectionModel().clearSelection();
                         event.consume();
                     }

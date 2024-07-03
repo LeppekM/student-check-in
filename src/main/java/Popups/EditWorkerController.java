@@ -6,7 +6,6 @@ import Controllers.IController;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -14,6 +13,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Controller for the edit worker popup that appears when double-clicking a worker in manage workers screen
+ */
 public class EditWorkerController implements IController {
 
     @FXML
@@ -40,7 +42,7 @@ public class EditWorkerController implements IController {
     private static Worker worker, loggedWorker;
     private Database database;
     private static String name, workerEmail, password;
-    private static int RFID;
+    private static int rfid;
     private static boolean priv, edit, work, remove;
 
     /**
@@ -61,7 +63,7 @@ public class EditWorkerController implements IController {
         workerName.setText(w.getName());
         email.setText(w.getEmail());
         pass.setText(w.getPass());
-        eRFIDw.setText(w.getRIFD() + "");
+        eRFIDw.setText(w.getWorkerRFID() + "");
         editParts.selectedProperty().setValue(w.canEditParts());
         removeParts.selectedProperty().setValue(w.canRemoveParts());
         workers.selectedProperty().setValue(w.canEditWorkers());
@@ -75,7 +77,7 @@ public class EditWorkerController implements IController {
         name = workerName.getText();
         workerEmail = email.getText();
         password = pass.getText();
-        RFID = Integer.parseInt(eRFIDw.getText());
+        rfid = Integer.parseInt(eRFIDw.getText());
         priv = admin.isSelected();
         edit = w.canEditParts();
         work = w.canEditWorkers();
@@ -96,17 +98,18 @@ public class EditWorkerController implements IController {
         return !name.equals(workerName.getText()) || !password.equals(pass.getText()) ||
                 !workerEmail.equals(email.getText()) || priv != admin.isSelected() || edit != editParts.isSelected() ||
                 work != workers.isSelected() || remove != removeParts.isSelected() ||
-                RFID != Integer.parseInt(eRFIDw.getText());
+                rfid != Integer.parseInt(eRFIDw.getText());
     }
 
-    public void save(ActionEvent actionEvent) {
+    public void save() {
         if (!changed()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No changes detected...");
             alert.setTitle("Edit Failure");
             alert.setHeaderText("No changes were made.");
             alert.showAndWait();
         }else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to make the following changes?\n");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to " +
+                    "make the following changes?\n");
             alert.setTitle("Edit Success");
             alert.setHeaderText("Student worker info changing...");
             if (!name.equals(workerName.getText())) {
@@ -119,19 +122,23 @@ public class EditWorkerController implements IController {
                 alert.setContentText(alert.getContentText() + "\t" + password + " --> " + pass.getText() + "\n");
             }
             if (priv != admin.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Admin: " + priv + " --> Admin: " + admin.isSelected() + "\n");
+                alert.setContentText(alert.getContentText() + "\t Admin: " + priv + " --> Admin: " +
+                        admin.isSelected() + "\n");
             }
             if (edit != editParts.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Edit Parts: " + edit + " --> Edit Parts: " + editParts.isSelected() + "\n");
+                alert.setContentText(alert.getContentText() + "\t Edit Parts: " + edit + " --> Edit Parts: "
+                        + editParts.isSelected() + "\n");
             }
             if (work != workers.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Manage Workers: " + work + " --> Manage Workers: " + workers.isSelected() + "\n");
+                alert.setContentText(alert.getContentText() + "\t Manage Workers: " + work + " --> Manage Workers: "
+                        + workers.isSelected() + "\n");
             }
             if (remove != removeParts.isSelected()){
-                alert.setContentText(alert.getContentText() + "\t Remove Parts: " + remove + " --> Remove Parts: " + removeParts.isSelected() + "\n");
+                alert.setContentText(alert.getContentText() + "\t Remove Parts: " + remove + " --> Remove Parts: "
+                        + removeParts.isSelected() + "\n");
             }
-            if (RFID!= Integer.parseInt(eRFIDw.getText())) {
-                alert.setContentText(alert.getContentText() + "\t" + RFID + " --> " + eRFIDw.getText() + "\n");
+            if (rfid != Integer.parseInt(eRFIDw.getText())) {
+                alert.setContentText(alert.getContentText() + "\t" + rfid + " --> " + eRFIDw.getText() + "\n");
             }
             alert.showAndWait().ifPresent(buttonType -> {
                 if (buttonType == ButtonType.OK){
@@ -139,7 +146,7 @@ public class EditWorkerController implements IController {
                     worker.setEmail(email.getText());
                     worker.setPass(pass.getText());
                     worker.setAdmin(false);
-                    worker.setRIFD(Integer.parseInt(eRFIDw.getText()));
+                    worker.setWorkerRFID(Integer.parseInt(eRFIDw.getText()));
                     worker.setEdit(editParts.isSelected());
                     worker.setRemove(removeParts.isSelected());
                     worker.setWorker(workers.isSelected());
@@ -148,22 +155,22 @@ public class EditWorkerController implements IController {
                     Alert alert1 = new Alert(Alert.AlertType.INFORMATION, "Worker updated");
                     alert1.showAndWait();
                     main.getScene().getWindow().hide();
-                }else {
+                } else {
                     workerName.setText(name);
                     email.setText(workerEmail);
                     pass.setText(password);
-                    eRFIDw.setText(RFID + "");
+                    eRFIDw.setText(rfid + "");
                 }
             });
         }
     }
 
-    public void unblock(ActionEvent actionEvent) {
+    public void unblock() {
         if (admin.isSelected()){
             editParts.setDisable(false);
             workers.setDisable(false);
             removeParts.setDisable(false);
-        }else {
+        } else {
             editParts.selectedProperty().setValue(false);
             removeParts.selectedProperty().setValue(false);
             workers.selectedProperty().setValue(false);

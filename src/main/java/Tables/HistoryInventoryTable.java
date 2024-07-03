@@ -21,6 +21,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
+/**
+ * Manages the Checkout History table in the Inventory screen
+ */
 public class HistoryInventoryTable extends TSCTable {
 
     private JFXTreeTableColumn<HIRow, String> studentNameCol, partNameCol, actionCol;
@@ -73,8 +76,10 @@ public class HistoryInventoryTable extends TSCTable {
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 
         // unfortunately, this cast needs to be here to add the cols to the table
-        TreeTableColumn<TableRow, String> studentNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) studentNameCol;
-        TreeTableColumn<TableRow, String> partNameTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) partNameCol;
+        TreeTableColumn<TableRow, String> studentNameTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) studentNameCol;
+        TreeTableColumn<TableRow, String> partNameTemp =
+                (TreeTableColumn<TableRow, String>) (TreeTableColumn) partNameCol;
         TreeTableColumn<TableRow, Long> barcodeTemp = (TreeTableColumn<TableRow, Long>) (TreeTableColumn) barcodeCol;
         TreeTableColumn<TableRow, String> actionTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) actionCol;
         TreeTableColumn<TableRow, String> dateTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) dateCol;
@@ -94,11 +99,11 @@ public class HistoryInventoryTable extends TSCTable {
         String action = val.getAction().getValue();
         String date = val.getDate().getValue().toString().toLowerCase();
 
-        return ((student != null && student.toLowerCase().contains(input))
-                || (partName != null && partName.toLowerCase().contains(input))
-                || (serialNumber != null && serialNumber.toLowerCase().contains(input))
-                || (action != null && action.toLowerCase().contains(input))
-                || (date != null && date.toLowerCase().contains(input)));
+        return student != null && student.toLowerCase().contains(input)
+                || partName != null && partName.toLowerCase().contains(input)
+                || serialNumber.toLowerCase().contains(input)
+                || action != null && action.toLowerCase().contains(input)
+                || date.toLowerCase().contains(input);
     }
 
     @Override
@@ -112,12 +117,12 @@ public class HistoryInventoryTable extends TSCTable {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
         if (index != -1) {
-            TreeItem item = table.getSelectionModel().getModelItem(index);
+            TreeItem<TableRow> item = table.getSelectionModel().getModelItem(index);
             // null if user clicks on empty row
             if (item != null) {
                 HIRow row = ((HIRow) item.getValue());
 
-                Popup historyPopup = new Popup(root) {
+                new Popup(root) {
 
                     @Override
                     public void populate() {
@@ -126,7 +131,8 @@ public class HistoryInventoryTable extends TSCTable {
                         add("Part Name: ", row.getPartName().get(), false);
                         add("Barcode: ", "" + row.getBarcode().get(), false);
                         add("Action: ", row.getAction().get(), false);
-                        add("Date: ", new SimpleDateFormat("dd MMM yyyy hh:mm:ss a").format(row.getDate().get()), false);
+                        add("Date: ", new SimpleDateFormat("dd MMM yyyy hh:mm:ss a")
+                                .format(row.getDate().get()), false);
 
                         submitButton.setText("Close");
                     }
@@ -147,7 +153,8 @@ public class HistoryInventoryTable extends TSCTable {
         if (this.worker != null && this.worker.isAdmin()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm Delete Old History");
-            alert.setContentText("Are you sure you want to clear the transaction history for parts older than 2 years?");
+            alert.setContentText("Are you sure you want to clear the transaction history for parts " +
+                    "older than 2 years?");
             alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.YES) {

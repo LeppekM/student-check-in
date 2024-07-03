@@ -55,7 +55,7 @@
                         <Insets bottom="10.0"/>
                     </VBox.margin>
                 </Label>
-                <GridPane fx:id="emailLogin" alignment="CENTER" hgap="2.0" vgap="30.0">
+                <GridPane alignment="CENTER" hgap="2.0" vgap="30.0">
                     <Label fx:id="emailLabel" alignment="CENTER_RIGHT" contentDisplay="CENTER"
                            style="-fx-font-weight: bold" text="email:" visible="false">
                         <font>
@@ -89,12 +89,12 @@
                             <Insets/>
                         </GridPane.margin>
                     </JFXPasswordField>
-                    <Label fx:id="RFIDLabel" text="RFID:">
+                    <Label fx:id="rfidLabel" text="RFID:">
                         <font>
                             <Font name="System Bold" size="18.0"/>
                         </font>
                     </Label>
-                    <JFXTextField fx:id="RFID" focusColor="FIREBRICK" GridPane.columnIndex="1"/>
+                    <JFXTextField fx:id="rfid" focusColor="FIREBRICK" GridPane.columnIndex="1"/>
                     <columnConstraints>
                         <ColumnConstraints halignment="RIGHT"/>
                         <ColumnConstraints minWidth="10.0" prefWidth="170.0"/>

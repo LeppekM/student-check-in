@@ -5,13 +5,12 @@ import javafx.beans.property.*;
 
 import java.util.Date;
 
+/**
+ * Object which represents checkout entities in database
+ */
 public class Checkout extends RecursiveTreeObject {
-    private final StringProperty studentName;
-    private final StringProperty studentEmail;
-    private final StringProperty partName;
-    private StringProperty action;
-    private StringProperty serialNumber;
-    private StringProperty fee;
+    private final StringProperty studentName, studentEmail, partName;
+    private StringProperty action, serialNumber, fee;
     private final LongProperty barcode;
     private IntegerProperty checkoutID, studentID, partID;
     private ObjectProperty<Date> date, dueDate, checkedOutDate;
@@ -27,7 +26,8 @@ public class Checkout extends RecursiveTreeObject {
         };
     }
 
-    public Checkout(int checkoutID, String studentName, String studentEmail, int studentID, String partName, long barcode, String serialNumber, int partID, Date checkedOutDate, Date dueDate, String fee) {
+    public Checkout(int checkoutID, String studentName, String studentEmail, int studentID, String partName,
+                    long barcode, String serialNumber, int partID, Date checkedOutDate, Date dueDate, String fee) {
         this.checkoutID = new SimpleIntegerProperty(checkoutID);
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);

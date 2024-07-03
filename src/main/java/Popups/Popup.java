@@ -16,9 +16,16 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
+/**
+ * This abstract class creates a popup object that allows a standardized layout for popups with the following format:
+ * [HBox[Label] [JFXBox]]
+ * [HBox[Label] [JFXBox]]
+ * ...
+ * This class allows for some flexibility, but is mainly meant so that this type of popup looks standardized
+ * and saves on lines/classes. All inheritors are anonymous inner classes
+ */
 public abstract class Popup {
 
-    private Pane root;
     protected VBox vbox;
 
     protected JFXButton submitButton;
@@ -30,7 +37,6 @@ public abstract class Popup {
 
 
     public Popup(Pane root) {
-        this.root = root;
 
         VBox outerVBox = new VBox();
         outerVBox.setAlignment(Pos.CENTER);

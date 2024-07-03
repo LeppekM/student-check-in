@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Helper class which assists in managing time
+ */
 public class TimeUtils {
 
     public Date convertStringtoDate(String stringDate) {

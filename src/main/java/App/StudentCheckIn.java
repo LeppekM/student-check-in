@@ -18,9 +18,8 @@ import java.util.Date;
 /**
  * Starts the program
  */
-public class StudentCheckIn extends Application  {
-    private static final String logLocation = System.getProperty("user.dir");
-    public final static Logger logger = LogManager.getLogger(StudentCheckIn.class.getName());
+public class StudentCheckIn extends Application {
+    public static final Logger logger = LogManager.getLogger(StudentCheckIn.class.getName());
 
     static {
         Log4J.enableForClass(StudentCheckIn.class);
@@ -31,7 +30,7 @@ public class StudentCheckIn extends Application  {
     /**
      * Basic constructor
      */
-    public StudentCheckIn(){}
+    public StudentCheckIn() { }
 
     /**
      * Loads the window with the login page
@@ -41,7 +40,6 @@ public class StudentCheckIn extends Application  {
     @Override
     public void start(Stage primaryStage) throws Exception{
         URL myFxmlURL = ClassLoader.getSystemResource("fxml/Login.fxml");
-        FXMLLoader loader = new FXMLLoader(myFxmlURL);
         Parent root = FXMLLoader.load(myFxmlURL);
         Scene scene = new Scene(root, 1150, 800);
         primaryStage.setMinWidth(1000);
