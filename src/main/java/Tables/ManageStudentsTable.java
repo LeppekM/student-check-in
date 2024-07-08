@@ -306,6 +306,16 @@ public class ManageStudentsTable extends TSCTable {
         }
     }
 
+    public void clearUnusedStudents() {
+        if (this.worker != null && this.worker.isAdmin()) {
+            if (stageUtils.confirmationAlert("Confirm Delete Unused Students",
+                    "Are you sure you want to clear unused students?",
+                    "Do you want to delete students with no transaction history?")) {
+                database.clearUnusedStudents();
+            }
+        }
+    }
+
     public class MSRow extends TableRow {
 
         private final StringProperty firstName;

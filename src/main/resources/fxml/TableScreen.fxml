@@ -73,33 +73,32 @@
                     <Insets topRightBottomLeft="5.0"/>
                 </HBox.margin>
             </JFXButton>
-            <JFXButton fx:id="menuButton4" mnemonicParsing="false" onAction="#editPart"
+            <JFXButton fx:id="menuButton4" mnemonicParsing="false"
                        prefHeight="45.0" minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css"
                        text="Edit">
                 <HBox.margin>
                     <Insets topRightBottomLeft="5.0"/>
                 </HBox.margin>
             </JFXButton>
-            <JFXButton fx:id="menuButton3" mnemonicParsing="false" prefHeight="45.0"
-                       minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css">
-                <HBox.margin>
-                    <Insets topRightBottomLeft="5.0"/>
-                </HBox.margin>
-            </JFXButton>
-            <JFXButton fx:id="menuButton2" mnemonicParsing="false" prefHeight="45.0"
-                       minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css">
-                <HBox.margin>
-                    <Insets topRightBottomLeft="5.0"/>
-                </HBox.margin>
-            </JFXButton>
-            <JFXButton fx:id="menuButton1" mnemonicParsing="false" prefHeight="45.0"
-                       minWidth="175.0" maxWidth="175.0" stylesheets="@../css/CheckButton.css">
-                <HBox.margin>
-                    <Insets topRightBottomLeft="5.0"/>
-                </HBox.margin>
-            </JFXButton>
-            <JFXButton fx:id="excelButton" onAction="#export" prefHeight="0.0" prefWidth="50.0"
+            <JFXButton fx:id="menuButton3" mnemonicParsing="false" prefHeight="45.0" minWidth="175.0" maxWidth="175.0"
                        stylesheets="@../css/CheckButton.css">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="menuButton2" mnemonicParsing="false" prefHeight="45.0" minWidth="175.0" maxWidth="175.0"
+                       stylesheets="@../css/CheckButton.css">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="menuButton1" mnemonicParsing="false" prefHeight="45.0" minWidth="175.0" maxWidth="175.0"
+                       stylesheets="@../css/CheckButton.css">
+                <HBox.margin>
+                    <Insets topRightBottomLeft="5.0"/>
+                </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="excelButton" onAction="#export" prefHeight="0.0" stylesheets="@../css/CheckButton.css">
                 <graphic>
                     <ImageView fitHeight="30.0" fitWidth="32.0">
                         <Image url="@../images/sheetDownload.png"/>

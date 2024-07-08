@@ -111,9 +111,9 @@ public class TimeUtils {
      * Calculates the date that was 2 years ago from today
      * @return the date that was 2 years ago from today
      */
-    public static Date getTwoYearsAgo() {
+    public static Timestamp getTwoYearsAgo() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, -2);
-        return cal.getTime();
+        return new Timestamp(cal.getTimeInMillis());
     }
 }

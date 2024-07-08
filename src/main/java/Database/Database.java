@@ -119,7 +119,7 @@ public class Database implements IController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         if (date != null && !date.isEmpty()) {
             try {
-                Date current = dateFormat.parse(timeUtils.getCurrentDateTimeStamp());  // todo?
+                Date current = dateFormat.parse(timeUtils.getCurrentDateTimeStamp());
                 Date dueDate = dateFormat.parse(date);
                 return current.after(dueDate);
             } catch (ParseException e) {
@@ -441,25 +441,38 @@ public class Database implements IController {
     }
 
     /**
-     * todo: Make this smarter, don't want to delete checkout(s) on parts that are out, also delete students that have no transaction history for 4+ years
      * This method clears the checkout data that is over 2 years old
-     * And students who haven't interacted with the system in over 4 years
      */
     public void clearOldHistory() {
         String query =
                 "DELETE checkout " +
                         "FROM checkout " +
-                        "INNER JOIN parts " +
-                        "ON checkout.partID = parts.partID " +
-                        "AND checkout.checkinAt < ? ";
+                        "WHERE checkout.checkinAt < ? ";
 
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
-//            DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");  // todo: make sure this is formatted correctly
-//            String formattedDate = target.format(TimeUtils.getTwoYearsAgo());
             preparedStatement.setString(1, TimeUtils.getTwoYearsAgo().toString());
             preparedStatement.execute();
             preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Removes students who have no transaction history associated with them. This should only
+     * affect students with no parts checked in/out in the past two years (after history is cleared)
+     * or students created via the manage students screen, either through importing them or adding a student
+     */
+    public void clearUnusedStudents() {
+        String query =
+                "DELETE FROM students " +
+                        "WHERE studentID NOT IN (SELECT studentID FROM checkout)";
+
+        try {
+            Statement statement = getConnection().createStatement();
+            statement.execute(query);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

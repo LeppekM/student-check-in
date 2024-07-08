@@ -81,13 +81,16 @@ public class TableScreensController extends MenuController implements IControlle
             tabPane.setTabMaxWidth(tabPane.getWidth() / 4.5);
         });
 
-        screenProperty.set(TableScreen.OVERDUE);
         BooleanBinding hideTabs = screenProperty.isEqualTo(TableScreen.STUDENTS)
                 .or(screenProperty.isEqualTo(TableScreen.WORKERS));
         NumberBinding heightBinding = Bindings.when(hideTabs).then(0).otherwise(42);
         tabPane.maxHeightProperty().bind(heightBinding);
         tabPane.minHeightProperty().bind(heightBinding);
         tabPane.prefHeightProperty().bind(heightBinding);
+        NumberBinding widthBinding = Bindings.when(hideTabs).then(0).otherwise(60);
+        excelButton.maxWidthProperty().bind(widthBinding);
+        excelButton.minWidthProperty().bind(widthBinding);
+        excelButton.prefWidthProperty().bind(widthBinding);
 
         backButton.getStylesheets().add("/css/CheckButton.css");  // set button style
 
@@ -118,9 +121,17 @@ public class TableScreensController extends MenuController implements IControlle
             if (screen == TableScreen.COMPLETE_INVENTORY) {
                 editManyParts();
             } else if (screen == TableScreen.STUDENTS) {
-                importStudents();
+                clearUnusedStudents();
             } else if (screen == TableScreen.WORKERS) {
                 addWorker();
+            }
+        });
+
+        menuButton4.setOnAction(event -> {
+            if (screen == TableScreen.COMPLETE_INVENTORY) {
+                editPart();
+            } else if (screen == TableScreen.STUDENTS) {
+                importStudents();
             }
         });
 
@@ -207,8 +218,9 @@ public class TableScreensController extends MenuController implements IControlle
                 menuButton2.setVisible(true);
                 menuButton2.setText("Add");
                 menuButton3.setVisible(true);
-                menuButton3.setText("Import Students");
-                menuButton4.setVisible(false);
+                menuButton3.setText("Clear Unused Students");
+                menuButton4.setVisible(true);
+                menuButton4.setText("Import Students");
                 menuButton5.setVisible(false);
                 break;
         }
@@ -313,6 +325,12 @@ public class TableScreensController extends MenuController implements IControlle
     public void importStudents() {
         if (tscTable instanceof ManageStudentsTable) {
             ((ManageStudentsTable) tscTable).importStudents();
+        }
+    }
+
+    public void clearUnusedStudents() {
+        if (tscTable instanceof ManageStudentsTable) {
+            ((ManageStudentsTable) tscTable).clearUnusedStudents();
         }
     }
 

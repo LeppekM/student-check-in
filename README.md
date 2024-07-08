@@ -27,8 +27,6 @@ Product Owner: Jim Frommell
 * Some tables auto-double click on single click or after sort function
 
 ## Priority List ##
-* allow smarter clear history
-  * Potentially allow adjustable dates for this
 * QA test table functionality
 * Testing suite
 * Scan all of part type in inventory
