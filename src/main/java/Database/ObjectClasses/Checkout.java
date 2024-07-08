@@ -22,7 +22,7 @@ public class Checkout extends RecursiveTreeObject {
         this.partName = new SimpleStringProperty(partName);
         this.barcode = new SimpleLongProperty(barcode);
         this.action = new SimpleStringProperty(action);
-        this.date = new SimpleObjectProperty<Date>(date) {
+        this.date = new SimpleObjectProperty<Date>(date) {  // todo: pretty sure this is same as dueDate, combine
         };
     }
 

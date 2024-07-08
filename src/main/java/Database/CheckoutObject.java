@@ -10,13 +10,13 @@ public class CheckoutObject {
     private static String studentID, barcode, extendedCourseName, extendedProfessor;
     private static Date dueAt;
 
-    private final String checkoutAtDate;
-    private final String checkinAtDate;
+    private final Date checkoutAtDate;
+    private final Date checkinAtDate;
 
     /**
      * Constructor
      */
-    public CheckoutObject(String studentID, String barcode, String checkoutAt, String checkinAt, Date dueAt) {
+    public CheckoutObject(String studentID, String barcode, Date checkoutAt, Date checkinAt, Date dueAt) {
         CheckoutObject.studentID = studentID;
         CheckoutObject.barcode = barcode;
         this.checkoutAtDate = checkoutAt;
@@ -38,11 +38,11 @@ public class CheckoutObject {
         return extendedProfessor;
     }
 
-    public String getCheckoutAtDate() {
+    public Date getCheckoutAtDate() {
         return checkoutAtDate;
     }
 
-    public String getCheckinAtDate() {
+    public Date getCheckinAtDate() {
         return checkinAtDate;
     }
 

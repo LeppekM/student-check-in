@@ -186,8 +186,7 @@ public class CompleteInventoryTable extends TSCTable {
 
                         if (student != null) {
                             CheckoutObject checkoutObject = database.getLastCheckoutOf(row.getPartID().get());
-                            String type = checkoutObject.getCheckinAtDate() == null ||
-                                    checkoutObject.getCheckinAtDate().isEmpty() ? "Checked Out" : "Check In";
+                            String type = checkoutObject.getCheckinAtDate() == null ? "Checked Out" : "Check In";
 
                             add("Student Name: ", student.getName(), false);
                             add("Student Email: ", student.getEmail(), false);
@@ -211,11 +210,11 @@ public class CompleteInventoryTable extends TSCTable {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
                             TimeUtils timeUtils = new TimeUtils();
                             if (type.equals("Check In")){
-                                label = (Label) add(type + ": ", dateFormat.format(timeUtils.convertStringtoDate(
-                                        checkoutObject.getCheckinAtDate())), false).getChildren().get(0);
+                                label = (Label) add(type + ": ", dateFormat.format(
+                                        checkoutObject.getCheckinAtDate()), false).getChildren().get(0);
                             } else {
-                                label = (Label) add(type + ": ", dateFormat.format(timeUtils.convertStringtoDate(
-                                        checkoutObject.getCheckoutAtDate())), false).getChildren().get(0);
+                                label = (Label) add(type + ": ", dateFormat.format(
+                                        checkoutObject.getCheckoutAtDate()), false).getChildren().get(0);
                             }
                             add("Due Date: ", dateFormat.format(checkoutObject.getDueAt()), false);
                             if (isOverdue) {

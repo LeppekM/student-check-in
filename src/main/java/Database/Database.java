@@ -10,12 +10,10 @@ import HelperClasses.TimeUtils;
 import HelperClasses.StageUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.sql.*;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -86,7 +84,6 @@ public class Database implements IController {
     public ObservableList<OverdueItem> getOverdue() {
         ObservableList<OverdueItem> data = FXCollections.observableArrayList();
 
-        timeUtils.getCurrentDateTimeStamp();
         String overdue = "SELECT checkout.partID, checkout.studentID, students.studentName, students.email, " +
                 "parts.partName, parts.serialNumber, parts.barcode, checkout.dueAt, checkout.checkoutID " +
                 "FROM checkout LEFT JOIN parts ON checkout.partID = parts.partID " +
@@ -122,7 +119,7 @@ public class Database implements IController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
         if (date != null && !date.isEmpty()) {
             try {
-                Date current = dateFormat.parse(timeUtils.getCurrentDateTimeStamp());
+                Date current = dateFormat.parse(timeUtils.getCurrentDateTimeStamp());  // todo?
                 Date dueDate = dateFormat.parse(date);
                 return current.after(dueDate);
             } catch (ParseException e) {
@@ -288,7 +285,7 @@ public class Database implements IController {
             statement.setInt(1, partID);
             statement.setInt(2, rfid);
             statement.setLong(3, barcode);
-            statement.setString(4, timeUtils.getCurrentDateTimeStamp());
+            statement.setString(4, timeUtils.getCurrentDateTime().toString());
             if (dueDate != null){
                 statement.setString(5, cleanString(dueDate));
                 statement.setString(6, cleanString(prof));
@@ -316,7 +313,7 @@ public class Database implements IController {
         try {
             String setDate = "UPDATE checkout SET checkinAt = ? WHERE checkoutID = ?;";
             PreparedStatement statement = connection.prepareStatement(setDate);
-            statement.setString(1, timeUtils.getCurrentDateTimeStamp());
+            statement.setString(1, timeUtils.getCurrentDateTime().toString());
             statement.setInt(2, getCheckoutIDFromBarcodeAndRFID(rfid, barcode));
             statement.execute();
             statement.close();
@@ -421,7 +418,7 @@ public class Database implements IController {
         CheckoutObject checkoutObject = null;
         String studentID = "", barcode = "";
         String dueAt = null;
-        String checkoutAt = null, checkinAt = null;
+        Date checkoutAt = null, checkinAt = null;
 
         try {
             Statement statement = connection.createStatement();
@@ -429,8 +426,8 @@ public class Database implements IController {
             if (resultSet.next()) {
                 studentID = "" + resultSet.getInt("studentID");
                 barcode = "" + resultSet.getLong("barcode");
-                checkoutAt = resultSet.getString("checkoutAt");
-                checkinAt = resultSet.getString("checkinAt");
+                checkoutAt = TimeUtils.parseTimestamp(resultSet.getTimestamp("checkoutAt"));
+                checkinAt = TimeUtils.parseTimestamp(resultSet.getTimestamp("checkinAt"));
                 dueAt = resultSet.getString("dueAt");
             }
             checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, checkinAt,
@@ -446,6 +443,7 @@ public class Database implements IController {
     /**
      * todo: Make this smarter, don't want to delete checkout(s) on parts that are out, also delete students that have no transaction history for 4+ years
      * This method clears the checkout data that is over 2 years old
+     * And students who haven't interacted with the system in over 4 years
      */
     public void clearOldHistory() {
         String query =
@@ -457,9 +455,9 @@ public class Database implements IController {
 
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(query);
-            DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-            String formattedDate = target.format(TimeUtils.getTwoYearsAgo());
-            preparedStatement.setString(1, formattedDate);
+//            DateFormat target = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");  // todo: make sure this is formatted correctly
+//            String formattedDate = target.format(TimeUtils.getTwoYearsAgo());
+            preparedStatement.setString(1, TimeUtils.getTwoYearsAgo().toString());
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException e) {
@@ -516,30 +514,35 @@ public class Database implements IController {
         return data;
     }
 
-    public ObservableList<Checkout> getAllCheckoutHistory() {  //todo: improve this, there's 100% a more efficient way
+    public ObservableList<Checkout> getAllCheckoutHistory() {
         ObservableList<Checkout> data = FXCollections.observableArrayList();
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT studentName, email, partName, parts.barcode, " +
-                    "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
-                    "THEN 'Checked In' ELSE 'Checked Out' END AS 'Action', " +
-                    "CASE WHEN checkout.checkoutAt < checkout.checkinAt " +
-                    "THEN checkout.checkinAt ELSE checkout.checkoutAt END AS 'Date' " +
-                    "FROM parts " +
+            ResultSet resultSet = statement.executeQuery("WITH ActionHistory AS ( " +
+                    "SELECT studentName, email, partName, parts.barcode, checkout.checkinAt, checkout.checkoutAt, " +
+                    "1 as val FROM parts " +
                     "INNER JOIN checkout ON parts.partID = checkout.partID " +
                     "INNER JOIN students ON checkout.studentID = students.studentID " +
-                    "ORDER BY CASE " +
-                    "WHEN checkout.checkoutAt < checkout.checkinAt " +
-                    "THEN checkout.checkinAt ELSE checkout.checkoutAt END DESC;");
-            while(resultSet.next()){
+                    "UNION ALL " +
+                    "SELECT studentName, email, partName, parts.barcode, checkout.checkinAt, checkout.checkoutAt, " +
+                    "2 as val FROM parts " +
+                    "INNER JOIN checkout ON parts.partID = checkout.partID " +
+                    "INNER JOIN students ON checkout.studentID = students.studentID " +
+                    "WHERE checkout.checkinAt IS NOT NULL " +
+                    ")" +
+                    "SELECT studentName, email, partName, barcode, " +
+                    "CASE WHEN val = 1 THEN 'Checked Out' ELSE 'Checked In' END AS 'Action', " +
+                    "CASE WHEN val = 1 THEN checkoutAt ELSE checkinAt END AS 'Date' " +
+                    "FROM ActionHistory " +
+                    "ORDER BY Date DESC;");
+            while (resultSet.next()) {
                 String studentName = resultSet.getString("studentName");
                 String studentEmail = resultSet.getString("email");
                 String partName = resultSet.getString("partName");
                 long barcode = resultSet.getLong("barcode");
                 String action = resultSet.getString("Action");
-                String date = resultSet.getString("Date");
-                Checkout historyItems = new Checkout(studentName, studentEmail, partName, barcode, action,
-                        timeUtils.convertStringtoDate(date));
+                Date date = TimeUtils.parseTimestamp(resultSet.getTimestamp("Date"));
+                Checkout historyItems = new Checkout(studentName, studentEmail, partName, barcode, action, date);
                 data.add(historyItems);
             }
         } catch (SQLException e) {
@@ -567,12 +570,12 @@ public class Database implements IController {
                 String partName = resultSet.getString("partName");
                 long barcode = resultSet.getLong("barcode");
                 String serialNumber = resultSet.getString("serialNumber");
-                String checkedOutAt = resultSet.getString("checkoutAt");
+                Date checkedOutAt = TimeUtils.parseTimestamp(resultSet.getTimestamp("checkoutAt"));
                 String dueDate = resultSet.getString("dueAt");
                 int partID = resultSet.getInt("parts.partID");
                 String fee = resultSet.getString("price");
                 Checkout checkedOut = new Checkout(checkoutID, studentName, studentEmail, studentID, partName, barcode,
-                        serialNumber, partID, timeUtils.convertStringtoDate(checkedOutAt),
+                        serialNumber, partID, checkedOutAt,
                         timeUtils.convertStringtoDate(dueDate), fee);
                 data.add(checkedOut);
             }
@@ -1036,7 +1039,7 @@ public class Database implements IController {
                             resultSet.getLong("parts.barcode"),
                             resultSet.getString("parts.serialNumber"),
                             resultSet.getInt("parts.partID"),
-                            timeUtils.convertStringtoDate(resultSet.getString("checkout.checkoutAt")),
+                            TimeUtils.parseTimestamp(resultSet.getTimestamp("checkout.checkoutAt")),
                             timeUtils.convertStringtoDate(resultSet.getString("checkout.dueAt")),
                             resultSet.getString("parts.price")));
 

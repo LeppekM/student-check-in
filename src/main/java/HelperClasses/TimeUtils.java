@@ -1,7 +1,6 @@
 package HelperClasses;
 
-import App.StudentCheckIn;
-
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,6 +26,14 @@ public class TimeUtils {
     }
 
     /**
+     * @param timestamp the SQL timestamp that is being parsed
+     * @return a Java Date object with the correct date AND time
+     */
+    public static Date parseTimestamp(Timestamp timestamp) {
+        return timestamp == null ? null : new Date(timestamp.getTime());
+    }
+
+    /**
      * This method gets the current date and time
      *
      * @return Current date
@@ -42,6 +49,13 @@ public class TimeUtils {
      */
     public String getCurrentDate() {
         return LocalDateTime.now().toString();
+    }
+
+    /**
+     * @return current dateTime in SQL friendly insertable
+     */
+    public LocalDateTime getCurrentDateTime() {
+        return LocalDateTime.now();
     }
 
     /**
