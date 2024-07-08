@@ -166,7 +166,7 @@ public class ExportToExcel {
             row.createCell(1).setCellValue(items.getPartName().get());
             row.createCell(2).setCellValue(items.getBarcode().get());
             row.createCell(3).setCellValue(items.getAction().get());
-            row.createCell(4).setCellValue(items.getDate().get().toString());
+            row.createCell(4).setCellValue(items.getDueDate().get().toString());
         }
         buildExcelFile(fileChooserSave, columns, workbook, sheet);
     }

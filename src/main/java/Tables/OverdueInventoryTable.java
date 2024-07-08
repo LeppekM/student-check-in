@@ -72,7 +72,6 @@ public class OverdueInventoryTable extends TSCTable {
         rows.clear();
         table.getColumns().clear();
         // get and add all rows
-        // todo add cache
         ObservableList<OverdueItem> list = database.getOverdue();
         for (OverdueItem overdueItem : list) {
             rows.add(new OIRow(overdueItem.getStudentName().get(), overdueItem.getID().get(),

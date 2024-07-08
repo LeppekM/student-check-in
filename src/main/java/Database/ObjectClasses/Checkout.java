@@ -13,7 +13,7 @@ public class Checkout extends RecursiveTreeObject {
     private StringProperty action, serialNumber, fee;
     private final LongProperty barcode;
     private IntegerProperty checkoutID, studentID, partID;
-    private ObjectProperty<Date> date, dueDate, checkedOutDate;
+    private ObjectProperty<Date> dueDate, checkedOutDate;
 
     public Checkout(String studentName, String studentEmail, String partName, long barcode,
                  String action, Date date) {
@@ -22,8 +22,7 @@ public class Checkout extends RecursiveTreeObject {
         this.partName = new SimpleStringProperty(partName);
         this.barcode = new SimpleLongProperty(barcode);
         this.action = new SimpleStringProperty(action);
-        this.date = new SimpleObjectProperty<Date>(date) {  // todo: pretty sure this is same as dueDate, combine
-        };
+        this.dueDate = new SimpleObjectProperty<>(date);
     }
 
     public Checkout(int checkoutID, String studentName, String studentEmail, int studentID, String partName,
@@ -59,10 +58,6 @@ public class Checkout extends RecursiveTreeObject {
 
     public StringProperty getAction() {
         return action;
-    }
-
-    public ObjectProperty<Date> getDate() {
-        return date;
     }
 
     public IntegerProperty getCheckoutID() {

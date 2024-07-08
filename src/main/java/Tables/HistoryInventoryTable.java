@@ -72,7 +72,7 @@ public class HistoryInventoryTable extends TSCTable {
 
         for (Checkout c : list) {
             rows.add(new HIRow(c.getStudentName().get(), c.getStudentEmail().get(), c.getPartName().get(),
-                    c.getBarcode().get(), c.getAction().get(), c.getDate().get()));
+                    c.getBarcode().get(), c.getAction().get(), c.getDueDate().get()));
         }
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 
