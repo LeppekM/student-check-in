@@ -129,6 +129,7 @@ public abstract class Popup {
         region.setMinWidth(WIDTH * 0.1);
         serialBox.getChildren().add(region);
         suffixField = createTextField(suffix, true);
+        suffixField.setStyle(TEXTFIELD_STYLE + "-fx-prompt-text-fill: rgba(0, 0, 0, .5);");
         suffixField.setMinWidth(WIDTH * 0.6);
         suffixField.setMaxWidth(WIDTH * 0.6);
         suffixField.setPromptText("Suffix ie:V2");

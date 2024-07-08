@@ -1,6 +1,5 @@
 package Database;
 
-import App.StudentCheckIn;
 import Controllers.IController;
 import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Part;
@@ -998,7 +997,6 @@ public class Database implements IController {
 
     /**
      * Gets a student from the database based on their RFID or email
-     * todo: simplify, if possible
      * @param rfid RFID to search for, -1 if no RFID being searched
      * @param studentEmail the email being searched, null if no email being searched
      * @return a student matching inputs if one exists in the db, null otherwise
