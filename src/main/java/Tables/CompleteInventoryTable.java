@@ -29,6 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -667,6 +669,15 @@ public class CompleteInventoryTable extends TSCTable {
                 HBox serialBox = addSerialBox("", "");
                 serialField = (JFXTextField) serialBox.getChildren().get(1);
                 suffixField = (JFXTextField) serialBox.getChildren().get(3);
+                Pattern pattern = Pattern.compile("^(\\d+)(.*)$");
+                Matcher matcher = pattern.matcher(part.getSerialNumber());
+                if (matcher.matches()) {
+                    serialField.setText(matcher.group(1));
+                    suffixField.setText(matcher.group(2));
+                } else {
+                    stageUtils.errorAlert("Error parsing serial number");
+                }
+
                 barcodeField = (JFXTextField) add("Barcode: ", part.getBarcode().toString(), true).getChildren().get(1);
 
                 if (isPartType) {
@@ -693,7 +704,7 @@ public class CompleteInventoryTable extends TSCTable {
                         String originalPartName = part.getPartName();
                         part.update(nameField.getText().trim(), serialField.getText() +
                                         suffixField.getText().trim(), manufacturerField.getText().trim(),
-                                        Integer.parseInt(priceField.getText()), vendorField.getValue(),
+                                        Double.parseDouble(priceField.getText()), vendorField.getValue(),
                                         locationField.getText().trim(), Long.parseLong(barcodeField.getText()));
                         // checks if other parts with same name but different partIDs, then updates all their names
                         if (database.hasUniqueBarcodes(originalPartName)) {
@@ -706,7 +717,7 @@ public class CompleteInventoryTable extends TSCTable {
                     } else {
                         part.update(nameField.getText().trim(), serialField.getText() +
                                         suffixField.getText().trim(), manufacturerField.getText().trim(),
-                                        Integer.parseInt(priceField.getText()), vendorField.getValue(),
+                                        Double.parseDouble(priceField.getText()), vendorField.getValue(),
                                         locationField.getText().trim(), Long.parseLong(barcodeField.getText()));
                         database.editPart(part);
                         stage.close();
@@ -736,6 +747,7 @@ public class CompleteInventoryTable extends TSCTable {
                     isValid = false;
                     stageUtils.errorAlert("Invalid serial number for part type");
                 } else if (!validBarcodeChange(part, Long.parseLong(barcodeField.getText()))) {
+                    isValid = false;
                     stageUtils.errorAlert("Invalid barcode for part type");
                 }
                 boolean newVendor = true;

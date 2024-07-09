@@ -268,6 +268,7 @@ public class TableScreensController extends MenuController implements IControlle
     private void search() {
         String filter = searchInput.getText();
         String[] filters = filter.split(" ");
+        tscTable.populateTable();
         if (!filter.isEmpty()) {
             TreeItem<TSCTable.TableRow> filteredRoot = new TreeItem<>();
             tscTable.filter(filters, filteredRoot);
