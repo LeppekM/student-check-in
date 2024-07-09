@@ -33,7 +33,7 @@ public abstract class Popup {
     protected static final int HEIGHT = 35;
     protected static final int WIDTH = 200;
     protected static final String LABEL_STYLE = "-fx-font-size: 16px;";
-    protected static final String TEXTFIELD_STYLE = "-fx-font-size: 16px; -jfx-focus-color: FIREBRICK;";
+    public static final String TEXTFIELD_STYLE = "-fx-font-size: 16px; -jfx-focus-color: FIREBRICK;";
 
 
     public Popup(Pane root) {

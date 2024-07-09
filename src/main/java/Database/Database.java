@@ -625,7 +625,7 @@ public class Database implements IController {
      * @return the list of barcodes
      */
     public ArrayList<String> getAllBarcodesForPartName(String partName) {
-        String query = "SELECT barcode FROM parts WHERE partName = " + cleanString(partName) + ";";
+        String query = "SELECT barcode FROM parts WHERE partName = '" + cleanString(partName) + "';";
         return collectFromOneCol(query, "barcode");
     }
 
@@ -878,6 +878,15 @@ public class Database implements IController {
     public ObservableList<String> getStudentEmails() {
         String query = "SELECT email FROM students;";
         return FXCollections.observableArrayList(collectFromOneCol(query, "email"));
+    }
+
+    /**
+     * This method returns a list of all Unique part names in the database
+     * @return the list of all unique part names
+     */
+    public ObservableList<String> getAllPartNames() {
+        String query = "SELECT DISTINCT partName FROM parts;";
+        return FXCollections.observableArrayList(collectFromOneCol(query, "partName"));
     }
 
     /**

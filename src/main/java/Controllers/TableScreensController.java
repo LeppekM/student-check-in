@@ -100,6 +100,8 @@ public class TableScreensController extends MenuController implements IControlle
                 deleteManyParts();
             } else if (screen == TableScreen.HISTORY) {
                 clearHistory();
+            } else if (screen == TableScreen.CHECKED_OUT) {
+                inventoryParts();
             } else if (screen == TableScreen.STUDENTS) {
                 deleteStudent();
             } else if (screen == TableScreen.WORKERS) {
@@ -180,7 +182,8 @@ public class TableScreensController extends MenuController implements IControlle
                 tscTable = new CheckedOutInventoryTable(this);
                 titleLabel.setText("Checked Out");
                 excelButton.setVisible(true);
-                menuButton1.setVisible(false);
+                menuButton1.setVisible(true);
+                menuButton1.setText("Take Inventory of Part");
                 menuButton2.setVisible(false);
                 menuButton3.setVisible(false);
                 menuButton4.setVisible(false);
@@ -235,6 +238,8 @@ public class TableScreensController extends MenuController implements IControlle
             menuButton2.setDisable(bool);
             menuButton3.setDisable(bool);
             menuButton4.setDisable(bool);
+        } else if (screen == TableScreen.CHECKED_OUT) {
+            menuButton1.setDisable(bool);
         } else if (screen == TableScreen.HISTORY) {
             menuButton1.setDisable(!worker.isAdmin());
         } else if (screen == TableScreen.STUDENTS) {
@@ -309,10 +314,15 @@ public class TableScreensController extends MenuController implements IControlle
         }
     }
 
-    @FXML
     public void editPart() {
         if (tscTable instanceof CompleteInventoryTable) {
             ((CompleteInventoryTable) tscTable).editPart();
+        }
+    }
+
+    public void inventoryParts() {
+        if (tscTable instanceof CheckedOutInventoryTable) {
+            ((CheckedOutInventoryTable) tscTable).inventoryParts();
         }
     }
 

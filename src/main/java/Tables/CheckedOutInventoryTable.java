@@ -1,6 +1,7 @@
 package Tables;
 
 import Database.ObjectClasses.Checkout;
+import HelperClasses.AutoCompleteTextField;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
 import HelperClasses.TimeUtils;
@@ -8,14 +9,17 @@ import Popups.Popup;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -23,7 +27,10 @@ import javafx.stage.Stage;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static Popups.Popup.TEXTFIELD_STYLE;
 
 /**
  * Manages the table in Inventory screen that shows all parts currently checked out
@@ -163,7 +170,7 @@ public class CheckedOutInventoryTable extends TSCTable {
                 TimeUtils timeUtils = new TimeUtils();
                 try{
                     if (dateFormat.parse(timeUtils.getCurrentDateTimeStamp()).after(checkout.getDueDate().get())) {
-                        dueDateLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FIREBRICK");
+                        dueDateLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FIREBRICK;");
                     }
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
@@ -182,6 +189,123 @@ public class CheckedOutInventoryTable extends TSCTable {
 
         stage.getIcons().add(new Image("images/msoe.png"));
         stage.show();
+    }
+
+    public void inventoryParts() {
+        Stage stage = new Stage();
+        stage.setTitle("Inventory Parts");
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.TOP_CENTER);
+        AutoCompleteTextField partSearch = new AutoCompleteTextField();
+        partSearch.setStyle(TEXTFIELD_STYLE);
+        vBox.getChildren().add(partSearch);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(vBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setPrefSize(450, 600);
+        Scene scene = new Scene(scrollPane);
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+
+        ArrayList<HBox> parts = new ArrayList<>();
+        ArrayList<String> barcodes = new ArrayList<>();
+
+        Platform.runLater(partSearch::requestFocus);
+        partSearch.initEntrySet(new TreeSet<>(database.getAllPartNames()));
+        partSearch.setOnKeyPressed(event -> {
+            if (partSearch.focusedProperty().get() && event.getCode().equals(KeyCode.TAB) || event.getCode().equals(KeyCode.ENTER)) {
+                vBox.getChildren().clear();
+                vBox.getChildren().add(partSearch);
+                partSearch.setText(partSearch.getFilteredEntries().get(0));
+                parts.clear();
+                parts.addAll(generatePartInventory(partSearch, vBox, stage));
+                barcodes.clear();
+                barcodes.addAll(database.getAllBarcodesForPartName(partSearch.getText()));
+                barcodes.replaceAll(s -> String.format("%06d", new Long(s)));
+                scrollPane.requestFocus();
+            }
+        });
+
+        stage.getIcons().add(new Image("images/msoe.png"));
+        stage.show();
+
+        AtomicReference<String> input = new AtomicReference<>("");
+        scrollPane.setOnKeyPressed(event -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                int index = barcodes.indexOf(input.get());
+                if (index != -1) {
+                    ((CheckBox) parts.get(index).getChildren().get(2)).setSelected(true);
+                }
+                input.set("");
+            } else if (event.getCode().isDigitKey()) {
+                input.updateAndGet(currentValue -> currentValue + event.getText());
+            }
+        });
+
+    }
+
+    private ArrayList<HBox> generatePartInventory(TextField nameField, Pane root, Stage stage) {
+        ArrayList<String> barcodes = database.getAllBarcodesForPartName(nameField.getText());
+        ArrayList<String> serialNumbers = database.getAllSerialNumbersForPartName(nameField.getText());
+        ArrayList<HBox> parts = new ArrayList<>();
+        if (barcodes.size() > 1) {
+            new Popup(root) {
+                private HBox addCheckoff(String barcode, String serialNumber) {
+                    HBox checkoffBox = new HBox();
+                    checkoffBox.setSpacing(10);
+                    checkoffBox.setAlignment(Pos.CENTER_LEFT);
+                    Long barcodeLong = new Long(barcode);
+                    Label barcodeLabel = createLabel(String.format("%06d", barcodeLong));
+                    Label serialNumberLabel = createLabel(serialNumber);
+                    CheckBox checkoffCheckBox = new CheckBox();
+                    checkoffBox.getChildren().addAll(barcodeLabel, serialNumberLabel, checkoffCheckBox);
+
+                    checkoffCheckBox.selectedProperty().addListener((ov, oldV, newV) -> {
+                        if (newV) {
+                            barcodeLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FORESTGREEN;");
+                            serialNumberLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FORESTGREEN;");
+                        } else {
+                            barcodeLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FIREBRICK;");
+                            serialNumberLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FIREBRICK;");
+                        }
+                    });
+
+                    addHBox(checkoffBox);
+                    parts.add(checkoffBox);
+                    return checkoffBox;
+                }
+
+                @Override
+                public void populate() {
+                    Label partNameLabel = createLabel(nameField.getText() + " List");
+                    partNameLabel.setMinWidth(300);
+                    partNameLabel.setMaxWidth(300);
+                    partNameLabel.setPrefWidth(300);
+                    HBox titleBox = new HBox();
+                    titleBox.getChildren().addAll(partNameLabel);
+                    addHBox(titleBox);
+                    for (int i = 0; i < barcodes.size(); i++) {
+                        HBox box = addCheckoff(barcodes.get(i), serialNumbers.get(i));
+                        if (i % 2 == 1) {
+                            box.setStyle("-fx-background-color: #c4c4c4;");
+                        }
+                    }
+                    submitButton.setText("Close");
+                }
+
+                @Override
+                public void submit() {
+                    stage.close();
+                }
+            };
+        } else {
+            stageUtils.informationAlert("Only One Barcode", "Only one barcode is associated " +
+                    "with this part name. The part is either unique or many parts use the same barcode.");
+            nameField.requestFocus();
+        }
+        return parts;
     }
 
     public class CORow extends TableRow {
