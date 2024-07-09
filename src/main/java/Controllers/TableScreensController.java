@@ -183,7 +183,7 @@ public class TableScreensController extends MenuController implements IControlle
                 titleLabel.setText("Checked Out");
                 excelButton.setVisible(true);
                 menuButton1.setVisible(true);
-                menuButton1.setText("Take Inventory of Part");
+                menuButton1.setText("Inventory Part");
                 menuButton2.setVisible(false);
                 menuButton3.setVisible(false);
                 menuButton4.setVisible(false);

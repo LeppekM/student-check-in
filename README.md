@@ -29,5 +29,4 @@ Product Owner: Jim Frommell
 ## Priority List ##
 * QA test table functionality
 * Testing suite
-* Scan all of part type in inventory
 * scrollbar for checkin/out page (or other fix to infinite barcode smush problem) (like if you press enter on empty barcodefield it submits)

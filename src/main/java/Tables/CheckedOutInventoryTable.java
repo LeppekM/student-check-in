@@ -197,7 +197,8 @@ public class CheckedOutInventoryTable extends TSCTable {
         VBox vBox = new VBox();
         vBox.setAlignment(Pos.TOP_CENTER);
         AutoCompleteTextField partSearch = new AutoCompleteTextField();
-        partSearch.setStyle(TEXTFIELD_STYLE);
+        partSearch.setStyle(TEXTFIELD_STYLE + "-fx-prompt-text-fill: rgba(0, 0, 0, .5);");
+        partSearch.setPromptText("Search Part to Inventory");
         vBox.getChildren().add(partSearch);
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vBox);
