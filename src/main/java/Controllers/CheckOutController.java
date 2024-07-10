@@ -232,6 +232,7 @@ public class CheckOutController extends MenuController implements IController, I
     private JFXTextField createBarcode() {
         HBox barcodeBox = new HBox();
         barcodeBox.setPrefHeight(60);
+        barcodeBox.setMinHeight(60);
         barcodeBox.setAlignment(Pos.BOTTOM_LEFT);
 
         JFXTextField barcodeField = new JFXTextField();

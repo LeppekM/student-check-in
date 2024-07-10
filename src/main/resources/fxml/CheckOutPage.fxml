@@ -15,87 +15,93 @@
 <?import HelperClasses.AutoCompleteTextField?>
 <?import javafx.geometry.Insets?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.scene.control.ScrollPane?>
 <VBox fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="800.0" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Controllers.CheckOutController" stylesheets="@../css/SpinnerStyle.css">
    <HBox VBox.vgrow="ALWAYS">
       <Pane prefWidth="40.0" HBox.hgrow="SOMETIMES"/>
-
-      <VBox prefWidth="800.0" alignment="TOP_CENTER" HBox.hgrow="SOMETIMES">
-         <HBox prefHeight="106.0" prefWidth="1150.0" VBox.vgrow="NEVER">
-            <JFXButton onAction="#returnHome" stylesheets="@../css/CheckButton.css" translateX="25.0"
-                       translateY="10.0" HBox.hgrow="NEVER">
-               <graphic>
-                  <ImageView fitHeight="35.0" fitWidth="39.0">
-                     <Image url="@../images/home.png"/>
-                  </ImageView>
-               </graphic>
-            </JFXButton>
-            <Pane prefHeight="53.0" prefWidth="100.0" HBox.hgrow="SOMETIMES"/>
-            <Label alignment="CENTER" contentDisplay="CENTER" text="Checkout/In Item" textAlignment="CENTER">
-               <font>
-                  <Font size="31.0"/>
-               </font>
-               <padding>
-                  <Insets top="5.0"/>
-               </padding>
-            </Label>
-            <Pane prefHeight="53.0" prefWidth="200.0" HBox.hgrow="SOMETIMES"/>
-         </HBox>
-         <HBox alignment="TOP_CENTER">
-            <VBox alignment="TOP_RIGHT">
-               <Pane prefHeight="18.0" VBox.vgrow="NEVER"/>
-               <Label contentDisplay="BOTTOM" text="Student ID  " prefHeight="60.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent">
+         <VBox prefWidth="800.0" alignment="TOP_CENTER" HBox.hgrow="SOMETIMES">
+            <HBox prefHeight="106.0" prefWidth="1150.0" VBox.vgrow="NEVER">
+               <JFXButton onAction="#returnHome" stylesheets="@../css/CheckButton.css" translateX="25.0"
+                          translateY="10.0" HBox.hgrow="NEVER">
+                  <graphic>
+                     <ImageView fitHeight="35.0" fitWidth="39.0">
+                        <Image url="@../images/home.png"/>
+                     </ImageView>
+                  </graphic>
+               </JFXButton>
+               <Pane prefHeight="53.0" prefWidth="100.0" HBox.hgrow="SOMETIMES"/>
+               <Label alignment="CENTER" contentDisplay="CENTER" text="Checkout/In Item" textAlignment="CENTER">
                   <font>
-                     <Font size="24.0"/>
+                     <Font size="31.0"/>
                   </font>
+                  <padding>
+                     <Insets top="5.0"/>
+                  </padding>
                </Label>
-               <Label text="Student Name  " prefHeight="60.0" contentDisplay="BOTTOM">
-                  <font>
-                     <Font size="24.0"/>
-                  </font>
-               </Label>
-               <Label text="Scan Barcodes  " prefHeight="60.0" contentDisplay="BOTTOM">
-                  <font>
-                     <Font size="24.0"/>
-                  </font>
-               </Label>
-            </VBox>
-            <VBox prefWidth="500.0">
-               <AutoCompleteTextField fx:id="studentIDField" focusColor="FIREBRICK" prefHeight="60.0" minWidth="400.0" maxWidth="400.0" alignment="BOTTOM_LEFT"/>
-               <JFXTextField fx:id="studentNameField" disable="true" focusColor="FIREBRICK" prefHeight="60.0" minWidth="400.0" maxWidth="400.0" alignment="BOTTOM_LEFT"/>
-               <VBox fx:id="barcodeVBox"> </VBox>
-            </VBox>
-         </HBox>
-
-         <StackPane prefHeight="100.0" prefWidth="400.0" alignment="TOP_CENTER">
-            <HBox alignment="CENTER" prefHeight="170.0" prefWidth="1150.0">
-               <JFXButton onAction="#reset" prefHeight="65.0" prefWidth="179.0"
-                          stylesheets="@../css/CheckButton.css" text="Reset" translateX="-20.0"
-                          translateY="50.0" HBox.hgrow="NEVER"/>
-               <JFXButton fx:id="submitButton" onAction="#submit" prefHeight="65.0" prefWidth="168.0"
-                          stylesheets="@../css/CheckButton.css" text="Submit" translateY="50.0"
-                          HBox.hgrow="NEVER"/>
+               <Pane prefHeight="53.0" prefWidth="200.0" HBox.hgrow="SOMETIMES"/>
             </HBox>
-            <HBox prefHeight="143.0" prefWidth="1150.0">
-               <VBox prefHeight="118.0" prefWidth="1150.0" HBox.hgrow="ALWAYS">
-                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
-                     <Pane prefHeight="42.0" prefWidth="290.0" HBox.hgrow="ALWAYS"/>
-                     <StackPane prefHeight="150.0" prefWidth="200.0">
-                        <JFXCheckBox fx:id="extended" checkedColor="FIREBRICK" disable="true"
-                                     onAction="#isExtended" prefHeight="35.0" prefWidth="162.0"
-                                     text="Extended Checkout" translateY="-10.0">
-                           <font>
-                              <Font size="24.0"/>
-                           </font>
-                        </JFXCheckBox>
-                     </StackPane>
-                     <Pane prefHeight="42.0" prefWidth="263.0" HBox.hgrow="ALWAYS"/>
-                  </HBox>
+            <HBox alignment="TOP_CENTER">
+               <VBox alignment="TOP_RIGHT">
+                  <Pane prefHeight="18.0" VBox.vgrow="NEVER"/>
+                  <Label contentDisplay="BOTTOM" text="Student ID  " prefHeight="60.0">
+                     <font>
+                        <Font size="24.0"/>
+                     </font>
+                  </Label>
+                  <Label text="Student Name  " prefHeight="60.0" contentDisplay="BOTTOM">
+                     <font>
+                        <Font size="24.0"/>
+                     </font>
+                  </Label>
+                  <Label text="Scan Barcodes  " prefHeight="60.0" contentDisplay="BOTTOM">
+                     <font>
+                        <Font size="24.0"/>
+                     </font>
+                  </Label>
+               </VBox>
+               <VBox prefWidth="500.0">
+                  <AutoCompleteTextField fx:id="studentIDField" focusColor="FIREBRICK" prefHeight="60.0" minHeight="60.0" minWidth="400.0" maxWidth="400.0" alignment="BOTTOM_LEFT"/>
+                  <JFXTextField fx:id="studentNameField" disable="true" focusColor="FIREBRICK" prefHeight="60.0" minHeight="60.0" minWidth="400.0" maxWidth="400.0" alignment="BOTTOM_LEFT"/>
+                  <VBox fx:id="barcodeVBox">
+                     <padding>
+                        <Insets bottom="5.0"/>
+                     </padding>
+                  </VBox>
                </VBox>
             </HBox>
-         </StackPane>
-      </VBox>
+
+            <StackPane prefHeight="150.0" minHeight="175.0" prefWidth="400.0" alignment="TOP_CENTER">
+               <HBox alignment="TOP_CENTER" prefHeight="170.0" prefWidth="1150.0">
+                  <JFXButton onAction="#reset" prefHeight="65.0" prefWidth="179.0"
+                             stylesheets="@../css/CheckButton.css" text="Reset" translateX="-20.0"
+                             translateY="50.0" HBox.hgrow="NEVER"/>
+                  <JFXButton fx:id="submitButton" onAction="#submit" prefHeight="65.0" prefWidth="168.0"
+                             stylesheets="@../css/CheckButton.css" text="Submit" translateY="50.0"
+                             HBox.hgrow="NEVER"/>
+               </HBox>
+               <HBox prefHeight="75.0" prefWidth="1150.0">
+                  <VBox prefHeight="75.0" prefWidth="1150.0" HBox.hgrow="ALWAYS">
+                     <HBox prefHeight="50.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                        <Pane prefHeight="42.0" prefWidth="290.0" HBox.hgrow="ALWAYS"/>
+                        <StackPane prefHeight="50.0" prefWidth="200.0">
+                           <JFXCheckBox fx:id="extended" checkedColor="FIREBRICK" disable="true"
+                                        onAction="#isExtended" prefHeight="35.0" prefWidth="250.0"
+                                        text="Extended Checkout" translateY="-10.0">
+                              <font>
+                                 <Font size="24.0"/>
+                              </font>
+                           </JFXCheckBox>
+                        </StackPane>
+                        <Pane prefHeight="42.0" prefWidth="300.0" HBox.hgrow="ALWAYS"/>
+                     </HBox>
+                  </VBox>
+               </HBox>
+            </StackPane>
+         </VBox>
+      </ScrollPane>
 
       <Pane prefWidth="20.0" HBox.hgrow="SOMETIMES"/>
 

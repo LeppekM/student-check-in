@@ -1,7 +1,6 @@
 package Tables;
 
 import Database.ObjectClasses.Checkout;
-import HelperClasses.AutoCompleteTextField;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
 import HelperClasses.TimeUtils;
@@ -9,17 +8,12 @@ import Popups.Popup;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,9 +22,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static Popups.Popup.TEXTFIELD_STYLE;
 
 /**
  * Manages the table in Inventory screen that shows all parts currently checked out
