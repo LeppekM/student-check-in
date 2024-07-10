@@ -8,6 +8,7 @@ public enum TableScreen {
     HISTORY,
     CHECKED_OUT,
     OVERDUE,
+    INVENTORY_PARTS,
     WORKERS,
     STUDENTS
 }

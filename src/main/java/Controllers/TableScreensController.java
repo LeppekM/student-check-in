@@ -2,6 +2,7 @@ package Controllers;
 
 import Database.Database;
 import Database.ObjectClasses.Worker;
+import HelperClasses.AutoCompleteTextField;
 import HelperClasses.ExportToExcel;
 import HelperClasses.StageUtils;
 import Tables.*;
@@ -41,7 +42,7 @@ public class TableScreensController extends MenuController implements IControlle
     private VBox scene;
 
     @FXML
-    private TextField searchInput;
+    private AutoCompleteTextField searchInput;
 
     @FXML
     private JFXTreeTableView<TSCTable.TableRow> table;
@@ -68,8 +69,10 @@ public class TableScreensController extends MenuController implements IControlle
                     screen = TableScreen.HISTORY;
                 } else if (newValue.getText().equals("Checked Out")) {
                     screen = TableScreen.CHECKED_OUT;
-                } else {
+                } else if (newValue.getText().equals("Overdue")) {
                     screen = TableScreen.OVERDUE;
+                } else {
+                    screen = TableScreen.INVENTORY_PARTS;
                 }
             }
             if (newValue != oldValue){
@@ -77,8 +80,8 @@ public class TableScreensController extends MenuController implements IControlle
             }
         });
         tabPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-            tabPane.setTabMinWidth(tabPane.getWidth() / 4.5);
-            tabPane.setTabMaxWidth(tabPane.getWidth() / 4.5);
+            tabPane.setTabMinWidth(tabPane.getWidth() / 5.2);
+            tabPane.setTabMaxWidth(tabPane.getWidth() / 5.2);
         });
 
         BooleanBinding hideTabs = screenProperty.isEqualTo(TableScreen.STUDENTS)
@@ -100,8 +103,6 @@ public class TableScreensController extends MenuController implements IControlle
                 deleteManyParts();
             } else if (screen == TableScreen.HISTORY) {
                 clearHistory();
-            } else if (screen == TableScreen.CHECKED_OUT) {
-                inventoryParts();
             } else if (screen == TableScreen.STUDENTS) {
                 deleteStudent();
             } else if (screen == TableScreen.WORKERS) {
@@ -182,8 +183,7 @@ public class TableScreensController extends MenuController implements IControlle
                 tscTable = new CheckedOutInventoryTable(this);
                 titleLabel.setText("Checked Out");
                 excelButton.setVisible(true);
-                menuButton1.setVisible(true);
-                menuButton1.setText("Inventory Part");
+                menuButton1.setVisible(false);
                 menuButton2.setVisible(false);
                 menuButton3.setVisible(false);
                 menuButton4.setVisible(false);
@@ -193,6 +193,16 @@ public class TableScreensController extends MenuController implements IControlle
                 tscTable = new OverdueInventoryTable(this);
                 titleLabel.setText("Overdue Parts");
                 excelButton.setVisible(true);
+                menuButton1.setVisible(false);
+                menuButton2.setVisible(false);
+                menuButton3.setVisible(false);
+                menuButton4.setVisible(false);
+                menuButton5.setVisible(false);
+                break;
+            case INVENTORY_PARTS:
+                tscTable = new InventoryPartsTable(this);
+                titleLabel.setText("Inventory a Part");
+                excelButton.setVisible(false);
                 menuButton1.setVisible(false);
                 menuButton2.setVisible(false);
                 menuButton3.setVisible(false);
@@ -266,15 +276,17 @@ public class TableScreensController extends MenuController implements IControlle
      */
     @FXML
     private void search() {
-        String filter = searchInput.getText();
-        String[] filters = filter.split(" ");
-        tscTable.populateTable();
-        if (!filter.isEmpty()) {
-            TreeItem<TSCTable.TableRow> filteredRoot = new TreeItem<>();
-            tscTable.filter(filters, filteredRoot);
-            table.setRoot(filteredRoot);
+        if (!(screen == TableScreen.INVENTORY_PARTS)){
+            String filter = searchInput.getText();
+            String[] filters = filter.split(" ");
+            tscTable.populateTable();
+            if (!filter.isEmpty()) {
+                TreeItem<TSCTable.TableRow> filteredRoot = new TreeItem<>();
+                tscTable.filter(filters, filteredRoot);
+                table.setRoot(filteredRoot);
+            }
+            disableButtons(true);
         }
-        disableButtons(true);
     }
 
     @FXML
@@ -318,12 +330,6 @@ public class TableScreensController extends MenuController implements IControlle
     public void editPart() {
         if (tscTable instanceof CompleteInventoryTable) {
             ((CompleteInventoryTable) tscTable).editPart();
-        }
-    }
-
-    public void inventoryParts() {
-        if (tscTable instanceof CheckedOutInventoryTable) {
-            ((CheckedOutInventoryTable) tscTable).inventoryParts();
         }
     }
 
@@ -390,5 +396,9 @@ public class TableScreensController extends MenuController implements IControlle
 
     public Worker getWorker() {
         return worker;
+    }
+
+    public AutoCompleteTextField getSearchInput() {
+        return searchInput;
     }
 }

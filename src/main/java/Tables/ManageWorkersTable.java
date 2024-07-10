@@ -1,6 +1,5 @@
 package Tables;
 
-import App.StudentCheckIn;
 import Database.ObjectClasses.Worker;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
@@ -22,7 +21,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
@@ -30,7 +28,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,8 +40,8 @@ import static Controllers.CheckOutController.RFID_REGEX;
  */
 public class ManageWorkersTable extends TSCTable {
 
-    private JFXTreeTableColumn<MERow, String> nameCol, emailCol;
-    private JFXTreeTableColumn<MERow, Boolean> adminCol;
+    private JFXTreeTableColumn<MWRow, String> nameCol, emailCol;
+    private JFXTreeTableColumn<MWRow, Boolean> adminCol;
 
     public ManageWorkersTable(TableScreensController controller) {
         super(controller);
@@ -61,14 +58,14 @@ public class ManageWorkersTable extends TSCTable {
         emailCol.setCellValueFactory(col -> col.getValue().getValue().getEmail());
         adminCol = createNewCol("Is an Admin");
         adminCol.setCellValueFactory(param -> {
-            TreeItem<MERow> treeItem = param.getValue();
-            MERow tRow = treeItem.getValue();
+            TreeItem<MWRow> treeItem = param.getValue();
+            MWRow tRow = treeItem.getValue();
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(tRow.getIsAdmin().get());
             booleanProp.addListener((observable, oldValue, newValue) -> tRow.setIsAdmin(newValue));
             return booleanProp;
         });
         adminCol.setCellFactory(p -> {
-            CheckBoxTreeTableCell<MERow, Boolean> cell = new CheckBoxTreeTableCell<>();
+            CheckBoxTreeTableCell<MWRow, Boolean> cell = new CheckBoxTreeTableCell<>();
             cell.setAlignment(Pos.CENTER);
             return cell;
         });
@@ -91,7 +88,7 @@ public class ManageWorkersTable extends TSCTable {
         // get and add all rows
         ObservableList<Worker> list = database.getWorkers();
         for (Worker datum : list) {
-            rows.add(new MERow(datum.getName(), datum.getEmail(), datum.isAdmin()));
+            rows.add(new MWRow(datum.getName(), datum.getEmail(), datum.isAdmin()));
         }
         root = new RecursiveTreeItem<>(rows, RecursiveTreeObject::getChildren);
 
@@ -108,7 +105,7 @@ public class ManageWorkersTable extends TSCTable {
     @Override
     protected boolean isMatch(TableRow value, String[] filters) {
         for (String filter : filters) {
-            MERow val = (MERow) value;
+            MWRow val = (MWRow) value;
             String input = filter.toLowerCase();
             String name = val.getName().getValue();
             String email = val.getEmail().getValue();
@@ -123,7 +120,7 @@ public class ManageWorkersTable extends TSCTable {
     @Override
     protected void popupRow(int index) {
         Stage stage = new Stage();
-        MERow r = (MERow) table.getSelectionModel().getModelItem(index).getValue();
+        MWRow r = (MWRow) table.getSelectionModel().getModelItem(index).getValue();
         Worker w = database.getWorker(r.getEmail().get());
         if (w.isAdmin()) {
             openEditWorker("fxml/EditAdmin.fxml", w, stage);
@@ -329,13 +326,13 @@ public class ManageWorkersTable extends TSCTable {
         populateTable();
     }
 
-    public class MERow extends TableRow {
+    public class MWRow extends TableRow {
 
         private final StringProperty name;
         private final StringProperty email;
-        private BooleanProperty isAdmin;
+        private final BooleanProperty isAdmin;
 
-        public MERow(String name, String email, boolean isAdmin) {
+        public MWRow(String name, String email, boolean isAdmin) {
             this.name = new SimpleStringProperty(name);
             this.email = new SimpleStringProperty(email);
             this.isAdmin = new SimpleBooleanProperty(isAdmin);
@@ -354,7 +351,7 @@ public class ManageWorkersTable extends TSCTable {
         }
 
         public void setIsAdmin(boolean value){
-            isAdmin = new SimpleBooleanProperty(value);
+            isAdmin.set(value);
         }
     }
 }

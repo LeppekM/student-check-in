@@ -1,6 +1,5 @@
 package Tables;
 
-import App.StudentCheckIn;
 import Database.CheckoutObject;
 import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Student;
