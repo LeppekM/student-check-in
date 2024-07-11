@@ -40,7 +40,8 @@
                 <Insets right="20.0" top="14.0"/>
             </HBox.margin>
             <AutoCompleteTextField fx:id="searchInput" focusColor="FIREBRICK" prefHeight="39.0" prefWidth="230.0"
-                          promptText="Filter i.e. &quot;Wire Kits&quot;, &quot;Analog&quot;">
+                          promptText="Filter i.e. &quot;Wire Kits&quot;, &quot;Analog&quot;"
+                                   style="-fx-prompt-text-fill: rgba(0, 0, 0, .5)">
                 <HBox.margin>
                     <Insets right="5.0"/>
                 </HBox.margin>

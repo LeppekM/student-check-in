@@ -6,8 +6,6 @@ package Database;
 public class ExtendedCheckoutObject {
 
     private static String barcode, course, prof, extendedDate;
-    private static boolean fieldsFilled;
-
 
     public ExtendedCheckoutObject(String course, String prof, String extendedDate) {
         ExtendedCheckoutObject.course = course;

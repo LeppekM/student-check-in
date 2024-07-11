@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * Manages the Checkout History table in the Inventory screen

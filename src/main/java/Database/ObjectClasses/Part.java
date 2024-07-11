@@ -101,7 +101,7 @@ public class Part {
 
     @Override
     public String toString() {
-        String str = "Part Name: " + getPartName() +
+        return "Part Name: " + getPartName() +
                 "\tSerial Number: " + getSerialNumber() +
                 "\tManufacturer: " + getManufacturer() +
                 "\tPrice: " + getPrice() +
@@ -113,6 +113,5 @@ public class Part {
                 "\tPart ID: " + getPartID() +
                 "\tIs Deleted: " +
                 "\tIs CheckedOut: " + getCheckedOut() + "\n";
-        return str;
     }
 }

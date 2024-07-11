@@ -160,7 +160,6 @@ public class ManageWorkersTable extends TSCTable {
             populateTable();
         } catch (IOException e) {
             stageUtils.errorAlert("Couldn't load admin info page");
-            e.printStackTrace();
         }
     }
 

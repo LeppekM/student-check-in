@@ -27,7 +27,7 @@ public class InventoryPartsTable extends TSCTable {
     private JFXTreeTableColumn<IPRow, Long> barcodeCol;
     private JFXTreeTableColumn<IPRow, Boolean> isPresentCol;
     private AutoCompleteTextField searchField;
-    private AtomicReference<String> input = new AtomicReference<>("");
+    private final AtomicReference<String> input = new AtomicReference<>("");
 
     public InventoryPartsTable(TableScreensController controller) {
         super(controller);
@@ -40,44 +40,18 @@ public class InventoryPartsTable extends TSCTable {
 
         barcodeCol = createNewCol("Barcode");
         barcodeCol.setCellValueFactory(col -> col.getValue().getValue().getBarcode().asObject());
-        barcodeCol.setCellFactory(column -> {
-            TreeTableCell<IPRow, Long> cell = new TreeTableCell<IPRow, Long>() {
-                @Override
-                protected void updateItem(Long item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        Text text = new Text(String.format("%06d", item));
-                        IPRow row = getTreeTableRow().getItem();
-                        if (row != null) {
-                            if (row.getIsPresent().get()) {
-                                text.setFill(Color.FORESTGREEN);
-                            } else {
-                                text.setFill(Color.FIREBRICK);
-                            }
-                            setGraphic(text);
-                        }
-                    }
-                }
-            };
-            return cell;
-        });
-        serialCol = createNewCol("Serial Number");
-        serialCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
-        serialCol.setCellFactory(column -> {
-            TreeTableCell<IPRow, String> cell = new TreeTableCell<IPRow, String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        Text text = new Text(item);
-                        IPRow row = getTreeTableRow().getItem();
-                        if (row != null && row.getIsPresent().get()) {
+        barcodeCol.setCellFactory(column -> new TreeTableCell<IPRow, Long>() {
+            @Override
+            protected void updateItem(Long item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    Text text = new Text(String.format("%06d", item));
+                    IPRow row = getTreeTableRow().getItem();
+                    if (row != null) {
+                        if (row.getIsPresent().get()) {
                             text.setFill(Color.FORESTGREEN);
                         } else {
                             text.setFill(Color.FIREBRICK);
@@ -85,8 +59,28 @@ public class InventoryPartsTable extends TSCTable {
                         setGraphic(text);
                     }
                 }
-            };
-            return cell;
+            }
+        });
+        serialCol = createNewCol("Serial Number");
+        serialCol.setCellValueFactory(col -> col.getValue().getValue().getSerialNumber());
+        serialCol.setCellFactory(column -> new TreeTableCell<IPRow, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    Text text = new Text(item);
+                    IPRow row = getTreeTableRow().getItem();
+                    if (row != null && row.getIsPresent().get()) {
+                        text.setFill(Color.FORESTGREEN);
+                    } else {
+                        text.setFill(Color.FIREBRICK);
+                    }
+                    setGraphic(text);
+                }
+            }
         });
         isPresentCol = createNewCol("Is Present");
         isPresentCol.setCellValueFactory(param -> {
@@ -116,7 +110,6 @@ public class InventoryPartsTable extends TSCTable {
                 }
             }
         });
-        searchField.setStyle(TEXTFIELD_STYLE + "; -fx-prompt-text-fill: rgba(0, 0, 0, .5);");
 
         controller.getScene().setOnKeyPressed(event -> {
             if (input.get().length() == 6) {

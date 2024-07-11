@@ -123,7 +123,7 @@ public class CheckedOutInventoryTable extends TSCTable {
     @Override
     protected void popupRow(int index) {
         if (index != -1) {
-            TreeItem item = table.getSelectionModel().getModelItem(index);
+            TreeItem<TableRow> item = table.getSelectionModel().getModelItem(index);
             // null if user clicks on empty row
             if (item != null) {
                 CORow row = (CORow) item.getValue();
@@ -163,9 +163,7 @@ public class CheckedOutInventoryTable extends TSCTable {
                     if (dateFormat.parse(timeUtils.getCurrentDateTimeStamp()).after(checkout.getDueDate().get())) {
                         dueDateLabel.setStyle(LABEL_STYLE + " -fx-text-fill: FIREBRICK;");
                     }
-                } catch (ParseException parseException) {
-                    parseException.printStackTrace();
-                }
+                } catch (ParseException ignored) { }
 
                 add("Fee: ", "$" + new DecimalFormat("#,###,##0.00").format(Double.parseDouble(checkout.getFee().get()) / 100), false);
 

@@ -9,7 +9,7 @@ This is the check-in/check-out system that keeps track of parts belonging to the
 ### How do I get set up? ###
 
 * Summary of set up:
-  * Set-up instructions are shown with pictures in Inventory set up guide.pdf
+  * Set-up instructions are shown with pictures in Documentation/Inventory set up guide.pdf
 * Dependencies:
   * Gradle
   * JDK 8
@@ -23,9 +23,13 @@ Product Owner: Jim Frommell
 
 ## Known Issues ##
 * Sometimes inventory tables show parts with only name fields filled while everything else shows as null, these parts cannot be edited
-* Some parts do not have a popup when double-clicked in inventory screen, assumed due to deleting history associated with part
-* Some tables auto-double click on single click or after sort function
+* The auto-submit function for Checkin/out attempts to run on any page that is open 5 minutes after no input is detected, this only causes the side popup to appear on any screen other than checkin/out
+* 
 
 ## Priority List ##
-* QA test table functionality
+* Documentation
+* auto search tables
+* autofill create new student 
+* first whitespace name delim
+* search prompts
 * Testing suite

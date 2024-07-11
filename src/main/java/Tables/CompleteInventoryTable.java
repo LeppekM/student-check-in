@@ -209,7 +209,6 @@ public class CompleteInventoryTable extends TSCTable {
                             }
                             Label label;
                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-                            TimeUtils timeUtils = new TimeUtils();
                             if (type.equals("Check In")){
                                 label = (Label) add(type + ": ", dateFormat.format(
                                         checkoutObject.getCheckinAtDate()), false).getChildren().get(0);
@@ -587,7 +586,7 @@ public class CompleteInventoryTable extends TSCTable {
                             }
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        stageUtils.errorAlert("Error deleting part");
                     }
                 } else {
                     stageUtils.errorAlert("This part is currently checked out and cannot be deleted.");
@@ -622,7 +621,7 @@ public class CompleteInventoryTable extends TSCTable {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    stageUtils.errorAlert("Error deleting parts with name: " + partName);
                 }
             } else {
                 stageUtils.errorAlert("At least one " + partName + " is currently checked out, so "

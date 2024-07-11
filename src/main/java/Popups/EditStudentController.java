@@ -51,7 +51,7 @@ public class EditStudentController implements IController {
     private static String name;
     private static int id;
     private static String studentEmail;
-    private StageUtils stageUtils = StageUtils.getInstance();
+    private final StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * This method sets the student in this class and in the window

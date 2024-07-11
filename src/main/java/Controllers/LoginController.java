@@ -10,7 +10,6 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -120,11 +119,13 @@ public class LoginController implements Initializable {
                 }
             } catch (IOException invoke) {
                 stageUtils.errorAlert("Error, no valid stage was found to load.");
-                invoke.printStackTrace();
             }
         } else {
             try {
-                Worker worker = findWorkerByID(Integer.parseInt(rfid.getText()));
+                Worker worker = null;
+                if (!rfid.getText().isEmpty()) {
+                    worker = findWorkerByID(Integer.parseInt(rfid.getText()));
+                }
                 if (worker != null) {
                     FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/Menu.fxml"));
                     Pane mainMenu = loader.load();
@@ -133,10 +134,10 @@ public class LoginController implements Initializable {
                     loginScene.getScene().setRoot(mainMenu);
                 } else {
                     invalidLoginCredentialsError.setVisible(true);
+                    rfid.setText("");
                 }
             } catch (IOException invoke) {
                 stageUtils.errorAlert("Error, no valid stage was found to load.");
-                invoke.printStackTrace();
             }
         }
     }

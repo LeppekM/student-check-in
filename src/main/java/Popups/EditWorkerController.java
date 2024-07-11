@@ -9,8 +9,6 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -45,7 +43,7 @@ public class EditWorkerController implements IController {
     private static String name, workerEmail, password;
     private static int rfid;
     private static boolean priv, edit, work, remove;
-    private StageUtils stageUtils = StageUtils.getInstance();
+    private final StageUtils stageUtils = StageUtils.getInstance();
 
     /**
      * Used to keep track of which worker is currently logged in by passing the worker into

@@ -9,8 +9,6 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -39,7 +37,7 @@ public class EditAdminController implements IController {
 
     private static Worker worker, loggedWorker;
     private Database database;
-    private StageUtils stageUtils = StageUtils.getInstance();
+    private final StageUtils stageUtils = StageUtils.getInstance();
     private static String name, workerEmail, password;
     private static int adminPin, rfid;
 

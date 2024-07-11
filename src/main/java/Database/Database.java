@@ -53,7 +53,6 @@ public class Database implements IController {
                     USERNAME, PASSWORD);
             connection.setClientInfo("autoReconnect", "true");
         } catch (SQLException e) {
-            e.printStackTrace();
             stageUtils.errorAlert("Error, could not connect to the database.");
         }
     }
@@ -67,7 +66,7 @@ public class Database implements IController {
      * @return the database connection
      */
     public Connection getConnection() {
-        try{
+        try {
             if (connection.isClosed()) {
                 connection = DriverManager.getConnection(HOST + DB_NAME, USERNAME, PASSWORD);
             }
@@ -104,7 +103,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Error, could not retrieve all overdue parts");
         }
         return data;
     }
@@ -122,7 +121,7 @@ public class Database implements IController {
                 Date dueDate = dateFormat.parse(date);
                 return current.after(dueDate);
             } catch (ParseException e) {
-                e.printStackTrace();
+                stageUtils.errorAlert("Error, could not parse date");
             }
         }
         return false;
@@ -139,7 +138,7 @@ public class Database implements IController {
             statement.executeUpdate(delete);
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Error, could not delete part with ID " + partID);
         }
         Notifications.create().title("Successful!").text("Part with ID = " + partID + " has been successfully deleted")
                 .hideAfter(new Duration(5000)).show();
@@ -156,7 +155,7 @@ public class Database implements IController {
             statement.executeUpdate(deleteQuery);
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Error, could not delete part with name = " + partName);
         }
     }
 
@@ -180,7 +179,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Error retrieving part with ID = " + partID);
         }
         return part;
     }
@@ -400,7 +399,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Error retrieving last student to checkout part");
         }
         return student;
     }
@@ -434,7 +433,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Error while retrieving last checkout of part");
         }
         return checkoutObject;
     }
@@ -454,7 +453,7 @@ public class Database implements IController {
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Error clearing old history");
         }
     }
 
@@ -473,7 +472,7 @@ public class Database implements IController {
             statement.execute(query);
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Error clearing unused students");
         }
     }
 
@@ -498,7 +497,7 @@ public class Database implements IController {
                 return true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Could not determine if specific part is checked out");
         }
         return false;
     }
@@ -653,7 +652,7 @@ public class Database implements IController {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Could not collect " + column + "(s) from database");
         }
         return list;
     }
@@ -690,7 +689,7 @@ public class Database implements IController {
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Unable to count number of parts with the same name");
         }
         return -1;
     }
@@ -708,7 +707,7 @@ public class Database implements IController {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Unable to determine whether part name exists in database");
         }
         return false;
     }
@@ -847,7 +846,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of students");
-            e.printStackTrace();
         }
         return studentsList;
     }
@@ -866,7 +864,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of rfids");
-            e.printStackTrace();
         }
         return studentRFID != 0;
     }
@@ -905,7 +902,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of workers");
-            e.printStackTrace();
         }
         return workerList;
     }
@@ -927,7 +923,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of workers");
-            e.printStackTrace();
         }
         return worker;
     }
@@ -938,13 +933,13 @@ public class Database implements IController {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            resultSet.next();
-            worker = buildWorker(resultSet);
+            if (resultSet.next()) {
+                worker = buildWorker(resultSet);
+            }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of workers");
-            e.printStackTrace();
         }
         return worker;
     }
@@ -967,7 +962,6 @@ public class Database implements IController {
             }
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the worker from database");
-            e.printStackTrace();
         }
         return worker;
     }
@@ -987,7 +981,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of admin pins");
-            e.printStackTrace();
         }
         return adminPin == pin;
     }
@@ -999,7 +992,7 @@ public class Database implements IController {
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Could not count the number of admins in database");
         }
         return -1;
     }
@@ -1094,7 +1087,7 @@ public class Database implements IController {
                 student = new Student(name, uniqueID, id, email, "", checkedOutItems, overdueItems);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Could not retrieve student from database");
         }
         return student;
     }
@@ -1176,7 +1169,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not add student");
-            e.printStackTrace();
         }
     }
 
@@ -1186,9 +1178,6 @@ public class Database implements IController {
      * @param s the student to be added
      */
     public boolean importStudent(Student s) {
-        // note: the controllerManageStudents class replaces "'" with "\\'" for this method,
-        // but other methods in this class need to replace "'" with "\\'" so that it does not
-        // mess up the database queries.
         String query = "insert into students (email, studentName, createdAt, createdBy) values ('" +
                 cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) +
                 "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
@@ -1198,7 +1187,6 @@ public class Database implements IController {
             statement.close();
         } catch (Exception e) {
             stageUtils.errorAlert("Could not add student");
-            e.printStackTrace();
             return false;
         }
         return true;
@@ -1218,7 +1206,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not update student");
-            e.printStackTrace();
         }
     }
 
@@ -1238,7 +1225,6 @@ public class Database implements IController {
             } catch (SQLException e) {
                 stageUtils.errorAlert("Issue updating checked out parts for student that was " +
                         "being updated, SQL exception");
-                e.printStackTrace();
             }
         }
     }
@@ -1267,7 +1253,7 @@ public class Database implements IController {
             resultSet.close();
             return result;
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Issue counting parts checked out by specific student");
         }
         return 0;
     }
@@ -1292,7 +1278,7 @@ public class Database implements IController {
             resultSet.close();
             return result;
         } catch (SQLException e) {
-            e.printStackTrace();
+            stageUtils.errorAlert("Issue counting parts checked out by barcode");
         }
         return 0;
     }
@@ -1314,7 +1300,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not delete student.");
-            e.printStackTrace();
         }
     }
 
@@ -1334,7 +1319,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not add worker");
-            e.printStackTrace();
         }
     }
 
@@ -1350,7 +1334,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not delete worker.");
-            e.printStackTrace();
         }
     }
 
@@ -1371,7 +1354,6 @@ public class Database implements IController {
             statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not update worker");
-            e.printStackTrace();
         }
     }
 
