@@ -593,21 +593,30 @@ public class CompleteInventoryTable extends TSCTable {
 
             if ((worker != null && (worker.canRemoveParts() || worker.isAdmin())) ||
                     stageUtils.requestAdminPin("Delete a Part", controller.getScene())) {
-                if (!part.getCheckedOut()) {
-                    database.initWorker(worker);
-                    try {
-                        if (database.selectPart(partID) != null) {
-                            if (stageUtils.confirmationAlert("Are you sure?", "Delete this part?",
-                                    "Are you sure you wish to delete the part with ID = " + partID + "?")) {
-                                database.deletePart(partID);
-                                populateTable();
-                            }
-                        }
-                    } catch (Exception e) {
-                        stageUtils.errorAlert("Error deleting part");
-                    }
-                } else {
+                if (database.getIsCheckedOut("" + part.getPartID())) {
                     stageUtils.errorAlert("This part is currently checked out and cannot be deleted.");
+
+                    if (!stageUtils.confirmationAlert("Part is Already Checked Out",
+                            "This part is currently checked out are you sure you want to delete it?",
+                            "The part will be marked as returned before being deleted")) {
+                        return;  // if chose not to proceed
+                    } else {
+                        database.checkInPart(part.getBarcode(),
+                                database.getLastCheckoutOf(partID).getStudentID().get());
+                    }
+                }
+                database.initWorker(worker);
+                try {
+                    if (database.selectPart(partID) != null) {
+
+                        if (stageUtils.confirmationAlert("Are you sure?", "Delete this part?",
+                                "Are you sure you wish to delete the part with ID = " + partID + "?")) {
+                            database.deletePart(partID);
+                            populateTable();
+                        }
+                    }
+                } catch (Exception e) {
+                    stageUtils.errorAlert("Error deleting part");
                 }
             }
         }

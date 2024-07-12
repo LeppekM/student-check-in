@@ -984,7 +984,9 @@ public class Database implements IController {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT pin FROM workers WHERE pin = " + pin + ";");
-            adminPin = resultSet.getInt("adminPin");
+            if (resultSet.next()) {
+                adminPin = resultSet.getInt("pin");
+            }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {

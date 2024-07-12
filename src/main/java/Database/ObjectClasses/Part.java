@@ -13,7 +13,6 @@ public class Part {
     private final SimpleLongProperty barcode;
     private final SimpleDoubleProperty price;
     private SimpleIntegerProperty partID;
-    private final SimpleBooleanProperty checkedOut = new SimpleBooleanProperty(false);
 
 
     public Part(String partName, String serialNumber, double price, String location, long barcode) {
@@ -81,10 +80,6 @@ public class Part {
         this.barcode.set(barcode);
     }
 
-    public boolean getCheckedOut() {
-        return checkedOut.get();
-    }
-
     public int getPartID() {
         return partID.get();
     }
@@ -108,10 +103,6 @@ public class Part {
                 "\tVendor: " + getVendor() +
                 "\tLocation: " + getLocation() +
                 "\tBarcode: " + getBarcode() +
-                "\tFault: " + false +
-                "\tFault Description: " + // will not correctly parse if these are not appended
-                "\tPart ID: " + getPartID() +
-                "\tIs Deleted: " +
-                "\tIs CheckedOut: " + getCheckedOut() + "\n";
+                "\tPart ID: " + getPartID() + "\n";
     }
 }
