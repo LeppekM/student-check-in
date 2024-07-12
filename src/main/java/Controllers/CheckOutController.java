@@ -184,6 +184,7 @@ public class CheckOutController extends MenuController implements IController, I
      * Submits (all) part(s)
      */
     private void submitParts() {
+        boolean success = false;
         ArrayList<Long> barcodesAlreadyChecked = new ArrayList<>();
         for (HBox hbox : barcodes) {
             JFXTextField barcodeField = (JFXTextField) hbox.getChildren().get(0); // get the barcodeField
@@ -199,7 +200,7 @@ public class CheckOutController extends MenuController implements IController, I
                 if (statusLabel.getText().equals(CHECK_IN_STR)){
                     // check in
                     for (int i = 0; i < quantitySpinner.getValue(); i++){
-                        database.checkInPart(barcode, currentStudent.getRFID());
+                        success = database.checkInPart(barcode, currentStudent.getRFID());
                     }
                 } else if (statusLabel.getText().equals(CHECK_OUT_STR)){
                     // check out a part with partID matching barcode, including a barcodes with many associated
@@ -207,9 +208,9 @@ public class CheckOutController extends MenuController implements IController, I
                     for (int i = 0; i < quantitySpinner.getValue(); i++){
                         if(database.barcodeExists(barcode)) {
                             if (extendedCheckout.isSelected()){
-                                database.checkOutPart(barcode, currentStudent.getRFID(), course, professor, dueDate);
+                                success = database.checkOutPart(barcode, currentStudent.getRFID(), course, professor, dueDate);
                             } else {
-                                database.checkOutPart(barcode, currentStudent.getRFID(), null, null, null);
+                                success = database.checkOutPart(barcode, currentStudent.getRFID(), null, null, null);
                             }
                         } else {
                             stageUtils.errorAlert("Barcode " + barcode + " was not found in database, " +
@@ -225,8 +226,9 @@ public class CheckOutController extends MenuController implements IController, I
             }
         }
 
-        // want to add a number of parts that went through to this message
-        stageUtils.checkoutAlert("Success", "Part(s) Checked in/out successfully");
+        if (success) {
+            stageUtils.checkoutAlert("Success", "Part(s) Checked in/out successfully");
+        }
     }
 
     /**
@@ -419,6 +421,7 @@ public class CheckOutController extends MenuController implements IController, I
                                 studentName = newStudentName(true);
                             }
                             if (studentName != null) {
+                                database.initWorker(worker);
                                 database.addStudent(new Student(studentName, Integer.parseInt(input), studentEmail));
                                 stageUtils.successAlert("New student created");
                             }
@@ -481,7 +484,7 @@ public class CheckOutController extends MenuController implements IController, I
 
             @Override
             public void submit() {
-                studentName[0] = contentLabel.getText();
+                studentName[0] = nameField.getText();
                 stage.close();
             }
         };
@@ -534,7 +537,7 @@ public class CheckOutController extends MenuController implements IController, I
 
             @Override
             public void submit() {
-                email[0] = contentLabel.getText();
+                email[0] = emailField.getText();
                 stage.close();
             }
         };

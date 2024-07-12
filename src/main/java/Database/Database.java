@@ -198,12 +198,11 @@ public class Database implements IController {
             if (rs.next()) {
                 bc = rs.getLong("barcode");
             }
-            statement.close();
             rs.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
-        return bc == 0;
+        return !(bc == 0);
     }
 
     public boolean partNameExists(String partName) {
@@ -270,14 +269,14 @@ public class Database implements IController {
     /**
      * Inserts new checkout entity into the database, and changes the associated part.isCheckedOut to 1
      */
-    public void checkOutPart(long barcode, int rfid, String course, String prof, String dueDate) {
+    public boolean checkOutPart(long barcode, int rfid, String course, String prof, String dueDate) {
         try {
             String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, " +
                     "prof, course) VALUES(?,?,?,?,?,?,?);";
             int partID = getPartIDFromBarcode(barcode, false);
             if (partID == 0) {
                 stageUtils.errorAlert("Unable to find a valid partID for barcode");
-                return;
+                return false;
             }
             PreparedStatement statement = connection.prepareStatement(addToCheckouts);
             statement.setInt(1, partID);
@@ -300,13 +299,15 @@ public class Database implements IController {
             throw new IllegalStateException("Cannot connect to the database", e);
         } catch (NullPointerException e){
             stageUtils.errorAlert("Part with barcode of " + barcode + " is already checked out");
+            return false;
         }
+        return true;
     }
 
     /**
      * Updates the checkout entity checkinAt to current time, and changes the associated part.isCheckedOut to 0
      */
-    public void checkInPart(long barcode, int rfid) {
+    public boolean checkInPart(long barcode, int rfid) {
         int partID = getPartIDFromBarcode(barcode, true);
         try {
             String setDate = "UPDATE checkout SET checkinAt = ? WHERE checkoutID = ?;";
@@ -319,6 +320,7 @@ public class Database implements IController {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         setPartStatus(partID, true); //Sets part to checked in
+        return true;
     }
 
     /**

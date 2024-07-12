@@ -73,23 +73,15 @@
                </VBox>
             </HBox>
 
-            <StackPane prefHeight="150.0" minHeight="175.0" prefWidth="400.0" alignment="TOP_CENTER">
-               <HBox alignment="TOP_CENTER" prefHeight="170.0" prefWidth="1150.0">
-                  <JFXButton onAction="#reset" prefHeight="65.0" prefWidth="179.0"
-                             stylesheets="@../css/CheckButton.css" text="Reset" translateX="-20.0"
-                             translateY="50.0" HBox.hgrow="NEVER"/>
-                  <JFXButton fx:id="submitButton" onAction="#submit" prefHeight="65.0" prefWidth="168.0"
-                             stylesheets="@../css/CheckButton.css" text="Submit" translateY="50.0"
-                             HBox.hgrow="NEVER"/>
-               </HBox>
-               <HBox prefHeight="75.0" prefWidth="1150.0">
-                  <VBox prefHeight="75.0" prefWidth="1150.0" HBox.hgrow="ALWAYS">
+            <VBox prefHeight="125.0" minHeight="125.0" prefWidth="400.0" alignment="TOP_CENTER">
+               <HBox prefHeight="50.0" prefWidth="1150.0">
+                  <VBox prefHeight="50.0" prefWidth="1150.0" HBox.hgrow="ALWAYS">
                      <HBox prefHeight="50.0" prefWidth="200.0" VBox.vgrow="NEVER">
                         <Pane prefHeight="42.0" prefWidth="290.0" HBox.hgrow="ALWAYS"/>
                         <StackPane prefHeight="50.0" prefWidth="200.0">
                            <JFXCheckBox fx:id="extended" checkedColor="FIREBRICK" disable="true"
                                         onAction="#isExtended" prefHeight="35.0" prefWidth="250.0"
-                                        text="Extended Checkout" translateY="-10.0">
+                                        text="Extended Checkout" translateY="-5.0">
                               <font>
                                  <Font size="24.0"/>
                               </font>
@@ -99,7 +91,15 @@
                      </HBox>
                   </VBox>
                </HBox>
-            </StackPane>
+               <HBox alignment="TOP_CENTER" prefHeight="65.0" prefWidth="1150.0">
+                  <JFXButton onAction="#reset" prefHeight="65.0" prefWidth="179.0"
+                             stylesheets="@../css/CheckButton.css" text="Reset" translateX="-20.0"
+                             HBox.hgrow="NEVER"/>
+                  <JFXButton fx:id="submitButton" onAction="#submit" prefHeight="65.0" prefWidth="168.0"
+                             stylesheets="@../css/CheckButton.css" text="Submit"
+                             HBox.hgrow="NEVER"/>
+               </HBox>
+            </VBox>
          </VBox>
       </ScrollPane>
 
