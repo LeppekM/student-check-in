@@ -9,11 +9,11 @@ import java.util.Date;
  * Object which represents checkout entities in database
  */
 public class Checkout extends RecursiveTreeObject {
-    private final StringProperty studentName, studentEmail, partName;
-    private StringProperty action, serialNumber, fee;
+    private final ObjectProperty<Date> dueDate;
+    private StringProperty studentName, studentEmail, partName, action, serialNumber, fee, professor, course;
     private final LongProperty barcode;
     private IntegerProperty checkoutID, studentID, partID;
-    private ObjectProperty<Date> dueDate, checkedOutDate;
+    private ObjectProperty<Date> checkedOutDate, checkedInDate;
 
     public Checkout(String studentName, String studentEmail, String partName, long barcode,
                  String action, Date date) {
@@ -38,6 +38,16 @@ public class Checkout extends RecursiveTreeObject {
         this.checkedOutDate = new SimpleObjectProperty<>(checkedOutDate);
         this.dueDate = new SimpleObjectProperty<>(dueDate);
         this.fee = new SimpleStringProperty(fee);
+    }
+
+    public Checkout(int studentID, long barcode, Date checkoutAt, Date checkinAt, Date dueAt, String course, String professor) {
+        this.studentID = new SimpleIntegerProperty(studentID);
+        this.barcode = new SimpleLongProperty(barcode);
+        this.checkedOutDate = new SimpleObjectProperty<>(checkoutAt);
+        this.checkedInDate = checkinAt != null ? new SimpleObjectProperty<>(checkinAt) : null;
+        this.dueDate = new SimpleObjectProperty<>(dueAt);
+        this.professor = professor != null ? new SimpleStringProperty(professor) : null;
+        this.course = course != null ? new SimpleStringProperty(course) : null;
     }
 
     public StringProperty getStudentName() {
@@ -68,6 +78,14 @@ public class Checkout extends RecursiveTreeObject {
         return serialNumber;
     }
 
+    public StringProperty getProfessor() {
+        return professor;
+    }
+
+    public StringProperty getCourse() {
+        return course;
+    }
+
     public IntegerProperty getPartID() {
         return partID;
     }
@@ -78,6 +96,10 @@ public class Checkout extends RecursiveTreeObject {
 
     public ObjectProperty<Date> getDueDate() {
         return dueDate;
+    }
+
+    public ObjectProperty<Date> getCheckedInDate() {
+        return checkedInDate;
     }
 
     public StringProperty getFee() {

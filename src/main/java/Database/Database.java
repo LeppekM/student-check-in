@@ -411,27 +411,33 @@ public class Database implements IController {
      * @param partID the part ID of the part being checked
      * @return a CheckoutObject object that represents info about the part's last checkout
      */
-    public CheckoutObject getLastCheckoutOf(int partID) {
+    public Checkout getLastCheckoutOf(int partID) {
         String query = "SELECT c.* FROM checkout c\n" +
                 "INNER JOIN (SELECT MAX(checkoutID) AS max_checkoutID FROM checkout WHERE partID = " + partID +
                 ") max_c on c.checkoutID = max_c.max_checkoutID;";
-        CheckoutObject checkoutObject = null;
-        String studentID = "", barcode = "";
+        Checkout checkoutObject = null;
+        int studentID = 0;
+        long barcode = 0;
         String dueAt = null;
-        Date checkoutAt = null, checkinAt = null;
+        String professor = null;
+        String course = null;
+        Date checkoutAt  = null;
+        Date checkinAt = null;
 
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
-                studentID = "" + resultSet.getInt("studentID");
-                barcode = "" + resultSet.getLong("barcode");
+                studentID = resultSet.getInt("studentID");
+                barcode = resultSet.getLong("barcode");
                 checkoutAt = TimeUtils.parseTimestamp(resultSet.getTimestamp("checkoutAt"));
                 checkinAt = TimeUtils.parseTimestamp(resultSet.getTimestamp("checkinAt"));
                 dueAt = resultSet.getString("dueAt");
+                professor = resultSet.getString("prof");
+                course = resultSet.getString("course");
             }
-            checkoutObject = new CheckoutObject(studentID, barcode, checkoutAt, checkinAt,
-                    timeUtils.convertStringtoDate(dueAt));
+            checkoutObject = new Checkout(studentID, barcode, checkoutAt, checkinAt,
+                    timeUtils.convertStringtoDate(dueAt), professor, course);
             resultSet.close();
             statement.close();
         } catch (SQLException e) {

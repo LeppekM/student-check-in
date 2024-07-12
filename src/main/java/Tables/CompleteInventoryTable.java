@@ -1,12 +1,11 @@
 package Tables;
 
-import Database.CheckoutObject;
+import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Part;
 import Database.ObjectClasses.Student;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
 import HelperClasses.StageUtils;
-import HelperClasses.TimeUtils;
 import Popups.Popup;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
@@ -186,22 +185,22 @@ public class CompleteInventoryTable extends TSCTable {
                         Student student = database.getStudentToLastCheckout(row.getPartID().get());
 
                         if (student != null) {
-                            CheckoutObject checkoutObject = database.getLastCheckoutOf(row.getPartID().get());
-                            String type = checkoutObject.getCheckinAtDate() == null ? "Checked Out" : "Check In";
+                            Checkout checkoutObject = database.getLastCheckoutOf(row.getPartID().get());
+                            String type = checkoutObject.getCheckedInDate() == null ? "Checked Out" : "Check In";
 
                             add("Student Name: ", student.getName(), false);
                             add("Student Email: ", student.getEmail(), false);
 
                             boolean isOverdue = false;
-                            if (checkoutObject.getCheckoutAtDate() != null) {
-                                String className = checkoutObject.getExtendedCourseName();
+                            if (checkoutObject.getCheckedOutDate().get() != null) {
+                                String className = checkoutObject.getCourse() == null ? null : checkoutObject.getCourse().get();
                                 if (className != null && !className.isEmpty()) {
                                     add("Class Name: ", className, false);
-                                    add("Professor Name: ", checkoutObject.getExtendedProfessor(), false);
+                                    add("Professor Name: ", checkoutObject.getProfessor().get(), false);
                                 }
                                 Date current = new Date();
-                                isOverdue = checkoutObject.getDueAt().after(current) &&
-                                        checkoutObject.getCheckinAtDate() == null;
+                                isOverdue = !checkoutObject.getDueDate().get().after(current) &&
+                                        checkoutObject.getCheckedInDate() == null;
                                 if (isOverdue) {
                                     DecimalFormat df = new DecimalFormat("#,###,##0.00");
                                     add("Fee: ", "$" + df.format(row.getPrice().get() / 100), false);
@@ -210,13 +209,14 @@ public class CompleteInventoryTable extends TSCTable {
                             Label label;
                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
                             if (type.equals("Check In")){
-                                label = (Label) add(type + ": ", dateFormat.format(
-                                        checkoutObject.getCheckinAtDate()), false).getChildren().get(0);
+                                add(type + ": ", dateFormat.format(checkoutObject.getCheckedInDate().getValue()),
+                                        false);
                             } else {
-                                label = (Label) add(type + ": ", dateFormat.format(
-                                        checkoutObject.getCheckoutAtDate()), false).getChildren().get(0);
+                                add(type + ": ", dateFormat.format(checkoutObject.getCheckedOutDate().getValue()),
+                                        false);
                             }
-                            add("Due Date: ", dateFormat.format(checkoutObject.getDueAt()), false);
+                            label = (Label) add("Due Date: ", dateFormat.format(checkoutObject.getDueDate()
+                                    .getValue()), false).getChildren().get(0);
                             if (isOverdue) {
                                 label.setStyle("-fx-text-fill: red; -fx-font-size: 16px;");
                             }
