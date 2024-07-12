@@ -28,8 +28,4 @@ Product Owner: Jim Frommell
 
 ## Priority List ##
 * Documentation
-* auto search tables
-* autofill create new student 
-* first whitespace name delim
-* search prompts
 * Testing suite

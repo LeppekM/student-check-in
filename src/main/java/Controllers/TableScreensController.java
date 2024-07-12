@@ -133,7 +133,7 @@ public class TableScreensController extends MenuController implements IControlle
         menuButton4.setOnAction(event -> {
             if (screen == TableScreen.COMPLETE_INVENTORY) {
                 editPart();
-            } else if (screen == TableScreen.STUDENTS) {
+            } else if (screen == TableScreen.STUDENTS && worker.isAdmin()) {
                 importStudents();
             }
         });
@@ -144,7 +144,11 @@ public class TableScreensController extends MenuController implements IControlle
 
         // Updates the search if the user presses enter with the cursor in the search field
         searchInput.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
+            if (screen == TableScreen.HISTORY) {
+                if (event.getCode() == KeyCode.ENTER) {
+                    search();
+                }
+            } else {
                 search();
             }
         });
@@ -152,10 +156,12 @@ public class TableScreensController extends MenuController implements IControlle
 
     private void reloadScreen() {
         screenProperty.set(screen);
+        searchInput.initEntrySet(new TreeSet<>());
         switch (screen) {
             case COMPLETE_INVENTORY:
                 tscTable = new CompleteInventoryTable(this);
                 titleLabel.setText("Total Inventory");
+                searchInput.setPromptText("Filter i.e. 'Wire Kits', 'Analog'");
                 excelButton.setVisible(true);
                 menuButton1.setVisible(true);
                 menuButton1.setText("Delete Part Type");
@@ -171,6 +177,7 @@ public class TableScreensController extends MenuController implements IControlle
             case HISTORY:
                 tscTable = new HistoryInventoryTable(this);
                 titleLabel.setText("Transaction History");
+                searchInput.setPromptText("Filter i.e. 'Wire Kits', 'Analog'");
                 excelButton.setVisible(true);
                 menuButton1.setVisible(true);
                 menuButton1.setText("Clear History");
@@ -182,6 +189,7 @@ public class TableScreensController extends MenuController implements IControlle
             case CHECKED_OUT:
                 tscTable = new CheckedOutInventoryTable(this);
                 titleLabel.setText("Checked Out");
+                searchInput.setPromptText("Filter i.e. 'Wire Kits', 'Analog'");
                 excelButton.setVisible(true);
                 menuButton1.setVisible(false);
                 menuButton2.setVisible(false);
@@ -192,6 +200,7 @@ public class TableScreensController extends MenuController implements IControlle
             case OVERDUE:
                 tscTable = new OverdueInventoryTable(this);
                 titleLabel.setText("Overdue Parts");
+                searchInput.setPromptText("Filter i.e. 'Wire Kits', 'Analog'");
                 excelButton.setVisible(true);
                 menuButton1.setVisible(false);
                 menuButton2.setVisible(false);
@@ -202,6 +211,7 @@ public class TableScreensController extends MenuController implements IControlle
             case INVENTORY_PARTS:
                 tscTable = new InventoryPartsTable(this);
                 titleLabel.setText("Inventory a Part");
+                searchInput.setPromptText("Search i.e. 'Wire Kits', 'Analog'");
                 excelButton.setVisible(false);
                 menuButton1.setVisible(false);
                 menuButton2.setVisible(false);
@@ -212,6 +222,7 @@ public class TableScreensController extends MenuController implements IControlle
             case WORKERS:
                 tscTable = new ManageWorkersTable(this);
                 titleLabel.setText("Manage Workers");
+                searchInput.setPromptText("Search workers");
                 excelButton.setVisible(false);
                 menuButton1.setVisible(true);
                 menuButton1.setText("Delete");
@@ -225,6 +236,7 @@ public class TableScreensController extends MenuController implements IControlle
             case STUDENTS:
                 tscTable = new ManageStudentsTable(this);
                 titleLabel.setText("Manage Students");
+                searchInput.setPromptText("Search students");
                 excelButton.setVisible(false);
                 menuButton1.setVisible(true);
                 menuButton1.setText("Delete");
@@ -254,6 +266,7 @@ public class TableScreensController extends MenuController implements IControlle
             menuButton1.setDisable(!worker.isAdmin());
         } else if (screen == TableScreen.STUDENTS) {
             menuButton1.setDisable(bool);
+            menuButton3.setDisable(!worker.isAdmin());
         } else if (screen == TableScreen.WORKERS) {
             menuButton1.setDisable(bool);
         }
@@ -286,6 +299,8 @@ public class TableScreensController extends MenuController implements IControlle
                 table.setRoot(filteredRoot);
             }
             disableButtons(true);
+        } else {
+            tscTable.populateTable();
         }
     }
 

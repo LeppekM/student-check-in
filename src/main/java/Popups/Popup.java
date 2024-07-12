@@ -1,6 +1,7 @@
 package Popups;
 
 import Database.Database;
+import HelperClasses.AutoCompleteTextField;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
@@ -65,8 +66,8 @@ public abstract class Popup {
         return l;
     }
 
-    protected JFXTextField createTextField(String text, boolean editable) {
-        JFXTextField textField = new JFXTextField();
+    protected AutoCompleteTextField createTextField(String text, boolean editable) {
+        AutoCompleteTextField textField = new AutoCompleteTextField();
         textField.setText(text);
         textField.setEditable(editable);
         textField.setStyle(TEXTFIELD_STYLE);

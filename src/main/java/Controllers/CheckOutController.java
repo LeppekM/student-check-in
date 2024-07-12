@@ -7,6 +7,7 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AutoCompleteTextField;
 import HelperClasses.StageUtils;
+import Popups.Popup;
 import Tables.CheckedOutInventoryTable;
 import Tables.TSCTable;
 import com.jfoenix.controls.*;
@@ -16,13 +17,16 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -446,17 +450,46 @@ public class CheckOutController extends MenuController implements IController, I
      * @return Student name
      */
     private String newStudentName(boolean wasInvalid) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("New Student Creation");
-        if (wasInvalid) {
-            dialog.setHeaderText("Student Name was not formatted correctly." +
-                    "\nPlease Enter Name with space to Continue ");
-        } else {
-            dialog.setHeaderText("Student Name is not in System.\nPlease Enter Name to Continue ");
-        }
-        dialog.setContentText("First and last name\nSeparate by space");
-        dialog.showAndWait();
-        return dialog.getResult();
+        Stage stage = new Stage();
+        VBox root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("New Student Creation: Name");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+
+        final String[] studentName = {null};
+        new Popup(root) {
+            Label contentLabel;
+            AutoCompleteTextField nameField;
+            @Override
+            public void populate() {
+                if (wasInvalid) {
+                    contentLabel = createLabel("Student Name was not formatted correctly." +
+                            "\nPlease Enter FirstName LastName seperated by space to Continue ");
+                } else {
+                    contentLabel = createLabel("Student Name is not in System.\nPlease Enter Name to Continue ");
+                }
+                contentLabel.setMinSize(WIDTH * 2, HEIGHT * 2);
+                contentLabel.setAlignment(Pos.CENTER_LEFT);
+                addHBox(new HBox(contentLabel));
+                nameField = createTextField("", true);
+                nameField.setMinWidth(WIDTH * 2);
+                nameField.setPromptText("FirstName LastName");
+                addHBox(new HBox(nameField));
+            }
+
+            @Override
+            public void submit() {
+                studentName[0] = contentLabel.getText();
+                stage.close();
+            }
+        };
+
+        stage.getIcons().add(new Image("images/msoe.png"));
+        stage.showAndWait();
+
+        return studentName[0];
     }
 
     /**
@@ -464,16 +497,52 @@ public class CheckOutController extends MenuController implements IController, I
      * @return Student email
      */
     private String newStudentEmail(boolean wasInvalid) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("New Student Creation");
-        if (wasInvalid) {
-            dialog.setHeaderText("Invalid email entered.\n Please enter a valid MSOE email to continue ");
-        } else {
-            dialog.setHeaderText("Student ID is not in system.\n Please enter MSOE email to continue ");
-        }
-        dialog.setContentText("Please enter Student Email");
-        dialog.showAndWait();
-        return dialog.getResult();
+        Stage stage = new Stage();
+        VBox root = new VBox();
+        Scene scene = new Scene(root);
+        stage.setTitle("New Student Creation: Email");
+        stage.initOwner(scene.getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+
+        final String[] email = {null};
+        new Popup(root) {
+            Label contentLabel;
+            AutoCompleteTextField emailField;
+            @Override
+            public void populate() {
+                if (wasInvalid) {
+                    contentLabel = createLabel("Invalid email entered.\nPlease enter a valid MSOE email to continue ");
+                } else {
+                    contentLabel = createLabel("Student ID is not in system.\nPlease enter MSOE email to continue ");
+                }
+                contentLabel.setMinSize(WIDTH * 2, HEIGHT * 2);
+                contentLabel.setAlignment(Pos.CENTER_LEFT);
+                addHBox(new HBox(contentLabel));
+                emailField = createTextField("", true);
+                emailField.setMinWidth(WIDTH * 2);
+                emailField.initEntrySet(new TreeSet<>(database.getStudentEmails()));
+                emailField.setOnKeyPressed(event -> {
+                    if (event.getCode().equals(KeyCode.TAB)
+                            || event.getCode().equals(KeyCode.ENTER)) {
+                        emailField.setText(emailField.getFilteredEntries().get(0));
+                    }
+                });
+                emailField.setPromptText("email@msoe.edu");
+                addHBox(new HBox(emailField));
+            }
+
+            @Override
+            public void submit() {
+                email[0] = contentLabel.getText();
+                stage.close();
+            }
+        };
+
+        stage.getIcons().add(new Image("images/msoe.png"));
+        stage.showAndWait();
+
+        return email[0];
     }
 
     /**

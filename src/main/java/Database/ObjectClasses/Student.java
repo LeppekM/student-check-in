@@ -30,7 +30,7 @@ public class Student {
         this.email = email;
     }
 
-    public Student(String firstName, String lastName, int rfid, String email){
+    public Student(String firstName, String lastName, int rfid, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.rfid = rfid;

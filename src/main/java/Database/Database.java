@@ -839,7 +839,7 @@ public class Database implements IController {
                 name = resultSet.getString("studentName");
                 id = resultSet.getInt("studentID");
                 email = resultSet.getString("email");
-                String[] names = name.split(" ");
+                String[] names = name.split(" ", 2);
                 studentsList.add(new Student(names[0], names[1], id, email));
             }
             resultSet.close();
