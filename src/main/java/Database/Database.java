@@ -207,7 +207,7 @@ public class Database implements IController {
 
     public boolean partNameExists(String partName) {
         String name = "";
-        String query = "SELECT parts.partName from parts WHERE partName = " + cleanString(partName) + ";";
+        String query = "SELECT parts.partName from parts WHERE partName = '" + cleanString(partName) + "';";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();

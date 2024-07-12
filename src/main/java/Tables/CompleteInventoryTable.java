@@ -321,6 +321,7 @@ public class CompleteInventoryTable extends TSCTable {
 
             @Override
             public void submit() {
+                database.initWorker(worker);
                 if (validateFieldsNotEmpty() && validateQuantityField() && validatePriceField()) {
                     if(!vendorExists(getVendorName())){
                         database.createNewVendor(getVendorName(), vendorInformation());
