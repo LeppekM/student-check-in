@@ -7,6 +7,7 @@ import Database.ObjectClasses.Student;
 import Database.ObjectClasses.Worker;
 import HelperClasses.AutoCompleteTextField;
 import HelperClasses.StageUtils;
+import HelperClasses.TimeUtils;
 import Popups.Popup;
 import Tables.CheckedOutInventoryTable;
 import Tables.TSCTable;
@@ -32,6 +33,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 import static javafx.scene.paint.Color.FIREBRICK;
@@ -69,7 +71,7 @@ public class CheckOutController extends MenuController implements IController, I
     private final StageUtils stageUtils = StageUtils.getInstance();
     private final Database database = Database.getInstance();
 
-    private static String professor, course, dueDate;
+    private static String professor, course, extendedDueDate;
 
     private static final int PAUSE_DELAY = 5;
     public static final int BARCODE_STRING_LENGTH = 6;
@@ -123,7 +125,7 @@ public class CheckOutController extends MenuController implements IController, I
     public void initExtendedObject(ExtendedCheckoutObject checkout) {
         course = checkout.getCourse();
         professor = checkout.getProf();
-        dueDate = checkout.getExtendedDate();
+        extendedDueDate = checkout.getExtendedDate();
     }
 
     /**
@@ -131,7 +133,7 @@ public class CheckOutController extends MenuController implements IController, I
      * @return True if any of the fields are left empty
      */
     private boolean extendedFieldsNotFilled() {
-        return professor == null || course == null || dueDate == null;
+        return professor == null || course == null || extendedDueDate == null;
     }
 
     /**
@@ -208,7 +210,7 @@ public class CheckOutController extends MenuController implements IController, I
                     for (int i = 0; i < quantitySpinner.getValue(); i++){
                         if(database.barcodeExists(barcode)) {
                             if (extendedCheckout.isSelected()){
-                                success = database.checkOutPart(barcode, currentStudent.getRFID(), course, professor, dueDate);
+                                success = database.checkOutPart(barcode, currentStudent.getRFID(), course, professor, extendedDueDate);
                             } else {
                                 success = database.checkOutPart(barcode, currentStudent.getRFID(), null, null, null);
                             }
@@ -609,8 +611,57 @@ public class CheckOutController extends MenuController implements IController, I
      */
     public void isExtended() {
         if (extended.isSelected()) {
-            Stage stage = stageUtils.createPopupStage("fxml/ExtendedCheckout.fxml", main, "Part Information");
+            Stage stage = new Stage();
+            VBox root = new VBox();
+            Scene scene = new Scene(root);
+            stage.setTitle("Extended Checkout");
+            stage.initOwner(scene.getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+
+            course = "";
+            professor = "";
+            extendedDueDate = "";
+            new Popup(root) {
+                JFXTextField courseField, professorField;
+                JFXDatePicker dueDateField;
+                @Override
+                public void populate() {
+                    Label titleLabel = createLabel("Extended Checkout Information");
+                    titleLabel.setMinSize(WIDTH * 2, HEIGHT * 2);
+                    titleLabel.setStyle("-fx-font-size: 24;");
+                    titleLabel.setAlignment(Pos.CENTER);
+                    addHBox(new HBox(titleLabel));
+                    courseField = (JFXTextField) add("Course Name: ", "", true).getChildren().get(1);
+                    professorField = (JFXTextField) add("Professor Name: ", "", true).getChildren().get(1);
+                    dueDateField = new JFXDatePicker();
+                    dueDateField.setDefaultColor(FIREBRICK);
+                    dueDateField.setMinSize(WIDTH, HEIGHT);
+                    dueDateField.setDayCellFactory(picker -> new DateCell() {
+                        public void updateItem(LocalDate date, boolean empty) {
+                            super.updateItem(date, empty);
+                            LocalDate today = LocalDate.now();
+
+                            setDisable(empty || date.isBefore(today));
+                        }
+                    });
+
+                    addHBox(new HBox(createLabel("Return Date: "), dueDateField));
+                }
+
+                @Override
+                public void submit() {
+                    course = courseField.getText();
+                    professor = professorField.getText();
+                    TimeUtils timeUtils = new TimeUtils();
+                    extendedDueDate = timeUtils.setExtendedDuedate(dueDateField.getValue());
+                    stage.close();
+                }
+            };
+
+            stage.getIcons().add(new Image("images/msoe.png"));
             stage.showAndWait();
+
             if (extendedFieldsNotFilled()) {
                 stageUtils.checkoutAlert("Extended Checkout",
                         "Process cancelled or fields were not filled out for extended checkout");

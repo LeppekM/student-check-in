@@ -80,11 +80,12 @@ public abstract class Popup {
         HBox hbox = new HBox();
         hbox.getChildren().add(createLabel(label));
         hbox.getChildren().add(createTextField(field, editable));
-        vbox.getChildren().add(hbox);
+        addHBox(hbox);
         return hbox;
     }
 
     public void addHBox(HBox hbox) {
+        VBox.setMargin(hbox, new Insets(5, 5, 5, 5));
         vbox.getChildren().add(hbox);
     }
 
@@ -96,7 +97,7 @@ public abstract class Popup {
         field.setMinSize(WIDTH, HEIGHT);
         field.setMaxSize(WIDTH, HEIGHT);
         hbox.getChildren().add(field);
-        vbox.getChildren().add(hbox);
+        addHBox(hbox);
         return field;
     }
 
@@ -112,7 +113,7 @@ public abstract class Popup {
         vendorField.setMaxSize(WIDTH, HEIGHT);
         vendorField.setStyle(TEXTFIELD_STYLE);
         vendorBox.getChildren().add(vendorField);
-        vbox.getChildren().add(vendorBox);
+        addHBox(vendorBox);
         return vendorField;
     }
 
@@ -135,7 +136,7 @@ public abstract class Popup {
         suffixField.setMaxWidth(WIDTH * 0.6);
         suffixField.setPromptText("Suffix ie:V2");
         serialBox.getChildren().add(suffixField);
-        vbox.getChildren().add(serialBox);
+        addHBox(serialBox);
         return serialBox;
     }
 
