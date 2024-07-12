@@ -243,6 +243,7 @@ public class CheckOutController extends MenuController implements IController, I
 
         JFXTextField barcodeField = new JFXTextField();
         barcodeField.setFocusColor(FIREBRICK);
+        barcodeField.setStyle("-fx-font-size: 14");
         barcodeField.setPrefHeight(60);
         barcodeField.setMinWidth(400);
         barcodeField.setMaxWidth(400);

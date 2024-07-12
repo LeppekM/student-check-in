@@ -7,7 +7,7 @@
    - Editing/adding parts
    - Removing parts
    - Some workers are administrators who have all of the above permissions and the ability to grant permission to grant non-admins the above permissions via a pin, as well as clear old history and unused students
-3. Login with RFID or msoe email
+3. Login with RFID or msoe email and worker-set password
 4. Check in / out parts (and kits) from inventory to a specific student (or whoever is checking in/out a part ie: professor)
     - Prevent checkout of parts already checked out by other students
     - Automatically assign a due date based on current date

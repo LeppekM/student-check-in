@@ -63,8 +63,20 @@
                   </Label>
                </VBox>
                <VBox prefWidth="500.0">
-                  <AutoCompleteTextField fx:id="studentIDField" focusColor="FIREBRICK" prefHeight="60.0" minHeight="60.0" minWidth="400.0" maxWidth="400.0" alignment="BOTTOM_LEFT"/>
-                  <JFXTextField fx:id="studentNameField" disable="true" focusColor="FIREBRICK" prefHeight="60.0" minHeight="60.0" minWidth="400.0" maxWidth="400.0" alignment="BOTTOM_LEFT"/>
+                  <AutoCompleteTextField fx:id="studentIDField" focusColor="FIREBRICK" prefHeight="60.0"
+                                         minHeight="60.0" minWidth="400.0" maxWidth="400.0" alignment="BOTTOM_LEFT"
+                                         style="-fx-font-size: 14">
+                     <VBox.margin>
+                        <Insets top="3.0" bottom="3.0"/>
+                     </VBox.margin>
+                  </AutoCompleteTextField>
+                  <JFXTextField fx:id="studentNameField" disable="true" focusColor="FIREBRICK" prefHeight="60.0"
+                                minHeight="60.0" minWidth="400.0" maxWidth="400.0" alignment="BOTTOM_LEFT"
+                                style="-fx-font-size: 14">
+                     <padding>
+                        <Insets bottom="6.0"/>
+                     </padding>
+                  </JFXTextField>
                   <VBox fx:id="barcodeVBox">
                      <padding>
                         <Insets bottom="5.0"/>
