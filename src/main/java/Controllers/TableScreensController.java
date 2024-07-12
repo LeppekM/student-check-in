@@ -249,6 +249,7 @@ public class TableScreensController extends MenuController implements IControlle
                 menuButton5.setVisible(false);
                 break;
         }
+        searchInput.setText("");
         disableButtons(true);
         tscTable.initialize();
         tscTable.populateTable();
@@ -302,6 +303,21 @@ public class TableScreensController extends MenuController implements IControlle
         } else {
             tscTable.populateTable();
         }
+    }
+
+    /**
+     * This is search that tscTable can reach to set filters after repopulating the table.
+     * search() is not called instead because it calls tscTable.populateTable()
+     */
+    public void repopulatedTableSearch() {
+        String filter = searchInput.getText();
+        String[] filters = filter.split(" ");
+        if (!filter.isEmpty()) {
+            TreeItem<TSCTable.TableRow> filteredRoot = new TreeItem<>();
+            tscTable.filter(filters, filteredRoot);
+            table.setRoot(filteredRoot);
+        }
+        disableButtons(true);
     }
 
     @FXML

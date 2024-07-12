@@ -100,6 +100,7 @@ public class ManageWorkersTable extends TSCTable {
         table.getColumns().setAll(nameTemp, emailTemp, adminTemp);
         table.setRoot(root);
         table.setShowRoot(false);
+        controller.repopulatedTableSearch();
     }
 
     @Override

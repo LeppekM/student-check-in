@@ -102,6 +102,7 @@ public class ManageStudentsTable extends TSCTable {
         table.setRoot(root);
         // needs to be false so that it doesn't group all elements, effectively hiding them until you drop them down
         table.setShowRoot(false);
+        controller.repopulatedTableSearch();
     }
 
     @Override
@@ -308,6 +309,7 @@ public class ManageStudentsTable extends TSCTable {
                     "Are you sure you want to clear unused students?",
                     "Do you want to delete students with no transaction history?")) {
                 database.clearUnusedStudents();
+                populateTable();
             }
         }
     }

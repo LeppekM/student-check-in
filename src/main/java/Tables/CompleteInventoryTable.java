@@ -31,6 +31,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static Controllers.CheckOutController.BARCODE_STRING_LENGTH;
+
 
 /**
  * This class manages backend functionality for the Tab labeled Total Inventory in the inventory page
@@ -103,6 +105,7 @@ public class CompleteInventoryTable extends TSCTable {
         table.setRoot(root);
         // needs to be false so that it doesn't group all elements, effectively hiding them until you drop them down
         table.setShowRoot(false);
+        controller.repopulatedTableSearch();
     }
 
     @Override
@@ -113,7 +116,7 @@ public class CompleteInventoryTable extends TSCTable {
             String partName = val.getPartName().getValue();
             String serialNumber = val.getSerialNumber().getValue();
             String loc = val.getLocation().getValue();
-            String barcode = val.getBarcode().getValue().toString();
+            String barcode = String.format("%06d", val.getBarcode().getValue());
             String partID = val.getPartID().getValue().toString();
             if (!(partName != null && partName.toLowerCase().contains(input)
                     || serialNumber != null && serialNumber.toLowerCase().contains(input)
@@ -291,6 +294,7 @@ public class CompleteInventoryTable extends TSCTable {
                 addHBox(spacer);
 
                 stageUtils.acceptIntegerOnly(barcodeField);
+                stageUtils.setMaxTextLength(barcodeField, BARCODE_STRING_LENGTH);
                 stageUtils.acceptIntegerOnly(quantityField);
                 stageUtils.acceptIntegerOnly(priceField);
                 stageUtils.acceptIntegerOnly(serialField);
@@ -326,7 +330,8 @@ public class CompleteInventoryTable extends TSCTable {
                     if(!vendorExists(getVendorName())){
                         database.createNewVendor(getVendorName(), vendorInformation());
                     }
-                    long barcode = Long.parseLong(barcodeField.getText());
+                    long barcode = barcodeField.getText().isEmpty() ? database.getMaxPartID() :
+                            Long.parseLong(barcodeField.getText());
                     int quantity = Integer.parseInt(quantityField.getText());
                     String partName = nameField.getText();
 
@@ -338,12 +343,13 @@ public class CompleteInventoryTable extends TSCTable {
                                     addManyPartsWithDifferentBarcodes(quantity, partName);
                                     partAddedSuccess(quantity);
                                     stage.close();
+                                    populateTable();
                                 }
                             } else {
                                 addManyPartsWithDifferentBarcodes(quantity, partName);
                                 partAddedSuccess(quantity);
                                 stage.close();
-
+                                populateTable();
                             }
                         } else {
                             List<String> barcodesWithSamePartName = database.getAllBarcodesForPartName(partName)
@@ -359,29 +365,41 @@ public class CompleteInventoryTable extends TSCTable {
                                 }
                                 partAddedSuccess(quantity);
                                 stage.close();
+                                populateTable();
                             } else {
                                 stageUtils.errorAlert("This part name already has different barcodes for each part");
                             }
                         }
                     } else if (quantity == 1) {
                         if (database.partNameExists(partName)) {
-                            if (database.getAllBarcodesForPartName(partName).stream().distinct().count() == 1) {
+                            ArrayList<Long> barcodesSamePartName = new ArrayList<>();
+                            for (String str : database.getAllBarcodesForPartName(partName)) {
+                                barcodesSamePartName.add(Long.parseLong(str));
+                            }
+                            if (barcodesSamePartName.stream().distinct().count() == 1
+                                    && barcodesSamePartName.get(0).equals(barcode)) {
                                 // Same names, same barcodes, serial does not need checked
                                 database.addPart(new Part(partName, serialField.getText(),
                                         manufacturerField.getText(), Double.parseDouble(priceField.getText()),
                                         getVendorName(), locationField.getText(), barcode));
                                 partAddedSuccess(1);
                                 stage.close();
+                                populateTable();
                             } else {
                                 // Same names, different barcodes, serial number should be different
                                 if (database.getAllSerialNumbersForPartName(partName).contains(serialField.getText())) {
-                                    stageUtils.errorAlert("This serial number is already used for part of this name");
+                                    stageUtils.errorAlert("This serial number is already used for a different " +
+                                            "part of this name");
+                                } else if (barcodesSamePartName.contains(barcode)) {
+                                    stageUtils.errorAlert("This barcode is already used for a different part " +
+                                            "of this name");
                                 } else {
                                     database.addPart(new Part(partName, serialField.getText(),
                                             manufacturerField.getText(), Double.parseDouble(priceField.getText()),
                                             getVendorName(), locationField.getText(), barcode));
                                     partAddedSuccess(1);
                                     stage.close();
+                                    populateTable();
                                 }
                             }
                         } else {
@@ -393,6 +411,7 @@ public class CompleteInventoryTable extends TSCTable {
                                         getVendorName(), locationField.getText(), barcode));
                                 partAddedSuccess(1);
                                 stage.close();
+                                populateTable();
                             }
                         }
                     }
@@ -428,11 +447,11 @@ public class CompleteInventoryTable extends TSCTable {
              * @return False if any field is empty
              */
             private boolean validateFieldsNotEmpty(){
-                return !(nameField.getText().isEmpty() | serialField.getText().isEmpty() |
-                        manufacturerField.getText().isEmpty() | priceField.getText().isEmpty() |
-                        locationField.getText().isEmpty() | serialField.getText().isEmpty() |
-                        barcodeField.getText().isEmpty() | quantityField.getText().isEmpty() |
-                        getVendorName().contains("-1"));
+                return !(nameField.getText().isEmpty() || serialField.getText().isEmpty() ||
+                        manufacturerField.getText().isEmpty() || priceField.getText().isEmpty() ||
+                        locationField.getText().isEmpty() || serialField.getText().isEmpty() ||
+                        (barcodeField.getText().isEmpty() && !differentBarcodes.isSelected()) ||
+                        quantityField.getText().isEmpty() || getVendorName().contains("-1"));
             }
 
             /**
@@ -513,10 +532,7 @@ public class CompleteInventoryTable extends TSCTable {
         };
 
         stage.setScene(scene);
-        stage.setOnCloseRequest(event -> {
-            populateTable();
-            stage.close();
-        });
+        stage.setOnCloseRequest(event -> stage.close());
         stage.getIcons().add(new Image("images/msoe.png"));
         stage.show();
     }
@@ -584,6 +600,7 @@ public class CompleteInventoryTable extends TSCTable {
                             if (stageUtils.confirmationAlert("Are you sure?", "Delete this part?",
                                     "Are you sure you wish to delete the part with ID = " + partID + "?")) {
                                 database.deletePart(partID);
+                                populateTable();
                             }
                         }
                     } catch (Exception e) {
@@ -619,6 +636,7 @@ public class CompleteInventoryTable extends TSCTable {
                                 "Delete all " + partName + "s?",
                                 "Are you sure you wish to delete all parts named: " + partName + "?")) {
                             database.deleteParts(partName);
+                            populateTable();
                         }
                     }
                 } catch (Exception e) {
@@ -711,7 +729,6 @@ public class CompleteInventoryTable extends TSCTable {
                         } else {
                             database.editAllOfPartNameCommonBarcode(originalPartName, part);
                         }
-                        stage.close();
                         stageUtils.successAlert("All " + part.getPartName() + " parts edited successfully.");
                     } else {
                         part.update(nameField.getText().trim(), serialField.getText() +
@@ -719,9 +736,10 @@ public class CompleteInventoryTable extends TSCTable {
                                         Double.parseDouble(priceField.getText()), vendorField.getValue(),
                                         locationField.getText().trim(), Long.parseLong(barcodeField.getText()));
                         database.editPart(part);
-                        stage.close();
                         stageUtils.successAlert("Part edited successfully.");
                     }
+                    stage.close();
+                    populateTable();
                 }
             }
 

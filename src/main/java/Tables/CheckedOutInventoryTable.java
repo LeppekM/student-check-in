@@ -107,7 +107,7 @@ public class CheckedOutInventoryTable extends TSCTable {
             String input = filter.toLowerCase();
             String studentName = val.getStudentName().getValue();
             String partName = val.getPartName().getValue();
-            String barcode = val.getBarcode().getValue().toString();
+            String barcode = String.format("%06d", val.getBarcode().getValue());
             String checkedOutAt = val.getCheckedOutAt().getValue().toString();
             String dueDate = val.getDueDate().getValue().toString();
             if (!(studentName != null && studentName.toLowerCase().contains(input) ||

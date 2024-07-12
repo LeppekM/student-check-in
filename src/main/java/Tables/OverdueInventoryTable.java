@@ -110,7 +110,7 @@ public class OverdueInventoryTable extends TSCTable {
             String partName = val.getPartName().getValue();
             String serialNumber = val.getSerialNumber().getValue();
             String dueDate = val.getDueDate().getValue().toString();
-            String barcode = val.getBarcode().getValue().toString();
+            String barcode = String.format("%06d", val.getBarcode().getValue());
             if (!(studentID.toLowerCase().contains(input) || partName != null && partName.toLowerCase().contains(input)
                     || barcode.toLowerCase().contains(input) || dueDate != null
                     && dueDate.toLowerCase().contains(input) || studentName != null

@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static Popups.Popup.TEXTFIELD_STYLE;
-
 public class InventoryPartsTable extends TSCTable {
 
     private JFXTreeTableColumn<IPRow, String> serialCol;
@@ -183,7 +181,7 @@ public class InventoryPartsTable extends TSCTable {
 
     @Override
     protected void popupRow(int index) {
-        // does not have popup info, TODO: change to show last checked out/by who
+        // does not have popup info
     }
 
     public class IPRow extends TableRow {
