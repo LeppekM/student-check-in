@@ -82,7 +82,6 @@ public class CompleteInventoryTable extends TSCTable {
         rows.clear();
         table.getColumns().clear();
         // get and add all rows
-        // todo add cache
         ObservableList<Part> list = database.getAllParts();
         for (Part part : list) {
             rows.add(new CIRow(part.getPartID(), part.getBarcode(), part.getSerialNumber(), part.getLocation(),
