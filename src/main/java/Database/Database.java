@@ -25,7 +25,7 @@ import java.util.Date;
 public class Database implements IController {
     //DB root pass: Userpassword123
     public static final String USERNAME = "root";
-    public static final String PASSWORD = "3l3ctr1c_B00gloo";
+    public static final String PASSWORD = "Userpassword123";
     private static final String HOST = "jdbc:mysql://localhost:3306";
     private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_NAME = "/student_check_in";
