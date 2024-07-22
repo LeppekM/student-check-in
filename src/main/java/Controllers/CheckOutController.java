@@ -210,7 +210,8 @@ public class CheckOutController extends MenuController implements IController, I
                     for (int i = 0; i < quantitySpinner.getValue(); i++){
                         if(database.barcodeExists(barcode)) {
                             if (extendedCheckout.isSelected()){
-                                success = database.checkOutPart(barcode, currentStudent.getRFID(), course, professor, extendedDueDate);
+                                success = database.checkOutPart(barcode, currentStudent.getRFID(), course, professor,
+                                        extendedDueDate);
                             } else {
                                 success = database.checkOutPart(barcode, currentStudent.getRFID(), null, null, null);
                             }
