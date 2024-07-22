@@ -1,5 +1,6 @@
 package Tables;
 
+import Database.ObjectClasses.Checkout;
 import Database.ObjectClasses.Student;
 import HelperClasses.ExportToExcel;
 import Controllers.TableScreensController;
@@ -160,10 +161,6 @@ public class ManageStudentsTable extends TSCTable {
         }
     }
 
-    public String getEmail(int row) {
-        return emailCol.getCellData(row);
-    }
-
     public void importStudents() {
         database.initWorker(worker);
         try {
@@ -267,6 +264,7 @@ public class ManageStudentsTable extends TSCTable {
                             } else if (database.studentRFIDExists(Integer.parseInt(rfid.getText()))) {
                                 stageUtils.errorAlert("A student with that rfid already exists.");
                             } else {
+                                database.initWorker(worker);
                                 database.addStudent(new Student(first.getText() + " " + last.getText(),
                                         Integer.parseInt(rfid.getText()), email.getText()));
                                 stage.close();
@@ -295,7 +293,25 @@ public class ManageStudentsTable extends TSCTable {
                     || StageUtils.getInstance().requestAdminPin("delete a student", controller.getScene())) {
 
                 int index = table.getSelectionModel().getFocusedIndex();
-                String email = getEmail(index);
+                String email = emailCol.getCellData(index);
+                ArrayList<Checkout> currentlyCheckedOut = new ArrayList<>(database.selectStudent(-1 ,email)
+                        .getCheckedOut());
+                StringBuilder currentlyCheckedOutParts = new StringBuilder();
+                for (Checkout checkout : currentlyCheckedOut) {
+                    currentlyCheckedOutParts.append(checkout.getPartName().get()).append(" partID = ")
+                            .append(checkout.getPartID().get()).append(", ");
+                }
+                if (stageUtils.confirmationAlert("Student has Parts Checked Out", "The selected student " +
+                        firstNameCol.getCellData(index) + " " + lastNameCol.getCellData(index) +
+                        " has parts currently checked out. They will be marked as returned before the student is " +
+                        "deleted", "Parts currently checked out: "
+                        + currentlyCheckedOutParts.substring(0, currentlyCheckedOutParts.length() - 2))) {
+                    for (Checkout checkout : currentlyCheckedOut) {
+                        database.checkInPart(checkout.getBarcode().get(), checkout.getStudentID().get());
+                    }
+                } else {
+                    return;
+                }
                 if (stageUtils.confirmationAlert("Delete Student", "Are you ok with this?", "Delete this Student?")) {
                     database.deleteStudent(email);
                     populateTable();

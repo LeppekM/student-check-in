@@ -224,7 +224,8 @@ public class CompleteInventoryTable extends TSCTable {
                                 label.setStyle("-fx-text-fill: red; -fx-font-size: 16px;");
                             }
                         } else {
-                            Label label = new Label("No Previous Checkout History Associated with this Part");
+                            Label label = new Label("No previous checkout history associated with this part \n" +
+                                    "or last student to check part out has been deleted");
                             label.setStyle("-fx-font-size: 16px;");
                             HBox hBox = new HBox(label);
                             addHBox(hBox);

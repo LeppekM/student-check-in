@@ -868,7 +868,9 @@ public class Database implements IController {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT studentID FROM students where studentID = " +
                     rfid + ";");
-            studentRFID = resultSet.getInt("studentID");
+            if (resultSet.next()) {
+                studentRFID = resultSet.getInt("studentID");
+            }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
