@@ -96,12 +96,12 @@ public class HistoryInventoryTable extends TSCTable {
             String input = filter.toLowerCase();
             String student = val.getStudentName().getValue();
             String partName = val.getPartName().getValue();
-            String serialNumber = val.getBarcode().getValue().toString();
+            String barcode = String.format("%06d", val.getBarcode().getValue());
             String action = val.getAction().getValue();
             String date = val.getDate().getValue().toString().toLowerCase();
             if (!(student != null && student.toLowerCase().contains(input)
                     || partName != null && partName.toLowerCase().contains(input)
-                    || serialNumber.toLowerCase().contains(input)
+                    || barcode.toLowerCase().contains(input)
                     || action != null && action.toLowerCase().contains(input)
                     || date.toLowerCase().contains(input))) {
                 return false;
