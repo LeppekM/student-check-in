@@ -629,31 +629,38 @@ public class CompleteInventoryTable extends TSCTable {
 
         if ((worker != null && (worker.canRemoveParts() || worker.isAdmin())) ||
                 stageUtils.requestAdminPin("delete parts", controller.getScene())) {
-            boolean typeHasOneCheckedOut = false;
-            ArrayList<String> partIDs = database.getAllPartIDsForPartName("" + part.getPartID());
+            ArrayList<Part> checkedOutList = new ArrayList<>();
+            ArrayList<String> partIDs = database.getAllPartIDsForPartName(part.getPartName());
             for (String id : partIDs) {
                 if (database.getIsCheckedOut(id)) {
-                    typeHasOneCheckedOut = true;
+                    checkedOutList.add(database.selectPart(Integer.parseInt(id)));
                 }
             }
             String partName = part.getPartName();
-            if (!typeHasOneCheckedOut) {
-                database.initWorker(worker);
-                try {
-                    if (database.hasPartName(partName)) {
-                        if (stageUtils.confirmationAlert("Are you sure?",
-                                "Delete all " + partName + "s?",
-                                "Are you sure you wish to delete all parts named: " + partName + "?")) {
-                            database.deleteParts(partName);
-                            populateTable();
-                        }
-                    }
-                } catch (Exception e) {
-                    stageUtils.errorAlert("Error deleting parts with name: " + partName);
+            if (!checkedOutList.isEmpty()) {
+                StringBuilder partsCheckedOut = new StringBuilder();
+                for (Part checkedOut : checkedOutList) {
+                    partsCheckedOut.append(checkedOut.getPartID()).append(", ");
                 }
-            } else {
-                stageUtils.errorAlert("At least one " + partName + " is currently checked out, so "
-                        + partName + " parts cannot be deleted.");
+                if (!stageUtils.confirmationAlert("Part(s) Already Checked Out", "At least one " + partName +
+                        " is currently checked out, are you sure you want to delete?", "The parts will be marked " +
+                        "as returned before being deleted. Parts currently checked out: " +
+                        partsCheckedOut.substring(0, partsCheckedOut.length() - 2) + ".")) {
+                    return;
+                }
+            }
+            database.initWorker(worker);
+            try {
+                if (database.hasPartName(partName)) {
+                    if (stageUtils.confirmationAlert("Are you sure?",
+                            "Delete all " + partName + "s?",
+                            "Are you sure you wish to delete all parts named: " + partName + "?")) {
+                        database.deleteParts(partName);
+                        populateTable();
+                    }
+                }
+            } catch (Exception e) {
+                stageUtils.errorAlert("Error deleting parts with name: " + partName);
             }
         }
     }
