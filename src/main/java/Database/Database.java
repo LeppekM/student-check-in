@@ -473,7 +473,8 @@ public class Database implements IController {
     public void clearUnusedStudents() {
         String query =
                 "DELETE FROM students " +
-                        "WHERE studentID NOT IN (SELECT studentID FROM checkout)";
+                        "WHERE studentID NOT IN (SELECT studentID FROM checkout)" +
+                        "OR studentID is null";
 
         try {
             Statement statement = getConnection().createStatement();
