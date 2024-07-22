@@ -172,64 +172,65 @@ public class ManageStudentsTable extends TSCTable {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx", "*.xls"));
 
             File file = fileChooser.showOpenDialog(table.getScene().getWindow());
-            FileInputStream fis = new FileInputStream(file);
-            XSSFWorkbook workbook = new XSSFWorkbook(fis);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIt = sheet.iterator();
-            // skip the first row, which just has column labels
-            if (rowIt.hasNext()) {
-                rowIt.next();
-            }
+            if (file != null) {
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook workbook = new XSSFWorkbook(fis);
+                XSSFSheet sheet = workbook.getSheetAt(0);
+                Iterator<Row> rowIt = sheet.iterator();
+                // skip the first row, which just has column labels
+                if (rowIt.hasNext()) {
+                    rowIt.next();
+                }
 
-            List<Student> failedImports = new ArrayList<>();
-            // parse the rest of the rows
-            while (rowIt.hasNext()) {
-                Row row = rowIt.next();
-                if (row.getCell(0) != null && row.getCell(3) != null) {
-                    String email = row.getCell(3).toString();
-                    String name = row.getCell(0).toString();
-                    try {
-                        String lastName = name.substring(0, name.indexOf(", "));
-                        String restOfName = name.substring(name.indexOf(", ") + 2);
-                        String firstName;
-                        if (restOfName.contains(" ")) {
-                            firstName = restOfName.substring(0, restOfName.indexOf(" "));
-                        } else {
-                            firstName = restOfName;
-                        }
-                        if (restOfName.contains(", ")) {
-                            lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
-                        }
-                        if (!email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
-                            failedImports.add(new Student(firstName + " " + lastName, email));
-                        } else {
-                            if (!database.getStudentEmails().contains(email)) {
-                                if (!database.importStudent(new Student(firstName + " " + lastName, email))) {
-                                    failedImports.add(new Student(firstName + " " + lastName, email));
+                List<Student> failedImports = new ArrayList<>();
+                // parse the rest of the rows
+                while (rowIt.hasNext()) {
+                    Row row = rowIt.next();
+                    if (row.getCell(0) != null && row.getCell(3) != null) {
+                        String email = row.getCell(3).toString();
+                        String name = row.getCell(0).toString();
+                        try {
+                            String lastName = name.substring(0, name.indexOf(", "));
+                            String restOfName = name.substring(name.indexOf(", ") + 2);
+                            String firstName;
+                            if (restOfName.contains(" ")) {
+                                firstName = restOfName.substring(0, restOfName.indexOf(" "));
+                            } else {
+                                firstName = restOfName;
+                            }
+                            if (restOfName.contains(", ")) {
+                                lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
+                            }
+                            if (!email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                                failedImports.add(new Student(firstName + " " + lastName, email));
+                            } else {
+                                if (!database.getStudentEmails().contains(email)) {
+                                    if (!database.importStudent(new Student(firstName + " " + lastName, email))) {
+                                        failedImports.add(new Student(firstName + " " + lastName, email));
+                                    }
                                 }
                             }
+                        } catch (StringIndexOutOfBoundsException e) {
+                            failedImports.add(new Student(name, email));
                         }
-                    } catch (StringIndexOutOfBoundsException e) {
-                        failedImports.add(new Student(name, email));
+                    } else {
+                        stageUtils.errorAlert("The name must be in the first row and the email must " +
+                                "be in the fourth row of the imported excel file.");
                     }
-                } else {
-                    stageUtils.errorAlert("The name must be in the first row and the email must " +
-                            "be in the fourth row of the imported excel file.");
                 }
+                populateTable();
 
-            }
-            populateTable();
-
-            if (!failedImports.isEmpty()) {
-                List<String> lines = new ArrayList<>();
-                for (Student student : failedImports) {
-                    lines.add(student.getName());
+                if (!failedImports.isEmpty()) {
+                    List<String> lines = new ArrayList<>();
+                    for (Student student : failedImports) {
+                        lines.add(student.getName());
+                    }
+                    Path filePath = Paths.get("failed_students_import.txt");
+                    Files.write(filePath, lines);
+                    stageUtils.errorAlert("The program failed to import the students listed in the text file: \""
+                            + filePath.getFileName() + "\"");
                 }
-                Path filePath = Paths.get("failed_students_import.txt");
-                Files.write(filePath, lines);
-                stageUtils.errorAlert("The program failed to import the students listed in the text file: \""
-                        + filePath.getFileName() + "\"");
-            }
+            }  // do nothing if no file was selected / operation cancelled
         } catch (IOException e) {
             stageUtils.errorAlert("Failed to import students");
         }
