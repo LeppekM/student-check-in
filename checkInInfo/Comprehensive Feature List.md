@@ -51,5 +51,5 @@
     - 8+ character password
     - RFID
 27. Add admins with all the same information and a 4 digit PIN
-28. Delete individual workers
+28. Delete individual workers or admins
 29. Switch which worker is currently logged in by logging out and redirecting to login screen
