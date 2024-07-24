@@ -36,7 +36,7 @@ apply plugin: 'javafx-gradle-plugin'
 
 jfx {
     // minimal requirement for jfxJar-task
-    mainClass = 'InventoryController.StudentCheckIn'
+    mainClass = 'App.StudentCheckIn'
 
     // minimal requirement for jfxNative-task
     vendor = 'MSOE'
