@@ -109,12 +109,15 @@ public class InventoryPartsTable extends TSCTable {
             }
         });
 
-        controller.getScene().setOnKeyPressed(event -> {
-            if (input.get().length() == 6) {
+        controller.getScene().getScene().setOnKeyPressed(event -> {
+            if (event.getCode().isDigitKey()) {
+                input.updateAndGet(currentValue -> currentValue + event.getText());
+            }
+            if (input.get().trim().length() == 6) {
                 int index = -1;
                 for (int i = 0; i < rows.size(); i++) {
                     IPRow row = (IPRow) rows.get(i);
-                    if (Long.parseLong(input.get()) == row.getBarcode().get()) {
+                    if (Long.parseLong(input.get().trim()) == row.getBarcode().get()) {
                         index = i;
                     }
                 }
@@ -124,8 +127,6 @@ public class InventoryPartsTable extends TSCTable {
                 input.set("");
             } else if (event.getCode().equals(KeyCode.BACK_SPACE)) {
                 input.set("");
-            } else if (event.getCode().isDigitKey()) {
-                input.updateAndGet(currentValue -> currentValue + event.getText());
             }
         });
 
