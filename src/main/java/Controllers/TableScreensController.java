@@ -156,7 +156,6 @@ public class TableScreensController extends MenuController implements IControlle
 
     private void reloadScreen() {
         screenProperty.set(screen);
-        searchInput.initEntrySet(new TreeSet<>());
         switch (screen) {
             case COMPLETE_INVENTORY:
                 tscTable = new CompleteInventoryTable(this);
@@ -250,9 +249,11 @@ public class TableScreensController extends MenuController implements IControlle
                 break;
         }
         searchInput.setText("");
+        searchInput.initEntrySet(new TreeSet<>());
         disableButtons(true);
         tscTable.initialize();
         tscTable.populateTable();
+        searchInput.requestFocus();
     }
 
     private void disableButtons(boolean bool) {
