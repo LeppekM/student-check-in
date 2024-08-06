@@ -432,6 +432,7 @@ public class CheckOutController extends MenuController implements IController, I
                         } else {
                             Student s = database.selectStudent(-1, studentEmail);
                             s.setRFID(getStudentID());
+                            database.initWorker(worker);
                             database.updateStudent(s, s.getRFID());
                             stageUtils.successAlert("Student updated");
                         }
