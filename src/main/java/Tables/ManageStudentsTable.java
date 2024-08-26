@@ -40,6 +40,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static Controllers.CheckOutController.EMAIL_REGEX;
 
 /**
  * Manages the table which contains all students in the manage students screen
@@ -180,6 +183,8 @@ public class ManageStudentsTable extends TSCTable {
                 }
 
                 List<Student> failedImports = new ArrayList<>();
+                List<String> allStudentEmails = database.getStudentEmails().stream().map(String::toLowerCase)
+                        .collect(Collectors.toList()) ;
                 // parse the rest of the rows
                 while (rowIt.hasNext()) {
                     Row row = rowIt.next();
@@ -198,10 +203,10 @@ public class ManageStudentsTable extends TSCTable {
                             if (restOfName.contains(", ")) {
                                 lastName += restOfName.substring(restOfName.indexOf(", ") + 1);
                             }
-                            if (!email.matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
+                            if (!email.matches(EMAIL_REGEX)) {
                                 failedImports.add(new Student(firstName + " " + lastName, email));
                             } else {
-                                if (!database.getStudentEmails().contains(email)) {
+                                if (!allStudentEmails.contains(email.toLowerCase())) {
                                     if (!database.importStudent(new Student(firstName + " " + lastName, email))) {
                                         failedImports.add(new Student(firstName + " " + lastName, email));
                                     }
