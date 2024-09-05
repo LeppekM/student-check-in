@@ -1206,7 +1206,7 @@ public class Database implements IController {
     }
 
     public void updateStudent(Student s, int oldRFID) {
-        if(studentHasCheckedOutItems(s.getEmail())){
+        if(studentHasCheckedOutItems(oldRFID)){
             updateCheckedOutPartsRFID(s, oldRFID);
         }
         String query = "update students set students.studentID = " + s.getRFID() + ", students.studentName = '" +
@@ -1242,12 +1242,22 @@ public class Database implements IController {
         }
     }
 
-    public boolean studentHasCheckedOutItems(String email) {
-        Student s = selectStudent(-1, email);
-        if(s.getRFID() == 0 || s.getCheckedOut().isEmpty()){
-            return false;
+    public boolean studentHasCheckedOutItems(int oldRFID) {
+        String query = "SELECT COUNT(*) FROM checkout WHERE checkout.studentID = " + oldRFID + ";";
+        ResultSet resultSet;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            resultSet.next();
+            if(oldRFID != 0 && resultSet.getInt(1) > 0){
+                return true;
+            }
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            stageUtils.errorAlert("Issue counting parts checked out by specific student");
         }
-        return !s.getCheckedOut().isEmpty();
+        return false;
     }
 
     /**
@@ -1301,7 +1311,8 @@ public class Database implements IController {
      * @param email students email
      */
     public void deleteStudent(String email) {
-        if (studentHasCheckedOutItems(email)) {
+        Student s = selectStudent(-1, email);
+        if (studentHasCheckedOutItems(s.getRFID())) {
             stageUtils.errorAlert("Student could not be deleted because they have parts checked out");
             return;
         }
