@@ -104,14 +104,18 @@ public class StageUtils {
      * @param title Title of alert
      * @param content Content
      */
-    public void checkoutAlert(String title, String content) {
-        new Thread(() -> Platform.runLater(() -> {
-            Stage owner = createAlert();
-            Notifications.create().title(title).text(content).hideAfter(new Duration(2000)).show();
+    public void checkoutAlert(String title, String content, Stage owner) {
+        Platform.runLater(() -> {
+            Notifications.create()
+                    .title(title)
+                    .text(content)
+                    .owner(owner)  // Set the owner of the notification
+                    .hideAfter(new Duration(2000))
+                    .show();
+
             PauseTransition delay = new PauseTransition(Duration.seconds(2));
-            delay.setOnFinished(event -> owner.close());
             delay.play();
-        })).start();
+        });
     }
 
     /**

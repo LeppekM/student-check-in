@@ -156,7 +156,8 @@ public class CheckOutController extends MenuController implements IController, I
         }
         database.initWorker(worker); // kept for tracking purposes
         if (!fieldsFilled()) {
-            stageUtils.checkoutAlert("Unfilled Fields", "No parts checked in/out");
+            stageUtils.checkoutAlert("Unfilled Fields", "No parts checked in/out",
+                    (Stage) main.getScene().getWindow());
             return;
         }
         if (isStudentNameEmpty()) {
@@ -230,7 +231,8 @@ public class CheckOutController extends MenuController implements IController, I
         }
 
         if (success) {
-            stageUtils.checkoutAlert("Success", "Part(s) Checked in/out successfully");
+            stageUtils.checkoutAlert("Success", "Part(s) Checked in/out successfully",
+                    (Stage) main.getScene().getWindow());
         }
     }
 
@@ -667,7 +669,8 @@ public class CheckOutController extends MenuController implements IController, I
 
             if (extendedFieldsNotFilled()) {
                 stageUtils.checkoutAlert("Extended Checkout",
-                        "Process cancelled or fields were not filled out for extended checkout");
+                        "Process cancelled or fields were not filled out for extended checkout",
+                        (Stage) main.getScene().getWindow());
                 extended.setSelected(false);
                 setExtendedCheckboxesVisible(false);
                 return;
@@ -721,10 +724,10 @@ public class CheckOutController extends MenuController implements IController, I
                         } else {
                             setText(item);
 
-                            // if the part is overdue
+                            // if the part is overdue, text is red
                             Date currentDate = new Date();
-                            Checkout model = getTreeTableRow().getItem();
-                            if (model != null && model.getDueDate().get().before(currentDate)) {
+                            Checkout checkedOutPart = getTreeTableRow().getItem();
+                            if (checkedOutPart != null && checkedOutPart.getDueDate().get().before(currentDate)) {
                                 setStyle("-fx-text-fill: #920202");
                             } else {
                                 setStyle(""); // Reset to default style if condition is not met
