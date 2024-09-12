@@ -47,28 +47,6 @@ public class StageUtils {
     }
 
     /**
-     * Helper method to make a popup
-     * @param fxml Name of FXML page
-     * @param node The root scene to use
-     * @param title the title of the popup
-     */
-    public Stage createPopupStage(String fxml, Node node, String title) {
-        Stage stage = new Stage();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxml));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            stage.setTitle(title);
-            stage.initOwner(node.getScene().getWindow());
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return stage;
-    }
-
-    /**
      * Helper method to make popup with worker initialized
      * @param fxml Name of FXML
      * @param node The root scene to use
@@ -124,13 +102,13 @@ public class StageUtils {
      * @param content Content
      */
     public void slidingAlert(String title, String content) {
-        new Thread(() -> Platform.runLater(() -> {
+        Platform.runLater(() -> {
             Stage owner = createAlert();
             Notifications.create().title(title).text(content).hideAfter(new Duration(5000)).show();
             PauseTransition delay = new PauseTransition(Duration.seconds(5));
             delay.setOnFinished(event -> owner.close());
             delay.play();
-        })).start();
+        });
     }
 
     /**
@@ -196,14 +174,18 @@ public class StageUtils {
      * This is the success alert that appears when editing/adding parts
      * @param successText text that is being passed to the dialog
      */
-    public void successAlert(String successText){
-        new Thread(() -> Platform.runLater(() -> {
-            Stage owner = createAlert();
-            Notifications.create().title("Successful!").text(successText).hideAfter(new Duration(5000)).show();
+    public void successAlert(String successText, Stage owner){
+        Platform.runLater(() -> {
+            Notifications.create()
+                    .title("Successful!")
+                    .text(successText)
+                    .owner(owner)  // Set the owner of the notification
+                    .hideAfter(new Duration(5000))
+                    .show();
+
             PauseTransition delay = new PauseTransition(Duration.seconds(5));
-            delay.setOnFinished(event -> owner.close());
             delay.play();
-        })).start();
+        });
     }
 
     public void unsavedChangesAlert(Stage stage) {

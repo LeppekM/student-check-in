@@ -505,7 +505,8 @@ public class CompleteInventoryTable extends TSCTable {
              * Creates an alert informing user that part was added successfully
              */
             private void partAddedSuccess(int num){
-                stageUtils.successAlert(num == 1 ? "Part added successfully." : num + " parts added successfully.");
+                stageUtils.successAlert(num == 1 ? "Part added successfully." : num + " parts added successfully.",
+                        stage);
             }
 
             /**
@@ -745,14 +746,14 @@ public class CompleteInventoryTable extends TSCTable {
                         } else {
                             database.editAllOfPartNameCommonBarcode(originalPartName, part);
                         }
-                        stageUtils.successAlert("All " + part.getPartName() + " parts edited successfully.");
+                        stageUtils.successAlert("All " + part.getPartName() + " parts edited successfully.", stage);
                     } else {
                         part.update(nameField.getText().trim(), serialField.getText() +
                                         suffixField.getText().trim(), manufacturerField.getText().trim(),
                                         Double.parseDouble(priceField.getText()), vendorField.getValue(),
                                         locationField.getText().trim(), Long.parseLong(barcodeField.getText()));
                         database.editPart(part);
-                        stageUtils.successAlert("Part edited successfully.");
+                        stageUtils.successAlert("Part edited successfully.", stage);
                     }
                     stage.close();
                     populateTable();

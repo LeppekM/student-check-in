@@ -429,7 +429,7 @@ public class CheckOutController extends MenuController implements IController, I
                             if (studentName != null) {
                                 database.initWorker(worker);
                                 database.addStudent(new Student(studentName, Integer.parseInt(input), studentEmail));
-                                stageUtils.successAlert("New student created");
+                                stageUtils.successAlert("New student created", (Stage) main.getScene().getWindow());
                             }
                         } else {
                             Student s = database.selectStudent(-1, studentEmail);
@@ -437,7 +437,7 @@ public class CheckOutController extends MenuController implements IController, I
                             s.setRFID(getStudentID());
                             database.initWorker(worker);
                             database.updateStudent(s, oldRFID);
-                            stageUtils.successAlert("Student updated");
+                            stageUtils.successAlert("Student updated", (Stage) main.getScene().getWindow());
                         }
                     }
                     studentNameField.setText(studentName);
