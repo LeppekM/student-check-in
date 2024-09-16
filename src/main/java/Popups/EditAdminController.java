@@ -39,7 +39,8 @@ public class EditAdminController implements IController {
     private Database database;
     private final StageUtils stageUtils = StageUtils.getInstance();
     private static String name, workerEmail, password;
-    private static int adminPin, rfid;
+    private static int adminPin;
+    private static long rfid;
 
     /**
      * Initializes the window and copies initial values
@@ -56,7 +57,7 @@ public class EditAdminController implements IController {
         name = workerName.getText();
         workerEmail = email.getText();
         password = pass.getText();
-        rfid = Integer.parseInt(eRFIDa.getText());
+        rfid = Long.parseLong(eRFIDa.getText());
         adminPin = Integer.parseInt(pin.getText());
         unmasked.setManaged(false);
         unmaskedPin.setManaged(false);
@@ -85,7 +86,7 @@ public class EditAdminController implements IController {
     public boolean changed(){
         return !name.equals(workerName.getText()) || !password.equals(pass.getText()) ||
                 !workerEmail.equals(email.getText()) || adminPin != Integer.parseInt(pin.getText())
-                || rfid != Integer.parseInt(eRFIDa.getText());
+                || rfid != Long.parseLong(eRFIDa.getText());
     }
 
     /**
@@ -108,7 +109,7 @@ public class EditAdminController implements IController {
             if (adminPin != Integer.parseInt(pin.getText())){
                 contentText += "\t" + adminPin + " --> " + pin.getText() + "\n";
             }
-            if (rfid != Integer.parseInt(eRFIDa.getText())) {
+            if (rfid != Long.parseLong(eRFIDa.getText())) {
                 contentText += "\t" + rfid + " --> " + eRFIDa.getText() + "\n";
             }
             if (stageUtils.confirmationAlert("Edit Success", "Student worker info changing...",
@@ -117,7 +118,7 @@ public class EditAdminController implements IController {
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
                 worker.setPin(Integer.parseInt(pin.getText()));
-                worker.setWorkerRFID(Integer.parseInt(eRFIDa.getText()));
+                worker.setWorkerRFID(Long.parseLong(eRFIDa.getText()));
                 database.initWorker(loggedWorker);
                 database.updateWorker(worker);
                 stageUtils.informationAlert("Admin updated", "Admin updated successfully");

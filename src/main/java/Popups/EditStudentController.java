@@ -49,7 +49,7 @@ public class EditStudentController implements IController {
     private Worker worker;
     private Database database;
     private static String name;
-    private static int id;
+    private static long id;
     private static String studentEmail;
     private final StageUtils stageUtils = StageUtils.getInstance();
 
@@ -66,7 +66,7 @@ public class EditStudentController implements IController {
         StageUtils stageUtils = StageUtils.getInstance();
         stageUtils.acceptIntegerOnly(rfid);
         name = studentName.getText();
-        id = Integer.parseInt(rfid.getText());
+        id = Long.parseLong(rfid.getText());
         studentEmail = email.getText();
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(5);
@@ -153,7 +153,7 @@ public class EditStudentController implements IController {
      * @return true if nothing changed
      */
     public boolean changed(){
-        return !name.equals(studentName.getText()) || id != Integer.parseInt(rfid.getText()) || !studentEmail.equals(email.getText());
+        return !name.equals(studentName.getText()) || id != Long.parseLong(rfid.getText()) || !studentEmail.equals(email.getText());
     }
 
     /**
@@ -170,7 +170,7 @@ public class EditStudentController implements IController {
             if (!name.equals(studentName.getText())) {
                 contentText += "\t" + name + " --> " + studentName.getText() + "\n";
             }
-            if (id != Integer.parseInt(rfid.getText())) {
+            if (id != Long.parseLong(rfid.getText())) {
                 contentText += "\t" + id + " --> " + rfid.getText() + "\n";
             }
             if (!studentEmail.equals(email.getText())){
@@ -178,8 +178,8 @@ public class EditStudentController implements IController {
             }
             if (stageUtils.confirmationAlert("Edit Success", "Student info changing...", contentText)) {
                 student.setName(studentName.getText());
-                int oldRFID = student.getRFID();
-                student.setRFID(Integer.parseInt(rfid.getText()));
+                long oldRFID = student.getRFID();
+                student.setRFID(Long.parseLong(rfid.getText()));
                 student.setEmail(email.getText());
                 database.initWorker(worker);
                 database.updateStudent(student, oldRFID);

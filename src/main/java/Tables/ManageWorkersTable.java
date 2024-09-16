@@ -217,7 +217,7 @@ public class ManageWorkersTable extends TSCTable {
 
                         database.initWorker(worker);
                         database.addWorker(new Worker(n.toString(), email.getText(), pass.getText(),
-                                Integer.parseInt(rfid.getText())));
+                                Long.parseLong(rfid.getText())));
                         stage.close();
                     }
                 } else {
@@ -291,7 +291,7 @@ public class ManageWorkersTable extends TSCTable {
                         database.initWorker(worker);
                         database.addWorker(new Worker(n.toString(), w.get(w.size() - 1).getWorkerID()
                                 + 1, email.getText(), pass.getText(), Integer.parseInt(pin.getText()),
-                                Integer.parseInt(rfid.getText()), true, true, true, true));
+                                Long.parseLong(rfid.getText()), true, true, true, true));
                         stage.close();
                     }
                 } else {

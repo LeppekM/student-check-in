@@ -12,7 +12,8 @@ public class Checkout extends RecursiveTreeObject {
     private final ObjectProperty<Date> dueDate;
     private StringProperty studentName, studentEmail, partName, action, serialNumber, fee, professor, course;
     private final LongProperty barcode;
-    private IntegerProperty checkoutID, studentID, partID;
+    private IntegerProperty checkoutID, partID;
+    private LongProperty studentID;
     private ObjectProperty<Date> checkedOutDate, checkedInDate;
 
     public Checkout(String studentName, String studentEmail, String partName, long barcode,
@@ -25,12 +26,12 @@ public class Checkout extends RecursiveTreeObject {
         this.dueDate = new SimpleObjectProperty<>(date);
     }
 
-    public Checkout(int checkoutID, String studentName, String studentEmail, int studentID, String partName,
+    public Checkout(int checkoutID, String studentName, String studentEmail, long studentID, String partName,
                     long barcode, String serialNumber, int partID, Date checkedOutDate, Date dueDate, String fee) {
         this.checkoutID = new SimpleIntegerProperty(checkoutID);
         this.studentName = new SimpleStringProperty(studentName);
         this.studentEmail = new SimpleStringProperty(studentEmail);
-        this.studentID = new SimpleIntegerProperty(studentID);
+        this.studentID = new SimpleLongProperty(studentID);
         this.partName = new SimpleStringProperty(partName);
         this.barcode = new SimpleLongProperty(barcode);
         this.serialNumber = new SimpleStringProperty(serialNumber);
@@ -40,8 +41,8 @@ public class Checkout extends RecursiveTreeObject {
         this.fee = new SimpleStringProperty(fee);
     }
 
-    public Checkout(int studentID, long barcode, Date checkoutAt, Date checkinAt, Date dueAt, String course, String professor) {
-        this.studentID = new SimpleIntegerProperty(studentID);
+    public Checkout(long studentID, long barcode, Date checkoutAt, Date checkinAt, Date dueAt, String course, String professor) {
+        this.studentID = new SimpleLongProperty(studentID);
         this.barcode = new SimpleLongProperty(barcode);
         this.checkedOutDate = new SimpleObjectProperty<>(checkoutAt);
         this.checkedInDate = checkinAt != null ? new SimpleObjectProperty<>(checkinAt) : null;
@@ -106,7 +107,7 @@ public class Checkout extends RecursiveTreeObject {
         return fee;
     }
 
-    public IntegerProperty getStudentID() {
+    public LongProperty getStudentID() {
         return studentID;
     }
 }

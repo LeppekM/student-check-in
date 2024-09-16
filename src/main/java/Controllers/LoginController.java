@@ -124,7 +124,7 @@ public class LoginController implements Initializable {
             try {
                 Worker worker = null;
                 if (!rfid.getText().isEmpty()) {
-                    worker = findWorkerByID(Integer.parseInt(rfid.getText()));
+                    worker = findWorkerByID(Long.parseLong(rfid.getText()));
                 }
                 if (worker != null) {
                     FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/Menu.fxml"));
@@ -146,7 +146,7 @@ public class LoginController implements Initializable {
         return database.getWorker(email);
     }
 
-    private Worker findWorkerByID(int rfid) {
+    private Worker findWorkerByID(long rfid) {
         return database.getWorker(rfid);
     }
 

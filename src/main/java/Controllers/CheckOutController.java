@@ -407,7 +407,7 @@ public class CheckOutController extends MenuController implements IController, I
 
             if (!newV) {  // if no longer in focus
                 if (input.matches(EMAIL_REGEX)) {
-                    int sID = database.getStudentIDFromEmail(input);
+                    long sID = database.getStudentIDFromEmail(input);
                     if (sID == 0) {
                         stageUtils.errorAlert("Student is checking out equipment for first time/has no associated ID" +
                                 "\n They must use their student ID to check out an item");
@@ -435,7 +435,7 @@ public class CheckOutController extends MenuController implements IController, I
                             }
                             if (studentName != null) {
                                 database.initWorker(worker);
-                                database.addStudent(new Student(studentName, Integer.parseInt(input), studentEmail));
+                                database.addStudent(new Student(studentName, Long.parseLong(input), studentEmail));
                                 stageUtils.successAlert("New student created", (Stage) main.getScene().getWindow());
                             }
                         } else {
@@ -604,14 +604,14 @@ public class CheckOutController extends MenuController implements IController, I
     }
 
     /**
-     * Gets studentID as text, returns as int
-     * @return StudentID as integer
+     * Gets studentID as text, returns as long
+     * @return StudentID as long
      */
-    private int getStudentID() {
-        int id = 0;
+    private long getStudentID() {
+        long id = 0;
         if (studentIDField.getText().matches(RFID_REGEX)) {
             // technically incorrect, but shouldn't be a problem unless some nonsense is entered IE: 297839RFID:8920
-            id = Integer.parseInt(studentIDField.getText().replaceAll("\\D", ""));
+            id = Long.parseLong(studentIDField.getText().replaceAll("\\D", ""));
         } else if (studentIDField.getText().matches(EMAIL_REGEX)) {
             id = database.getStudentIDFromEmail(studentIDField.getText());
         }

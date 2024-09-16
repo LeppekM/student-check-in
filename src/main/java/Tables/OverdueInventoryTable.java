@@ -27,7 +27,7 @@ import java.util.Date;
  */
 public class OverdueInventoryTable extends TSCTable {
 
-    private JFXTreeTableColumn<OIRow, Integer> studentIDCol;
+    private JFXTreeTableColumn<OIRow, Long> studentIDCol;
     private JFXTreeTableColumn<OIRow, String> studentNameCol, partNameCol, serialNumberCol;
     private JFXTreeTableColumn<OIRow, Long> barcodeCol;
     private JFXTreeTableColumn<OIRow, Date> dueDateCol;
@@ -89,8 +89,8 @@ public class OverdueInventoryTable extends TSCTable {
         TreeTableColumn<TableRow, String> serialNumberTemp =
                 (TreeTableColumn<TableRow, String>) (TreeTableColumn) serialNumberCol;
         TreeTableColumn<TableRow, Date> dueDateTemp = (TreeTableColumn<TableRow, Date>) (TreeTableColumn) dueDateCol;
-        TreeTableColumn<TableRow, Integer> studentIDTemp =
-                (TreeTableColumn<TableRow, Integer>) (TreeTableColumn) studentIDCol;
+        TreeTableColumn<TableRow, Long> studentIDTemp =
+                (TreeTableColumn<TableRow, Long>) (TreeTableColumn) studentIDCol;
         TreeTableColumn<TableRow, Long> barcodeTemp = (TreeTableColumn<TableRow, Long>) (TreeTableColumn) barcodeCol;
 
         table.getColumns().setAll(studentIDTemp, studentNameTemp, partNameTemp, serialNumberTemp,
@@ -172,13 +172,12 @@ public class OverdueInventoryTable extends TSCTable {
     public class OIRow extends TableRow {
 
         private final StringProperty studentName, partName, serialNumber, checkInID;
-        private final LongProperty barcode;
-        private final IntegerProperty studentID;
+        private final LongProperty barcode, studentID;
         private final ObjectProperty<Date> dueDate;
 
-        public OIRow(String studentName, int studentID, String partName, String serialNumber, long barcode,
+        public OIRow(String studentName, long studentID, String partName, String serialNumber, long barcode,
                                   Date dueDate, String checkInID) {
-            this.studentID = new SimpleIntegerProperty(studentID);
+            this.studentID = new SimpleLongProperty(studentID);
             this.partName = new SimpleStringProperty(partName);
             this.studentName = new SimpleStringProperty(studentName);
             this.barcode = new SimpleLongProperty(barcode);
@@ -187,7 +186,7 @@ public class OverdueInventoryTable extends TSCTable {
             this.checkInID = new SimpleStringProperty(checkInID);
         }
 
-        public IntegerProperty getStudentID() {
+        public LongProperty getStudentID() {
             return studentID;
         }
 

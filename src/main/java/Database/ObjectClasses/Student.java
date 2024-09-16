@@ -8,12 +8,13 @@ import javafx.collections.ObservableList;
  */
 public class Student {
 
-    private int uniqueID, rfid;
+    private int uniqueID;
+    private long rfid;
     private String name, email, firstName, lastName, date;
     private ObservableList<Checkout> checkedOut;
     private ObservableList<OverdueItem> overdueItems;
 
-    public Student(String name, int uniqueID, int rfid, String email, String date, ObservableList<Checkout> checkedOut,
+    public Student(String name, int uniqueID, long rfid, String email, String date, ObservableList<Checkout> checkedOut,
                    ObservableList<OverdueItem> overdueItems){
         this.name = name;
         this.uniqueID = uniqueID;
@@ -24,13 +25,13 @@ public class Student {
         this.overdueItems = overdueItems;
     }
 
-    public Student(String name, int rfid, String email) {
+    public Student(String name, long rfid, String email) {
         this.name = name;
         this.rfid = rfid;
         this.email = email;
     }
 
-    public Student(String firstName, String lastName, int rfid, String email) {
+    public Student(String firstName, String lastName, long rfid, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.rfid = rfid;
@@ -62,11 +63,11 @@ public class Student {
         return uniqueID;
     }
 
-    public int getRFID() {
+    public long getRFID() {
         return rfid;
     }
 
-    public void setRFID(int RFID) {
+    public void setRFID(long RFID) {
         this.rfid = RFID;
     }
 

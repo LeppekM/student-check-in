@@ -6,10 +6,11 @@ package Database.ObjectClasses;
 public class Worker {
 
     private String name, email, pass;
-    private int workerID, workerRFID, pin;
+    private int workerID, pin;
+    private long workerRFID;
     private boolean isAdmin, edit,  worker, remove;
 
-    public Worker(String name, int workerID, String email, String pass, int pin, int rfid, boolean isAdmin,
+    public Worker(String name, int workerID, String email, String pass, int pin, long rfid, boolean isAdmin,
                   boolean edit, boolean worker, boolean remove){
         this.name = name;
         this.workerID = workerID;
@@ -29,7 +30,7 @@ public class Worker {
         }
     }
 
-    public Worker(String name, String email, String pass, int rfid){
+    public Worker(String name, String email, String pass, long rfid){
         this.name = name;
         this.email = email;
         this.pass = pass;
@@ -77,11 +78,11 @@ public class Worker {
         this.pin = pin;
     }
 
-    public int getWorkerRFID() {
+    public long getWorkerRFID() {
         return workerRFID;
     }
 
-    public void setWorkerRFID(int workerRFID) {
+    public void setWorkerRFID(long workerRFID) {
         this.workerRFID = workerRFID;
     }
 

@@ -93,7 +93,7 @@ public class Database implements IController {
             while (resultSet.next()) {
                 String dueAt = resultSet.getString("checkout.dueAt");
                 if (isOverdue(dueAt)) {
-                    data.add(new OverdueItem(resultSet.getInt("checkout.studentID"),
+                    data.add(new OverdueItem(resultSet.getLong("checkout.studentID"),
                             resultSet.getString("students.studentName"), resultSet.getString("students.email"),
                             resultSet.getString("parts.partName"), resultSet.getString("parts.serialNumber"),
                             resultSet.getLong("parts.barcode"), timeUtils.convertStringtoDate(dueAt),
@@ -222,13 +222,13 @@ public class Database implements IController {
         return !name.isEmpty();
     }
 
-    public int getCheckoutIDFromBarcodeAndRFID(int rfid, long barcode) {
+    public int getCheckoutIDFromBarcodeAndRFID(long rfid, long barcode) {
         int checkoutID = 0;
         String query = "select checkoutID from checkout where studentID =? and barcode = ? " +
                 "and checkinAt IS NULL limit 1";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, rfid);
+            statement.setLong(1, rfid);
             statement.setLong(2, barcode);
             ResultSet rs = statement.executeQuery();
             if(rs.next()){
@@ -248,15 +248,15 @@ public class Database implements IController {
      * @return the ID associated with student's email, 0 if the student isn't in the db
      * (might be 0 for imported students)
      */
-    public int getStudentIDFromEmail(String email) {
-        int sID = 0;
+    public long getStudentIDFromEmail(String email) {
+        long sID = 0;
         String query = "SELECT studentID FROM students WHERE email = ?;";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, cleanString(email));
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                sID = rs.getInt("studentID");
+                sID = rs.getLong("studentID");
             }
             rs.close();
             statement.close();
@@ -269,7 +269,7 @@ public class Database implements IController {
     /**
      * Inserts new checkout entity into the database, and changes the associated part.isCheckedOut to 1
      */
-    public boolean checkOutPart(long barcode, int rfid, String course, String prof, String dueDate) {
+    public boolean checkOutPart(long barcode, long rfid, String course, String prof, String dueDate) {
         try {
             String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, " +
                     "prof, course) VALUES(?,?,?,?,?,?,?);";
@@ -280,7 +280,7 @@ public class Database implements IController {
             }
             PreparedStatement statement = connection.prepareStatement(addToCheckouts);
             statement.setInt(1, partID);
-            statement.setInt(2, rfid);
+            statement.setLong(2, rfid);
             statement.setLong(3, barcode);
             statement.setString(4, timeUtils.getCurrentDateTime().toString());
             if (dueDate != null){
@@ -307,7 +307,7 @@ public class Database implements IController {
     /**
      * Updates the checkout entity checkinAt to current time, and changes the associated part.isCheckedOut to 0
      */
-    public boolean checkInPart(long barcode, int rfid) {
+    public boolean checkInPart(long barcode, long rfid) {
         int partID = getPartIDFromBarcode(barcode, true);
         try {
             String setDate = "UPDATE checkout SET checkinAt = ? WHERE checkoutID = ?;";
@@ -381,14 +381,14 @@ public class Database implements IController {
                 "ON c.studentID = s.studentID \n" +
                 "INNER JOIN (SELECT MAX(checkoutID) AS max_checkoutID FROM checkout WHERE partID = " + partID +
                 ") max_c on c.checkoutID = max_c.max_checkoutID;";
-        int studentID = -1;
+        long studentID = -1;
         Student student = null;
         String studentName = "";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
-                studentID = resultSet.getInt("studentID");
+                studentID = resultSet.getLong("studentID");
                 studentName = resultSet.getString("studentName");
             }
             student = selectStudent(studentID, null);
@@ -416,7 +416,7 @@ public class Database implements IController {
                 "INNER JOIN (SELECT MAX(checkoutID) AS max_checkoutID FROM checkout WHERE partID = " + partID +
                 ") max_c on c.checkoutID = max_c.max_checkoutID;";
         Checkout checkoutObject = null;
-        int studentID = 0;
+        long studentID = 0;
         long barcode = 0;
         String dueAt = null;
         String professor = null;
@@ -428,7 +428,7 @@ public class Database implements IController {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
-                studentID = resultSet.getInt("studentID");
+                studentID = resultSet.getLong("studentID");
                 barcode = resultSet.getLong("barcode");
                 checkoutAt = TimeUtils.parseTimestamp(resultSet.getTimestamp("checkoutAt"));
                 checkinAt = TimeUtils.parseTimestamp(resultSet.getTimestamp("checkinAt"));
@@ -586,7 +586,7 @@ public class Database implements IController {
                 int checkoutID = resultSet.getInt("checkoutID");
                 String studentName = resultSet.getString("studentName");
                 String studentEmail = resultSet.getString("email");
-                int studentID = resultSet.getInt("studentID");
+                long studentID = resultSet.getLong("studentID");
                 String partName = resultSet.getString("partName");
                 long barcode = resultSet.getLong("barcode");
                 String serialNumber = resultSet.getString("serialNumber");
@@ -842,11 +842,11 @@ public class Database implements IController {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students");
             String name;
-            int id;
+            long id;
             String email;
             while (resultSet.next()) {
                 name = resultSet.getString("studentName");
-                id = resultSet.getInt("studentID");
+                id = resultSet.getLong("studentID");
                 email = resultSet.getString("email");
                 String[] names = name.split(" ", 2);
                 studentsList.add(new Student(names[0], names[1], id, email));
@@ -862,14 +862,14 @@ public class Database implements IController {
     /**
      * @return true if a student has RFID, false otherwise
      */
-    public boolean studentRFIDExists(int rfid) {
-        int studentRFID = 0;
+    public boolean studentRFIDExists(long rfid) {
+        long studentRFID = 0;
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT studentID FROM students where studentID = " +
                     rfid + ";");
             if (resultSet.next()) {
-                studentRFID = resultSet.getInt("studentID");
+                studentRFID = resultSet.getLong("studentID");
             }
             resultSet.close();
             statement.close();
@@ -938,7 +938,7 @@ public class Database implements IController {
         return worker;
     }
 
-    public Worker getWorker(int rfid) {
+    public Worker getWorker(long rfid) {
         Worker worker = null;
         String query = "Select * from workers where ID = " + rfid + ";";
         try {
@@ -961,7 +961,7 @@ public class Database implements IController {
             String name = resultSet.getString("workerName");
             String password = resultSet.getString("pass");
             int workerID = resultSet.getInt("workerID");
-            int rfid = resultSet.getInt("ID");
+            long rfid = resultSet.getLong("ID");
             String email = resultSet.getString("email");
             int pin = resultSet.getInt("pin");
             boolean isAdmin = resultSet.getByte("isAdmin") == 1;
@@ -1016,7 +1016,7 @@ public class Database implements IController {
      * @param studentEmail the email being searched, null if no email being searched
      * @return a student matching inputs if one exists in the db, null otherwise
      */
-    public Student selectStudent(int rfid, String studentEmail) {
+    public Student selectStudent(long rfid, String studentEmail) {
         String query;
         String coList = "select students.studentID, students.studentName, students.email, parts.partName, " +
                 "checkout.checkoutAt, checkout.dueAt, checkout.checkoutID, checkout.studentID, parts.barcode, " +
@@ -1038,7 +1038,8 @@ public class Database implements IController {
         Student student = null;
         String name = "", email = "";
         Date date = null;
-        int id = 0, uniqueID = 0;
+        int uniqueID = 0;
+        long id = 0;
         ObservableList<Checkout> checkedOutItems = FXCollections.observableArrayList();
         ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
         try {
@@ -1047,7 +1048,7 @@ public class Database implements IController {
             while (resultSet.next()) {
                 name = resultSet.getString("studentName");
                 email = resultSet.getString("email");
-                id = resultSet.getInt("studentID");
+                id = resultSet.getLong("studentID");
                 uniqueID = resultSet.getInt("uniqueID");
             }
             resultSet.close();
@@ -1060,7 +1061,7 @@ public class Database implements IController {
                             resultSet.getInt("checkout.checkoutID"),
                             resultSet.getString("students.studentName"),
                             resultSet.getString("students.email"),
-                            resultSet.getInt("students.studentID"),
+                            resultSet.getLong("students.studentID"),
                             resultSet.getString("parts.partName"),
                             resultSet.getLong("parts.barcode"),
                             resultSet.getString("parts.serialNumber"),
@@ -1072,7 +1073,7 @@ public class Database implements IController {
                     String dueAt = resultSet.getString("checkout.dueAt");
                     if (isOverdue(dueAt)) {
                         overdueItems.add(new OverdueItem(
-                                resultSet.getInt("students.studentID"),
+                                resultSet.getLong("students.studentID"),
                                 resultSet.getString("students.studentName"),
                                 resultSet.getString("students.email"),
                                 resultSet.getString("parts.partName"),
@@ -1109,7 +1110,7 @@ public class Database implements IController {
         String query = "Select studentName, email, studentID from students where email = ?;";
         String studentEmail = "";
         String name = "";
-        int id = 0;
+        long id = 0;
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, cleanString(email));
@@ -1117,7 +1118,7 @@ public class Database implements IController {
             while (rs.next()) {
                 studentEmail = rs.getString("email");
                 name = rs.getString("studentName");
-                id = rs.getInt("studentID");
+                id = rs.getLong("studentID");
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database", e);
@@ -1205,7 +1206,7 @@ public class Database implements IController {
         return true;
     }
 
-    public void updateStudent(Student s, int oldRFID) {
+    public void updateStudent(Student s, long oldRFID) {
         if(studentHasCheckedOutItems(oldRFID)){
             updateCheckedOutPartsRFID(s, oldRFID);
         }
@@ -1227,7 +1228,7 @@ public class Database implements IController {
      * @param s the student being updated, with all the information changed
      * @param oldRFID the RFID the checkouts are associated with
      */
-    public void updateCheckedOutPartsRFID(Student s, int oldRFID){
+    public void updateCheckedOutPartsRFID(Student s, long oldRFID){
         if (s.getRFID() != oldRFID) {  // won't update if no change is made with the RFID
             String query = "UPDATE checkout SET checkout.studentID = " + s.getRFID() +
                     " WHERE checkout.studentID = " + oldRFID + ";";
@@ -1242,7 +1243,7 @@ public class Database implements IController {
         }
     }
 
-    public boolean studentHasCheckedOutItems(int oldRFID) {
+    public boolean studentHasCheckedOutItems(long oldRFID) {
         String query = "SELECT COUNT(*) FROM checkout WHERE checkout.studentID = " + oldRFID + ";";
         ResultSet resultSet;
         try {

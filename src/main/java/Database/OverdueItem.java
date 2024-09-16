@@ -10,7 +10,7 @@ import java.util.Date;
  * relating to the last time it was checked out (and not checked back in)
  */
 public class OverdueItem extends RecursiveTreeObject {
-    private final SimpleIntegerProperty ID;
+    private final SimpleLongProperty ID;
     private final SimpleStringProperty partName;
     private final SimpleLongProperty barcode;
     private final ObjectProperty<Date> dueDate;
@@ -19,9 +19,9 @@ public class OverdueItem extends RecursiveTreeObject {
     private final SimpleStringProperty checkID;
     private SimpleStringProperty serialNumber;
 
-    public OverdueItem(int studentID, String studentName, String email, String partName, String serialNumber,
+    public OverdueItem(long studentID, String studentName, String email, String partName, String serialNumber,
                        long barcodeCon, Date dueDate, String checkID) {
-        this.ID = new SimpleIntegerProperty(studentID);
+        this.ID = new SimpleLongProperty(studentID);
         this.partName = new SimpleStringProperty(partName);
         this.barcode = new SimpleLongProperty(barcodeCon);
         this.dueDate = new SimpleObjectProperty<>(dueDate);
@@ -31,9 +31,9 @@ public class OverdueItem extends RecursiveTreeObject {
         this.serialNumber = new SimpleStringProperty(serialNumber);
     }
 
-    public OverdueItem(int studentID, String studentName, String email, String partName, long barcodeCon,
+    public OverdueItem(long studentID, String studentName, String email, String partName, long barcodeCon,
                        Date dueDate, String checkID) {
-        this.ID = new SimpleIntegerProperty(studentID);
+        this.ID = new SimpleLongProperty(studentID);
         this.partName = new SimpleStringProperty(partName);
         this.barcode = new SimpleLongProperty(barcodeCon);
         this.dueDate = new SimpleObjectProperty<>(dueDate);
@@ -42,7 +42,7 @@ public class OverdueItem extends RecursiveTreeObject {
         this.checkID = new SimpleStringProperty(checkID);
     }
 
-    public SimpleIntegerProperty getID() {
+    public SimpleLongProperty getID() {
         return ID;
     }
 

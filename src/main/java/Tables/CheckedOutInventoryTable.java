@@ -188,13 +188,13 @@ public class CheckedOutInventoryTable extends TSCTable {
         private final StringProperty fee;
         private final LongProperty barcode;
         private final IntegerProperty partID;
-        private final IntegerProperty studentRFID;
+        private final LongProperty studentRFID;
         private final IntegerProperty checkoutID;
         private final ObjectProperty<Date> dueDate;
         private final ObjectProperty<Date> checkedOutAt;
 
         public CORow(String studentName, String studentEmail, String partName, long barcode, String serialNumber,
-                     int partID, Date checkedOutAt, Date dueDate, String fee, int studentRFID, int checkoutID) {
+                     int partID, Date checkedOutAt, Date dueDate, String fee, long studentRFID, int checkoutID) {
             this.studentName = new SimpleStringProperty(studentName);
             this.studentEmail = new SimpleStringProperty(studentEmail);
             this.partName = new SimpleStringProperty(partName);
@@ -204,7 +204,7 @@ public class CheckedOutInventoryTable extends TSCTable {
             this.checkedOutAt = new SimpleObjectProperty<>(checkedOutAt);
             this.dueDate = new SimpleObjectProperty<>(dueDate);
             this.fee = new SimpleStringProperty(fee);
-            this.studentRFID = new SimpleIntegerProperty(studentRFID);
+            this.studentRFID = new SimpleLongProperty(studentRFID);
             this.checkoutID = new SimpleIntegerProperty(checkoutID);
         }
 
@@ -244,7 +244,7 @@ public class CheckedOutInventoryTable extends TSCTable {
             return fee;
         }
 
-        public IntegerProperty getStudentRFID() {
+        public LongProperty getStudentRFID() {
             return studentRFID;
         }
 

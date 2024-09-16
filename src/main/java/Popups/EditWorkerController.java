@@ -41,7 +41,7 @@ public class EditWorkerController implements IController {
     private static Worker worker, loggedWorker;
     private Database database;
     private static String name, workerEmail, password;
-    private static int rfid;
+    private static long rfid;
     private static boolean priv, edit, work, remove;
     private final StageUtils stageUtils = StageUtils.getInstance();
 
@@ -77,7 +77,7 @@ public class EditWorkerController implements IController {
         name = workerName.getText();
         workerEmail = email.getText();
         password = pass.getText();
-        rfid = Integer.parseInt(eRFIDw.getText());
+        rfid = Long.parseLong(eRFIDw.getText());
         priv = admin.isSelected();
         edit = w.canEditParts();
         work = w.canEditWorkers();
@@ -98,7 +98,7 @@ public class EditWorkerController implements IController {
         return !name.equals(workerName.getText()) || !password.equals(pass.getText()) ||
                 !workerEmail.equals(email.getText()) || priv != admin.isSelected() || edit != editParts.isSelected() ||
                 work != workers.isSelected() || remove != removeParts.isSelected() ||
-                rfid != Integer.parseInt(eRFIDw.getText());
+                rfid != Long.parseLong(eRFIDw.getText());
     }
 
     public void save() {
@@ -127,7 +127,7 @@ public class EditWorkerController implements IController {
             if (remove != removeParts.isSelected()){
                 contentText += "\t Remove Parts: " + remove + " --> Remove Parts: " + removeParts.isSelected() + "\n";
             }
-            if (rfid != Integer.parseInt(eRFIDw.getText())) {
+            if (rfid != Long.parseLong(eRFIDw.getText())) {
                 contentText += "\t" + rfid + " --> " + eRFIDw.getText() + "\n";
             }
             if (stageUtils.confirmationAlert("Edit Success", "Student worker info changing...",
@@ -136,7 +136,7 @@ public class EditWorkerController implements IController {
                 worker.setEmail(email.getText());
                 worker.setPass(pass.getText());
                 worker.setAdmin(false);
-                worker.setWorkerRFID(Integer.parseInt(eRFIDw.getText()));
+                worker.setWorkerRFID(Long.parseLong(eRFIDw.getText()));
                 worker.setEdit(editParts.isSelected());
                 worker.setRemove(removeParts.isSelected());
                 worker.setWorker(workers.isSelected());

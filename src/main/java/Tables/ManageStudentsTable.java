@@ -11,10 +11,7 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -50,7 +47,7 @@ import static Controllers.CheckOutController.EMAIL_REGEX;
 public class ManageStudentsTable extends TSCTable {
 
     private JFXTreeTableColumn<MSRow, String> firstNameCol, lastNameCol, emailCol;
-    private JFXTreeTableColumn<MSRow, Integer> studentIDCol;
+    private JFXTreeTableColumn<MSRow, Long> studentIDCol;
 
     public ManageStudentsTable(TableScreensController controller) {
         super(controller);
@@ -98,8 +95,8 @@ public class ManageStudentsTable extends TSCTable {
                 (TreeTableColumn<TableRow, String>) (TreeTableColumn) firstNameCol;
         TreeTableColumn<TableRow, String> lastNameTemp =
                 (TreeTableColumn<TableRow, String>) (TreeTableColumn) lastNameCol;
-        TreeTableColumn<TableRow, Integer> studentIDTemp =
-                (TreeTableColumn<TableRow, Integer>) (TreeTableColumn) studentIDCol;
+        TreeTableColumn<TableRow, Long> studentIDTemp =
+                (TreeTableColumn<TableRow, Long>) (TreeTableColumn) studentIDCol;
         TreeTableColumn<TableRow, String> emailTemp = (TreeTableColumn<TableRow, String>) (TreeTableColumn) emailCol;
 
         table.getColumns().setAll(firstNameTemp, lastNameTemp, studentIDTemp, emailTemp);
@@ -266,12 +263,12 @@ public class ManageStudentsTable extends TSCTable {
                         if (email.getText().matches("^\\w+[+.\\w'-]*@msoe\\.edu$")) {
                             if (database.getStudentEmails().contains(email.getText())) {
                                 stageUtils.errorAlert("A student with that email already exists.");
-                            } else if (database.studentRFIDExists(Integer.parseInt(rfid.getText()))) {
+                            } else if (database.studentRFIDExists(Long.parseLong(rfid.getText()))) {
                                 stageUtils.errorAlert("A student with that rfid already exists.");
                             } else {
                                 database.initWorker(worker);
                                 database.addStudent(new Student(first.getText() + " " + last.getText(),
-                                        Integer.parseInt(rfid.getText()), email.getText()));
+                                        Long.parseLong(rfid.getText()), email.getText()));
                                 stage.close();
                             }
                         } else {
@@ -341,12 +338,12 @@ public class ManageStudentsTable extends TSCTable {
         private final StringProperty firstName;
         private final StringProperty lastName;
         private final StringProperty email;
-        private final IntegerProperty id;
+        private final LongProperty id;
 
-        public MSRow(String firstName, String lastName, int id, String email) {
+        public MSRow(String firstName, String lastName, long id, String email) {
             this.firstName = new SimpleStringProperty(firstName);
             this.lastName = new SimpleStringProperty(lastName);
-            this.id = new SimpleIntegerProperty(id);
+            this.id = new SimpleLongProperty(id);
             this.email = new SimpleStringProperty(email);
         }
 
@@ -358,7 +355,7 @@ public class ManageStudentsTable extends TSCTable {
             return lastName;
         }
 
-        public IntegerProperty getId() {
+        public LongProperty getId() {
             return id;
         }
 
