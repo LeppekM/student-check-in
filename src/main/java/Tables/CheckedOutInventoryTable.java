@@ -151,6 +151,7 @@ public class CheckedOutInventoryTable extends TSCTable {
             public void populate() {
                 add("Student Name: ", checkout.getStudentName().get(), false);
                 add("Student Email: ", checkout.getStudentEmail().getValue(), false);
+                add("Student ID: ", "" + checkout.getStudentID().get(), false);
                 add("Part Name: ", checkout.getPartName().getValue(), false);
                 add("Barcode: ", "" + checkout.getBarcode().get(), false);
                 add("Serial Number: ", checkout.getSerialNumber().get(), false);
