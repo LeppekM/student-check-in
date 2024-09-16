@@ -290,6 +290,13 @@ public class CheckOutController extends MenuController implements IController, I
                         if (numOutByCurrentStudent > 0) {
                             spinnerInit(spinner, numOutByCurrentStudent);
                             statusLabel.setText(CHECK_IN_STR);
+                            // TODO
+//                            for (int i = 0; i < coTable.currentItemsCountProperty().get(); i++) {
+//                                Checkout item = (Checkout) coTable.getSelectionModel().getModelItem(i).getValue();
+//                                if (item.getBarcode().get() == Long.parseLong(newValue)) {
+//                                    coTable.getSelectionModel().select(i); // works, not ideal
+//                                }
+//                            }
                         } else if (setSpinnerWithAvailableParts(Long.parseLong(newValue), spinner)){
                             statusLabel.setText(CHECK_OUT_STR);
                             extendedCheckBox.setVisible(extended.isSelected());
@@ -433,7 +440,7 @@ public class CheckOutController extends MenuController implements IController, I
                             }
                         } else {
                             Student s = database.selectStudent(-1, studentEmail);
-                            int oldRFID = s.getRFID();
+                            long oldRFID = s.getRFID();
                             s.setRFID(getStudentID());
                             database.initWorker(worker);
                             database.updateStudent(s, oldRFID);
@@ -732,6 +739,18 @@ public class CheckOutController extends MenuController implements IController, I
                             } else {
                                 setStyle(""); // Reset to default style if condition is not met
                             }
+                            // TODO
+                            // THIS IS THE NEW CODE, NOT WORKING
+                            for (HBox hbox : barcodes){
+                                JFXTextField textField = (JFXTextField) hbox.getChildren().get(0);
+                                if (textField.getText().length() == BARCODE_STRING_LENGTH) {
+                                    assert checkedOutPart != null;
+                                    if (checkedOutPart.getBarcode().get() == (Long.parseLong(textField.getText()))) {
+                                        setStyle("-fx-highlight-text-fill: #c3706f");
+                                    }
+                                }
+                            }
+                            // NEW CODE END
                         }
                     }
                 };
