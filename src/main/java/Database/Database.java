@@ -995,7 +995,7 @@ public class Database implements IController {
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of admin pins");
         }
-        return adminPin == pin;
+        return adminPin == pin && pin != 0;
     }
 
     public int getNumAdmins() {
