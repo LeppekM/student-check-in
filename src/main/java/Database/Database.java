@@ -1243,14 +1243,29 @@ public class Database implements IController {
         }
     }
 
-    public boolean studentHasCheckedOutItems(long oldRFID) {
-        String query = "SELECT COUNT(*) FROM checkout WHERE checkout.studentID = " + oldRFID + ";";
+    /**
+     * Confirms whether the RFID has associated checkout data, either currently checked out or history
+     */
+    public boolean studentHasCheckedOutItems(long RFID) {
+        String query = "SELECT COUNT(*) FROM checkout WHERE checkout.studentID = " + RFID + ";";
+        return checkCheckedOutFromRFID(RFID, query);
+    }
+
+    /**
+     * Confirms whether the student CURRENTLY has any items checked out
+     */
+    public boolean studentHasCurrentCheckedOutItems(long RFID) {
+        String query = "SELECT COUNT(*) FROM checkout WHERE checkout.studentID = " + RFID + " AND checkinAt is NULL;";
+        return checkCheckedOutFromRFID(RFID, query);
+    }
+
+    private boolean checkCheckedOutFromRFID(long RFID, String query) {
         ResultSet resultSet;
         try {
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
             resultSet.next();
-            if(oldRFID != 0 && resultSet.getInt(1) > 0){
+            if(RFID != 0 && resultSet.getInt(1) > 0){
                 return true;
             }
             statement.close();
@@ -1313,7 +1328,7 @@ public class Database implements IController {
      */
     public void deleteStudent(String email) {
         Student s = selectStudent(-1, email);
-        if (studentHasCheckedOutItems(s.getRFID())) {
+        if (studentHasCurrentCheckedOutItems(s.getRFID())) {
             stageUtils.errorAlert("Student could not be deleted because they have parts checked out");
             return;
         }

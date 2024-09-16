@@ -303,16 +303,18 @@ public class ManageStudentsTable extends TSCTable {
                     currentlyCheckedOutParts.append(checkout.getPartName().get()).append(" partID = ")
                             .append(checkout.getPartID().get()).append(", ");
                 }
-                if (stageUtils.confirmationAlert("Student has Parts Checked Out", "The selected student " +
-                        firstNameCol.getCellData(index) + " " + lastNameCol.getCellData(index) +
-                        " has parts currently checked out. They will be marked as returned before the student is " +
-                        "deleted", "Parts currently checked out: "
-                        + currentlyCheckedOutParts.substring(0, currentlyCheckedOutParts.length() - 2))) {
-                    for (Checkout checkout : currentlyCheckedOut) {
-                        database.checkInPart(checkout.getBarcode().get(), checkout.getStudentID().get());
+                if (currentlyCheckedOutParts.length() > 0) {
+                    if (stageUtils.confirmationAlert("Student has Parts Checked Out", "The selected student " +
+                            firstNameCol.getCellData(index) + " " + lastNameCol.getCellData(index) +
+                            " has parts currently checked out. They will be marked as returned before the student is " +
+                            "deleted", "Parts currently checked out: "
+                            + currentlyCheckedOutParts.substring(0, currentlyCheckedOutParts.length() - 2))) {
+                        for (Checkout checkout : currentlyCheckedOut) {
+                            database.checkInPart(checkout.getBarcode().get(), checkout.getStudentID().get());
+                        }
+                    } else {
+                        return;
                     }
-                } else {
-                    return;
                 }
                 if (stageUtils.confirmationAlert("Delete Student", "Are you ok with this?", "Delete this Student?")) {
                     database.deleteStudent(email);
