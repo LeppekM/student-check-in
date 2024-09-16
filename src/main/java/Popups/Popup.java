@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -50,6 +51,11 @@ public abstract class Popup {
         submitButton = new JFXButton("Submit");
         submitButton.setOnAction(e -> submit());
         submitButton.getStylesheets().add("/css/ButtonStyle.css");
+        submitButton.setOnKeyPressed(event -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                submit();
+            }
+        });
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.BOTTOM_RIGHT);
         hbox.getChildren().add(submitButton);
