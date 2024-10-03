@@ -76,7 +76,7 @@ public class CheckOutController extends MenuController implements IController, I
     private static final int PAUSE_DELAY = 5;
     public static final int BARCODE_STRING_LENGTH = 6;
     public static final String EMAIL_REGEX = "^\\w+[+.\\w'-]*@msoe\\.edu$";
-    public static final String RFID_REGEX = "^.*(\\d{4,})$";
+    public static final String RFID_REGEX = "^[0-9]{4,}$";
     private static final String CHECK_IN_STR = "In";
     private static final String CHECK_OUT_STR = "Out";
     private static final String DEFAULT_STR = "--";
@@ -604,14 +604,12 @@ public class CheckOutController extends MenuController implements IController, I
     }
 
     /**
-     * Gets studentID as text, returns as long
-     * @return StudentID as long
+     * @return StudentID as long, from the id/email input by user. returns 0 if invalid input in student ID field
      */
     private long getStudentID() {
         long id = 0;
         if (studentIDField.getText().matches(RFID_REGEX)) {
-            // technically incorrect, but shouldn't be a problem unless some nonsense is entered IE: 297839RFID:8920
-            id = Long.parseLong(studentIDField.getText().replaceAll("\\D", ""));
+            id = Long.parseLong(studentIDField.getText().replaceAll("\\D", "")); // redundant, but kept
         } else if (studentIDField.getText().matches(EMAIL_REGEX)) {
             id = database.getStudentIDFromEmail(studentIDField.getText());
         }
@@ -739,18 +737,17 @@ public class CheckOutController extends MenuController implements IController, I
                             } else {
                                 setStyle(""); // Reset to default style if condition is not met
                             }
-                            // TODO
-                            // THIS IS THE NEW CODE, NOT WORKING
-                            for (HBox hbox : barcodes){
-                                JFXTextField textField = (JFXTextField) hbox.getChildren().get(0);
-                                if (textField.getText().length() == BARCODE_STRING_LENGTH) {
-                                    assert checkedOutPart != null;
-                                    if (checkedOutPart.getBarcode().get() == (Long.parseLong(textField.getText()))) {
-                                        setStyle("-fx-highlight-text-fill: #c3706f");
-                                    }
-                                }
-                            }
-                            // NEW CODE END
+//                            // TODO
+//                            // THIS IS THE NEW CODE, NOT WORKING
+//                            for (HBox hbox : barcodes){
+//                                JFXTextField textField = (JFXTextField) hbox.getChildren().get(0);
+//                                if (textField.getText().length() == BARCODE_STRING_LENGTH) {
+//                                    if (checkedOutPart.getBarcode().get() == (Long.parseLong(textField.getText()))) {
+//                                        setStyle("-fx-highlight-text-fill: #c3706f");
+//                                    }
+//                                }
+//                            }
+//                            // NEW CODE END
                         }
                     }
                 };
