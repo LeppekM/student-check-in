@@ -29,6 +29,9 @@ public class Database implements IController {
     private static final String HOST = "jdbc:mysql://localhost:3306";
     private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_NAME = "/student_check_in";
+    private static final int MAX_RETRIES = 3;
+    private static final int RETRY_DELAY_MS = 2000; // 2 seconds
+    private static final int CONNECTION_TIMEOUT = 10; // 10 seconds
     private static Connection connection;
     private final TimeUtils timeUtils = new TimeUtils();
     private Worker worker;
@@ -48,6 +51,7 @@ public class Database implements IController {
             System.exit(0);
         }
         connection = null;
+        DriverManager.setLoginTimeout(3);
         try {
             connection = DriverManager.getConnection((HOST + DB_NAME),
                     USERNAME, PASSWORD);
@@ -61,18 +65,100 @@ public class Database implements IController {
         return database;
     }
 
+    private Connection reconnect() {
+        Connection conn = null;
+        int retries = MAX_RETRIES;
+
+        DriverManager.setLoginTimeout(CONNECTION_TIMEOUT); // Set timeout for connection attempts
+
+        while (retries > 0) {
+            try {
+                conn = DriverManager.getConnection(HOST + DB_NAME, USERNAME, PASSWORD);
+                break; // Break the loop if connection is successful
+            } catch (SQLException e) {
+                retries--;
+                if (retries == 0) {
+                    // Handle max retries exceeded
+                    stageUtils.errorAlert("Error, could not reconnect to the database after multiple attempts.");
+                } else {
+                    try {
+                        System.out.println("Retrying database connection... " + retries + " attempts left.");
+                        Thread.sleep(RETRY_DELAY_MS); // Wait before retrying
+                    } catch (InterruptedException ignored) {
+                        Thread.currentThread().interrupt(); // Restore interrupt flag if interrupted
+                    }
+                }
+            }
+        }
+        return conn;
+    }
+
     /**
      * Returns the connection to the database created by constructor method
      * @return the database connection
      */
-    public Connection getConnection() {
+    private Connection getConnection() {
         try {
-            if (connection.isClosed()) {
-                connection = DriverManager.getConnection(HOST + DB_NAME, USERNAME, PASSWORD);
+            if (connection == null || connection.isClosed()) {
+                connection = reconnect();
             }
         } catch (SQLException ignored) { }
 
         return connection;
+    }
+
+    public ResultSet executeQueryWithRetry(String query) throws SQLException {
+        int retries = MAX_RETRIES;
+        ResultSet resultSet = null;
+        while (retries > 0) {
+            try {
+                Connection conn = getConnection();
+                Statement statement = conn.createStatement();
+                statement.setQueryTimeout(CONNECTION_TIMEOUT); // Set timeout for the query execution
+                resultSet = statement.executeQuery(query); // Execute the query
+                break; // Successful query execution, break the loop
+            } catch (SQLException e) {
+                retries--;
+                if (retries == 0) {
+                    throw new SQLException("Error, could not execute query after multiple attempts.", e);
+                } else {
+                    System.out.println("Retrying query execution... " + retries + " attempts left.");
+                    try {
+                        Thread.sleep(RETRY_DELAY_MS); // Wait before retrying
+                    } catch (InterruptedException ignored) {
+                        Thread.currentThread().interrupt(); // Restore the interrupt flag
+                    }
+                }
+            }
+        }
+        return resultSet; // Note: ResultSet must be closed later (via try-with-resources block)
+    }
+
+    public int executeUpdateWithRetry(String query) throws SQLException {
+        int retries = MAX_RETRIES;
+        int result = 0;
+        while (retries > 0) {
+            try {
+                Connection conn = getConnection();
+                Statement statement = conn.createStatement();
+                statement.setQueryTimeout(CONNECTION_TIMEOUT); // Set timeout for the update execution
+                result = statement.executeUpdate(query); // Execute the update (INSERT, UPDATE, or DELETE)
+                break; // Successful execution, break the loop
+            } catch (SQLException e) {
+                retries--;
+                if (retries == 0) {
+                    throw new SQLException("Error, could not execute update after multiple attempts.", e);
+                } else {
+                    System.out.println("Retrying update execution... " + retries + " attempts left.");
+                    try {
+                        Thread.sleep(RETRY_DELAY_MS); // Wait before retrying
+                    } catch (InterruptedException ignored) {
+                        Thread.currentThread().interrupt(); // Restore the interrupt flag
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -87,9 +173,7 @@ public class Database implements IController {
                 "FROM checkout LEFT JOIN parts ON checkout.partID = parts.partID " +
                 "LEFT JOIN students ON checkout.studentID = students.studentID " +
                 "WHERE checkout.checkinAt IS NULL;";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(overdue);
+        try (ResultSet resultSet = executeQueryWithRetry(overdue)) {
             while (resultSet.next()) {
                 String dueAt = resultSet.getString("checkout.dueAt");
                 if (isOverdue(dueAt)) {
@@ -100,8 +184,6 @@ public class Database implements IController {
                             resultSet.getString("checkout.checkoutID")));
                 }
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Error, could not retrieve all overdue parts");
         }
@@ -109,34 +191,13 @@ public class Database implements IController {
     }
 
     /**
-     * Helper method to determine if item is overdue
-     * @param date Due date of item
-     * @return true if item is overdue; false otherwise
-     */
-    public boolean isOverdue(String date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-        if (date != null && !date.isEmpty()) {
-            try {
-                Date current = dateFormat.parse(timeUtils.getCurrentDateTimeStamp());
-                Date dueDate = dateFormat.parse(date);
-                return current.after(dueDate);
-            } catch (ParseException e) {
-                stageUtils.errorAlert("Error, could not parse date");
-            }
-        }
-        return false;
-    }
-
-    /**
      * This uses an SQL query to delete a specific part from the database
      * @param partID a unique part id
      */
     public void deletePart(int partID) {
+        String delete = "delete from parts where partID = " + partID + ";";
         try {
-            String delete = "delete from parts where partID = " + partID + ";";
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(delete);
-            statement.close();
+            executeUpdateWithRetry(delete);
         } catch (SQLException e) {
             stageUtils.errorAlert("Error, could not delete part with ID " + partID);
         }
@@ -149,11 +210,9 @@ public class Database implements IController {
      * @param partName the name of the parts that are deleted
      */
     public void deleteParts(String partName) {
+        String deleteQuery = "DELETE FROM parts WHERE partName = '" + cleanString(partName) + "';";
         try {
-            String deleteQuery = "DELETE FROM parts WHERE partName = '" + cleanString(partName) + "';";
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(deleteQuery);
-            statement.close();
+            executeUpdateWithRetry(deleteQuery);
         } catch (SQLException e) {
             stageUtils.errorAlert("Error, could not delete part with name = " + partName);
         }
@@ -167,17 +226,13 @@ public class Database implements IController {
     public Part selectPart(int partID) {
         String query = "SELECT * FROM parts WHERE partID = " + partID + ";";
         Part part = null;
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             if (resultSet.next()) {
                 part = new Part(resultSet.getString("partName"), resultSet.getString("serialNumber"),
                         resultSet.getString("manufacturer"), Double.parseDouble(resultSet.getString("price")),
                         resultSet.getString("vendorID"), resultSet.getString("location"),
                         resultSet.getLong("barcode"), resultSet.getInt("partID"));
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Error retrieving part with ID = " + partID);
         }
@@ -191,14 +246,11 @@ public class Database implements IController {
      */
     public boolean barcodeExists(long barcode) {
         long bc = 0;
-        final String getAllBarcodes = "SELECT barcode FROM parts WHERE barcode = " + barcode + ";";
-        try {
-            PreparedStatement statement = connection.prepareStatement(getAllBarcodes);
-            ResultSet rs = statement.executeQuery();
+        String getAllBarcodes = "SELECT barcode FROM parts WHERE barcode = " + barcode + ";";
+        try (ResultSet rs = executeQueryWithRetry(getAllBarcodes)) {
             if (rs.next()) {
                 bc = rs.getLong("barcode");
             }
-            rs.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -208,14 +260,10 @@ public class Database implements IController {
     public boolean partNameExists(String partName) {
         String name = "";
         String query = "SELECT parts.partName from parts WHERE partName = '" + cleanString(partName) + "';";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
+        try (ResultSet rs = executeQueryWithRetry(query)) {
             if (rs.next()) {
                 name = rs.getString("partName");
             }
-            statement.close();
-            rs.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("SQLException: Can't connect to the database when checking if part name exists.");
         }
@@ -224,18 +272,12 @@ public class Database implements IController {
 
     public int getCheckoutIDFromBarcodeAndRFID(long rfid, long barcode) {
         int checkoutID = 0;
-        String query = "select checkoutID from checkout where studentID =? and barcode = ? " +
+        String query = "select checkoutID from checkout where studentID = " + rfid + " and barcode = " + barcode +
                 "and checkinAt IS NULL limit 1";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, rfid);
-            statement.setLong(2, barcode);
-            ResultSet rs = statement.executeQuery();
+        try (ResultSet rs = executeQueryWithRetry(query)) {
             if(rs.next()){
                 checkoutID = rs.getInt("checkoutID");
             }
-            rs.close();
-            statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -250,16 +292,11 @@ public class Database implements IController {
      */
     public long getStudentIDFromEmail(String email) {
         long sID = 0;
-        String query = "SELECT studentID FROM students WHERE email = ?;";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, cleanString(email));
-            ResultSet rs = statement.executeQuery();
+        String query = "SELECT studentID FROM students WHERE email = " + email + ";";
+        try (ResultSet rs = executeQueryWithRetry(query)) {
             if (rs.next()) {
                 sID = rs.getLong("studentID");
             }
-            rs.close();
-            statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -270,31 +307,22 @@ public class Database implements IController {
      * Inserts new checkout entity into the database, and changes the associated part.isCheckedOut to 1
      */
     public boolean checkOutPart(long barcode, long rfid, String course, String prof, String dueDate) {
+        int partID = getPartIDFromBarcode(barcode, false);
+        if (partID == 0) {
+            stageUtils.errorAlert("Unable to find a valid partID for barcode");
+            return false;
+        }
+        String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, " +
+                "prof, course) VALUES(" + partID + "," + rfid + "," + barcode + ",'" +
+                timeUtils.getCurrentDateTime().toString() + "','";
+        if (dueDate != null) {
+            addToCheckouts += cleanString(dueDate) + "','" + cleanString(prof) + "','" + cleanString(course) + "');";
+        } else {
+            addToCheckouts += timeUtils.setDueDate() + "','','');";
+        }
         try {
-            String addToCheckouts = "INSERT INTO checkout (partID, studentID, barcode, checkoutAt, dueAt, " +
-                    "prof, course) VALUES(?,?,?,?,?,?,?);";
-            int partID = getPartIDFromBarcode(barcode, false);
-            if (partID == 0) {
-                stageUtils.errorAlert("Unable to find a valid partID for barcode");
-                return false;
-            }
-            PreparedStatement statement = connection.prepareStatement(addToCheckouts);
-            statement.setInt(1, partID);
-            statement.setLong(2, rfid);
-            statement.setLong(3, barcode);
-            statement.setString(4, timeUtils.getCurrentDateTime().toString());
-            if (dueDate != null){
-                statement.setString(5, cleanString(dueDate));
-                statement.setString(6, cleanString(prof));
-                statement.setString(7, cleanString(course));
-            } else {
-                statement.setString(5, timeUtils.setDueDate());
-                statement.setString(6, "");
-                statement.setString(7, "");
-            }
+            executeUpdateWithRetry(addToCheckouts);
             setPartStatus(partID, false); //This will set the partID found above to a checked out status
-            statement.execute();
-            statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         } catch (NullPointerException e){
@@ -309,13 +337,10 @@ public class Database implements IController {
      */
     public boolean checkInPart(long barcode, long rfid) {
         int partID = getPartIDFromBarcode(barcode, true);
+        String setDate = "UPDATE checkout SET checkinAt = '" + timeUtils.getCurrentDateTime().toString()
+                + "' WHERE checkoutID = " + getCheckoutIDFromBarcodeAndRFID(rfid, barcode) + ";";
         try {
-            String setDate = "UPDATE checkout SET checkinAt = ? WHERE checkoutID = ?;";
-            PreparedStatement statement = connection.prepareStatement(setDate);
-            statement.setString(1, timeUtils.getCurrentDateTime().toString());
-            statement.setInt(2, getCheckoutIDFromBarcodeAndRFID(rfid, barcode));
-            statement.execute();
-            statement.close();
+            executeUpdateWithRetry(setDate);
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -331,15 +356,12 @@ public class Database implements IController {
     private void setPartStatus(int partID, boolean isCheckIn){
         String status;
         if (isCheckIn) {
-            status = "UPDATE parts SET isCheckedOut = 0 WHERE partID = ?;";
+            status = "UPDATE parts SET isCheckedOut = 0 WHERE partID = " + partID + ";";
         } else {
-            status = "UPDATE parts SET isCheckedOut = 1 WHERE partID = ?;";
+            status = "UPDATE parts SET isCheckedOut = 1 WHERE partID = " + partID + ";";
         }
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(status);
-            preparedStatement.setInt(1, partID);
-            preparedStatement.execute();
-            preparedStatement.close();
+            executeUpdateWithRetry(status);
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -353,17 +375,12 @@ public class Database implements IController {
      */
     private int getPartIDFromBarcode(long barcode, boolean isCheckIn){
         int partID = 0;
-        String status = "SELECT partID FROM parts WHERE barcode = ? AND isCheckedOut = ? LIMIT 1;";
-        try {
-            PreparedStatement statement = connection.prepareStatement(status);
-            statement.setLong(1, barcode);
-            statement.setBoolean(2, isCheckIn);
-            ResultSet rs = statement.executeQuery();
-            if(rs.next()){
+        String status = "SELECT partID FROM parts WHERE barcode = " + barcode + " AND isCheckedOut = " +
+                (isCheckIn? 1 : 0) + " LIMIT 1;";
+        try (ResultSet rs = executeQueryWithRetry(status)) {
+            if(rs.next()) {
                 partID = rs.getInt("partID");
             }
-            rs.close();
-            statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -384,9 +401,7 @@ public class Database implements IController {
         long studentID = -1;
         Student student = null;
         String studentName = "";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             if (resultSet.next()) {
                 studentID = resultSet.getLong("studentID");
                 studentName = resultSet.getString("studentName");
@@ -398,8 +413,6 @@ public class Database implements IController {
             if (student.getName().isEmpty()) {
                 student.setName(studentName);
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Error retrieving last student to checkout part");
         }
@@ -424,9 +437,7 @@ public class Database implements IController {
         Date checkoutAt  = null;
         Date checkinAt = null;
 
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             if (resultSet.next()) {
                 studentID = resultSet.getLong("studentID");
                 barcode = resultSet.getLong("barcode");
@@ -438,8 +449,6 @@ public class Database implements IController {
             }
             checkoutObject = new Checkout(studentID, barcode, checkoutAt, checkinAt,
                     timeUtils.convertStringtoDate(dueAt), professor, course);
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Error while retrieving last checkout of part");
         }
@@ -451,15 +460,9 @@ public class Database implements IController {
      */
     public void clearOldHistory() {
         String query =
-                "DELETE checkout " +
-                        "FROM checkout " +
-                        "WHERE checkout.checkinAt < ? ";
-
+                "DELETE checkout FROM checkout WHERE checkout.checkinAt < '" + TimeUtils.getTwoYearsAgo() + "';";
         try {
-            PreparedStatement preparedStatement = getConnection().prepareStatement(query);
-            preparedStatement.setString(1, TimeUtils.getTwoYearsAgo().toString());
-            preparedStatement.execute();
-            preparedStatement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             stageUtils.errorAlert("Error clearing old history");
         }
@@ -472,14 +475,9 @@ public class Database implements IController {
      */
     public void clearUnusedStudents() {
         String query =
-                "DELETE FROM students " +
-                        "WHERE studentID NOT IN (SELECT studentID FROM checkout)" +
-                        "OR studentID is null";
-
+                "DELETE FROM students WHERE studentID NOT IN (SELECT studentID FROM checkout) OR studentID is null";
         try {
-            Statement statement = getConnection().createStatement();
-            statement.execute(query);
-            statement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             stageUtils.errorAlert("Error clearing unused students");
         }
@@ -494,14 +492,9 @@ public class Database implements IController {
     public boolean getIsCheckedOut(String partID) {
         String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND partID = " + cleanString(partID)
                 + ";";
-        ResultSet resultSet;
-        try {
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             resultSet.next();
             int result = resultSet.getInt(1);
-            statement.close();
-            resultSet.close();
             if (result > 0) {
                 return true;
             }
@@ -514,9 +507,7 @@ public class Database implements IController {
     public ObservableList<Part> getAllParts() {
         String query = "select partName, serialNumber, barcode, location, partID, price from parts;";
         ObservableList<Part> data = FXCollections.observableArrayList();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             while(resultSet.next()){
                 String partName = resultSet.getString("partName");
                 long barcode = resultSet.getLong("barcode");
@@ -529,32 +520,30 @@ public class Database implements IController {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database", e);
-
         }
         return data;
     }
 
     public ObservableList<Checkout> getAllCheckoutHistory() {
         ObservableList<Checkout> data = FXCollections.observableArrayList();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("WITH ActionHistory AS ( " +
-                    "SELECT studentName, email, partName, parts.barcode, checkout.checkinAt, checkout.checkoutAt, " +
-                    "1 as val FROM parts " +
-                    "INNER JOIN checkout ON parts.partID = checkout.partID " +
-                    "INNER JOIN students ON checkout.studentID = students.studentID " +
-                    "UNION ALL " +
-                    "SELECT studentName, email, partName, parts.barcode, checkout.checkinAt, checkout.checkoutAt, " +
-                    "2 as val FROM parts " +
-                    "INNER JOIN checkout ON parts.partID = checkout.partID " +
-                    "INNER JOIN students ON checkout.studentID = students.studentID " +
-                    "WHERE checkout.checkinAt IS NOT NULL " +
-                    ")" +
-                    "SELECT studentName, email, partName, barcode, " +
-                    "CASE WHEN val = 1 THEN 'Checked Out' ELSE 'Checked In' END AS 'Action', " +
-                    "CASE WHEN val = 1 THEN checkoutAt ELSE checkinAt END AS 'Date' " +
-                    "FROM ActionHistory " +
-                    "ORDER BY Date DESC;");
+        String query = "WITH ActionHistory AS ( " +
+                "SELECT studentName, email, partName, parts.barcode, checkout.checkinAt, checkout.checkoutAt, " +
+                "1 as val FROM parts " +
+                "INNER JOIN checkout ON parts.partID = checkout.partID " +
+                "INNER JOIN students ON checkout.studentID = students.studentID " +
+                "UNION ALL " +
+                "SELECT studentName, email, partName, parts.barcode, checkout.checkinAt, checkout.checkoutAt, " +
+                "2 as val FROM parts " +
+                "INNER JOIN checkout ON parts.partID = checkout.partID " +
+                "INNER JOIN students ON checkout.studentID = students.studentID " +
+                "WHERE checkout.checkinAt IS NOT NULL " +
+                ")" +
+                "SELECT studentName, email, partName, barcode, " +
+                "CASE WHEN val = 1 THEN 'Checked Out' ELSE 'Checked In' END AS 'Action', " +
+                "CASE WHEN val = 1 THEN checkoutAt ELSE checkinAt END AS 'Date' " +
+                "FROM ActionHistory " +
+                "ORDER BY Date DESC;";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             while (resultSet.next()) {
                 String studentName = resultSet.getString("studentName");
                 String studentEmail = resultSet.getString("email");
@@ -573,15 +562,14 @@ public class Database implements IController {
 
     public ObservableList<Checkout> getAllCurrentlyCheckedOut() {
         ObservableList<Checkout> data = FXCollections.observableArrayList();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT students.studentName, students.email, " +
-                    "students.studentID, parts.partName, parts.barcode, parts.serialNumber, checkout.checkoutAt, " +
-                    "checkout.dueAt, checkout.checkoutID, parts.partID, parts.price\n" +
-                    "FROM checkout\n" +
-                    "INNER JOIN parts on checkout.partID = parts.partID\n" +
-                    "INNER JOIN students on checkout.studentID = students.studentID\n" +
-                    "WHERE checkout.checkinAt IS NULL");
+        String query = "SELECT students.studentName, students.email, " +
+                "students.studentID, parts.partName, parts.barcode, parts.serialNumber, checkout.checkoutAt, " +
+                "checkout.dueAt, checkout.checkoutID, parts.partID, parts.price\n" +
+                "FROM checkout\n" +
+                "INNER JOIN parts on checkout.partID = parts.partID\n" +
+                "INNER JOIN students on checkout.studentID = students.studentID\n" +
+                "WHERE checkout.checkinAt IS NULL";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             while(resultSet.next()){
                 int checkoutID = resultSet.getInt("checkoutID");
                 String studentName = resultSet.getString("studentName");
@@ -652,14 +640,10 @@ public class Database implements IController {
      */
     private ArrayList<String> collectFromOneCol(String query, String column) {
         ArrayList<String> list = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             while (resultSet.next()) {
                 list.add(resultSet.getString(column));
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not collect " + column + "(s) from database");
         }
@@ -689,12 +673,8 @@ public class Database implements IController {
      * @return the number of parts
      */
     public int countPartsOfType(String partName) {
-        String query = "SELECT COUNT(*) FROM parts WHERE partName = ?;";
-        ResultSet resultSet;
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, cleanString(partName));
-            resultSet = statement.executeQuery();
+        String query = "SELECT COUNT(*) FROM parts WHERE partName = '" + cleanString(partName) + "';";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
@@ -709,11 +689,8 @@ public class Database implements IController {
      * @return true if the database contains a part with part name that equals partName; false otherwise
      */
     public boolean hasPartName(String partName) {
-        String query = "SELECT * from parts where partName = ?;";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, cleanString(partName));
-            ResultSet resultSet = statement.executeQuery();
+        String query = "SELECT * from parts where partName = '" + cleanString(partName) + "';";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             return resultSet.next();
         } catch (SQLException e) {
             stageUtils.errorAlert("Unable to determine whether part name exists in database");
@@ -727,13 +704,11 @@ public class Database implements IController {
      */
     public int getMaxPartID(){
         int partID = 0;
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT partID FROM parts ORDER BY partID DESC LIMIT 1");
+        String query = "SELECT partID FROM parts ORDER BY partID DESC LIMIT 1";
+        try (ResultSet rs = executeQueryWithRetry(query)) {
             while(rs.next()){
                 partID = rs.getInt("partID");
             }
-            statement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -746,21 +721,12 @@ public class Database implements IController {
     public void addPart(Part p){
         String query = "INSERT INTO parts(partName, serialnumber, manufacturer, price, vendorID," +
                 " location, barcode, isCheckedOut, createdAt, createdBy)"+
-                "VALUES(?,?,?,?,?,?,?,?,?,?)";
+                "VALUES('" + cleanString(p.getPartName()) + "','" + p.getSerialNumber() + "','" +
+                cleanString(p.getManufacturer()) + "'," + p.getPrice() + "," + getVendorIDFromVendor(p.getVendor()) +
+                ",'" + cleanString(p.getLocation()) + "'," + p.getBarcode() + "," + 0 + // 0 denotes it's checked in
+                ",'" + timeUtils.getCurrentDate() + "','" + cleanString(this.worker.getName()) + "');";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, cleanString(p.getPartName()));
-            preparedStatement.setString(2, p.getSerialNumber());
-            preparedStatement.setString(3, cleanString(p.getManufacturer()));
-            preparedStatement.setDouble(4, p.getPrice());
-            preparedStatement.setInt(5, getVendorIDFromVendor(p.getVendor()));
-            preparedStatement.setString(6, cleanString(p.getLocation()));
-            preparedStatement.setLong(7, p.getBarcode());
-            preparedStatement.setInt(8, 0);
-            preparedStatement.setString(9, timeUtils.getCurrentDate());
-            preparedStatement.setString(10, cleanString(this.worker.getName()));
-            preparedStatement.execute();
-            preparedStatement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -771,18 +737,11 @@ public class Database implements IController {
      * @param part The part to be edited
      */
     public void editPart(Part part){
+        String editQuery = "UPDATE parts SET serialNumber = '" + part.getSerialNumber() + "', barcode = " +
+                part.getBarcode() + ", price = " + part.getPrice() + ", location = '" + part.getLocation() + "', " +
+                "updatedAt = '" + timeUtils.getCurrentDate() + "' WHERE partID = " + part.getPartID() + ";";
         try {
-            String editQuery = "UPDATE parts SET serialNumber = ?, barcode = ?, price = ?, location = ?, " +
-                    "updatedAt = ? WHERE partID = ?;";
-            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editQuery);
-            preparedStatement.setString(1, part.getSerialNumber());
-            preparedStatement.setLong(2, part.getBarcode());
-            preparedStatement.setDouble(3, part.getPrice());
-            preparedStatement.setString(4, part.getLocation());
-            preparedStatement.setString(5, timeUtils.getCurrentDate());
-            preparedStatement.setString(6, "" + part.getPartID());
-            preparedStatement.execute();
-            preparedStatement.close();
+            executeUpdateWithRetry(editQuery);
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -790,19 +749,12 @@ public class Database implements IController {
 
     public void editAllOfPartName(String originalPartName, Part updatedPart) {
         if (!originalPartName.equals(updatedPart.getPartName())) {
+            String editAllQuery = "UPDATE parts SET partName = '" + updatedPart.getPartName() + "', price = " +
+                    updatedPart.getPrice() + ", location = '" + updatedPart.getLocation() + "', manufacturer = '" +
+                    updatedPart.getManufacturer() + "', vendorID = " + getVendorIDFromVendor(updatedPart.getVendor()) +
+                    ", updatedAt = '" + timeUtils.getCurrentDate() + "' WHERE partName = '" + originalPartName + "';";
             try {
-                String editAllQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, manufacturer = ?, " +
-                        "vendorID = ?, updatedAt = ? WHERE partName = ?;";
-                PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllQuery);
-                preparedStatement.setString(1, updatedPart.getPartName());
-                preparedStatement.setDouble(2, updatedPart.getPrice());
-                preparedStatement.setString(3, updatedPart.getLocation());
-                preparedStatement.setString(4, updatedPart.getManufacturer());
-                preparedStatement.setInt(5, getVendorIDFromVendor(updatedPart.getVendor()));
-                preparedStatement.setString(6, timeUtils.getCurrentDate());
-                preparedStatement.setString(7, originalPartName);
-                preparedStatement.execute();
-                preparedStatement.close();
+                executeUpdateWithRetry(editAllQuery);
             } catch (SQLException e) {
                 throw new IllegalStateException("Cannot connect to the database", e);
             }
@@ -810,23 +762,16 @@ public class Database implements IController {
     }
 
     public void editAllOfPartNameCommonBarcode(String originalPartName, Part updatedPart) {
+        ArrayList<String> partIDsForPart = database.getAllPartIDsForPartName(originalPartName);
         try {
-            String editAllCommonBarcodeQuery = "UPDATE parts SET partName = ?, price = ?, location = ?, " +
-                    "barcode = ?, manufacturer = ?, vendorID = ?, updatedAt = ? WHERE partID = ?;";
-            PreparedStatement preparedStatement = database.getConnection().prepareStatement(editAllCommonBarcodeQuery);
-            ArrayList<String> partIDsForPart = database.getAllPartIDsForPartName(originalPartName);
-            for (String id: partIDsForPart) {
-                preparedStatement.setString(1, updatedPart.getPartName());
-                preparedStatement.setDouble(2, updatedPart.getPrice());
-                preparedStatement.setString(3, updatedPart.getLocation());
-                preparedStatement.setLong(4, updatedPart.getBarcode());
-                preparedStatement.setString(5, updatedPart.getManufacturer());
-                preparedStatement.setInt(6, getVendorIDFromVendor(updatedPart.getVendor()));
-                preparedStatement.setString(7, timeUtils.getCurrentDate());
-                preparedStatement.setString(8, id);
-                preparedStatement.execute();
+            for (String partID : partIDsForPart) {
+                String editAllCommonBarcodeQuery = "UPDATE parts SET partName = '" + updatedPart.getPartName() +
+                        "', price = " + updatedPart.getPrice() + ", location = '" + updatedPart.getLocation() +
+                        "', barcode = " + updatedPart.getBarcode() + ", manufacturer = '" + updatedPart.getManufacturer()
+                        + "', vendorID = " + getVendorFromID(updatedPart.getVendor())+ ", updatedAt = '" +
+                        timeUtils.getCurrentDate() + "' WHERE partID = " + partID + ";";
+                executeUpdateWithRetry(editAllCommonBarcodeQuery);
             }
-            preparedStatement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -838,9 +783,8 @@ public class Database implements IController {
      */
     public ObservableList<Student> getStudents() {
         ObservableList<Student> studentsList = FXCollections.observableArrayList();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM students");
+        String query = "SELECT * FROM students";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             String name;
             long id;
             String email;
@@ -851,8 +795,6 @@ public class Database implements IController {
                 String[] names = name.split(" ", 2);
                 studentsList.add(new Student(names[0], names[1], id, email));
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of students");
         }
@@ -864,15 +806,11 @@ public class Database implements IController {
      */
     public boolean studentRFIDExists(long rfid) {
         long studentRFID = 0;
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT studentID FROM students where studentID = " +
-                    rfid + ";");
+        String query = "SELECT studentID FROM students where studentID = " + rfid + ";";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             if (resultSet.next()) {
                 studentRFID = resultSet.getLong("studentID");
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of rfids");
         }
@@ -903,14 +841,11 @@ public class Database implements IController {
      */
     public ObservableList<Worker> getWorkers() {
         ObservableList<Worker> workerList = FXCollections.observableArrayList();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers");
+        String query = "SELECT * FROM workers";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             while (resultSet.next()) {
                 workerList.add(buildWorker(resultSet));
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of workers");
         }
@@ -924,14 +859,10 @@ public class Database implements IController {
      */
     public Worker getWorker(String email) {
         Worker worker = null;
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM workers WHERE email = '" +
-                    cleanString(email) + "';");
+        String query = "SELECT * FROM workers where email = '" + cleanString(email) + "';";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             resultSet.next();
             worker = buildWorker(resultSet);
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of workers");
         }
@@ -941,14 +872,10 @@ public class Database implements IController {
     public Worker getWorker(long rfid) {
         Worker worker = null;
         String query = "Select * from workers where ID = " + rfid + ";";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             if (resultSet.next()) {
                 worker = buildWorker(resultSet);
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of workers");
         }
@@ -984,14 +911,11 @@ public class Database implements IController {
      */
     public boolean isValidPin(int pin) {
         int adminPin = 0;
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT pin FROM workers WHERE pin = " + pin + ";");
+        String query = "SELECT pin FROM workers WHERE pin = " + pin + ";";
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             if (resultSet.next()) {
                 adminPin = resultSet.getInt("pin");
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not retrieve the list of admin pins");
         }
@@ -1000,8 +924,7 @@ public class Database implements IController {
 
     public int getNumAdmins() {
         String query = "SELECT COUNT(*) FROM workers WHERE isAdmin = 1;";
-        try {
-            ResultSet resultSet = connection.prepareStatement(query).executeQuery();
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
@@ -1042,49 +965,44 @@ public class Database implements IController {
         long id = 0;
         ObservableList<Checkout> checkedOutItems = FXCollections.observableArrayList();
         ObservableList<OverdueItem> overdueItems = FXCollections.observableArrayList();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {  // gets student information
             while (resultSet.next()) {
                 name = resultSet.getString("studentName");
                 email = resultSet.getString("email");
                 id = resultSet.getLong("studentID");
                 uniqueID = resultSet.getInt("uniqueID");
             }
-            resultSet.close();
-            statement.close();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(coList);
-            while (resultSet.next()) {
-                if (resultSet.getInt("checkout.checkoutID") != 0) {
-                    checkedOutItems.add(new Checkout(
-                            resultSet.getInt("checkout.checkoutID"),
-                            resultSet.getString("students.studentName"),
-                            resultSet.getString("students.email"),
-                            resultSet.getLong("students.studentID"),
-                            resultSet.getString("parts.partName"),
-                            resultSet.getLong("parts.barcode"),
-                            resultSet.getString("parts.serialNumber"),
-                            resultSet.getInt("parts.partID"),
-                            TimeUtils.parseTimestamp(resultSet.getTimestamp("checkout.checkoutAt")),
-                            timeUtils.convertStringtoDate(resultSet.getString("checkout.dueAt")),
-                            resultSet.getString("parts.price")));
+            // gets all currently checked out items associated with student
+            try (ResultSet rs = executeQueryWithRetry(coList)) {
+                while (rs.next()) {
+                    if (rs.getInt("checkout.checkoutID") != 0) {
+                        checkedOutItems.add(new Checkout(
+                                rs.getInt("checkout.checkoutID"),
+                                rs.getString("students.studentName"),
+                                rs.getString("students.email"),
+                                rs.getLong("students.studentID"),
+                                rs.getString("parts.partName"),
+                                rs.getLong("parts.barcode"),
+                                rs.getString("parts.serialNumber"),
+                                rs.getInt("parts.partID"),
+                                TimeUtils.parseTimestamp(rs.getTimestamp("checkout.checkoutAt")),
+                                timeUtils.convertStringtoDate(rs.getString("checkout.dueAt")),
+                                rs.getString("parts.price")));
 
-                    String dueAt = resultSet.getString("checkout.dueAt");
-                    if (isOverdue(dueAt)) {
-                        overdueItems.add(new OverdueItem(
-                                resultSet.getLong("students.studentID"),
-                                resultSet.getString("students.studentName"),
-                                resultSet.getString("students.email"),
-                                resultSet.getString("parts.partName"),
-                                resultSet.getLong("parts.barcode"),
-                                timeUtils.convertStringtoDate(dueAt),
-                                resultSet.getString("checkout.checkoutID")));
+                        String dueAt = rs.getString("checkout.dueAt");
+                        if (isOverdue(dueAt)) {
+                            overdueItems.add(new OverdueItem(
+                                    rs.getLong("students.studentID"),
+                                    rs.getString("students.studentName"),
+                                    rs.getString("students.email"),
+                                    rs.getString("parts.partName"),
+                                    rs.getLong("parts.barcode"),
+                                    timeUtils.convertStringtoDate(dueAt),
+                                    rs.getString("checkout.checkoutID")));
+                        }
                     }
                 }
             }
-            statement.close();
-            resultSet.close();
             if (!checkedOutItems.isEmpty()) {
                 date = checkedOutItems.get(0).getCheckedOutDate().get();
             }
@@ -1107,21 +1025,18 @@ public class Database implements IController {
     }
 
     public Student selectStudentWithoutLists(String email) {
-        String query = "Select studentName, email, studentID from students where email = ?;";
+        String query = "Select studentName, email, studentID from students where email = '" + cleanString(email) + "';";
         String studentEmail = "";
         String name = "";
         long id = 0;
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, cleanString(email));
-            ResultSet rs = statement.executeQuery();
+        try (ResultSet rs = executeQueryWithRetry(query)) {
             while (rs.next()) {
                 studentEmail = rs.getString("email");
                 name = rs.getString("studentName");
                 id = rs.getLong("studentID");
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database", e);
+            throw new IllegalStateException("Cannot retrieve student information from the database", e);
         }
         return new Student(name, id, studentEmail);
     }
@@ -1144,27 +1059,18 @@ public class Database implements IController {
 
     private String getStudentName(String input, boolean isRFID) {
         String sName = "";
-        try {
-            PreparedStatement statement;
-            if(isRFID){
-                String getStudentNameFromIDQuery = "\n" +
-                        "select studentName from students\n" +
-                        "where studentID = ?";
-                statement = connection.prepareStatement(getStudentNameFromIDQuery);
-            } else {
-                String getStudentNameFromEmailQuery = "select studentName from students where email = ?";
-                statement = connection.prepareStatement(getStudentNameFromEmailQuery);
-                input = cleanString(input);
-            }
-            statement.setString(1, input);
-            ResultSet rs = statement.executeQuery();
+        String query;
+        if (isRFID) {
+            query = "select studentName from students where studentID = " + input + ";";
+        } else {
+            query = "select studentName from students where email = '" + cleanString(input) + "';";
+        }
+        try (ResultSet rs = executeQueryWithRetry(query)) {
             if (rs.next()) {
                 sName = rs.getString("studentName");
             }
-            rs.close();
-            statement.close();
         } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect to the database", e);
+            throw new IllegalStateException("Cannot get student name from the database", e);
         }
         return sName;
     }
@@ -1178,9 +1084,7 @@ public class Database implements IController {
                 s.getRFID() + ", '" + cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) +
                 "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
-            Statement statement = connection.createStatement();
-            statement.execute(query);
-            statement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not add student");
         }
@@ -1196,9 +1100,7 @@ public class Database implements IController {
                 cleanString(s.getEmail()) + "', '" + cleanString(s.getName()) +
                 "', date('" + TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
-            Statement statement = connection.createStatement();
-            statement.execute(query);
-            statement.close();
+            executeUpdateWithRetry(query);
         } catch (Exception e) {
             stageUtils.errorAlert("Could not add student");
             return false;
@@ -1215,9 +1117,7 @@ public class Database implements IController {
                 "', students.updatedAt = date('" + TimeUtils.getToday() + "'), students.updatedBy = '" +
                 cleanString(this.worker.getName()) + "' where students.uniqueID = " + s.getUniqueID() + ";";
         try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(query);
-            statement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not update student");
         }
@@ -1233,9 +1133,7 @@ public class Database implements IController {
             String query = "UPDATE checkout SET checkout.studentID = " + s.getRFID() +
                     " WHERE checkout.studentID = " + oldRFID + ";";
             try {
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(query);
-                statement.close();
+                executeUpdateWithRetry(query);
             } catch (SQLException e) {
                 stageUtils.errorAlert("Issue updating checked out parts for student that was " +
                         "being updated, SQL exception");
@@ -1260,16 +1158,11 @@ public class Database implements IController {
     }
 
     private boolean checkCheckedOutFromRFID(long RFID, String query) {
-        ResultSet resultSet;
-        try {
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             resultSet.next();
             if(RFID != 0 && resultSet.getInt(1) > 0){
                 return true;
             }
-            statement.close();
-            resultSet.close();
         } catch (SQLException e) {
             stageUtils.errorAlert("Issue counting parts checked out by specific student");
         }
@@ -1282,15 +1175,9 @@ public class Database implements IController {
     public int amountOutByStudent(long barcode, Student s) {
         String query = "SELECT COUNT(*) FROM checkout WHERE checkinAt is NULL AND barcode = " + barcode +
                 " AND studentID = " + s.getRFID() + ";";
-        ResultSet resultSet;
-        try {
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             resultSet.next();
-            int result = resultSet.getInt(1);
-            statement.close();
-            resultSet.close();
-            return result;
+            return resultSet.getInt(1);
         } catch (SQLException e) {
             stageUtils.errorAlert("Issue counting parts checked out by specific student");
         }
@@ -1301,20 +1188,15 @@ public class Database implements IController {
      * @return the number of parts associated with one barcode that is not currently checked out
      */
     public int getNumPartsAvailableByBarcode(long barcode) {
-        String query1 = "SELECT partID FROM parts WHERE barcode = " + barcode + " AND isCheckedOut = 0;";
-        ResultSet resultSet;
+        String query = "SELECT partID FROM parts WHERE barcode = " + barcode + " AND isCheckedOut = 0;";
         int result = 0;
-        try {
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(query1);
+        try (ResultSet resultSet = executeQueryWithRetry(query)) {
             while(resultSet.next()) {
                 boolean checkedOut = getIsCheckedOut(resultSet.getString(1));
                 if (!checkedOut) {
                     result++;
                 }
             }
-            statement.close();
-            resultSet.close();
             return result;
         } catch (SQLException e) {
             stageUtils.errorAlert("Issue counting parts checked out by barcode");
@@ -1332,12 +1214,9 @@ public class Database implements IController {
             stageUtils.errorAlert("Student could not be deleted because they have parts checked out");
             return;
         }
-        String query = "delete from students where email = ?;";
+        String query = "delete from students where email = '" + cleanString(email) + "';";
         try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, cleanString(email));
-            statement.execute();
-            statement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not delete student.");
         }
@@ -1354,9 +1233,7 @@ public class Database implements IController {
                 ", '" + cleanString(w.getPass()) + "', " + w.getWorkerRFID() + "," + bit + ", date('" +
                 TimeUtils.getToday() + "'), '" + cleanString(this.worker.getName()) + "');";
         try {
-            Statement statement = connection.createStatement();
-            statement.execute(query);
-            statement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not add worker");
         }
@@ -1369,9 +1246,7 @@ public class Database implements IController {
     public void deleteWorker(String name) {
         String query = "delete from workers where workers.workerName = '" + cleanString(name) + "';";
         try {
-            Statement statement = connection.createStatement();
-            statement.execute(query);
-            statement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not delete worker.");
         }
@@ -1389,9 +1264,7 @@ public class Database implements IController {
                 ", workers.updatedAt = date('" + TimeUtils.getToday() + "'), workers.updatedBy = '" +
                 cleanString(this.worker.getName()) + "' where workers.workerID = " + w.getWorkerID() + ";";
         try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(query);
-            statement.close();
+            executeUpdateWithRetry(query);
         } catch (SQLException e) {
             stageUtils.errorAlert("Could not update worker");
         }
@@ -1404,15 +1277,11 @@ public class Database implements IController {
      */
     public String getVendorFromID(String vendorID){
         String result = null;
-        try {
-            String getVendorFromIDQuery = "SELECT vendor FROM vendors WHERE vendorID = ?;";
-            PreparedStatement preparedStatement = connection.prepareStatement(getVendorFromIDQuery);
-            preparedStatement.setString(1, vendorID);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        String getVendorFromIDQuery = "SELECT vendor FROM vendors WHERE vendorID = " + vendorID + ";";
+        try (ResultSet resultSet = executeQueryWithRetry(getVendorFromIDQuery)) {
             if (resultSet.next()) {
                 result = resultSet.getString(1);
             }
-            preparedStatement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -1426,15 +1295,11 @@ public class Database implements IController {
      */
     public int getVendorIDFromVendor(String vendor) {
         int result = -1;
-        try {
-            String getVendorIDFromVendorQuery = "SELECT vendorID FROM vendors WHERE vendor = ?;";
-            PreparedStatement preparedStatement = connection.prepareStatement(getVendorIDFromVendorQuery);
-            preparedStatement.setString(1, vendor);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        String getVendorIDFromVendorQuery = "SELECT vendorID FROM vendors WHERE vendor = '" + vendor + "';";
+        try (ResultSet resultSet = executeQueryWithRetry(getVendorIDFromVendorQuery)) {
             if (resultSet.next()) {
                 result = resultSet.getInt(1);
             }
-            preparedStatement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -1446,15 +1311,10 @@ public class Database implements IController {
      * @param vendorName Name of vendor
      */
     public void createNewVendor(String vendorName, String description){
+        String createNewVendorQuery = "INSERT INTO vendors(vendorID, vendor, description) values ("
+                + getNewVendorID() + ", '" + cleanString(vendorName) + "', '" + cleanString(description) + "')";
         try {
-            String createNewVendorQuery = "INSERT INTO vendors(vendorID, vendor, description)\n" +
-                    " values (?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(createNewVendorQuery);
-            preparedStatement.setInt(1, getNewVendorID());
-            preparedStatement.setString(2, vendorName);
-            preparedStatement.setString(3, description);
-            preparedStatement.execute();
-
+            executeUpdateWithRetry(createNewVendorQuery);
         } catch (SQLException e){
             throw new IllegalStateException("Cannot connect to the database", e);
         }
@@ -1464,15 +1324,13 @@ public class Database implements IController {
      * Gets max vendor ID, adds one to it to generate a new vendor id
      * @return Vendor ID
      */
-    private int getNewVendorID(){
-        int vendorID = 0;
-        try {
-            Statement statement = connection.createStatement();
-            String getVendorIDQuery = "SELECT vendorID\n" +
-                    "FROM vendors\n" +
-                    "ORDER BY vendorID DESC\n" +
-                    "LIMIT 1";
-            ResultSet rs = statement.executeQuery(getVendorIDQuery);
+    private int getNewVendorID() {
+        int vendorID = 0; // this is probably the least efficient way to do this but :/
+        String getVendorIDQuery = "SELECT vendorID\n" +
+                "FROM vendors\n" +
+                "ORDER BY vendorID DESC\n" +
+                "LIMIT 1";
+        try (ResultSet rs  = executeQueryWithRetry(getVendorIDQuery)) {
             while(rs.next()){
                 vendorID = rs.getInt("vendorID");
             }
@@ -1489,10 +1347,8 @@ public class Database implements IController {
      */
     public ArrayList<String> getVendorList() {
         ArrayList<String> vendors;
-        try {
-            String getVendorListQuery = "SELECT vendor FROM vendors;";
-            PreparedStatement preparedStatement = connection.prepareStatement(getVendorListQuery);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        String getVendorListQuery = "SELECT vendor FROM vendors;";
+        try (ResultSet resultSet = executeQueryWithRetry(getVendorListQuery)) {
             ResultSetMetaData rsmd = resultSet.getMetaData();
             vendors = new ArrayList<>();
             while (resultSet.next()) {
@@ -1500,11 +1356,29 @@ public class Database implements IController {
                     vendors.add(resultSet.getString(i));
                 }
             }
-            preparedStatement.close();
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect to the database", e);
         }
         return vendors;
+    }
+
+    /**
+     * Helper method to determine if item is overdue
+     * @param date Due date of item
+     * @return true if item is overdue; false otherwise
+     */
+    public boolean isOverdue(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
+        if (date != null && !date.isEmpty()) {
+            try {
+                Date current = dateFormat.parse(timeUtils.getCurrentDateTimeStamp());
+                Date dueDate = dateFormat.parse(date);
+                return current.after(dueDate);
+            } catch (ParseException e) {
+                stageUtils.errorAlert("Error, could not parse date");
+            }
+        }
+        return false;
     }
 
     /**
