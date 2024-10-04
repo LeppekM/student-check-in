@@ -283,20 +283,13 @@ public class CheckOutController extends MenuController implements IController, I
         barcodeField.setOnKeyReleased(event -> statusLabel.setVisible(true));
         barcodeField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
+                    coTable.refresh();
                     if (newValue.length() == BARCODE_STRING_LENGTH) {
-
                         int numOutByCurrentStudent = database.amountOutByStudent(Long.parseLong(newValue),
                                 currentStudent);
                         if (numOutByCurrentStudent > 0) {
                             spinnerInit(spinner, numOutByCurrentStudent);
                             statusLabel.setText(CHECK_IN_STR);
-                            // TODO
-//                            for (int i = 0; i < coTable.currentItemsCountProperty().get(); i++) {
-//                                Checkout item = (Checkout) coTable.getSelectionModel().getModelItem(i).getValue();
-//                                if (item.getBarcode().get() == Long.parseLong(newValue)) {
-//                                    coTable.getSelectionModel().select(i); // works, not ideal
-//                                }
-//                            }
                         } else if (setSpinnerWithAvailableParts(Long.parseLong(newValue), spinner)){
                             statusLabel.setText(CHECK_OUT_STR);
                             extendedCheckBox.setVisible(extended.isSelected());
@@ -728,26 +721,33 @@ public class CheckOutController extends MenuController implements IController, I
                             setStyle("");
                         } else {
                             setText(item);
-
+                            String styleString = "";
                             // if the part is overdue, text is red
                             Date currentDate = new Date();
                             Checkout checkedOutPart = getTreeTableRow().getItem();
-                            if (checkedOutPart != null && checkedOutPart.getDueDate().get().before(currentDate)) {
-                                setStyle("-fx-text-fill: #920202");
-                            } else {
-                                setStyle(""); // Reset to default style if condition is not met
+                            boolean isHighlighted = false; // Track if the current cell should be highlighted
+                            for (HBox hbox : barcodes){
+                                JFXTextField textField = (JFXTextField) hbox.getChildren().get(0);
+                                if (textField.getText().length() == BARCODE_STRING_LENGTH) {
+                                    if (checkedOutPart != null && checkedOutPart.getBarcode().get() == (Long.parseLong(textField.getText()))) {
+                                        if (getTreeTableRow().getIndex() % 2 == 1) {
+                                            styleString += "-fx-background-color: #79B473;";
+                                        } else {
+                                            styleString += "-fx-background-color: #99D493;";
+                                        }
+                                        isHighlighted = true;
+                                        break;
+                                    }
+                                }
                             }
-//                            // TODO
-//                            // THIS IS THE NEW CODE, NOT WORKING
-//                            for (HBox hbox : barcodes){
-//                                JFXTextField textField = (JFXTextField) hbox.getChildren().get(0);
-//                                if (textField.getText().length() == BARCODE_STRING_LENGTH) {
-//                                    if (checkedOutPart.getBarcode().get() == (Long.parseLong(textField.getText()))) {
-//                                        setStyle("-fx-highlight-text-fill: #c3706f");
-//                                    }
-//                                }
-//                            }
-//                            // NEW CODE END
+                            // Reset to default style if no barcode matches
+                            if (!isHighlighted) {
+                                styleString = ""; // Reset style if no matching barcode was found
+                            }
+                            if (checkedOutPart != null && checkedOutPart.getDueDate().get().before(currentDate)) {
+                                styleString += "-fx-text-fill: #920202;";
+                            }
+                            setStyle(styleString);
                         }
                     }
                 };
