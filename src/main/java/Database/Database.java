@@ -273,7 +273,7 @@ public class Database implements IController {
     public int getCheckoutIDFromBarcodeAndRFID(long rfid, long barcode) {
         int checkoutID = 0;
         String query = "select checkoutID from checkout where studentID = " + rfid + " and barcode = " + barcode +
-                "and checkinAt IS NULL limit 1";
+                " and checkinAt IS NULL limit 1";
         try (ResultSet rs = executeQueryWithRetry(query)) {
             if(rs.next()){
                 checkoutID = rs.getInt("checkoutID");
