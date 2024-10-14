@@ -292,7 +292,7 @@ public class Database implements IController {
      */
     public long getStudentIDFromEmail(String email) {
         long sID = 0;
-        String query = "SELECT studentID FROM students WHERE email = " + email + ";";
+        String query = "SELECT studentID FROM students WHERE email = '" + email + "';";
         try (ResultSet rs = executeQueryWithRetry(query)) {
             if (rs.next()) {
                 sID = rs.getLong("studentID");
