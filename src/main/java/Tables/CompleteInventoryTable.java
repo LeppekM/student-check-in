@@ -299,9 +299,6 @@ public class CompleteInventoryTable extends TSCTable {
                 stageUtils.acceptIntegerOnly(priceField);
                 stageUtils.acceptIntegerOnly(serialField);
 
-                differentBarcodes.selectedProperty().addListener((observable, oldValue, newValue) ->
-                        barcodeField.setDisable(newValue));
-
                 quantityField.textProperty().addListener((observable, oldValue, newValue) ->
                         showBarcodesCheckbox(!newValue.isEmpty() && Integer.parseInt(newValue) > 1));
                 showBarcodesCheckbox(false);
@@ -486,12 +483,21 @@ public class CompleteInventoryTable extends TSCTable {
              */
             private void addManyPartsWithDifferentBarcodes(int quantity, String partName) {
                 int currentSN = serialField.getText().isEmpty() ? 1: Integer.parseInt(serialField.getText());
-                long currentBarcode = database.getMaxPartID() + 1;  // gets max part
+                long currentBarcode;
+                long startingBarcode = Long.parseLong(barcodeField.getText());
+                if (barcodeField.getText().isEmpty() || database.barcodeExists(startingBarcode)) {
+                    currentBarcode = getAcceptableMaxBarcode();
+                } else {
+                    currentBarcode = startingBarcode;
+                }
                 String suffix = suffixField.getText();
                 ArrayList<String> serialNums = database.getAllSerialNumbersForPartName(partName);
                 for (int i = 0; i < quantity; i++) {
                     while (serialNums.contains(currentSN + suffix)) {
                         currentSN++;
+                    }
+                    if (database.barcodeExists(currentBarcode)) {
+                        currentBarcode = getAcceptableMaxBarcode();
                     }
                     database.addPart(new Part(partName, currentSN + suffix, manufacturerField.getText(),
                             Double.parseDouble(priceField.getText()), getVendorName(),
@@ -499,6 +505,13 @@ public class CompleteInventoryTable extends TSCTable {
                     currentBarcode++;
                     currentSN++;
                 }
+            }
+            private long getAcceptableMaxBarcode() {
+                long barcode = database.getMaxPartID() + 1;
+                while (database.barcodeExists(barcode)) {
+                    barcode++;
+                }
+                return barcode;
             }
 
             /**
